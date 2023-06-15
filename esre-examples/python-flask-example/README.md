@@ -1,4 +1,10 @@
-## Download the Project
+# Elastic Workplace Sample App
+
+This is a sample app that combines Elasticsearch and OpenAI to create a semantic search experience.
+
+![Screenshot of the sample app](./app-demo.gif)
+
+## 1. Download the Project
 
 Download the project from Github and extract the python-flask-example folder.
 
@@ -7,11 +13,19 @@ curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/esre-examples/python-flask-example
 ```
 
-## Credentials
+## 2. Index Data
+
+You can index the data from the provided .json files by following the [README](./example-data/README.md) instructions in the `example-data` folder. At the moment indexing your own data should be possible. The UI will attempt to use the URL in the data file for the HTML link to the source.
+
+### Loading your own data
+
+See the [medicare](./example-data/README.md#loading-custom-data) example in the example-data folder for loding your own data.
+
+## 3. Credentials
 
 Requires the following environment variables to be set. This can be done by creating a `.env` file in the `/api` directory of the project.
 
-## Setup with OpenAI
+### Setup with OpenAI
 
 You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
 
@@ -24,7 +38,7 @@ cloud_pass=<elasticsearch-password>
 cloud_user=<elasticsearch-user>
 ```
 
-## Setup with Azure OpenAI Credentials
+### Setup with Azure OpenAI Credentials
 
 You can get your Azure OpenAI key from the [Azure OpenAI dashboard](https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryFeaturedMenuItemBlade/selectedMenuItemId/home/searchQuery/openai/resetMenuId/).
 
@@ -39,10 +53,6 @@ cloud_id=<elasticsearch-cloud-id>
 cloud_pass=<elasticsearch-password>
 cloud_user=<elasticsearch-user>
 ```
-
-### Indexing your own data
-
-You can index the data from the provided .json files by following the [README](./example-data/README.md) instructions in the `example-data` folder. At the moment indexing your own data should be possible. The UI will attempt to use the URL in the data file for the HTML link to the source.
 
 ## Developing
 
@@ -78,7 +88,3 @@ You can now access the frontend at http://localhost:3000. Changes are automatica
 docker build -f Dockerfile -t python-flask-example .
 docker run -p 4000:4000 -d python-flask-example
 ```
-
-## Loading your own data
-
-See the [medicare](./example-data/README.md#loading-custom-data) example in the example-data folder for loding your own data.
