@@ -151,7 +151,7 @@ export const thunkActions = {
             message += event.data === "" ? `${event.data} \n` : event.data;
             dispatch(actions.setStreamMessage({ streamMessage: message }));
           } else {
-            const regex = /\*\*SOURCES:(.+)\*\*/;
+            const regex = /SOURCES:(.+)/;
             const sourceReferences = message.match(regex);
 
             let resultSourcesToAdd: Result[] = [];

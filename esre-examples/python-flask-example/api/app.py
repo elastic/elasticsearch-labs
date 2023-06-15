@@ -50,12 +50,19 @@ bm25_index = "search-workplace"
 bm25_search_fields = ["name", "content"]
 bm25_result_fields = ["name", "content", "url", "category", "summary"]
 
+openai_type = os.environ['openai_type']
+model = ""
+engine = ""
 
-openai.api_key = os.environ['openai_api_key']
-openai.api_type = os.environ['openai_api_type']
-openai.api_base = os.environ['openai_api_base']
-openai.api_version = os.environ['openai_api_version']
-engine = os.environ['openai_api_engine']
+if openai_type == "azure":
+    openai.api_key = os.environ['openai_api_key']
+    openai.api_type = os.environ['openai_api_type']
+    openai.api_base = os.environ['openai_api_base']
+    openai.api_version = os.environ['openai_api_version']
+    engine = os.environ['openai_api_engine']
+else:
+    openai.api_key = os.environ['openai_api_key']
+    model = os.environ['openai_api_model']
 
 # Retrieve conversation context using conversation_id
 
@@ -233,7 +240,7 @@ def init_streaming(query, documents):
     prompt = f"{content}\nQuestion: {query}"
     truncated_prompt = truncate_text(
         prompt, max_context_tokens - max_tokens - safety_margin)
-    messages = [{"role": "system", "content": "Given the following extracted parts of a long document and a question, create a final answer with references ('SOURCES'). If you don't know the answer, just say 'The provided documents do not provide enough information to answer the question.'. Don't try to make up an answer. Only when you find an answer, return a 'SOURCES' part at the end of your answer, in the following format **SOURCES: <The source documents>**"}] + [
+    messages = [{"role": "system", "content": "Given the following extracted parts of a long document and a question, create a final answer with references. If you don't know the answer, just say 'The provided documents do not provide enough information to answer the question.'. Don't try to make up an answer. Only when you find an answer, return a 'SOURCES' part at the end of your answer, each document comma seperated, in the following format \n ** SOURCES: <sources> **"}] + [
         {"role": "user", "content": prompt}]
 
     es.index(index="flask_streaming", id=streaming_id,
@@ -282,11 +289,18 @@ def route_api_stream():
 
     def stream():
         messages = get_messages(streaming_id)
-        completion = completion_with_backoff(
-            engine=engine,
-            temperature=0.2,
-            messages=messages,
-            stream=True)
+        if (openai_type == "azure"):
+            completion = completion_with_backoff(
+                engine=engine,
+                temperature=0.2,
+                messages=messages,
+                stream=True)
+        else:
+            completion = completion_with_backoff(
+                model=model,
+                temperature=0.2,
+                messages=messages,
+                stream=True)
         for line in completion:
             chunk = line['choices'][0].get('delta', {}).get('content', '')
             if chunk:
