@@ -1,0 +1,13 @@
+elastic-transport==8.4.0
+elasticsearch==8.7.0
+openai==0.27.4
+requests==2.30.0
+flask==2.2.2
+flask-session
+memcache
+urllib3
+python-dotenv==1.0.0
+Flask-HTTPAuth
+pypdf>=3.8.0
+flask-cors
+tenacity
