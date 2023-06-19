@@ -20,7 +20,7 @@ Both scripts use the [Elasticsearch](https://github.com/elastic/elasticsearch-js
 This section will walk you through the steps for setting up and using the application from scratch.
 (Skip the first steps if you already have an Elastic deployment and OpenAI account/API key.)
 
-## 1. Download the Project
+### 1. Download the Project
 
 Download the project from Github and extract the openai-integration-example-python folder.
 
