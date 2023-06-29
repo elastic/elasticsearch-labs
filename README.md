@@ -2,7 +2,9 @@
 
 This repository contains several sample applications for demonstrating the features of Elasticsearch and Elasticsearch Relevance Engine (ESRE).
 
-
+# Guides 
+- [Getting Support](docs/SUPPORT.md)
+  
 # License
 This software is licensed under the Apache License, version 2 ("ALv2"), quoted below.
 
