@@ -1,0 +1,3 @@
+# Elastic Search + OpenAI or Azure OpenAI +  ChatGPT 
+We have provided in our sample application a few approached that can enable customers to create a ChatGPT-like experience over your proprietary data using the Retrieval Augmented Generation (RAG) pattern.
+This approach can be configured to use the Azure Open AI service or OpenAI to access the ChatGPT model (gpt-35-turbo) and Elasticsearch for data indexing and retrieval. 
