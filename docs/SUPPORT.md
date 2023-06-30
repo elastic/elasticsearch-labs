@@ -5,5 +5,5 @@ If you have an Elastic subscription, you are entitled to Support services for yo
 These services do not apply to the sample application code contained in this repository. 
 
 ### Where else can I go to get help? 
-The Search team at Elastic maintains this repository and is happy to help. Try posting your quesiton to the [Elastic discuss forums](https://discuss.elastic.co/) and tag it with [#esre-elasticsearch-relevance-engine](https://discuss.elastic.co/tag/esre-elasticsearch-relevance-engine)
+The Search team at Elastic maintains this repository and is happy to help. Try posting your question to the [Elastic discuss forums](https://discuss.elastic.co/) and tag it with [#esre-elasticsearch-relevance-engine](https://discuss.elastic.co/tag/esre-elasticsearch-relevance-engine)
 You can also find us in the [#search-esre-relevance-engine](https://elasticstack.slack.com/archives/C05CED61S9J) channel of the [Elastic Community Slack](http://elasticstack.slack.com)
