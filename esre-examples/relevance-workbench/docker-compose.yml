@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: ./app-api
+      dockerfile: Dockerfile
+    volumes:
+      - './app-api:/usr/src/app'
+    ports:
+      - 5000:5000
+    environment:
+      - CLOUD_ID=<CLOUD_ID>
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=<ELASTICSEARCH_PASSWORD>
+
+  client:
+    build:
+      context: ./app-ui
+      dockerfile: Dockerfile
+    volumes:
+      - './app-ui:/usr/src/app'
+    ports:
+      - 3000:3000
+    environment:
+      - NEXT_API_URL=http://host.docker.internal:5000
+    depends_on:
+      - api
