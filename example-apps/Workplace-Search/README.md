@@ -6,11 +6,12 @@ This is a sample app that combines Elasticsearch and OpenAI to create a semantic
 
 ## 1. Download the Project
 
-Download the project from Github and extract the python-flask-example folder.
+Download the project from Github and extract the Workplace-Search folder.
 
 ```bash
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
-tar -xz --strip=2 elasticsearch-labs-main/esre-examples/python-flask-example
+tar -xz --strip=2 elasticsearch-labs-main/esre-examples/Workplace-Search
+```
 ```
 
 ## 2. Index Data

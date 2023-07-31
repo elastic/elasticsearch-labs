@@ -1,4 +1,4 @@
-# Elastic OpenAI integration example - JavaScript
+# Elastic OpenAI embeddings example - JavaScript
 
 ## Overview
 
