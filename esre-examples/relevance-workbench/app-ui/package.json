@@ -1,0 +1,30 @@
+{
+  "name": "elasticon-relevance-workbench",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@next/font": "13.1.6",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "eslint": "8.33.0",
+    "eslint-config-next": "13.1.6",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@headlessui/react": "^1.7.11",
+    "@heroicons/react": "^2.0.17",
+    "autoprefixer": "^10.4.13",
+    "classnames": "^2.3.2",
+    "http-proxy": "^1.18.1",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.6"
+  }
+}
