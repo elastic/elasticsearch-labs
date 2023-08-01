@@ -7,7 +7,7 @@ Colab provides an easy-to-use Python virtual environment in the browser.
 
 Notebooks are organized into the following folders:
 
-- [`search`](./search/). Learn the fundamentals of Elasticsearch, so you can index embeddings, run lexical, semantic and _hybrid_ searches, and more.
+- [`search`](./search/): Notebooks that demonstrate the fundamentals of Elasticsearch, like indexing embeddings, running lexical, semantic and _hybrid_ searches, and more.
 
 - [`generative-ai`](./generative-ai/): Notebooks that demonstrate various use cases for Elasticsearch as the retrieval engine and vector store for LLM-powered applications.
 
