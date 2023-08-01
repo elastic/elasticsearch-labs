@@ -8,6 +8,7 @@ The following notebooks are available:
 1. [Keyword, querying, filtering](#1-keyword-querying-filtering)
 2. [Hybrid search](#2-hybrid-search)
 3. [Semantic search with ELSER](#3-semantic-search-with-elser)
+4. [Multilingual semantic search](#4-multilingual-semantic-search)
 
 ## Notebooks
 
@@ -54,3 +55,12 @@ In the [`03-ELSER.ipynb`](./03-ELSER.ipynb) notebook, you'll learn how to:
 - Observe the results of running the documents through the model by inspecting the additional terms it adds to documents, which enhance searchability.
 - Perform simple keyword searches on the `elser-movies` index to assess the impact of ELSER's text expansion.
 - Execute ELSER-powered semantic searches using the `text_expansion` query.
+
+### 4. Multilingual semantic search
+
+In the [`04-multilingual.ipynb`](./04-multilingual.ipynb) notebook, you'll learn how to:
+
+- Use a multilingual embedding model for semantic search across languages.
+- Transform fields in the sample dataset into embeddings using the Sentence Transformer model and index them into Elasticsearch.
+- Use filtering with a `kNN` semantic search.
+- Walk through a super simple toy example that demonstrates, step by step, how multilingual search works across languages, and within non-English languages.
