@@ -26,7 +26,7 @@ Download the project from Github and extract the openai-integration-example-pyth
 
 ```bash
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
-tar -xz --strip=2 elasticsearch-labs-main/esre-examples/openai-integration-example-javascript
+tar -xz --strip=2 elasticsearch-labs-main/example-apps/OpenAI-embeddings/OpenAI-Py
 ```
 
 ### 2. Create OpenAI account and API key

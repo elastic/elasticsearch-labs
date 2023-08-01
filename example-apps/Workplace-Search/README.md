@@ -10,7 +10,7 @@ Download the project from Github and extract the Workplace-Search folder.
 
 ```bash
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
-tar -xz --strip=2 elasticsearch-labs-main/esre-examples/Workplace-Search
+tar -xz --strip=2 elasticsearch-labs-main/example-apps/Workplace-Search
 ```
 ```
 
