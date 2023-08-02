@@ -8,7 +8,7 @@ This repository contains executable Python notebooks, sample apps, and resources
 
 # Python notebooks 📒
 
-The [`notebooks` folder](notebooks/README.md) contains a range of executable Python notebooks, so you can test these features out for yourself. Colab provides an easy-to-use Python virtual environment in the browser.
+The [`notebooks`](notebooks/README.md) folder contains a range of executable Python notebooks, so you can test these features out for yourself. Colab provides an easy-to-use Python virtual environment in the browser.
 
 # Example apps 💻
 
