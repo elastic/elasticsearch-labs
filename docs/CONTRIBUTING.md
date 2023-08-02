@@ -18,7 +18,6 @@ Prior to opening a pull request, please:
 ### Where
 
 * Select a folder under [notebooks](../notebooks/README.md) that matches the category of your notebook. If none of them match, create a new folder.
-* Create a folder under the category for your notebook.
 
 ### What
 
@@ -29,6 +28,7 @@ Prior to opening a pull request, please:
 * Start with a text cell that summarizes what the notebook will demonstrate. Feel free to use images - sometimes a picture is worth a thousand words.
 * Add a header and description section before each code cell. Explain in simple terms what the code will be doing and what the expected outcome is.
 * When the output of a cell is relevant, preserve it in the notebook.
+* Update the `README.md` file in the folder of the notebook.
 
 ### How
 
