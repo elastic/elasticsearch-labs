@@ -1,0 +1,3 @@
+elasticsearch
+tqdm
+argparse
