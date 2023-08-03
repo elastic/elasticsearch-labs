@@ -13,6 +13,7 @@ Use these apps as a starting point for your own projects.
 - [OpenAI embeddings](./OpenAI-embeddings/README.md). Use OpenAI embeddings at index time and in Elastic kNN queries. Available in [JavaScript](./OpenAI-embeddings/OpenAI-JS/README.md) and [Python](./OpenAI-embeddings/OpenAI-Py/README.md) versions.
 - [Workplace search](./Workplace-Search/README.md). Build a semantic search experience for organizational/workplace data.
 - [relevance-workbench](./relevance-workbench/README.md). A Python application that allows you to compare results ranking between the **Elastic Learned Sparse Encoder** model and BM25.
+- [Homecraft Vertex](./homecraft_vertex/README.md). A Python application designed for Retail industry simulating an e-commerce search bar. It integrates with Google's VertexAI and PALM2 model, BigQuery Datasets and Elastic Vector Search to answer questions around previous orders, suggested products available and company information.
 
 
 > ℹ️ **Note**:
