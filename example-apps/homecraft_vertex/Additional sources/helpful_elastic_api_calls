@@ -1,0 +1,86 @@
+POST search-homecraft-ikea/_mapping
+{
+  "properties": {
+    "title-vector": {
+      "type": "dense_vector",
+      "dims": 768,
+      "index": true,
+      "similarity": "dot_product"
+    }
+  }
+}
+
+
+POST home-depot-product-catalog-vector/_mapping
+{
+  "properties": {
+    "title-vector": {
+      "type": "dense_vector",
+      "dims": 768,
+      "index": true,
+      "similarity": "dot_product"
+    }
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "home-depot-product-catalog"
+  },
+  "dest": {
+    "index": "home-depot-product-catalog-vector",
+    "pipeline": "ml-inference-title-vector"
+  }
+}
+
+
+POST /home-depot-product-catalog-vector/_delete_by_query
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+DELETE /home-depot-product-catalog-vector
+
+PUT /home-depot-product-catalog-vector 
+
+
+# Elasticsearch query (BM25) and kNN configuration for hybrid search
+
+GET home-depot-product-catalog-vector/_search
+{
+    "query" : {
+        "bool": {
+            "must": [{
+                "match": {
+                    "title": {
+                        "query": "list the 3 top paint primers in the product catalog, specify also product price and product key features",
+                        "boost": 1
+                    }
+                }
+            }],
+            "filter": [{
+                "exists": {
+                    "field": "title-vector"
+                }
+            }]
+        }
+    },
+
+    "knn" : {
+        "field": "title-vector",
+        "k": 1,
+        "num_candidates": 20,
+        "query_vector_builder": {
+            "text_embedding": {
+                "model_id": "sentence-transformers__all-distilroberta-v1",
+                "model_text": "list the 3 top paint primers in the product catalog, specify also product price and product key features."
+            }
+        },
+        "boost": 24
+    }
+
+}    
+    
