@@ -65,4 +65,4 @@ Prior to opening a pull request, please:
 
 * **Never leave any secrets in the code** (API keys, passwords etc). Also avoid hardcoding URLs and IDs that may change from user to user. Instead use environment variables that need to be set by the user while they are running the app.
 * Test your app end to end before submitting a pull request.
-* Example of a well-formed app: [OpenAI-Py](../example-apps/OpenAI-embeddings/OpenAI-Py/README.md).
+* Example of a well-formed app: [openai-embeddings-python](../example-apps/openai-embeddings-python/README.md).
