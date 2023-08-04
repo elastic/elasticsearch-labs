@@ -4,7 +4,7 @@ Combine the search power of Elasticsearch with the Question Answering power of G
 
 This application supports the popular Elastic blog [ChatGPT and Elasticsearch: OpenAI meets private data](https://www.elastic.co/blog/chatgpt-elasticsearch-openai-meets-private-data).
 
-ℹ️ This application uses the ChatGPT API with your own UI. If you want to use the ChatGPT UI, see the [ElasticGPT plugin](../ElasticGPT_Plugin/README.md).
+ℹ️ This application uses the ChatGPT API with your own UI. If you want to use the ChatGPT UI, see the [ElasticGPT plugin](../chatgpt-plugin/README.md).
 
 ## Overview
 

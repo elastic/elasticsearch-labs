@@ -1,7 +1,7 @@
 # ElasticGPT plugin
 
 ℹ️ This approach enables use the ChatGPT UI with your own data.
-If you want to use your own UI, and/or you'd prefer to use the API, see the [ElasticDocs GPT](../ElasticDocs_GPT/README.md) application.
+If you want to use your own UI, and/or you'd prefer to use the API, see the [ElasticDocs GPT](../chatgpt-question-answering/README.md) application.
 
 Implement a ChatGPT plugin and extend ChatGPT usage to any content indexed into Elasticsearch:
 
