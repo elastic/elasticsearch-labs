@@ -2,21 +2,18 @@
 
 This folder contains a number of notebooks that demonstrate the fundamentals of Elasticsearch, like indexing embeddings, running lexical, semantic and _hybrid_ searches, and more.
 
-Jump straight to the notebooks by clicking on the links below, or read on for a quick overview of what each notebook covers.
+The following notebooks are available:
 
-0. [Quick start 🔗](./00-quick-start.ipynb)
-1. [Keyword, querying, filtering 🔗](./01-keyword-querying-filtering.ipynb)
-2. [Hybrid search 🔗](./02-hybrid-search.ipynb)
-3. [Semantic search with ELSER 🔗](./03-ELSER.ipynb)
-
-
-
+0. [Quick start](#0-quick-start)
+1. [Keyword, querying, filtering](#1-keyword-querying-filtering)
+2. [Hybrid search](#2-hybrid-search)
+3. [Semantic search with ELSER](#3-semantic-search-with-elser)
 
 ## Notebooks
 
-### [0. Quick start 🔗](./00-quick-start.ipynb)
+### 0. Quick start
 
-Learn how to:
+In  the [`00-quick-start.ipynb`](./00-quick-start.ipynb) notebook you'll learn how to:
 
 - Use the Elasticsearch Python client for various operations.
 - Create and define an index for a sample dataset with `dense_vector` fields.
@@ -25,9 +22,9 @@ Learn how to:
 - Integrate traditional text-based search with semantic search, for a hybrid search system.
 - Use reciprocal rank fusion (RRF) to intelligently combine search results from different retrieval systems.
 
-### [1. Keyword, querying, filtering 🔗](./01-keyword-querying-filtering.ipynb)
+### 1. Keyword, querying, filtering
 
-In this notebook, you'll learn how to:
+In the [`01-keyword-querying-filtering.ipynb`](./01-keyword-querying-filtering.ipynb) notebook, you'll learn how to:
 
 - Use [query and filter contexts](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html) to search and filter documents in Elasticsearch.
 - Execute full-text searches with `match` and `multi-match` queries.
@@ -36,18 +33,18 @@ In this notebook, you'll learn how to:
 - Prioritize specific fields in the `multi-match` query for tailored results.
 
 
-### [2. Hybrid search 🔗](./02-hybrid-search.ipynb)
+### 2. Hybrid search
 
-In this notebook, you'll learn how to:
+In the [`02-hybrid-search.ipynb`](./02-hybrid-search.ipynb) notebook, you'll learn how to:
 
 - Combine results of traditional text-based search with semantic search, for a hybrid search system.
 - Transform fields in the sample dataset into embeddings using the Sentence Transformer model and index them into Elasticsearch.
 - Use the [RRF API](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html#rrf-api) to combine the results of a `match` query and a `kNN` semantic search.
 - Walk through a super simple toy example that demonstrates, step by step, how RRF ranking works.
 
-### [3. Semantic search with ELSER 🔗](./03-ELSER.ipynb)
+### 3. Semantic search with ELSER
 
-In this notebook, you'll learn how to:
+In the [`03-ELSER.ipynb`](./03-ELSER.ipynb) notebook, you'll learn how to:
 
 - Use the Elastic Learned Sparse Encoder (ELSER) for text expansion-powered semantic search, out of the box — without training, fine-tuning, or embeddings generation.
 - Download and deploy the ELSER model in your Elastic environment.
