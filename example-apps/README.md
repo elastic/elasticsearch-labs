@@ -10,7 +10,7 @@ The applications are organized into the following folders:
 
 - [`relevance-workbench`](relevance-workbench/README.md). A Python application that allows you to compare results ranking between the **Elastic Learned Sparse Encoder** model and BM25.
 
-- [`workplace-search``](workplace-search/README.md). Build a semantic search experience for organizational/workplace data.
+- [`workplace-search`](workplace-search/README.md). Build a semantic search experience for organizational/workplace data.
 
 > ℹ️ **Note**:
 > _Elastic Labs projects are for illustrative and experimental purposes only. Elastic Labs projects are not part of any product or services offering provided or supported under a commercial license or subscription. These projects are made available as-is under the terms of the license associated with the projects._
