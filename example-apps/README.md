@@ -8,7 +8,7 @@ Use these apps as a starting point for your own projects.
 
 ## Apps
 
-- [OpenAI embeddings](./OpenAI-embeddings/README.md). Use OpenAI embeddings at index time and in Elastic kNN queries. Available in [JavaScript](./OpenAI-embeddings/OpenAI-JS/README.md) and [Python](./OpenAI-embeddings/OpenAI-Py/README.md) versions.
+- [OpenAI embeddings](./OpenAI-embeddings/README.md). Use OpenAI embeddings at index time and in Elastic kNN queries. Available in [JavaScript](./OpenAI-embeddings/OpenAI-JS/README.md).
 - [Workplace search](./Workplace-Search/README.md). Build a semantic search experience for organizational/workplace data.
 - [relevance-workbench](./relevance-workbench/README.md). A Python application that allows you to compare results ranking between the **Elastic Learned Sparse Encoder** model and BM25.
 

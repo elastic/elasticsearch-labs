@@ -10,5 +10,4 @@ Tiny example applications that integrate Elastic with [OpenAI embeddings](https:
 
 ## Programming languages
 
-- [Python](./OpenAI-Py/README.md)
 - [JavaScript](./OpenAI-JS/README.md)
