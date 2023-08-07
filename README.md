@@ -16,7 +16,7 @@ The [`example-apps`](example-apps/README.md) folder contains example apps that d
 
 # Contributing 🎁
 
-See [contributing guidelines](docs/CONTRIBUTING.md).
+See [contributing guidelines](CONTRIBUTING.md).
 
 # Support 🛟
 
