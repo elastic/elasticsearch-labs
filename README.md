@@ -3,7 +3,7 @@
 This repository contains executable Python notebooks, sample apps, and resources for testing out the Elastic platform:
 
 - Learn how to use Elasticsearch as a vector database to store embeddings, power hybrid and semantic search experiences, and more.
-- Test Elastic's leading-edge, out-of-the-box capabilities like the [Elastic Learned Sparse Encoder](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html) and [reciprocal rank fusion (RRF)](https://www.elastic.co/blog/whats-new-elastic-enterprise-search-8-9-0#hybrid-search-with-reciprocal-rank-fusion-(rrf)-combines-multiple-search-techniques-for-better-results), which produce best-in-class results without training or tuning.
+- Test Elastic's leading-edge, out-of-the-box capabilities like the [Elastic Learned Sparse Encoder](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html) and [reciprocal rank fusion (RRF)](<https://www.elastic.co/blog/whats-new-elastic-enterprise-search-8-9-0#hybrid-search-with-reciprocal-rank-fusion-(rrf)-combines-multiple-search-techniques-for-better-results>), which produce best-in-class results without training or tuning.
 - Integrate with projects like OpenAI, Hugging Face, and LangChain to use Elasticsearch as the backbone of your LLM-powered applications. For use cases like retrieval augmented generation (RAG), summarization, and question answering (QA).
 
 # Python notebooks 📒
@@ -16,11 +16,24 @@ The [`example-apps`](example-apps/README.md) folder contains example apps that d
 
 # Contributing 🎁
 
-See [contributing guidelines](docs/CONTRIBUTING.md).
+See [contributing guidelines](CONTRIBUTING.md).
 
 # Support 🛟
 
-Learn how to [get Support](docs/SUPPORT.md).
+The Search team at Elastic maintains this repository and is happy to help.
+
+### Official Support Services
+
+If you have an Elastic subscription, you are entitled to Support services for your Elasticsearch deployment. See our welcome page for [working with our support team](https://www.elastic.co/support/welcome).
+These services do not apply to the sample application code contained in this repository.
+
+### Discuss Forum
+
+Try posting your question to the [Elastic discuss forums](https://discuss.elastic.co/) and tag it with [#esre-elasticsearch-relevance-engine](https://discuss.elastic.co/tag/esre-elasticsearch-relevance-engine)
+
+### Elastic Slack
+
+You can also find us in the [#search-esre-relevance-engine](https://elasticstack.slack.com/archives/C05CED61S9J) channel of the [Elastic Community Slack](http://elasticstack.slack.com)
 
 # License ⚖️
 
