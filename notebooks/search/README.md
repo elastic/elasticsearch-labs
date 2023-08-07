@@ -2,9 +2,19 @@
 
 This folder contains a number of notebooks that demonstrate the fundamentals of Elasticsearch, like indexing embeddings, running lexical, semantic and _hybrid_ searches, and more.
 
+Jump straight to the notebooks by clicking on the links below, or read on for a quick overview of what each notebook covers.
+
+0. [Quick start 🔗](./00-quick-start.ipynb)
+1. [Keyword, querying, filtering 🔗](./01-keyword-querying-filtering.ipynb)
+2. [Hybrid search 🔗](./02-hybrid-search.ipynb)
+3. [Semantic search with ELSER 🔗](./03-ELSER.ipynb)
+
+
+
+
 ## Notebooks
 
-### [Quick start](./00-quick-start.ipynb)
+### [0. Quick start 🔗](./00-quick-start.ipynb)
 
 Learn how to:
 
@@ -15,7 +25,7 @@ Learn how to:
 - Integrate traditional text-based search with semantic search, for a hybrid search system.
 - Use reciprocal rank fusion (RRF) to intelligently combine search results from different retrieval systems.
 
-### [Keyword, querying, filtering](./01-keyword-querying-filtering.ipynb)
+### [1. Keyword, querying, filtering 🔗](./01-keyword-querying-filtering.ipynb)
 
 In this notebook, you'll learn how to:
 
@@ -26,7 +36,7 @@ In this notebook, you'll learn how to:
 - Prioritize specific fields in the `multi-match` query for tailored results.
 
 
-### [Hybrid search](./02-hybrid-search.ipynb)
+### [2. Hybrid search 🔗](./02-hybrid-search.ipynb)
 
 In this notebook, you'll learn how to:
 
@@ -35,7 +45,7 @@ In this notebook, you'll learn how to:
 - Use the [RRF API](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html#rrf-api) to combine the results of a `match` query and a `kNN` semantic search.
 - Walk through a super simple toy example that demonstrates, step by step, how RRF ranking works.
 
-### [Semantic search with ELSER](./03-ELSER.ipynb)
+### [3. Semantic search with ELSER 🔗](./03-ELSER.ipynb)
 
 In this notebook, you'll learn how to:
 
