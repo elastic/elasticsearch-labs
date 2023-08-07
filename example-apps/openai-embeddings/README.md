@@ -22,11 +22,11 @@ This section will walk you through the steps for setting up and using the applic
 
 ### 1. Download the Project
 
-Download the project from Github and extract the `openai-embeddings-javascript` folder.
+Download the project from Github and extract the `openai-embeddings` folder.
 
 ```bash
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
-tar -xz --strip=2 elasticsearch-labs-main/example-apps/openai-embeddings-javascript
+tar -xz --strip=2 elasticsearch-labs-main/example-apps/openai-embeddings
 ```
 
 ### 2. Create OpenAI account and API key
