@@ -6,11 +6,11 @@ This is a sample app that combines Elasticsearch and OpenAI to create a semantic
 
 ## 1. Download the Project
 
-Download the project from Github and extract the Workplace-Search folder.
+Download the project from Github and extract the `workplace-search` folder.
 
 ```bash
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
-tar -xz --strip=2 elasticsearch-labs-main/example-apps/Workplace-Search
+tar -xz --strip=2 elasticsearch-labs-main/example-apps/workplace-search
 ```
 ```
 
