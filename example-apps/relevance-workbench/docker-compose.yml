@@ -10,9 +10,9 @@ services:
     ports:
       - 8000:8000
     environment:
-      - CLOUD_ID=demo-nlp-gai:dXMtZWFzdC0xLmF3cy5mb3VuZC5pbzo0NDMkYTQwZTdiY2ZiMzI5NDgxYzhmY2RjNDZhMTkwZGNiMjAkNWJlMTgyMGU2NzM2NDBjN2EyNGU2YzgzZWE5NTE3ZjU=
+      - CLOUD_ID=<cloud_id>
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=4fpcJvy5HXB10Lc0U1BP641b
+      - ELASTICSEARCH_PASSWORD=<elastic pass>
 
   client:
     build:
