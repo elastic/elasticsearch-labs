@@ -8,11 +8,11 @@ services:
     volumes:
       - './app-api:/usr/src/app'
     ports:
-      - 5000:5000
+      - 8000:8000
     environment:
-      - CLOUD_ID=<CLOUD_ID>
+      - CLOUD_ID=demo-nlp-gai:dXMtZWFzdC0xLmF3cy5mb3VuZC5pbzo0NDMkYTQwZTdiY2ZiMzI5NDgxYzhmY2RjNDZhMTkwZGNiMjAkNWJlMTgyMGU2NzM2NDBjN2EyNGU2YzgzZWE5NTE3ZjU=
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=<ELASTICSEARCH_PASSWORD>
+      - ELASTICSEARCH_PASSWORD=4fpcJvy5HXB10Lc0U1BP641b
 
   client:
     build:
@@ -23,6 +23,6 @@ services:
     ports:
       - 3000:3000
     environment:
-      - NEXT_API_URL=http://host.docker.internal:5000
+      - NEXT_API_URL=http://host.docker.internal:8000
     depends_on:
       - api
