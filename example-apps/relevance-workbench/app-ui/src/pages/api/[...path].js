@@ -1,6 +1,6 @@
 import httpProxy from 'http-proxy';
 
-const API_URL = process.env.NEXT_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_API_URL || "http://localhost:8000";
 
 const proxy = httpProxy.createProxyServer();
 
