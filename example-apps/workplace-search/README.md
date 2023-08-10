@@ -12,7 +12,6 @@ Download the project from Github and extract the `workplace-search` folder.
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/example-apps/workplace-search
 ```
-```
 
 ## 2. Index Data
 
