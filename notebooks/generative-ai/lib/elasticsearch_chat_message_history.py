@@ -1,7 +1,7 @@
 import json
 import logging
+from time import time
 from typing import List
-from elasticsearch import ApiError, Elasticsearch
 
 from langchain.schema import BaseChatMessageHistory
 from langchain.schema.messages import BaseMessage, _message_to_dict, messages_from_dict
@@ -20,20 +20,33 @@ class ElasticsearchChatMessageHistory(BaseChatMessageHistory):
 
     def __init__(
         self,
-        client: Elasticsearch,
+        client,
         index: str,
         session_id: str,
     ):
+        try:
+            from elasticsearch import Elasticsearch
+        except ImportError:
+            raise ImportError(
+                "Could not import elasticsearch python package. "
+                "Please install it with `pip install elasticsearch`."
+            )
+
         self.client: Elasticsearch = client
         self.index: str = index
         self.session_id: str = session_id
 
-        if not client.indices.exists(index=index):
+        if client.indices.exists(index=index):
+            logger.debug(f"Chat history index {index} already exists, skipping creation.")
+        else:
+            logger.debug(f"Creating index {index} for storing chat history.")
+
             client.indices.create(
                 index=index,
                 mappings={
                     "properties": {
                         "session_id": {"type": "keyword"},
+                        "created_at": {"type": "date"},
                         "history": {"type": "text"}
                     }
                 }
@@ -43,9 +56,12 @@ class ElasticsearchChatMessageHistory(BaseChatMessageHistory):
     def messages(self) -> List[BaseMessage]:
         """Retrieve the messages from Elasticsearch"""
         try:
+            from elasticsearch import ApiError
+
             result = self.client.search(
                 index=self.index,
-                query={"term": {"session_id": self.session_id}}
+                query={"term": {"session_id": self.session_id}},
+                sort="created_at:asc"
             )
         except ApiError as err:
             logger.error(err)
@@ -60,12 +76,16 @@ class ElasticsearchChatMessageHistory(BaseChatMessageHistory):
     def add_message(self, message: BaseMessage) -> None:
         """Add a message to the chat session in Elasticsearch"""
         try:
+            from elasticsearch import ApiError
+
             self.client.index(
                 index=self.index,
                 body={
                     "session_id": self.session_id,
+                    "created_at": round(time() * 1000),
                     "history": json.dumps(_message_to_dict(message))
-                }
+                },
+                refresh=True
             )
         except ApiError as err:
             logger.error(err)
@@ -73,9 +93,11 @@ class ElasticsearchChatMessageHistory(BaseChatMessageHistory):
     def clear(self) -> None:
         """Clear session memory in Elasticsearch"""
         try:
+            from elasticsearch import ApiError
+
             self.client.delete_by_query(
                 index=self.index,
                 query={"term": {"session_id": self.session_id}}
             )
-        except ApiError as err:
-            logger.error(err)
+        except ApiError:
+            logger.error('Could not clear session memory in Elasticsearch')
