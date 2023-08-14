@@ -14,9 +14,13 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 
 The [`example-apps`](example-apps/README.md) folder contains example apps that demonstrate Elasticsearch for a number of use cases, using different programming languages and frameworks.
 
+# Blog content 📄
+
+The [`supporting-blog-content`](supporting-blog-content/README.md) folder has content that is referenced in [Elastic blogs](https://www.elastic.co/blog/).
+
 # Contributing 🎁
 
-See [contributing guidelines](docs/CONTRIBUTING.md).
+See [contributing guidelines](CONTRIBUTING.md).
 
 # Support 🛟
 

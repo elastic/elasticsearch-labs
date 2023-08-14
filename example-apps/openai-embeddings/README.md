@@ -1,8 +1,8 @@
-# Elastic OpenAI embeddings example - JavaScript
+# OpenAI embeddings example application
 
 ## Overview
 
-Small sample Node.js/Express.js application to demonstrate how to integrate Elastic and OpenAI.
+Small example Node.js/Express.js application to demonstrate how to integrate Elastic and OpenAI.
 
 This folder includes two files:
 
@@ -22,11 +22,11 @@ This section will walk you through the steps for setting up and using the applic
 
 ### 1. Download the Project
 
-Download the project from Github and extract the openai-integration-example-python folder.
+Download the project from Github and extract the `openai-embeddings` folder.
 
 ```bash
 curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
-tar -xz --strip=2 elasticsearch-labs-main/example-apps/OpenAI-embeddings/OpenAI-Py
+tar -xz --strip=2 elasticsearch-labs-main/example-apps/openai-embeddings
 ```
 
 ### 2. Create OpenAI account and API key
@@ -80,7 +80,7 @@ Indexing 2 documents to index openai-integration...
 Processing complete
 ```
 
-_**Note**: the sample application uses the `text-embedding-ada-002` OpenAI model for generating the embeddings, which provides a 1536-dimensional vector output. See [this section](#using-a-different-openai-model) if you want to use a different model._
+_**Note**: the example application uses the `text-embedding-ada-002` OpenAI model for generating the embeddings, which provides a 1536-dimensional vector output. See [this section](#using-a-different-openai-model) if you want to use a different model._
 
 ### 7. Launch web app
 
