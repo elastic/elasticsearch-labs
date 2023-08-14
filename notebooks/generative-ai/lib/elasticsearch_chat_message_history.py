@@ -100,4 +100,4 @@ class ElasticsearchChatMessageHistory(BaseChatMessageHistory):
                 query={"term": {"session_id": self.session_id}}
             )
         except ApiError:
-            logger.error('Could not clear session memory in Elasticsearch')
+            logger.error("Could not clear session memory in Elasticsearch")
