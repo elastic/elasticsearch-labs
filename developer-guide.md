@@ -277,9 +277,9 @@ es.indices.create(index="demo", mappings={
 })
 ```
 
-By default, Elasticsearch will create field mappings automatically for you, detecting the type of data you are indexing. You can read more about [dynamic mapping](https://www.elastic.co/guide/en/elasticsearch/reference/current/dynamic-field-mapping.html).
+By default, Elasticsearch will create field mappings automatically for you, detecting the type of data you are indexing. Read more about [dynamic mapping](https://www.elastic.co/guide/en/elasticsearch/reference/current/dynamic-field-mapping.html).
 
-You can also create your own mappings, for complex data types like geo points and dense vectors. You can read more about [field data types](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html).
+You can also create your own mappings, for complex data types like geo points and dense vectors. Read more about [field data types](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html).
 
 ### Example: Create an Index with title & price fields
 
@@ -404,7 +404,7 @@ If each document contains long text, you should consider breaking up the text in
 
 Breaking up the text into passages allows you to retrieve more relevant results, as you can find the most relevant passages in one or more documents that match the query.
 
-Another advantage is for RAG use-cases, being able to pass in smaller relevant passages to the RAG model, instead of the entire document, will improve the quality of the answer and avoid hitting the token limits of the RAG model.
+Another advantage is for Retrieval Augmented Generation (RAG) use-cases. Passing smaller, relevant passages to the model, instead of the entire document, will improve the quality of the answer and avoid hitting token limits.
 
 ### Example: Chunking long text into passages
 
@@ -418,11 +418,11 @@ Now that you are able to index and search documents, lets start to tweak the rel
 
 ## Semantic Search
 
-With using an text embedding model like [sentence-transformers](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) you can transform your text into a vector that capture semantic information. These vectors represent the contextual meaning of sentences. When your customer's search for a query, you can transform the query into a vector and search for similar documents.
+Text embedding models like [sentence-transformers](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) transform your text into vectors (arrays of floating-point numbers) that capture semantic information. These vectors represent the contextual meaning of sentences. When users make a search query, you can encode their query into a vector (using the same embedding model) and search for similar documents.
 
-**NOTE** You must use the same embedding model to encode your documents and queries.
+**NOTE**: You must use the same embedding model to encode your documents and queries.
 
-Follow along with the [Semantic Search Quick Start Notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb)
+Test this out in our [Semantic search quick start notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb)
 
 ### Example: Semantic Search with Elasticsearch
 
@@ -445,9 +445,9 @@ response = es.search(index="demo", body={
 
 ## Text Search
 
-With BM25, you can retrieve relevant documents based on the keywords in the query, matching the keywords in the document. This is useful for retrieving documents that are relevant to the query (although may not be semantically similar). The advantage of using BM25 is that it is very fast, and can be used to retrieve relevant documents in milliseconds.
+With BM25, you can retrieve relevant documents based on the keywords in the query, matching the keywords in the document. This is useful for retrieving documents that are relevant to the query (although they may not be semantically similar). The advantage of using BM25 is that it is very fast, and can be used to retrieve relevant documents in milliseconds.
 
-Follow along with [Text search notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/01-keyword-querying-filtering.ipynb).
+Test out text search in this [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/01-keyword-querying-filtering.ipynb).
 
 ### Example: Text Search with Elasticsearch
 
@@ -465,13 +465,13 @@ response = es.search(index="demo", body={
 
 ## Hybrid Search
 
-Elasticsearch allows you to combine both semantic search and text search in a single query. Using this technique, you tend to get better retrieval accuracy than if just using by vector similarity alone. This gives you the ability to retrieve documents that are both semantically similar and lexically close to the query.
+Elasticsearch allows you to combine both semantic search and text search in a single query. Using this technique, you tend to get better retrieval accuracy than vector similarity alone. This gives you the ability to retrieve documents that are both semantically similar and lexically close to the query.
 
-Follow along with [hybrid search notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/02-hybrid-search.ipynb).
+Test out hybrid search in this [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/02-hybrid-search.ipynb).
 
-### Example: Hybrid Search with Elasticsearch
+### Example: Hybrid search with Elasticsearch
 
-**note** This example uses [Reciprocal Rank Fusion](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html) to balance the scores from both the vector search and text search with different relevance indicators into a single result set. Requires Elasticsearch 8.8.0+
+**Note** This example uses [Reciprocal Rank Fusion (RRF)](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html) to balance the scores from both the vector search and text search with different relevance indicators into a single result set. Requires Elasticsearch **8.8.0+**.
 
 ```python
 
@@ -501,7 +501,7 @@ Elasticsearch has a retrieval model trained by Elastic that enables you to perfo
 
 To use, you must first deploy the ELSER model into Elasticsearch. Follow the instructions on how to [deploy ELSER model](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html#download-deploy-elser).
 
-Follow along with [ELSER notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/03-ELSER.ipynb).
+Test this out in our [ELSER notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/03-ELSER.ipynb).
 
 ## Boosting & Re-ranking
 
@@ -511,7 +511,7 @@ TODO Notebook
 
 Filtering allows you to filter the results of your query based on certain criteria. Filtering doesn't affect the score of the documents, but allows you to filter out documents that don't match the criteria, which should improve the performance of your query.
 
-Follow along with [Filtering notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/02-keyword-querying-filtering.ipynb).
+Test out filtering in [this notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/02-keyword-querying-filtering.ipynb).
 
 # Integrations
 
@@ -522,17 +522,18 @@ Elasticsearch is commonly used with OpenAIs APIs in two ways:
 - OpenAI's embedding model "text-embedding-ada-002" to transform text into a vector
 - OpenAI's completion model to help answer questions given a context of documents retrieved from Elasticsearch
 
-You can follow along with the [OpenAI notebooks]((https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/integrations/openai)
+We have a number of [OpenAI notebooks](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/integrations/openai) you can test out.
 
 ## Hugging Face
 
-Hugging Face serves as an open-source hub dedicated to AI/ML models and tools, offering access to a vast collection of over 100,000 machine learning models. This platform presents a remarkable avenue for seamlessly incorporating specialized AI and ML functionalities into your applications.
+Hugging Face is an open-source hub dedicated to AI/ML models and tools, offering access to a vast collection of machine learning models. This platform makes it easy to incorporate specialized AI and ML functionalities into your applications.
 
-Utilizing Hugging Face models with Elasticsearch can be achieved through two ways:
+You can use Hugging Face models with Elasticsearch in two ways:
 
-Transformers Python Library: Leverage the Transformers Python library to carry out inference within a Python backend environment. [Notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb)
-
-Hosted Models in Elasticsearch: Deploy Hugging Face models directly into Elasticsearch to perform inference within the Elasticsearch environment. [Notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb)
+1. **Transformers library**: Leverage the Transformers Python library to carry out inference within a Python backend environment.
+Test it out in this [Notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb)
+2. **Hosted Models in Elasticsearch**: Deploy Hugging Face models directly in Elasticsearch to perform inference within the Elasticsearch environment. 
+Test out this approach in this [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb).
 
 ## Langchain
 
@@ -540,7 +541,7 @@ LangChain is a popular framework for working with AI, Vectors, and embeddings. U
 
 Elasticsearch can be used with LangChain in two ways:
 
-- Langchain VectorStore to store and retrieve documents from Elasticsearch
-- Langchain self-query retriever to with the help of an LLM like OpenAI, transform a user's query into a query + filter to retrieve relevant documents from Elasticsearch.
+- Use the LangChain VectorStore to store and retrieve documents from Elasticsearch
+- Use the LangChain self-query retriever with the help of an LLM like OpenAI, to transform a user's query into a query + filter to retrieve relevant documents from Elasticsearch.
 
-You can follow along with the [Langchain notebooks](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/integrations/langchain)
+Test these approaches in our [Langchain notebooks](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/integrations/langchain).
