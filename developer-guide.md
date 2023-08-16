@@ -2,7 +2,7 @@
 
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
-- [Setup](#setup-elasticsearch)
+- [Setup](#setup)
   - [Setup Elasticsearch](#running-elasticsearch)
     - [With Docker](#example:-use-elasticsearch-with-docker)
     - [Elastic Cloud](#use-elasticsearch-with-elastic-cloud)
