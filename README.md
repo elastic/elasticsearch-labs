@@ -8,7 +8,7 @@ This repository contains executable Python notebooks, sample apps, and resources
 
 # Developer Guide 📖
 
-The [`developer-guide`](developer-guide/README.md) folder contains resources for developers who want to learn how to use Elasticsearch for vector search and other use cases.
+The [`developer-guide`](developer-guide/README.md) contains resources for developers who want to learn how to use Elasticsearch for vector search and other use cases.
 
 # Python notebooks 📒
 
