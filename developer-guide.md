@@ -4,7 +4,7 @@
 - [Quick Start](#quick-start)
 - [Setup](#setup-elasticsearch)
   - [Setup Elasticsearch](#running-elasticsearch)
-    - [With Docker](#use-elasticsearch-with-docker)
+    - [With Docker](#example:-use-elasticsearch-with-docker)
     - [Elastic Cloud](#use-elasticsearch-with-elastic-cloud)
   - [API Clients](#api-clients)
     - [Install](#install)
