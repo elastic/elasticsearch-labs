@@ -1,0 +1,98 @@
+[
+   {
+      "title":"Pulp Fiction",
+      "runtime":"154",
+      "plot":"The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+      "keyScene":"John Travolta is forced to inject adrenaline directly into Uma Thurman's heart after she overdoses on heroin.",
+      "genre":"Crime, Drama",
+      "released":"1994"
+   },
+   {
+      "title":"The Dark Knight",
+      "runtime":"152",
+      "plot":"When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+      "keyScene":"Batman angrily responds 'I’m Batman' when asked who he is by Falcone.",
+      "genre":"Action, Crime, Drama, Thriller",
+      "released":"2008"
+   },
+   {
+      "title":"Fight Club",
+      "runtime":"139",
+      "plot":"An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.",
+      "keyScene":"Brad Pitt explains the rules of Fight Club to Edward Norton. The first rule of Fight Club is: You do not talk about Fight Club. The second rule of Fight Club is: You do not talk about Fight Club.",
+      "genre":"Drama",
+      "released":"1999"
+   },
+   {
+      "title":"Inception",
+      "runtime":"148",
+      "plot":"A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into thed of a C.E.O.",
+      "keyScene":"Leonardo DiCaprio explains the concept of inception to Ellen Page by using a child's spinning top.",
+      "genre":"Action, Adventure, Sci-Fi, Thriller",
+      "released":"2010"
+   },
+   {
+      "title":"The Matrix",
+      "runtime":"136",
+      "plot":"A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+      "keyScene":"Red pill or blue pill? Morpheus offers Neo a choice between the red pill, which will allow him to learn the truth about the Matrix, or the blue pill, which will return him to his former life.",
+      "genre":"Action, Sci-Fi",
+      "released":"1999"
+   },
+   {
+      "title":"The Shawshank Redemption",
+      "runtime":"142",
+      "plot":"Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+      "keyScene":"Andy Dufresne escapes from Shawshank prison by crawling through a sewer pipe.",
+      "genre":"Drama",
+      "released":"1994"
+   },
+   {
+      "title":"Goodfellas",
+      "runtime":"146",
+      "plot":"The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito in the Italian-American crime syndicate.",
+      "keyScene":"Joe Pesci's character Tommy DeVito shoots young Spider in the foot for not getting him a drink.",
+      "genre":"Biography, Crime, Drama",
+      "released":"1990"
+   },
+   {
+      "title":"Se7en",
+      "runtime":"127",
+      "plot":"Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.",
+      "keyScene":"Brad Pitt's character David Mills shoots John Doe after he reveals that he murdered Mills' wife.",
+      "genre":"Crime, Drama, Mystery, Thriller",
+      "released":"1995"
+   },
+   {
+      "title":"The Silence of the Lambs",
+      "runtime":"118",
+      "plot":"A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.",
+      "keyScene":"Hannibal Lecter explains to Clarice Starling that he ate a census taker's liver with some fava beans and a nice Chianti.",
+      "genre":"Crime, Drama, Thriller",
+      "released":"1991"
+   },
+   {
+      "title":"The Godfather",
+      "runtime":"175",
+      "plot":"An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.",
+      "keyScene":"James Caan's character Sonny Corleone is shot to death at a toll booth by a number of machine gun toting enemies.",
+      "genre":"Crime, Drama",
+      "released":"1972"
+   },
+   {
+      "title":"The Departed",
+      "runtime":"151",
+      "plot":"An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.",
+      "keyScene":"Leonardo DiCaprio's character Billy Costigan is shot to death by Matt Damon's character Colin Sullivan.",
+      "genre":"Crime, Drama, Thriller",
+      "released":"2006"
+   },
+   {
+      "title":"The Usual Suspects",
+      "runtime":"106",
+      "plot":"A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which began when five criminals met at a seemingly random police lineup.",
+      "keyScene":"Kevin Spacey's character Verbal Kint is revealed to be the mastermind behind the crime, when his limp disappears as he walks away from the police station.",
+      "genre":"Crime, Mystery, Thriller",
+      "released":"1995"
+   }
+]
