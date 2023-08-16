@@ -1,11 +1,12 @@
 # Elasticsearch Developer Guide
 
+This guide is intended for developers who want to build applications that combine Elasticsearch with generative AI.
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Setup](#setup)
   - [Setup Elasticsearch](#running-elasticsearch)
     - [With Docker](#example:-use-elasticsearch-with-docker)
-    - [Elastic Cloud](#use-elasticsearch-with-elastic-cloud)
+    - [Elastic Cloud](#example:-use-elasticsearch-with-elastic-cloud)
   - [API Clients](#api-clients)
     - [Install](#install)
     - [Connecting to Elasticsearch](#connecting-to-elasticsearch)
@@ -36,23 +37,25 @@
 
 ## Introduction
 
-This guide is intended for developers who want to use the Gen AI with Elasticsearch API to build applications that use the Gen AI with Elasticsearch service.
+This guide is intended for developers who want to build applications that combine Elasticsearch with generative AI.
 
-Elasticsearch is a search database that allows you to store and retrieve relevant information extremely quickly. It is used by many of the world's largest companies to power their search and analytics applications.
+Elasticsearch is a battle-tested data store, search engine, and analytics solution. It allows you to store and retrieve relevant information extremely quickly. Elasticsearch is used by many of the world's largest companies to power their search and analytics applications.
 
 Elasticsearch supports many different types of queries, including vector search, full-text search, geospatial search, and more.
 
-### Can Elasticsearch support Vector Search?
+### Does Elasticsearch support vector search?
 
-Yes! Elasticsearch supports vector search through the [dense_vector](https://www.elastic.co/guide/en/elasticsearch/reference/current/dense-vector.html) data type.
+Yes! Elasticsearch supports vector search using:
+-  Dense vectors with the [dense vector field type](https://www.elastic.co/guide/en/elasticsearch/reference/master/dense-vector.html)
+- Sparse vectors with the [rank feature field type](https://www.elastic.co/guide/en/elasticsearch/reference/master/rank-feature.html)
 
-### Can I do Semantic Search with Elasticsearch?
+### Can I do semantic search with Elasticsearch?
 
-Yes! With using an embedding model like [sentence-transformers](https://www.sbert.net/) you can transform your text into a vector and store it in Elasticsearch. Then you can use Elasticsearch's vector search capabilities to find similar documents.
+Yes! You have many options for semantic search with Elasticsearch. For example, you can use an embedding model like [sentence-transformers](https://www.sbert.net/) to transform your text into vectors and store these in Elasticsearch. Then you can use Elasticsearch's vector search capabilities to find similar documents.
 
-### Can I combine both Semantic Search and Full-Text Search?
+### Can I combine semantic search and full-text Search?
 
-Yes! You can combine both Semantic Search and Full-Text Search via a "hybrid" query strategy. You retrieve relevant documents through both a vector search and a full-text search, and then balance the scores from both queries to get the final ranking of documents.
+Yes! You can combine semantic search and full-text search in what's known as a "hybrid" query strategy. This involves retrieving relevant documents using both vector search and full-text search, and balancing the scores from both queries to get the final ranking of documents.
 
 ### Get started
 
@@ -60,20 +63,20 @@ To get started, [go to the quickstart guide](#quick-start) to setup Elasticsearc
 
 ## Quick Start
 
-This guide explains how to index and search
+Quickly get started indexing and querying Elasticsearch documents.
 
-**NOTE** This guide assumes you have got [Elasticsearch setup](#setup), you can start using the API Client to index and search documents.
+**NOTE** This section assumes you have an [Elasticsearch setup](#setup), so you can start using the API Client to index and search documents.
 
 You can quick start in two ways:
 
-- Use the [Quick Start notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb) to index and perform Semantic search with Elasticsearch.
-- Follow the commands below in your local development environment.
+- Use the [Quick Start notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb) for a concrete, interactive example of indexing and searching with Elasticsearch.
+- Follow the commands below and run them in your local development environment.
 
 ### Create an Index
 
 An index is a collection of documents that have similar characteristics. For example, you might have an index for "products" and another index for "users".
 
-Below lets create an index called "demo" with a mapping for the "text" field. With this mapping, we will be able to store 8 dimentional vectors in the "text" field. When we search for similar documents, we will use the "cosine" similarity function.
+In this example, let's create an index called "demo" with a mapping for the "text" field. With this mapping, we will be able to store 8 dimentional vectors in the "text" field. When we search for similar documents, we will use the "cosine" similarity function.
 
 ```python
 es.indices.create(index="demo", mappings={
@@ -96,7 +99,7 @@ es.indices.get(index="demo")
 
 ### Index Documents
 
-Lets start by ingesting vectors into your index, using the bulk helper.
+Lets start by ingesting vectors into your index, using the [bulk helper](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/client-helpers.html#bulk-helpers).
 
 ```python
 from elasticsearch.helpers import bulk
@@ -121,7 +124,7 @@ bulk(es, actions, refresh=True)
 
 We use `refresh` to make sure the documents are available for search immediately.
 
-### Search for Similar Documents
+### Search for similar documents
 
 Now that we have indexed some documents, we can search for similar documents that are most similar to the query vector.
 
@@ -185,7 +188,6 @@ For other clients, see [Client Libraries](https://www.elastic.co/guide/en/elasti
 
 To install the client, run the following command:
 
-Python
 
 ```bash
 pip install elasticsearch
@@ -193,7 +195,7 @@ pip install elasticsearch
 
 ### Connecting to Elasticsearch
 
-Showing both Python and Javascript examples.
+Learn how to connect to Elasticsearch using the Python client.
 
 - [Localhost example](#example-localhost)
 - [Elastic Cloud with API Key example](#example-elastic-cloud-with-api-key)
@@ -209,9 +211,9 @@ es = Elasticsearch(["http://localhost:9200"])
 
 #### Example: Elastic Cloud with API Key
 
-You can create an API key in Kibana by going to:
+Follow these steps to create an API key in Kibana:
 
-1. Management > Stack Management > Security > API Keys
+1. Go to **Management > Stack Management > Security > API Keys**
 2. Click "Create API Key"
 3. Give the API Key a name and click "Create"
 4. Copy the API key (base64 encoded)
@@ -227,9 +229,9 @@ es = Elasticsearch(
 
 #### Example: Elastic Cloud with Username and Password
 
-The password is given to you when you create your Elastic Cloud deployment. If you don't have it, you can reset it by going to:
+Your password is printed to the screen when you create your Elastic Cloud deployment. If you can't find it, you can reset it by going to:
 
-1. Elastic Cloud Console > Deployment > Security > Reset Password
+1. **Elastic Cloud Console > Deployment > Security > Reset Password**
 2. Copy the password
 
 This will reset the password for the `elastic` user.
@@ -249,7 +251,6 @@ To validate that you have connected to Elasticsearch, run the following command.
 
 This should return cluster information if setup was successful.
 
-Python
 
 ```python
 es.info()
