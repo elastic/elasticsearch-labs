@@ -5,8 +5,6 @@ This guide is intended for developers who want to build applications that combin
 - [Quick Start](#quick-start)
 - [Setup](#setup)
   - [Setup Elasticsearch](#running-elasticsearch)
-    - [With Docker](#example:-use-elasticsearch-with-docker)
-    - [Elastic Cloud](#example:-use-elasticsearch-with-elastic-cloud)
   - [API Clients](#api-clients)
     - [Install](#install)
     - [Connecting to Elasticsearch](#connecting-to-elasticsearch)
