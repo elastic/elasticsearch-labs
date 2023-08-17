@@ -81,8 +81,8 @@ es.indices.create(index="demo", mappings={
   "properties": {
     "text": {
       "type": "dense_vector",
-      "dims": 8
-      "similarity": "cosine"
+      "dims": 8,
+      "similarity": "cosine",
       "index": True
     }
   }
@@ -267,8 +267,8 @@ es.indices.create(index="demo", mappings={
   "properties": {
     "text": {
       "type": "dense_vector",
-      "dims": 8
-      "similarity": "cosine"
+      "dims": 8,
+      "similarity": "cosine",
       "index": True
     }
   }
