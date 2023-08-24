@@ -13,17 +13,9 @@ curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/example-apps/workplace-search
 ```
 
-## 2. Index Data
+## 2. Credentials
 
-You can index the data from the provided .json files by following the [README](./example-data/README.md) instructions in the `example-data` folder. At the moment indexing your own data should be possible. The UI will attempt to use the URL in the data file for the HTML link to the source.
-
-### Loading your own data
-
-See the [medicare](./example-data/README.md#loading-custom-data) example in the example-data folder for loding your own data.
-
-## 3. Credentials
-
-Requires the following environment variables to be set.
+This app requires the following environment variables to be set:
 
 ```sh
 export ELASTIC_CLOUD_ID=...
@@ -33,6 +25,15 @@ export OPENAI_API_KEY=...
 ```
 
 Note: you can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
+
+
+## 3. Index Data
+
+You can index the data from the provided .json files in the `data` folder:
+
+```sh
+python data/index-data.py
+```
 
 ## Developing
 
@@ -45,18 +46,33 @@ With the environment variables set, you can run the following commands to start 
 
 ### Install the dependencies
 
+For Python we recommend using a virtual environment.
+
+_ℹ️ Here's a good [primer](https://realpython.com/python-virtual-environments-a-primer) on virtual environments from Real Python._
+
 ```sh
+# Create a virtual environment
+python -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate
+```
+
+```sh
+# Install Python dependencies
 pip install -r requirements.txt
+
+# Install Node dependencies
 cd frontend && yarn
 ```
 
 ### Run API and frontend
 
 ```sh
+# Launch API app
 python api/app.py
 
-# in a separate terminal
-
+# In a separate terminal launch frontend app
 cd frontend && yarn start
 ```
 
