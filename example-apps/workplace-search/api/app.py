@@ -35,10 +35,9 @@ class QueueCallbackHandler(BaseCallbackHandler):
     def on_retriever_end(self, documents, *, run_id, parent_run_id = None, **kwargs):
         if len(documents) > 0:
             for doc in documents:
-                doc_metadata = doc.metadata
                 source = {
-                    'name': doc_metadata['name'],
-                    'summary': doc_metadata['summary']
+                    'name': doc.metadata['name'],
+                    'page_content': doc.page_content
                 }
                 self.queue.put(f"{SOURCE_TAG} {json.dumps(source)}")
         
@@ -48,9 +47,6 @@ class QueueCallbackHandler(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, prompts, *, run_id, parent_run_id = None, tags = None, metadata = None, **kwargs):
         self.in_human_prompt = prompts[0].startswith('Human:')
-
-    # def on_llm_start1(self, serialized: Dict[str, Any], prompts: List[str], *, run_id: UUID, parent_run_id: UUID | None = None, tags: List[str] | None = None, metadata: Dict[str, Any] | None = None, **kwargs: Any) -> Any:
-    #     self.in_human_prompt = prompts[0].startswith('Human:')
 
     def on_llm_end(self, response, *, run_id, parent_run_id = None, **kwargs):
         if not self.in_human_prompt:
