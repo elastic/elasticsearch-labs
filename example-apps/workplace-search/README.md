@@ -23,36 +23,16 @@ See the [medicare](./example-data/README.md#loading-custom-data) example in the 
 
 ## 3. Credentials
 
-Requires the following environment variables to be set. This can be done by creating a `.env` file in the `/api` directory of the project.
+Requires the following environment variables to be set.
 
-### Setup with OpenAI
-
-You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
-
-```
-openai_type=openai
-openai_api_model="gpt-3.5-turbo-0613"
-openai_api_key=<your-openai-key>
-cloud_id=<elasticsearch-cloud-id>
-cloud_pass=<elasticsearch-password>
-cloud_user=<elasticsearch-user>
+```sh
+export ELASTIC_CLOUD_ID=...
+export ELASTIC_USERNAME=...
+export ELASTIC_PASSWORD=...
+export OPENAI_API_KEY=...
 ```
 
-### Setup with Azure OpenAI Credentials
-
-You can get your Azure OpenAI key from the [Azure OpenAI dashboard](https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryFeaturedMenuItemBlade/selectedMenuItemId/home/searchQuery/openai/resetMenuId/).
-
-```
-openai_type=azure
-openai_api_key=<your openai api key>
-openai_api_type=azure
-openai_api_base=<your openai api base url>
-openai_api_version=2023-03-15-preview
-openai_api_engine=<your openai api engine>
-cloud_id=<elasticsearch-cloud-id>
-cloud_pass=<elasticsearch-password>
-cloud_user=<elasticsearch-user>
-```
+Note: you can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
 
 ## Developing
 
@@ -65,15 +45,15 @@ With the environment variables set, you can run the following commands to start 
 
 ### Install the dependencies
 
-```
-cd api && pip3 install -r requirements.txt
+```sh
+pip install -r requirements.txt
 cd frontend && yarn
 ```
 
 ### Run API and frontend
 
-```
-cd api && python3 app.py
+```sh
+python api/app.py
 
 # in a separate terminal
 
