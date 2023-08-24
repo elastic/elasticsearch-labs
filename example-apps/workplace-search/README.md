@@ -52,10 +52,10 @@ _ℹ️ Here's a good [primer](https://realpython.com/python-virtual-environment
 
 ```sh
 # Create a virtual environment
-python -m venv venv
+python -m venv .venv
 
 # Activate the virtual environment
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 ```sh
