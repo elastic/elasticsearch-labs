@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from lib.elasticsearch_chat_message_history import ElasticsearchChatMessageHistory
-from flask import Flask, request, Response
+from flask import Flask, jsonify, request, Response
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
@@ -20,6 +20,7 @@ ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 POISON_MESSAGE = "~~~END~~~"
+SESSION_ID_TAG = "[SESSION_ID]"
 SOURCE_TAG = "[SOURCE]"
 DONE_TAG = "[DONE]"
 
@@ -90,15 +91,7 @@ chat = ConversationalRetrievalChain.from_llm(
     retriever=store.as_retriever(),
     return_source_documents=True,
     combine_docs_chain_kwargs={'prompt': qa_prompt},
-    verbose=True
-)
-
-session_id = str(uuid4())
-print('Starting chat with session ID: ', session_id)
-chat_history = ElasticsearchChatMessageHistory(
-    client=elasticsearch_client,
-    index=INDEX_CHAT_HISTORY,
-    session_id=session_id
+    # verbose=True
 )
 
 stream_queue = Queue()
@@ -125,8 +118,21 @@ def ask_question(question, queue, chat_history):
 def api_chat():
     request_json = request.get_json()
     question = request_json.get("question")
+    if question is None:
+        return jsonify({"msg": "Missing question from request JSON"}), 400
+
+    session_id = request.args.get('session_id', str(uuid4()))
+    
+    print('Chat session ID: ', session_id)
+    chat_history = ElasticsearchChatMessageHistory(
+        client=elasticsearch_client,
+        index=INDEX_CHAT_HISTORY,
+        session_id=session_id
+    )
 
     def generate(queue: Queue):
+        yield f"data: {SESSION_ID_TAG} {session_id}\n\n"
+
         message = None
         while True:
             message = queue.get()
