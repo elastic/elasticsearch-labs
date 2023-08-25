@@ -27,6 +27,7 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`langchain-self-query-retriever.ipynb`](./notebooks/langchain/langchain-self-query-retriever.ipynb)
 - [`langchain-vector-store.ipynb`](./notebooks/langchain/langchain-vector-store.ipynb)
 - [`langchain-vector-store-using-elser.ipynb`](./notebooks/langchain/langchain-vector-store-using-elser.ipynb)
+- [`langchain-using-own-model.ipynb`](./notebooks/langchain/langchain-using-own-model.ipynb)
 
 ### Search
 
