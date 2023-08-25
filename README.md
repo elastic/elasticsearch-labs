@@ -14,6 +14,33 @@ The [`developer-guide`](developer-guide.md) contains resources for developers wh
 
 The [`notebooks`](notebooks/README.md) folder contains a range of executable Python notebooks, so you can test these features out for yourself. Colab provides an easy-to-use Python virtual environment in the browser.
 
+## Notebook quick links
+
+### Generative AI
+
+- [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)
+- [`chatbot.ipynb`](./notebooks/generative-ai/chatbot.ipynb)
+
+### LangChain
+
+- [`langchain-elasticsearch-embeddings.ipynb`](./notebooks/langchain/langchain-elasticsearch-embeddings.ipynb)
+- [`langchain-self-query-retriever.ipynb`](./notebooks/langchain/langchain-self-query-retriever.ipynb)
+- [`langchain-vector-store.ipynb`](./notebooks/langchain/langchain-vector-store.ipynb)
+- [`langchain-vector-store-using-elser.ipynb`](./notebooks/langchain/langchain-vector-store-using-elser.ipynb)
+
+### Search
+
+- [`00-quick-start.ipynb`](./notebooks/search/00-quick-start.ipynb)
+- [`01-keyword-querying-filtering.ipynb`](./notebooks/search/01-keyword-querying-filtering.ipynb)
+- [`02-hybrid-search.ipynb`](./notebooks/search/02-hybrid-search.ipynb)
+- [`03-ELSER.ipynb`](./notebooks/search/03-ELSER.ipynb)
+- [`04-multilingual.ipynb`](./notebooks/search/04-multilingual.ipynb)
+
+### Integrations
+
+- [`loading-model-from-hugging-face.ipynb`](./notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb)
+- [`openai-semantic-search-RAG.ipynb`](./notebooks/integrations/openai/openai-KNN-RAG.ipynb)
+
 # Example apps 💻
 
 The [`example-apps`](example-apps/README.md) folder contains example apps that demonstrate Elasticsearch for a number of use cases, using different programming languages and frameworks.
