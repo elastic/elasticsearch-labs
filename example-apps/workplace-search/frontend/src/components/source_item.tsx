@@ -4,11 +4,11 @@ import { SourceIcon, SourceIconType } from "./source_icon";
 
 export type SourceType = {
   name: string;
-  icon: any;
-  href: string;
+  summary?: string[];
+  url?: string;
 };
 
-export const SourceItem: React.FC<SourceType> = ({ name, icon, href }) => {
+export const SourceItem: React.FC<SourceType> = ({ name, url }) => {
   const styles = {
     wrapper: {
       background: "linear-gradient(180deg, #F7F9FC 0%, #F1F4FA 100%)",
@@ -34,12 +34,12 @@ export const SourceItem: React.FC<SourceType> = ({ name, icon, href }) => {
   return (
     <div className="sourceItem flex-wrap flex-none" style={styles.wrapper}>
       <a
-        href={href}
+        href={url}
         target="_blank"
         rel="noreferrer"
         className="inline-flex items-center gap-2 truncate"
       >
-        <SourceIcon icon={icon} />
+        {/*<SourceIcon icon={icon} />*/}
         <span style={styles.label}>{name}</span>
       </a>
     </div>

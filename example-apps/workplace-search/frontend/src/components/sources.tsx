@@ -20,8 +20,8 @@ export const Sources: React.FC<SourcesType> = ({ sources, showDisclaimer }) => {
             <SourceItem
               key={source.name}
               name={source.name}
-              icon={source.icon}
-              href={source.href}
+              // icon={source.icon}
+              url={source.url}
             />
           ))}
         </div>

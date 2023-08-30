@@ -1,13 +1,12 @@
-// eslint-disable-next-line 
-// @ts-ignore
-import Avatar from "./images/robot-avatar.png";
-import { SourceItem, SourceType } from "./source_item";
-import { Sources } from "./sources";
+import { SourceType } from "./source_item";
+import React from "react";
+import { BeatLoader } from "react-spinners";
 
 export type ChatMessageType = {
   id: number | string;
   content: string;
   isHuman?: boolean;
+  loading?: boolean;
   sources?: SourceType[];
 };
 export const ChatMessage: React.FC<ChatMessageType> = ({
@@ -15,6 +14,7 @@ export const ChatMessage: React.FC<ChatMessageType> = ({
   content,
   isHuman,
   sources,
+  loading,
 }) => {
   const styles = {
     wrapper: {
@@ -60,13 +60,18 @@ export const ChatMessage: React.FC<ChatMessageType> = ({
           >
             {content}
           </span>
+          {loading && (
+            <div className="ml-4">
+              <BeatLoader size={7} />
+            </div>
+          )}
         </div>
       </div>
-      {sources && (
-        <div className="mt-4">
-          <Sources sources={sources || []} />
-        </div>
-      )}
+      {/*{sources && (*/}
+      {/*  <div className="mt-4">*/}
+      {/*    <Sources sources={sources || []} />*/}
+      {/*  </div>*/}
+      {/*)}*/}
     </>
   );
 };

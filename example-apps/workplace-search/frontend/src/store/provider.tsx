@@ -1,33 +1,24 @@
-import { Result, SearchResponse } from "../types";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { ChatMessageType } from "../components/chat_message";
-import { SourceType } from "../components/source_item";
-
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-
 import { Provider, useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 
 type GlobalStateType = {
-  filters: Record<string, string[]>;
-  searchResponse: SearchResponse | null;
-  query: string;
   loading: boolean;
-  streamMessage: string;
   conversation: ChatMessageType[];
   inProgressMessage: boolean;
-  userRole: "demo" | "manager";
+  sessionId: string | null;
 };
 
+class RetriableError extends Error { }
+class FatalError extends Error { }
+
 const GLOBAL_STATE: GlobalStateType = {
-  filters: {},
-  searchResponse: null,
-  query: "",
   loading: false,
-  streamMessage: "",
   conversation: [],
   inProgressMessage: false,
-  userRole: "demo",
+  sessionId: null,
 };
 
 const API_HOST = "/api";
@@ -39,8 +30,8 @@ const globalSlice = createSlice({
   name: "global",
   initialState: GLOBAL_STATE,
   reducers: {
-    setStreamMessage: (state, action) => {
-      state.streamMessage = action.payload.streamMessage;
+    setSessionId: (state, action) => {
+      state.sessionId = action.payload.sessionId;
     },
     addConversation: (state, action) => {
       state.conversation.push(action.payload.conversation);
@@ -48,14 +39,12 @@ const globalSlice = createSlice({
     setConversation: (state, action) => {
       state.conversation = [action.payload.conversation];
     },
-    resetConversation: (state) => {
-      state.conversation = [];
-    },
-    setSearchResponse: (state, action) => {
-      state.searchResponse = action.payload.searchResponse;
-    },
-    setQuery: (state, action) => {
-      state.query = action.payload.query;
+    updateConversation: (state, action) => {
+      const conversationIndex = state.conversation.findIndex((c) => c.id === action.payload.id);
+
+      if (conversationIndex !== -1) {
+        state.conversation[conversationIndex] = { ...state.conversation[conversationIndex], ...action.payload }
+      }
     },
     setLoading: (state, action) => {
       state.loading = action.payload.loading;
@@ -63,19 +52,12 @@ const globalSlice = createSlice({
     setInProgressMessage: (state, action) => {
       state.inProgressMessage = action.payload.inProgressMessage;
     },
-    setFilters: (state, action) => {
-      state.filters = action.payload.filters;
-    },
     reset: (state) => {
-      state.searchResponse = null;
-      state.filters = {};
+      state.sessionId = null;
       state.inProgressMessage = false;
-      state.streamMessage = "";
+      // state.streamMessage = "";
       state.conversation = [];
-    },
-    setUserRole: (state, action) => {
-      state.userRole = action.payload.userRole;
-    },
+    }
   },
 });
 
@@ -95,158 +77,126 @@ export const hasStartedConversation = (state: RootState) => {
   return conversation.length > 0;
 };
 
-export const isFacetSelected = (
-  filters: RootState["filters"],
-  facet: string,
-  value: string
-) => {
-  return filters[facet]?.includes(value);
-};
-
 export const thunkActions = {
-  setUserRole(userRole: "demo" | "manager") {
-    return async function setUserRole(dispatch, getState) {
-      dispatch(actions.setUserRole({ userRole }));
-      if (getState().query !== "") {
-        dispatch(actions.reset());
-        dispatch(thunkActions.search(getState().query, {}));
-      }
-    };
-  },
-  search: (query, filters) => {
-    return async function fetchSearch(dispatch, getState) {
+  search: (query: string) => {
+    return async function fetchSearch(dispatch) {
+      dispatch(actions.reset());
+
       dispatch(actions.setLoading({ loading: true }));
-      dispatch(actions.setQuery({ query }));
-      dispatch(actions.setFilters({ filters }));
-
-      dispatch(actions.setInProgressMessage({ inProgressMessage: true }));
-      dispatch(actions.setStreamMessage({ streamMessage: "..." }));
-
-      const response = await fetch(`${API_HOST}/search`, {
-        method: "POST",
-        body: JSON.stringify({
-          query: query,
-          filters: filters,
-          conversation_id: getState().searchResponse?.conversation_id,
-          user: getState().userRole,
-        }),
-        headers: defaultHeaders,
-      });
-
-      const searchResponse = (await response.json()) as SearchResponse;
-      dispatch(actions.setSearchResponse({ searchResponse }));
-      dispatch(actions.setLoading({ loading: false }));
-
-      let message = "";
-
-      await fetchEventSource(`${API_HOST}/completions`, {
-        method: "POST",
-        openWhenHidden: true,
-        body: JSON.stringify({
-          streaming_id: searchResponse.streaming_id,
-        }),
-        headers: defaultHeaders,
-        async onmessage(event) {
-          if (event.data !== "[DONE]") {
-            message += event.data === "" ? `${event.data} \n` : event.data;
-            dispatch(actions.setStreamMessage({ streamMessage: message }));
-          } else {
-            const regex = /SOURCES:(.+)/;
-            const sourceReferences = message.match(regex);
-
-            let resultSourcesToAdd: Result[] = [];
-            if (sourceReferences) {
-              const sources = sourceReferences[1].split(",");
-              resultSourcesToAdd = sources
-                .map((sourceName) => {
-                  return searchResponse.results.find(
-                    (result) => result.name[0] === sourceName.trim()
-                  );
-                })
-                .filter((result): result is Result => result !== undefined);
-            }
-
-            const action = hasStartedConversation(getState())
-              ? actions.addConversation
-              : actions.setConversation;
-            dispatch(
-              action({
-                conversation: {
-                  isHuman: false,
-                  content: message.replace(regex, ""),
-                  id: getState().conversation.length + 1,
-                  sources: resultSourcesToAdd.map(
-                    (result): SourceType => ({
-                      icon: result.category[0].replace(" ", "_"),
-                      name: result.name[0],
-                      href: result.url[0],
-                    })
-                  ),
-                },
-              })
-            );
-
-            dispatch(actions.setStreamMessage({ streamMessage: null }));
-
-            dispatch(
-              actions.setInProgressMessage({ inProgressMessage: false })
-            );
-          }
-        },
-      });
+      dispatch(thunkActions.chat(query));
     };
   },
-  askQuestion: (query) => {
+  askQuestion: (question: string, signal) => {
     return async function askQuestion(dispatch, getState) {
       const state = getState();
       dispatch(
         actions.addConversation({
           conversation: {
             isHuman: true,
-            content: query,
+            content: question,
             id: state.conversation.length + 1,
           },
         })
       );
-      dispatch(thunkActions.search(query, state.filters));
+      dispatch(thunkActions.chat(question, signal));
     };
   },
-  toggleFilter: (filter: string, value: string) => {
-    return async function toggleFilter(dispatch, getState) {
-      const state = getState();
-      let stateFilters = {
-        category: [...(state.filters.category || [])],
-      };
-      if (!stateFilters[filter]) {
-        stateFilters[filter] = [];
-      }
-      const filterExists = state.filters[filter]?.includes(value);
-      const filterValues = filterExists
-        ? stateFilters[filter].filter((f) => f === filter)
-        : stateFilters[filter].concat(value);
-
-      stateFilters = {
-        ...stateFilters,
-        [filter]: filterValues,
-      };
-
-      if (hasStartedConversation(state)) {
-        // add a message to the conversation that we are adding/removing a filter
-        dispatch(
-          actions.addConversation({
-            conversation: {
-              isHuman: true,
-              content: filterExists
-                ? `Please exclude sources from ${value}`
-                : `Please include sources from ${value}`,
-              id: state.conversation.length + 1,
-            },
-          })
-        );
+  chat: (question: string, signal?: AbortSignal) => {
+    return async function fetchSearch(dispatch, getState) {
+      if (getState().inProgressMessage) {
+        return;
       }
 
-      dispatch(actions.setFilters({ filters: stateFilters }));
-      dispatch(thunkActions.search(state.query, stateFilters));
+      let message = "";
+      const sessionId = getState().sessionId;
+      const sourcesMap: Map<string, { name: string; url?: string, summary: string[] }> = new Map();
+      const action = hasStartedConversation(getState())
+        ? actions.addConversation
+        : actions.setConversation;
+      const conversationId = getState().conversation.length + 1;
+      dispatch(
+        action({
+          conversation: {
+            loading: true,
+            isHuman: false,
+            content: "",
+            id: conversationId,
+          },
+        })
+      );
+      dispatch(actions.setInProgressMessage({ inProgressMessage: true }));
+      let countRetiresError = 0;
+
+      await fetchEventSource(`${API_HOST}/chat${sessionId ? `?session_id=${sessionId}` : ''}`, {
+        method: "POST",
+        openWhenHidden: true,
+        body: JSON.stringify({
+          question,
+        }),
+        headers: defaultHeaders,
+        signal,
+        async onmessage(event) {
+          if (event.event === 'FatalError') {
+            throw new FatalError(event.data);
+          }
+
+          if (event.data.startsWith('[SESSION_ID]')) {
+            const sessionId = event.data.split(' ')[1].trim();
+            dispatch(actions.setSessionId({ sessionId }));
+          } else if (event.data.startsWith('[SOURCE]')) {
+            const source = event.data.match(/\[SOURCE\] ([^]+?)(?=\[|$)/)?.[1]
+
+            try {
+              if (source) {
+                const parsedSource = JSON.parse(source.replaceAll('\n', ''));
+
+                if (sourcesMap.has(parsedSource.name)) {
+                  const source = sourcesMap.get(parsedSource.name)!;
+
+                  source.summary = [...source.summary, parsedSource.page_content];
+                } else {
+                  sourcesMap.set(parsedSource.name, { ...parsedSource, summary: [parsedSource.page_content] });
+                }
+              }
+            } catch (e) {
+              console.error(e)
+            }
+          } else if (event.data === "[DONE]") {
+            dispatch(actions.updateConversation({
+              id: conversationId,
+              sources: Array.from(sourcesMap.values()),
+            }))
+            dispatch(actions.setInProgressMessage({ inProgressMessage: false }));
+          } else {
+            message += message && event.data === "" ? '\n' : event.data;
+
+            dispatch(actions.updateConversation({
+              id: conversationId,
+              content: message,
+              loading: false
+            }))
+            dispatch(actions.setLoading({ loading: false }));
+          }
+        },
+        async onopen(response) {
+          if (response.ok) {
+            return;
+          } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+            throw new FatalError();
+          } else {
+            throw new RetriableError();
+          }
+        },
+        onerror(err) {
+          if (err instanceof FatalError || countRetiresError > 3) {
+            dispatch(actions.setLoading({ loading: false }));
+
+            throw err;
+          } else {
+            countRetiresError++;
+            console.error(err)
+          }
+        }});
     };
   },
 };

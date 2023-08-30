@@ -10,7 +10,7 @@ import { cn } from "../../lib/utils";
 import Conversation from "../images/conversation";
 import SendIcon from "../images/SendIcon";
 
-export default function ChatInput({ isLoading, onSubmit }) {
+export default function ChatInput({ isMessageLoading, onSubmit }) {
   const [message, setMessage] = useState<string>();
   const textareaReference = useRef<HTMLTextAreaElement>(null);
 
@@ -18,7 +18,6 @@ export default function ChatInput({ isLoading, onSubmit }) {
     if (message && message.trim().length > 0) {
       onSubmit(message);
       setMessage("");
-      autosize.destroy(textareaReference.current);
     }
   }, [message, onSubmit]);
 
@@ -31,6 +30,7 @@ export default function ChatInput({ isLoading, onSubmit }) {
         message.trim().length > 0
       ) {
         event.preventDefault();
+        event.target.blur();
 
         sendMessage();
       }
@@ -38,23 +38,18 @@ export default function ChatInput({ isLoading, onSubmit }) {
     [message, sendMessage]
   );
 
-
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
   }, []);
-
-  useEffect(() => {
-    const ref = textareaReference?.current;
-
-    if (!isLoading && ref) {
-      ref.focus();
-    }
-  }, [isLoading]);
 
   useLayoutEffect(() => {
     const ref = textareaReference?.current;
 
     autosize(ref);
+
+    if (ref) {
+      ref.focus();
+    }
 
     return () => {
       autosize.destroy(ref);

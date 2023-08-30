@@ -2,7 +2,9 @@ from elasticsearch import Elasticsearch
 from langchain.vectorstores import ElasticsearchStore
 from langchain.document_loaders import JSONLoader
 from langchain.text_splitter import CharacterTextSplitter
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
 # Global variables
 # Modify these if you want to use a different file, index or model
@@ -21,6 +23,7 @@ elasticsearch_client = Elasticsearch(
 def metadata_func(record: dict, metadata: dict) -> dict:
     metadata["name"] = record.get("name")
     metadata["summary"] = record.get("summary")
+    metadata["url"] = record.get("url")
 
     return metadata
 

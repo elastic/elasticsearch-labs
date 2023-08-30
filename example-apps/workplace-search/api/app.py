@@ -8,9 +8,13 @@ from langchain.prompts.chat import HumanMessagePromptTemplate, SystemMessageProm
 from langchain.vectorstores import ElasticsearchStore
 from queue import Queue
 from uuid import uuid4
+from dotenv import load_dotenv
+
 import json
 import os
 import threading
+
+load_dotenv()
 
 INDEX = "workplace-app-docs"
 INDEX_CHAT_HISTORY = "workplace-app-docs-chat-history"
@@ -38,7 +42,8 @@ class QueueCallbackHandler(BaseCallbackHandler):
             for doc in documents:
                 source = {
                     'name': doc.metadata['name'],
-                    'page_content': doc.page_content
+                    'page_content': doc.page_content,
+                    'url': doc.metadata['url']
                 }
                 self.queue.put(f"{SOURCE_TAG} {json.dumps(source)}")
         
@@ -122,7 +127,7 @@ def api_chat():
         return jsonify({"msg": "Missing question from request JSON"}), 400
 
     session_id = request.args.get('session_id', str(uuid4()))
-    
+
     print('Chat session ID: ', session_id)
     chat_history = ElasticsearchChatMessageHistory(
         client=elasticsearch_client,
@@ -134,12 +139,14 @@ def api_chat():
         yield f"data: {SESSION_ID_TAG} {session_id}\n\n"
 
         message = None
+        time = current_milli_time()
         while True:
             message = queue.get()
 
             if message == POISON_MESSAGE: # Poison message 
                 break
-
+            print(f"Time Diff - {time - current_milli_time()} - {message} - {current_milli_time()}")
+            time = current_milli_time()
             yield f"data: {message}\n\n"
 
         yield f"data: {DONE_TAG}\n\n"
