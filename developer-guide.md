@@ -1,4 +1,8 @@
+
 # Elasticsearch Developer Guide
+
+> ℹ️ You can see a **table of contents** for this guide by by clicking the menu icon <img width="28" alt="Screenshot 2023-08-31 at 17 08 56" src="https://github.com/elastic/elasticsearch-labs/assets/32779855/becbabae-798b-409e-ae4d-506beff113ec">
+at the top of this page.
 
 This guide is intended for developers who want to build applications that combine Elasticsearch with generative AI.
 - [Introduction](#introduction)
