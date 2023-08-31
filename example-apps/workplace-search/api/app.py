@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
 from lib.elasticsearch_chat_message_history import ElasticsearchChatMessageHistory
 from flask import Flask, jsonify, request, Response
+from flask_cors import CORS
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
@@ -102,7 +103,7 @@ chat = ConversationalRetrievalChain.from_llm(
 stream_queue = Queue()
 
 app = Flask(__name__, static_folder="../frontend/public")
-
+CORS(app)
 
 @app.route("/")
 def api_index():
@@ -139,14 +140,11 @@ def api_chat():
         yield f"data: {SESSION_ID_TAG} {session_id}\n\n"
 
         message = None
-        time = current_milli_time()
         while True:
             message = queue.get()
 
             if message == POISON_MESSAGE: # Poison message 
                 break
-            print(f"Time Diff - {time - current_milli_time()} - {message} - {current_milli_time()}")
-            time = current_milli_time()
             yield f"data: {message}\n\n"
 
         yield f"data: {DONE_TAG}\n\n"
@@ -160,4 +158,4 @@ def api_chat():
 
 
 if __name__ == "__main__":
-    app.run(port=4000, debug=True)
+    app.run(port=3001, debug=True)

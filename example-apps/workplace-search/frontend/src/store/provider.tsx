@@ -21,7 +21,7 @@ const GLOBAL_STATE: GlobalStateType = {
   sessionId: null,
 };
 
-const API_HOST = "/api";
+const API_HOST = "http://localhost:3001/api";
 const defaultHeaders = {
   "Content-Type": "application/json",
 };

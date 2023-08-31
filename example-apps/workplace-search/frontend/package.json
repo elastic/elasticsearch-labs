@@ -1,8 +1,8 @@
 {
-  "name": "2023-05-11-searchkit",
+  "name": "workplace-search-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:4000",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "@radix-ui/react-slot": "^1.0.1",
