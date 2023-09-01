@@ -18,4 +18,4 @@ export const Smile = () => (
       </clipPath>
     </defs>
   </svg>
-);
+)

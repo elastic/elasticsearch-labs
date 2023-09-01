@@ -1,25 +1,26 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import autosize from "autosize";
-import { cn } from "../../lib/utils";
-import Conversation from "../images/conversation";
-import SendIcon from "../images/SendIcon";
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import autosize from 'autosize'
+import { cn } from '../../lib/utils'
+import Conversation from '../images/conversation'
+import SendIcon from '../images/SendIcon'
 
 export default function ChatInput({ isMessageLoading, onSubmit }) {
-  const [message, setMessage] = useState<string>();
-  const textareaReference = useRef<HTMLTextAreaElement>(null);
+  const [message, setMessage] = useState<string>()
+  const [abortRequest, setAbortRequest] = useState<() => void>()
+  const textareaReference = useRef<HTMLTextAreaElement>(null)
 
   const sendMessage = useCallback(() => {
     if (message && message.trim().length > 0) {
-      onSubmit(message);
-      setMessage("");
+      const controller = new AbortController()
+
+      setAbortRequest(() => () => {
+        controller?.abort()
+      })
+      onSubmit(message, controller.signal)
+
+      setMessage('')
     }
-  }, [message, onSubmit]);
+  }, [message, onSubmit])
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -29,32 +30,32 @@ export default function ChatInput({ isMessageLoading, onSubmit }) {
         message &&
         message.trim().length > 0
       ) {
-        event.preventDefault();
-        event.target.blur();
+        event.preventDefault()
+        event.target.blur()
 
-        sendMessage();
+        sendMessage()
       }
     },
     [message, sendMessage]
-  );
+  )
 
   const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-  }, []);
+    event.preventDefault()
+  }, [])
 
   useLayoutEffect(() => {
-    const ref = textareaReference?.current;
+    const ref = textareaReference?.current
 
-    autosize(ref);
+    autosize(ref)
 
     if (ref) {
-      ref.focus();
+      ref.focus()
     }
 
     return () => {
-      autosize.destroy(ref);
-    };
-  }, []);
+      autosize.destroy(ref)
+    }
+  }, [])
 
   return (
     <form className="flex space-x-2 relative" onSubmit={handleSubmit}>
@@ -65,26 +66,45 @@ export default function ChatInput({ isMessageLoading, onSubmit }) {
         placeholder="Ask a follow up question about this answer"
         onKeyDown={handleKeyDown}
         onChange={(event) => {
-          autosize(textareaReference.current);
-          setMessage(event.target.value);
+          autosize(textareaReference.current)
+          setMessage(event.target.value)
         }}
+        disabled={isMessageLoading}
       ></textarea>
       <span className="absolute left-1 top-3">
         <Conversation />
       </span>
-      <button
-        disabled={!message || message?.length === 0}
-        onClick={sendMessage}
-        type="submit"
-        className={cn(
-          "bg-ink text-light-fog font-medium flex-row items-center justify-center w-36 px-4 py-2 rounded-md border disabled:opacity-100 disabled:cursor-not-allowed cursor-pointer inline-flex"
-        )}
-      >
-        Send{" "}
-        <span className="ml-3">
-          <SendIcon />
-        </span>
-      </button>
+      {isMessageLoading && abortRequest && (
+        <button
+          onClick={abortRequest}
+          className={cn(
+            'bg-ink text-light-fog font-medium flex-row items-center justify-center w-36 px-4 py-2 rounded-md border disabled:opacity-100 disabled:cursor-not-allowed cursor-pointer inline-flex'
+          )}
+        >
+          Cancel
+        </button>
+      )}
+      {!isMessageLoading && (
+        <button
+          disabled={!message || message?.length === 0 || isMessageLoading}
+          onClick={sendMessage}
+          type="submit"
+          className={cn(
+            'bg-ink text-light-fog font-medium flex-row items-center justify-center w-36 px-4 py-2 rounded-md border disabled:opacity-100 disabled:cursor-not-allowed cursor-pointer inline-flex'
+          )}
+        >
+          {isMessageLoading ? (
+            'Sending...'
+          ) : (
+            <>
+              Send{' '}
+              <span className="ml-3">
+                <SendIcon />
+              </span>
+            </>
+          )}
+        </button>
+      )}
     </form>
-  );
+  )
 }

@@ -18,4 +18,4 @@ export const Neutral = () => (
       </clipPath>
     </defs>
   </svg>
-);
+)

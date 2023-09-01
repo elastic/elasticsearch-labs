@@ -1,9 +1,9 @@
-import { SourceItem, SourceType } from "./source_item";
+import { SourceItem, SourceType } from './source_item'
 
 export type SourcesType = {
-  sources: SourceType[];
-  showDisclaimer?: boolean;
-};
+  sources: SourceType[]
+  showDisclaimer?: boolean
+}
 export const Sources: React.FC<SourcesType> = ({ sources, showDisclaimer }) => {
   return (
     (sources.length > 0 && (
@@ -28,5 +28,5 @@ export const Sources: React.FC<SourcesType> = ({ sources, showDisclaimer }) => {
       </>
     )) ||
     null
-  );
-};
+  )
+}

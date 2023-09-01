@@ -1,23 +1,23 @@
 export interface Facet {
-  name: string;
+  name: string
   entries: {
-    count: number;
-    value: string;
-  }[];
+    count: number
+    value: string
+  }[]
 }
 
 export interface SearchResponse {
-  results: Result[];
-  facets: Facet[];
-  streaming_id: string;
-  conversation_id: string;
+  results: Result[]
+  facets: Facet[]
+  streaming_id: string
+  conversation_id: string
 }
 
 export interface Result {
-  id: string;
-  category: [string];
-  content: [string];
-  summary: [string];
-  name: [string];
-  url: [string];
+  id: string
+  category: [string]
+  content: [string]
+  summary: [string]
+  name: [string]
+  url: [string]
 }

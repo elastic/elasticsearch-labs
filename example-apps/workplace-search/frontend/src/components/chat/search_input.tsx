@@ -1,21 +1,21 @@
-import { cn } from "../../lib/utils";
-import { useEffect, useState } from "react";
-import { Reload } from "../images/reload";
-import SearchIcon from "../images/searchIcon";
+import { cn } from '../../lib/utils'
+import { useEffect, useState } from 'react'
+import { Reload } from '../images/reload'
+import SearchIcon from '../images/searchIcon'
 
 export default function SearchInput({ onSearch, searchActive, value }) {
-  const [query, setQuery] = useState<string>(value);
+  const [query, setQuery] = useState<string>(value)
 
   useEffect(() => {
-    setQuery(value);
-  }, [value]);
+    setQuery(value)
+  }, [value])
   return (
     <form
       className="w-full"
       onSubmit={(e) => {
-        e.preventDefault();
-        if (query.length === 0) return;
-        onSearch(query);
+        e.preventDefault()
+        if (query.length === 0) return
+        onSearch(query)
       }}
     >
       <label className="text-xs font-bold leading-none text-gray-900">
@@ -34,7 +34,7 @@ export default function SearchInput({ onSearch, searchActive, value }) {
         </span>
         <button
           className={cn(
-            "flex flex-row bg-dark-blue text-light-fog py-2.5 w-48 rounded-md font-medium items-center justify-center"
+            'flex flex-row bg-dark-blue text-light-fog py-2.5 w-48 rounded-md font-medium items-center justify-center'
           )}
           type="submit"
         >
@@ -42,10 +42,10 @@ export default function SearchInput({ onSearch, searchActive, value }) {
             <span className="mr-2">
               <Reload />
             </span>
-          )}{" "}
-          {searchActive ? "Start over" : "Search"}
+          )}{' '}
+          {searchActive ? 'Start over' : 'Search'}
         </button>
       </div>
     </form>
-  );
+  )
 }

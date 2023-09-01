@@ -1,12 +1,14 @@
-import { SourceType } from "./source_item";
-import { Sources } from "./sources";
+import { SourceType } from './source_item'
+import { Loader } from './loader'
 
 export const Summary = ({
+  isLoading,
   text,
   sources,
 }: {
-  text: string | undefined;
-  sources: SourceType[];
+  isLoading?: boolean
+  text: string | undefined
+  sources: SourceType[]
 }) => {
   return (
     <div className="mb-4">
@@ -20,11 +22,9 @@ export const Summary = ({
           </div>
         </div>
       </header>
-      {isLoading && !text && (
-        <div className="ml-4">
-          <BeatLoader size={7}/>
-        </div>
-      )}
+
+      {isLoading && !text && <Loader />}
+
       {text && (
         <div className="text-base leading-tight text-gray-800 whitespace-pre-wrap mb-8">
           {text}
@@ -32,5 +32,5 @@ export const Summary = ({
       )}
       {/*<Sources showDisclaimer sources={sources} />*/}
     </div>
-  );
-};
+  )
+}

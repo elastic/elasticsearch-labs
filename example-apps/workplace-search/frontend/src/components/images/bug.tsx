@@ -18,4 +18,4 @@ export const Bug = () => (
       </clipPath>
     </defs>
   </svg>
-);
+)

@@ -1,28 +1,25 @@
-import React, { useState } from "react";
-import ChatInput from "./components/chat/input";
+import React, { useState } from 'react'
+import ChatInput from './components/chat/input'
 
-import { ChatMessageList } from "./components/chat_message_list";
-import { Summary } from "./components/summary";
-import SearchInput from "./components/chat/search_input";
-import {
-  thunkActions,
-  useAppDispatch,
-  useAppSelector,
-} from "./store/provider";
-import { cn } from "./lib/utils";
-import { BeatLoader } from "react-spinners";
-import { Header } from "./components/header";
-import { SourceIcon } from "./components/source_icon";
+import { ChatMessageList } from './components/chat/message_list'
+import { Summary } from './components/summary'
+import SearchInput from './components/chat/search_input'
+import { thunkActions, useAppDispatch, useAppSelector } from './store/provider'
+import { cn } from './lib/utils'
+import { Header } from './components/header'
+import { Loader } from './components/loader'
 
 function Results() {
-  const conversation = useAppSelector((state) => state.conversation);
-  const dispatch = useAppDispatch();
+  const conversation = useAppSelector((state) => state.conversation)
+  const inProgressMessage = useAppSelector((state) => state.inProgressMessage)
+  const dispatch = useAppDispatch()
 
-  const onSubmit = (query) => {
-    dispatch(thunkActions.askQuestion(query));
-  };
+  const onSubmit = (query, signal) => {
+    console.log('request', !!signal)
+    dispatch(thunkActions.askQuestion(query, signal))
+  }
 
-  const [summary, ...chatMessages] = conversation;
+  const [summary, ...chatMessages] = conversation
 
   return (
     <>
@@ -37,16 +34,17 @@ function Results() {
           </div>
 
           <div
-            className={cn("chat border-t border-fog", {
-              "border-0": chatMessages.length === 0,
+            className={cn('chat border-t border-fog', {
+              'border-0': chatMessages.length === 0,
             })}
           >
             <div className="chat__messages">
-              <ChatMessageList
-                messages={chatMessages}
-              />
+              <ChatMessageList messages={chatMessages} />
             </div>
-            <ChatInput isMessageLoading={inProgressMessage} onSubmit={onSubmit}/>
+            <ChatInput
+              isMessageLoading={inProgressMessage}
+              onSubmit={onSubmit}
+            />
           </div>
         </div>
         {!!summary?.sources?.length && (
@@ -60,9 +58,13 @@ function Results() {
                 >
                   <div className="flex flex-row space-x-1.5 pb-2">
                     <h4 className="text-md mb-1 font-semibold">
-                      {result.url
-                        ? <a className="text-dark-blue" href={result?.url}>{result.name}</a>
-                        : result.name}
+                      {result.url ? (
+                        <a className="text-dark-blue" href={result?.url}>
+                          {result.name}
+                        </a>
+                      ) : (
+                        result.name
+                      )}
                     </h4>
                   </div>
                   {result.summary?.map((text, index) => (
@@ -78,30 +80,30 @@ function Results() {
         )}
       </div>
     </>
-  );
+  )
 }
 
 function App() {
-  const dispatch = useAppDispatch();
-  const isSessionStarted = useAppSelector((state) => state.sessionId);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const loading = useAppSelector((state) => state.loading);
+  const dispatch = useAppDispatch()
+  const isSessionStarted = useAppSelector((state) => state.sessionId)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const loading = useAppSelector((state) => state.loading)
 
   const onSearch = (query) => {
-    dispatch(thunkActions.search(query));
-  };
+    dispatch(thunkActions.search(query))
+  }
 
   const suggestedQueries = [
-    "What is our work from home policy?",
+    'What is our work from home policy?',
     "What's the NASA sales team?",
-    "Does the company own my personal project?",
-    "What job openings do we have?",
-    "How does compensation work?",
-  ];
+    'Does the company own my personal project?',
+    'What job openings do we have?',
+    'How does compensation work?',
+  ]
 
   return (
     <>
-      <Header/>
+      <Header />
       <div className="p-8">
         <div className="max-w-2xl mx-auto">
           <SearchInput
@@ -121,9 +123,9 @@ function App() {
                   href="#"
                   className="text-lg text-dark-blue hover:text-blue-700"
                   onClick={(e) => {
-                    e.preventDefault();
-                    setSearchQuery(query);
-                    onSearch(query);
+                    e.preventDefault()
+                    setSearchQuery(query)
+                    onSearch(query)
                   }}
                 >
                   {query}
@@ -134,15 +136,13 @@ function App() {
         )}
 
         {loading && !isSessionStarted && (
-          <div className="relative w-24 mx-auto py-10 opacity-30">
-            <BeatLoader size={15}/>
-          </div>
+          <Loader className="relative w-24 mx-auto py-10 opacity-30" />
         )}
 
-        {isSessionStarted && <Results/>}
+        {isSessionStarted && <Results />}
       </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

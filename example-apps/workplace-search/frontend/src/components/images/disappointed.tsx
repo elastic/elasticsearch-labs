@@ -18,4 +18,4 @@ export const Disappointed = () => (
       </clipPath>
     </defs>
   </svg>
-);
+)
