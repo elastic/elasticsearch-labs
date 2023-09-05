@@ -100,8 +100,6 @@ chat = ConversationalRetrievalChain.from_llm(
     # verbose=True
 )
 
-stream_queue = Queue()
-
 app = Flask(__name__, static_folder="../frontend/public")
 CORS(app)
 
@@ -122,6 +120,7 @@ def ask_question(question, queue, chat_history):
 
 @app.route("/api/chat", methods=["POST"])
 def api_chat():
+    stream_queue = Queue()
     request_json = request.get_json()
     question = request_json.get("question")
     if question is None:
