@@ -59,7 +59,10 @@ function Results() {
                   <div className="flex flex-row space-x-1.5 pb-2">
                     <h4 className="text-md mb-1 font-semibold">
                       {result.url ? (
-                        <a className="text-dark-blue" href={result?.url}>
+                        <a
+                          className="hover:text-blue text-dark-blue"
+                          href={result?.url}
+                        >
                           {result.name}
                         </a>
                       ) : (
