@@ -5,19 +5,23 @@ import { Provider, useDispatch, useSelector } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
 
 type GlobalStateType = {
-  loading: boolean
+  status: AppStatus
   conversation: ChatMessageType[]
-  inProgressMessage: boolean
   sessionId: string | null
 }
 
 class RetriableError extends Error {}
 class FatalError extends Error {}
+export enum AppStatus {
+  Idle = 'idle',
+  StreamingMessage = 'loading',
+  Done = 'done',
+  Error = 'error',
+}
 
 const GLOBAL_STATE: GlobalStateType = {
-  loading: false,
+  status: AppStatus.Idle,
   conversation: [],
-  inProgressMessage: false,
   sessionId: null,
 }
 const API_HOST = 'http://localhost:3001/api'
@@ -26,36 +30,39 @@ const globalSlice = createSlice({
   name: 'global',
   initialState: GLOBAL_STATE,
   reducers: {
+    setStatus: (state, action) => {
+      state.status = action.payload.status
+    },
     setSessionId: (state, action) => {
       state.sessionId = action.payload.sessionId
     },
-    addConversation: (state, action) => {
+    addMessage: (state, action) => {
       state.conversation.push(action.payload.conversation)
     },
-    setConversation: (state, action) => {
-      state.conversation = [action.payload.conversation]
-    },
-    updateConversation: (state, action) => {
-      const conversationIndex = state.conversation.findIndex(
+    updateMessage: (state, action) => {
+      const messageIndex = state.conversation.findIndex(
         (c) => c.id === action.payload.id
       )
 
-      if (conversationIndex !== -1) {
-        state.conversation[conversationIndex] = {
-          ...state.conversation[conversationIndex],
+      if (messageIndex !== -1) {
+        state.conversation[messageIndex] = {
+          ...state.conversation[messageIndex],
           ...action.payload,
         }
       }
     },
-    setLoading: (state, action) => {
-      state.loading = action.payload.loading
-    },
-    setInProgressMessage: (state, action) => {
-      state.inProgressMessage = action.payload.inProgressMessage
+    removeMessage: (state, action) => {
+      const messageIndex = state.conversation.findIndex(
+        (c) => c.id === action.payload.id
+      )
+
+      if (messageIndex !== -1) {
+        delete state.conversation[messageIndex]
+      }
     },
     reset: (state) => {
+      state.status = AppStatus.Idle
       state.sessionId = null
-      state.inProgressMessage = false
       state.conversation = []
     },
   },
@@ -71,25 +78,20 @@ export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 export const actions = globalSlice.actions
 
-export const hasStartedConversation = (state: RootState) => {
-  const [summary, ...conversation] = state.conversation
-  return conversation.length > 0
-}
-
 export const thunkActions = {
   search: (query: string) => {
     return async function fetchSearch(dispatch) {
       dispatch(actions.reset())
 
-      dispatch(actions.setLoading({ loading: true }))
       dispatch(thunkActions.chat(query))
     }
   },
   askQuestion: (question: string, signal) => {
-    return async function askQuestion(dispatch, getState) {
+    return async function (dispatch, getState) {
       const state = getState()
+
       dispatch(
-        actions.addConversation({
+        actions.addMessage({
           conversation: {
             isHuman: true,
             content: question,
@@ -102,22 +104,14 @@ export const thunkActions = {
   },
   chat: (question: string, signal?: AbortSignal) => {
     return async function fetchSearch(dispatch, getState) {
-      if (getState().inProgressMessage) {
+      if (getState().status === AppStatus.StreamingMessage) {
         return
       }
 
-      let message = ''
-      const sessionId = getState().sessionId
-      const sourcesMap: Map<
-        string,
-        { name: string; url?: string; summary: string[] }
-      > = new Map()
-      // const action = hasStartedConversation(getState())
-      //   ? actions.addConversation
-      //   : actions.setConversation
       const conversationId = getState().conversation.length + 1
+
       dispatch(
-        actions.addConversation({
+        actions.addMessage({
           conversation: {
             loading: true,
             isHuman: false,
@@ -126,8 +120,15 @@ export const thunkActions = {
           },
         })
       )
-      dispatch(actions.setInProgressMessage({ inProgressMessage: true }))
+      dispatch(actions.setStatus({ status: AppStatus.StreamingMessage }))
+
       let countRetiresError = 0
+      let message = ''
+      const sessionId = getState().sessionId
+      const sourcesMap: Map<
+        string,
+        { name: string; url?: string; summary: string[] }
+      > = new Map()
 
       await fetchEventSource(
         `${API_HOST}/chat${sessionId ? `?session_id=${sessionId}` : ''}`,
@@ -150,7 +151,7 @@ export const thunkActions = {
               const sessionId = event.data.split(' ')[1].trim()
               dispatch(actions.setSessionId({ sessionId }))
             } else if (event.data.startsWith('[SOURCE]')) {
-              const source = event.data.replace('[SOURCE] ', '') //event.data.match(/\[SOURCE\] ([^]+?)(?=\[|$)/)?.[1]
+              const source = event.data.replace('[SOURCE] ', '')
 
               try {
                 if (source) {
@@ -176,25 +177,21 @@ export const thunkActions = {
               }
             } else if (event.data === '[DONE]') {
               dispatch(
-                actions.updateConversation({
+                actions.updateMessage({
                   id: conversationId,
                   sources: Array.from(sourcesMap.values()),
                 })
               )
-              dispatch(
-                actions.setInProgressMessage({ inProgressMessage: false })
-              )
+              dispatch(actions.setStatus({ status: AppStatus.Done }))
             } else {
               message += message && event.data === '' ? '\n' : event.data
 
               dispatch(
-                actions.updateConversation({
+                actions.updateMessage({
                   id: conversationId,
                   content: message,
-                  loading: false,
                 })
               )
-              dispatch(actions.setLoading({ loading: false }))
             }
           },
           async onopen(response) {
@@ -212,7 +209,7 @@ export const thunkActions = {
           },
           onerror(err) {
             if (err instanceof FatalError || countRetiresError > 3) {
-              dispatch(actions.setLoading({ loading: false }))
+              dispatch(actions.setStatus({ status: AppStatus.Error }))
 
               throw err
             } else {
@@ -222,6 +219,21 @@ export const thunkActions = {
           },
         }
       )
+    }
+  },
+  stopRequest: () => {
+    return function (dispatch, getState) {
+      const lastMessage =
+        getState().conversation[getState().conversation.length - 1]
+
+      if (!lastMessage.content) {
+        dispatch(
+          actions.removeMessage({
+            id: lastMessage.id,
+          })
+        )
+      }
+      dispatch(actions.setStatus({ status: AppStatus.Done }))
     }
   },
 }

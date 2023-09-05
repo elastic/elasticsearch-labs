@@ -3,9 +3,11 @@ import { ChatMessageType, ChatMessage } from './message'
 
 type ChatMessageListType = {
   messages: ChatMessageType[]
+  isMessageLoading: boolean
 }
 export const ChatMessageList: React.FC<ChatMessageListType> = ({
   messages,
+  isMessageLoading,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [userScrolled, setUserScrolled] = useState(false)
@@ -34,13 +36,17 @@ export const ChatMessageList: React.FC<ChatMessageListType> = ({
       ref={containerRef}
       onScroll={handleScroll}
     >
-      {messages.map((msg) => (
+      {messages.map((msg, index) => (
         <ChatMessage
           key={msg.id}
           id={msg.id}
           content={msg.content}
           isHuman={msg.isHuman}
-          loading={msg.loading}
+          loading={
+            messages.length - 1 === index &&
+            !msg.content.length &&
+            isMessageLoading
+          }
           sources={msg.sources || undefined}
         />
       ))}
