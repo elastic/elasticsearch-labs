@@ -9,14 +9,9 @@ from langchain.prompts.chat import HumanMessagePromptTemplate, SystemMessageProm
 from langchain.vectorstores import ElasticsearchStore
 from queue import Queue
 from uuid import uuid4
-from dotenv import load_dotenv
-
 import json
 import os
 import threading
-
-load_dotenv()
-
 INDEX = "workplace-app-docs"
 INDEX_CHAT_HISTORY = "workplace-app-docs-chat-history"
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
