@@ -36,7 +36,6 @@ export default function SearchInput({ onSearch, value, appStatus }) {
           <SearchIcon />
         </span>
         <button
-          disabled={appStatus === AppStatus.StreamingMessage}
           className={cn(
             'hover:bg-blue flex flex-row bg-dark-blue text-light-fog py-2.5 w-48 rounded-md font-medium items-center justify-center'
           )}

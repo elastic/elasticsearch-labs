@@ -26,6 +26,7 @@ const GLOBAL_STATE: GlobalStateType = {
 }
 const API_HOST = 'http://localhost:3001/api'
 
+let abortController: AbortController | null = null
 const globalSlice = createSlice({
   name: 'global',
   initialState: GLOBAL_STATE as GlobalStateType,
@@ -79,14 +80,17 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 export const actions = globalSlice.actions
 
 export const thunkActions = {
-  search: (query: string, signal?: AbortSignal) => {
-    return async function fetchSearch(dispatch) {
-      dispatch(actions.reset())
+  search: (query: string) => {
+    return async function fetchSearch(dispatch, getState) {
+      if (getState().status === AppStatus.StreamingMessage) {
+        dispatch(thunkActions.abortRequest())
+      }
 
-      dispatch(thunkActions.chat(query, signal))
+      dispatch(actions.reset())
+      dispatch(thunkActions.chat(query))
     }
   },
-  askQuestion: (question: string, signal?: AbortSignal) => {
+  askQuestion: (question: string) => {
     return async function (dispatch, getState) {
       const state = getState()
 
@@ -99,15 +103,12 @@ export const thunkActions = {
           },
         })
       )
-      dispatch(thunkActions.chat(question, signal))
+      dispatch(thunkActions.chat(question))
     }
   },
-  chat: (question: string, signal?: AbortSignal) => {
+  chat: (question: string) => {
     return async function fetchSearch(dispatch, getState) {
-      if (getState().status === AppStatus.StreamingMessage) {
-        return
-      }
-
+      abortController = new AbortController()
       const conversationId = getState().conversation.length + 1
 
       dispatch(
@@ -141,7 +142,7 @@ export const thunkActions = {
           headers: {
             'Content-Type': 'application/json',
           },
-          signal,
+          signal: abortController.signal,
           async onmessage(event) {
             if (event.event === 'FatalError') {
               throw new FatalError(event.data)
@@ -221,10 +222,13 @@ export const thunkActions = {
       )
     }
   },
-  stopRequest: () => {
+  abortRequest: () => {
     return function (dispatch, getState) {
-      const lastMessage =
-        getState().conversation[getState().conversation.length - 1]
+      const messages = getState().conversation
+      const lastMessage = messages[getState().conversation.length - 1]
+
+      abortController?.abort()
+      abortController = null
 
       if (!lastMessage.content) {
         dispatch(
@@ -233,7 +237,11 @@ export const thunkActions = {
           })
         )
       }
-      dispatch(actions.setStatus({ status: AppStatus.Done }))
+      dispatch(
+        actions.setStatus({
+          status: messages.length ? AppStatus.Done : AppStatus.Idle,
+        })
+      )
     }
   },
 }

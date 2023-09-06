@@ -15,12 +15,14 @@ export const Chat = ({ status, messages, summary, onSend, onAbortRequest }) => (
         'border-0': messages.length === 0,
       })}
     >
-      <div className="chat__messages">
-        <ChatMessageList
-          messages={messages}
-          isMessageLoading={status === AppStatus.StreamingMessage}
-        />
-      </div>
+      {!!messages.length && (
+        <div className="chat__messages">
+          <ChatMessageList
+            messages={messages}
+            isMessageLoading={status === AppStatus.StreamingMessage}
+          />
+        </div>
+      )}
 
       <ChatInput
         isMessageLoading={status === AppStatus.StreamingMessage}

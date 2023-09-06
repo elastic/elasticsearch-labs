@@ -19,24 +19,15 @@ const App = () => {
     (state) => !!state.conversation?.[0]?.content
   )
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [controller, setController] = useState<AbortController>()
 
-  const getRequestSignal = () => {
-    const newController = new AbortController()
-
-    setController(newController)
-
-    return newController.signal
-  }
   const handleSearch = (query: string) => {
-    dispatch(thunkActions.search(query, getRequestSignal()))
+    dispatch(thunkActions.search(query))
   }
   const handleSendChatMessage = (query: string) => {
-    dispatch(thunkActions.askQuestion(query, getRequestSignal()))
+    dispatch(thunkActions.askQuestion(query))
   }
   const handleAbortRequest = () => {
-    controller?.abort()
-    dispatch(thunkActions.stopRequest())
+    dispatch(thunkActions.abortRequest())
   }
 
   const suggestedQueries = [
