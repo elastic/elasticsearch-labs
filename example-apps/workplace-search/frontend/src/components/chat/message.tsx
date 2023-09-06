@@ -1,5 +1,5 @@
-import { SourceType } from '../source_item'
-import { Loader } from '../loader'
+import { SourceType } from 'components/source_item'
+import { Loader } from 'components/loader'
 
 export type ChatMessageType = {
   id: number | string

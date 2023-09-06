@@ -1,3 +1,3 @@
 declare module '*.jpg'
-declare module '*.pnh'
+declare module '*.png'
 declare module '*.svg'

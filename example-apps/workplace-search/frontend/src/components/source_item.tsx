@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { SourceIcon, SourceIconType } from './source_icon'
-
 export type SourceType = {
   name: string
   summary?: string[]

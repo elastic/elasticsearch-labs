@@ -28,7 +28,7 @@ const API_HOST = 'http://localhost:3001/api'
 
 const globalSlice = createSlice({
   name: 'global',
-  initialState: GLOBAL_STATE,
+  initialState: GLOBAL_STATE as GlobalStateType,
   reducers: {
     setStatus: (state, action) => {
       state.status = action.payload.status
@@ -79,14 +79,14 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 export const actions = globalSlice.actions
 
 export const thunkActions = {
-  search: (query: string) => {
+  search: (query: string, signal?: AbortSignal) => {
     return async function fetchSearch(dispatch) {
       dispatch(actions.reset())
 
-      dispatch(thunkActions.chat(query))
+      dispatch(thunkActions.chat(query, signal))
     }
   },
-  askQuestion: (question: string, signal) => {
+  askQuestion: (question: string, signal?: AbortSignal) => {
     return async function (dispatch, getState) {
       const state = getState()
 

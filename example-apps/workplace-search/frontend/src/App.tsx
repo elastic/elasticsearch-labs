@@ -1,108 +1,38 @@
-import React, { useState } from 'react'
-import ChatInput from './components/chat/input'
+import React, { Fragment, useState } from 'react'
 
-import { ChatMessageList } from './components/chat/message_list'
-import { Summary } from './components/summary'
-import SearchInput from './components/chat/search_input'
 import {
   AppStatus,
   thunkActions,
   useAppDispatch,
   useAppSelector,
-} from './store/provider'
-import { cn } from './lib/utils'
-import { Header } from './components/header'
-import { Loader } from './components/loader'
+} from 'store/provider'
+import { Header } from 'components/header'
+import { Loader } from 'components/loader'
+import { Chat } from 'components/chat/chat'
+import SearchInput from 'components/search_input'
 
-function Results() {
-  const conversation = useAppSelector((state) => state.conversation)
-  const status = useAppSelector((state) => state.status)
-  const dispatch = useAppDispatch()
-
-  const onSubmit = (query, signal) => {
-    dispatch(thunkActions.askQuestion(query, signal))
-  }
-  const onAbortRequest = () => {
-    dispatch(thunkActions.stopRequest())
-  }
-
-  const [summary, ...chatMessages] = conversation
-
-  return (
-    <>
-      <div className="max-w-2xl mx-auto relative">
-        <div className="bg-white shadow-xl mt-4 p-6 rounded-xl border border-light-fog mb-8">
-          <div className="mb-4">
-            <Summary text={summary?.content} sources={summary?.sources || []} />
-          </div>
-
-          <div
-            className={cn('chat border-t border-fog', {
-              'border-0': chatMessages.length === 0,
-            })}
-          >
-            <div className="chat__messages">
-              <ChatMessageList
-                messages={chatMessages}
-                isMessageLoading={status === AppStatus.StreamingMessage}
-              />
-            </div>
-            <ChatInput
-              isMessageLoading={status === AppStatus.StreamingMessage}
-              onSubmit={onSubmit}
-              onAbortRequest={onAbortRequest}
-            />
-          </div>
-        </div>
-        {!!summary?.sources?.length && (
-          <>
-            <h3 className="text-lg mb-4 font-bold">Sources chunks</h3>
-            <div className="">
-              {summary?.sources?.map((result) => (
-                <div
-                  className="bg-white border border-light-fog mb-4 p-4 rounded-xl shadow-md"
-                  key={result.name}
-                >
-                  <div className="flex flex-row space-x-1.5 pb-2">
-                    <h4 className="text-md mb-1 font-semibold">
-                      {result.url ? (
-                        <a
-                          className="hover:text-blue text-dark-blue"
-                          href={result?.url}
-                        >
-                          {result.name}
-                        </a>
-                      ) : (
-                        result.name
-                      )}
-                    </h4>
-                  </div>
-                  {result.summary?.map((text, index) => (
-                    <React.Fragment key={index}>
-                      {!!index && <p>...</p>}
-                      <p className="text-sm mb-2 text-light-ink">{text}</p>
-                    </React.Fragment>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </>
-  )
-}
-
-function App() {
+const App = () => {
   const dispatch = useAppDispatch()
   const status = useAppSelector((state) => state.status)
+  const [summary, ...messages] = useAppSelector((state) => state.conversation)
   const hasSummary = useAppSelector(
     (state) => !!state.conversation?.[0]?.content
   )
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [controller, setController] = useState<AbortController>()
 
-  const onSearch = (query) => {
+  const handleSearch = (query) => {
     dispatch(thunkActions.search(query))
+  }
+  const handleSendChatMessage = (query) => {
+    const newController = new AbortController()
+
+    setController(newController)
+    dispatch(thunkActions.askQuestion(query, newController.signal))
+  }
+  const handleAbortRequest = () => {
+    controller?.abort('stop request')
+    dispatch(thunkActions.stopRequest())
   }
 
   const suggestedQueries = [
@@ -119,9 +49,9 @@ function App() {
       <div className="p-8">
         <div className="max-w-2xl mx-auto">
           <SearchInput
-            onSearch={onSearch}
+            onSearch={handleSearch}
             value={searchQuery}
-            searchActive={status !== AppStatus.Idle}
+            appStatus={status}
           />
         </div>
 
@@ -137,7 +67,7 @@ function App() {
                   onClick={(e) => {
                     e.preventDefault()
                     setSearchQuery(query)
-                    onSearch(query)
+                    handleSearch(query)
                   }}
                 >
                   {query}
@@ -148,7 +78,51 @@ function App() {
         ) : (
           <>
             {hasSummary ? (
-              <Results />
+              <div className="max-w-2xl mx-auto relative">
+                <Chat
+                  status={status}
+                  messages={messages}
+                  summary={summary}
+                  onSend={handleSendChatMessage}
+                  onAbortRequest={handleAbortRequest}
+                />
+
+                {!!summary?.sources?.length && (
+                  <>
+                    <h3 className="text-lg mb-4 font-bold">Sources chunks</h3>
+                    <div className="">
+                      {summary?.sources?.map((result) => (
+                        <div
+                          className="bg-white border border-light-fog mb-4 p-4 rounded-xl shadow-md"
+                          key={result.name}
+                        >
+                          <h4 className="flex flex-row space-x-1.5 pb-2 text-md mb-1 font-semibold">
+                            {result.url ? (
+                              <a
+                                className="hover:text-blue text-dark-blue"
+                                href={result?.url}
+                              >
+                                {result.name}
+                              </a>
+                            ) : (
+                              result.name
+                            )}
+                          </h4>
+
+                          {result.summary?.map((text, index) => (
+                            <Fragment key={index}>
+                              {!!index && <p>...</p>}
+                              <p className="text-sm mb-2 text-light-ink">
+                                {text}
+                              </p>
+                            </Fragment>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             ) : (
               <Loader className="relative w-24 mx-auto py-10 opacity-30" />
             )}
