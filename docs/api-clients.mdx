@@ -1,0 +1,89 @@
+---
+id: apiClients
+slug: /vector-gen-ai/api-clients
+title: Elasticsearch API clients
+image:
+description: Elasticsearch supports a number of REST clients for different languages.
+date: 2023-09-06
+tags: []
+related: []
+---
+
+Elasticsearch supports a number of REST clients for different languages.
+
+- Python [view docs](https://elasticsearch-py.readthedocs.io/en/master/)
+- Javascript [view docs](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/getting-started-js.html)
+
+For other clients, see [Client Libraries](https://www.elastic.co/guide/en/elasticsearch/client/index.html).
+
+### Install
+
+To install the client, run the following command:
+
+
+```bash
+pip install elasticsearch
+```
+
+### Connecting to Elasticsearch
+
+Learn how to connect to Elasticsearch using the Python client.
+
+- [Localhost example](#example-localhost)
+- [Elastic Cloud with API Key example](#example-elastic-cloud-with-api-key)
+- [Elastic Cloud with Username and Password example](#example-elastic-cloud-with-username-and-password)
+
+#### Example: Localhost
+
+```python
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch(["http://localhost:9200"])
+```
+
+#### Example: Elastic Cloud with API Key
+
+Follow these steps to create an API key in Kibana:
+
+1. Go to **Management > Stack Management > Security > API Keys**
+2. Click "Create API Key"
+3. Give the API Key a name and click "Create"
+4. Copy the API key (base64 encoded)
+
+```python
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch(
+  cloud_id="YOUR_CLOUD_ID",
+  api_key="YOUR_API_KEY"
+)
+```
+
+#### Example: Elastic Cloud with Username and Password
+
+Your password is printed to the screen when you create your Elastic Cloud deployment. If you can't find it, you can reset it by going to:
+
+1. **Elastic Cloud Console > Deployment > Security > Reset Password**
+2. Copy the password
+
+This will reset the password for the `elastic` user.
+
+```python
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch(
+  cloud_id="YOUR_CLOUD_ID",
+  http_auth=("elastic", "<password>"),
+)
+```
+
+### Validate Connection
+
+To validate that you have connected to Elasticsearch, run the following command.
+
+This should return cluster information if setup was successful.
+
+
+```python
+es.info()
+```

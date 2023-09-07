@@ -1,0 +1,305 @@
+---
+id: developerGuide
+slug: /vector-gen-ai/developer-guide
+title: ((es)) Labs Developer Guide
+description: Build applications that combine ((es)) with generative AI.
+date: 2023-05-09
+tags: ["demo"]
+---
+
+{/* # Integrations
+
+- [Integrations](#integrations)
+  - [OpenAI](#openai)
+  - [Hugging Face](#hugging-face)
+  - [Langchain](#langchain) */}
+
+
+# Indexing & Querying
+
+## Create an Index
+
+An index is a collection of documents that have similar characteristics. For example, you might have an index for "products" and another index for "users".
+
+### Example: Create an Index with a Dense Vector Mapping
+
+```python
+es.indices.create(index="demo", mappings={
+  "properties": {
+    "text": {
+      "type": "dense_vector",
+      "dims": 8,
+      "similarity": "cosine",
+      "index": True
+    }
+  }
+})
+```
+
+By default, ((es)) will create field mappings automatically for you, detecting the type of data you are indexing. Read more about [dynamic mapping](https://www.elastic.co/guide/en/elasticsearch/reference/current/dynamic-field-mapping.html).
+
+You can also create your own mappings, for complex data types like geo points and dense vectors. Read more about [field data types](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html).
+
+### Example: Create an Index with title & price fields
+
+```python
+es.indices.create(index="demo", mappings={
+  "properties": {
+    "title": {
+      "type": "text"
+    },
+    "price": {
+      "properties": {
+        "amount": {
+          "type": "float"
+        },
+        "currency": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+})
+```
+
+## Inserting Documents
+
+You can insert documents into an index using the `index` for a single document, or `bulk` for multiple documents.
+
+### Example: Insert a Single Document
+
+```python
+
+doc = {
+  "text": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+  "title": "Document 1"
+}
+
+es.index(index="demo", document=doc)
+```
+
+### Example: Insert Multiple Documents
+
+In this example, we use the `bulk` helper function to insert multiple documents at once.
+
+Helpers also provide a `parallel_bulk` function that can be used to insert documents in parallel and a `streaming_bulk` function that can be used to insert documents in a streaming fashion.
+
+Read more about [helpers](https://elasticsearch-py.readthedocs.io/en/stable/helpers.html).
+
+```python
+from elasticsearch.helpers import bulk
+
+docs = [
+  { "text": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], "title": "Document 1"},
+  { "text": [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4], "title": "Document 2"},
+  { "text": [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], "title": "Document 3"}
+]
+
+actions = []
+for doc in docs:
+  action = {
+      "_index": "demo",
+      "_source": doc
+  }
+  actions.append(action)
+
+bulk(es, actions, refresh=True)
+
+```
+
+## Querying Documents
+
+Once you have indexed documents, you can search for them using the `search` API.
+
+### Example: Query for Similar Documents
+
+In this example, we search for similar documents to the query vector.
+
+```python
+
+response = es.search(index="demo", body={
+    "knn": {
+      "field": "text",
+      "query_vector": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+      "k": 10, # return top 10 most similar documents
+      "num_candidates": 100
+    }
+})
+
+```
+
+### Example: Using model in ((es))
+
+In this example, instead of passing the query vector, we pass the query text and ((es)) will use the embedding model deployed in ((es)) to transform the text into a vector.
+
+To deploy the model in ((es)), follow the instructions in the [Deploying a Model](#deploying-a-model) section.
+
+```python
+
+response = es.search(index="demo", body={
+    "knn": {
+      "field": "text",
+      "k": 10,
+      "num_candidates": 50,
+      "query_vector_builder": {
+        "text_embedding": {
+          "model_id": "sentence-transformers__all-minilm-l6-v2", # model id deployed in ((es))
+          "model_text": "example query"
+        }
+      }
+    }
+  }
+)
+
+```
+
+# Data Modeling
+
+Depending on the type of use-case you are building, you will need to model your data differently.
+
+## Long unstructured text
+
+If each document contains long text, you should consider breaking up the text into smaller chunks called passages. Long text are hard to represent as a single vector, especially if the text is about multiple topics. We recommend breaking up the text into smaller chunks, and indexing each passage as a separate document.
+
+Breaking up the text into passages allows you to retrieve more relevant results, as you can find the most relevant passages in one or more documents that match the query.
+
+Another advantage is for Retrieval Augmented Generation (RAG) use-cases. Passing smaller, relevant passages to the model, instead of the entire document, will improve the quality of the answer and avoid hitting token limits.
+
+### Example: Chunking long text into passages
+
+```python
+# TODO
+```
+
+# Tweaking Relevance
+
+Now that you are able to index and search documents, lets start to tweak the relevance of your search results.
+
+## Semantic Search
+
+Text embedding models like [sentence-transformers](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) transform your text into vectors (arrays of floating-point numbers) that capture semantic information. These vectors represent the contextual meaning of sentences. When users make a search query, you can encode their query into a vector (using the same embedding model) and search for similar documents.
+
+**NOTE**: You must use the same embedding model to encode your documents and queries.
+
+Test this out in our [Semantic search quick start notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/00-quick-start.ipynb)
+
+### Example: Semantic Search with ((es))
+
+```python
+
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+
+response = es.search(index="demo", body={
+    "knn": {
+      "field": "text",
+      "query_vector": model.encode("javascript books?"),
+      "k": 10,
+      "num_candidates": 100
+    }
+})
+
+```
+
+## Text Search
+
+With BM25, you can retrieve relevant documents based on the keywords in the query, matching the keywords in the document. This is useful for retrieving documents that are relevant to the query (although they may not be semantically similar). The advantage of using BM25 is that it is very fast, and can be used to retrieve relevant documents in milliseconds.
+
+Test out text search in this [notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/01-keyword-querying-filtering.ipynb).
+
+### Example: Text Search with ((es))
+
+```python
+
+response = es.search(index="demo", body={
+    "query": {
+      "match": {
+        "title": "javascript books?"
+      }
+    }
+})
+
+```
+
+## Hybrid Search
+
+((es)) allows you to combine both semantic search and text search in a single query. Using this technique, you tend to get better retrieval accuracy than vector similarity alone. This gives you the ability to retrieve documents that are both semantically similar and lexically close to the query.
+
+Test out hybrid search in this [notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/02-hybrid-search.ipynb).
+
+### Example: Hybrid search with ((es))
+
+**Note** This example uses [Reciprocal Rank Fusion (RRF)](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html) to balance the scores from both the vector search and text search with different relevance indicators into a single result set. Requires ((es)) **8.8.0+**.
+
+```python
+
+response = es.search(index="demo", body={
+    "query": {
+      "match": {
+        "title": "javascript books?"
+      }
+    },
+    "knn": {
+      "field": "text",
+      "query_vector": model.encode("javascript books?"),
+      "k": 10,
+      "num_candidates": 100
+    },
+    "rank" : {
+      "rrf" : {}
+    }
+  }
+)
+```
+
+## Search with Sparse Vector and ELSER
+
+((es)) has a retrieval model trained by Elastic that enables you to perform semantic search to retrieve relevant documents. To learn more about ELSER, see [ELSER Guide](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html).
+
+To use, you must first deploy the ELSER model into ((es)). Follow the instructions on how to [deploy ELSER model](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html#download-deploy-elser).
+
+Test this out in our [ELSER notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/03-ELSER.ipynb).
+
+## Boosting & Re-ranking
+
+TODO Notebook
+
+# Filtering
+
+Filtering allows you to filter the results of your query based on certain criteria. Filtering doesn't affect the score of the documents, but allows you to filter out documents that don't match the criteria, which should improve the performance of your query.
+
+Test out filtering in [this notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/02-keyword-querying-filtering.ipynb).
+
+# Integrations
+
+## OpenAI
+
+((es)) is commonly used with OpenAIs APIs in two ways:
+
+- OpenAI's embedding model "text-embedding-ada-002" to transform text into a vector
+- OpenAI's completion model to help answer questions given a context of documents retrieved from ((es))
+
+We have a number of [OpenAI notebooks](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/integrations/openai) you can test out.
+
+## Hugging Face
+
+Hugging Face is an open-source hub dedicated to AI/ML models and tools, offering access to a vast collection of machine learning models. This platform makes it easy to incorporate specialized AI and ML functionalities into your applications.
+
+You can use Hugging Face models with ((es)) in two ways:
+
+1. **Transformers library**: Leverage the Transformers Python library to carry out inference within a Python backend environment.
+Test it out in this [Notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/00-quick-start.ipynb)
+2. **Hosted Models in ((es))**: Deploy Hugging Face models directly in ((es)) to perform inference within the ((es)) environment.
+Test out this approach in this [notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb).
+
+## Langchain
+
+LangChain is a popular framework for working with AI, Vectors, and embeddings. Used to simplify building a variety of AI applications.
+
+((es)) can be used with LangChain in two ways:
+
+- Use the LangChain VectorStore to store and retrieve documents from ((es))
+- Use the LangChain self-query retriever with the help of an LLM like OpenAI, to transform a user's query into a query + filter to retrieve relevant documents from ((es)).
+
+Test these approaches in our [Langchain notebooks](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/integrations/langchain).

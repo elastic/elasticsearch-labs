@@ -1,0 +1,61 @@
+{
+    "mission": "Developer guide",
+    "id": "vectorGenAI",
+    "landingPageId": "overview",
+    "icon": "logoElasticsearch",
+    "description": "For developers who want to test and build applications that combine ((es))’s machine learning and vector search capabilities with generative AI.",
+    "items": [
+      {
+        "label": "Overview",
+        "items": [
+            { "id": "genaiOverview"}
+    ]
+      },
+      {
+        "label": "Quick start",
+        "items": [
+          { "id": "genaiQuickStart"}
+        ]
+      },
+      {
+        "label": "FAQ",
+        "items": [
+          { "id": "genaiFAQ"}
+        ]
+      },
+      {
+        "label": "Set up Elasticsearch",
+        "items": [
+          { "id": "genaiSetup"}
+        ]
+      },
+      {
+        "label": "Programming language clients",
+        "items": [
+          { "id": "clientsOverview"},
+          { "id": "clientsPython"}
+        ]
+      },
+      {
+        "label": "Using Elasticsearch",
+        "items": [
+          { "id": "usingElasticsearchOverview"},
+          { "id": "usingElasticsearchIndexing"},
+          { "id": "usingElasticsearchQuerying"},
+          { "id": "usingElasticsearchDataModeling"},
+          { "id": "usingElasticsearchRelevance"},
+          { "id": "usingElasticsearchFiltering"}
+        ]
+      },
+      {
+        "label": "Integrations",
+        "items": [
+          {"id": "genaiIntegrationsOverview"},
+          { "id": "genaiIntegrationsOpenAI"},
+          { "id": "genaiIntegrationsHuggingFace"},
+          { "id": "genaiIntegrationsLangChain"},
+          { "id": "genaiIntegrationsLlamaIndex"}
+        ]
+      }
+    ]
+  }
