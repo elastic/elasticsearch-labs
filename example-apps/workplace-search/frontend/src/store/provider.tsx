@@ -278,14 +278,15 @@ const parseSources = (
   const html = document.createElement('html')
   html.innerHTML = message
 
-  const sources = Array.from(
-    html.querySelectorAll<HTMLElement>('span[data-source]')
-  )
-    .map((el) => el.innerText.replace(/\"/g, ''))
-    .filter((text) => !!text)
+  try {
+    const script = html.querySelector<HTMLElement>('script')
+    const sources = JSON.parse(script?.innerText || '')
 
-  if (sources.length) {
-    callback(sources)
+    if (sources.length) {
+      callback(sources)
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
 
