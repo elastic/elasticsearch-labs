@@ -21,3 +21,9 @@ export interface Result {
   name: [string]
   url: [string]
 }
+
+export type SourceType = {
+  name: string
+  summary: string[]
+  url?: string
+}

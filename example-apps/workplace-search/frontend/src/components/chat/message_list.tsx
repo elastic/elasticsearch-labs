@@ -36,18 +36,15 @@ export const ChatMessageList: React.FC<ChatMessageListType> = ({
       ref={containerRef}
       onScroll={handleScroll}
     >
-      {messages.map((msg, index) => (
+      {messages.map((message, index) => (
         <ChatMessage
-          key={msg.id}
-          id={msg.id}
-          content={msg.content}
-          isHuman={msg.isHuman}
+          key={message.id}
           loading={
             messages.length - 1 === index &&
-            !msg.content.length &&
+            !message.content.length &&
             isMessageLoading
           }
-          sources={msg.sources || undefined}
+          {...message}
         />
       ))}
     </div>

@@ -1,5 +1,6 @@
-import { SourceType } from './source_item'
+import { SourceType } from 'types'
 import { Loader } from './loader'
+import { Sources } from './sources'
 
 export const Summary = ({
   isLoading,
@@ -8,7 +9,7 @@ export const Summary = ({
 }: {
   isLoading?: boolean
   text: string | undefined
-  sources: SourceType[]
+  sources: string[]
 }) => {
   return (
     <div className="mb-4">
@@ -26,11 +27,12 @@ export const Summary = ({
       {isLoading && !text && <Loader />}
 
       {text && (
-        <div className="text-base leading-tight text-gray-800 whitespace-pre-wrap mb-8">
-          {text}
-        </div>
+        <div
+          className="text-base leading-tight text-gray-800 whitespace-pre-wrap mb-8"
+          dangerouslySetInnerHTML={{ __html: text }}
+        ></div>
       )}
-      {/*<Sources showDisclaimer sources={sources} />*/}
+      <Sources showDisclaimer sources={sources} />
     </div>
   )
 }

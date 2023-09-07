@@ -1,10 +1,13 @@
-import { SourceItem, SourceType } from './source_item'
+import { SourceItem } from './source_item'
 
-export type SourcesType = {
-  sources: SourceType[]
+export type SourcesProps = {
+  sources: string[]
   showDisclaimer?: boolean
 }
-export const Sources: React.FC<SourcesType> = ({ sources, showDisclaimer }) => {
+export const Sources: React.FC<SourcesProps> = ({
+  sources,
+  showDisclaimer,
+}) => {
   return (
     (sources.length > 0 && (
       <>
@@ -18,10 +21,10 @@ export const Sources: React.FC<SourcesType> = ({ sources, showDisclaimer }) => {
         <div className="flex space-x-2 flex-wrap">
           {sources.map((source) => (
             <SourceItem
-              key={source.name}
-              name={source.name}
+              key={source}
+              name={source}
               // icon={source.icon}
-              url={source.url}
+              // url={source.url}
             />
           ))}
         </div>

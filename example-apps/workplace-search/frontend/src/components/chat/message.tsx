@@ -1,12 +1,14 @@
-import { SourceType } from 'components/source_item'
+import React from 'react'
+import { SourceType } from 'types'
 import { Loader } from 'components/loader'
+import { Sources } from 'components/sources'
 
 export type ChatMessageType = {
   id: number | string
   content: string
   isHuman?: boolean
   loading?: boolean
-  sources?: SourceType[]
+  sources?: string[]
 }
 export const ChatMessage: React.FC<ChatMessageType> = ({
   id,
@@ -56,17 +58,16 @@ export const ChatMessage: React.FC<ChatMessageType> = ({
           <span
             style={styles.messageContent}
             className="whitespace-pre-wrap leading-normal"
-          >
-            {content}
-          </span>
+            dangerouslySetInnerHTML={{ __html: content }}
+          ></span>
           {loading && <Loader />}
         </div>
       </div>
-      {/*{sources && (*/}
-      {/*  <div className="mt-4">*/}
-      {/*    <Sources sources={sources || []} />*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {sources && (
+        <div className="mt-4">
+          <Sources sources={sources || []} />
+        </div>
+      )}
     </>
   )
 }

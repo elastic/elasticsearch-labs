@@ -1,12 +1,9 @@
 import React from 'react'
+import { SourceType } from 'types'
 
-export type SourceType = {
-  name: string
-  summary?: string[]
-  url?: string
-}
+export type SourceProps = Omit<SourceType, 'summary'>
 
-export const SourceItem: React.FC<SourceType> = ({ name, url }) => {
+export const SourceItem: React.FC<SourceProps> = ({ name, url }) => {
   const styles = {
     wrapper: {
       background: 'linear-gradient(180deg, #F7F9FC 0%, #F1F4FA 100%)',

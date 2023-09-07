@@ -1,12 +1,14 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { ChatMessageType } from '../components/chat/message'
-import { configureStore, createSlice } from '@reduxjs/toolkit'
-import { Provider, useDispatch, useSelector } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
+import { Provider, useDispatch, useSelector } from 'react-redux'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { ChatMessageType } from 'components/chat/message'
+import { SourceType } from 'types'
 
 type GlobalStateType = {
   status: AppStatus
   conversation: ChatMessageType[]
+  sources: SourceType[]
   sessionId: string | null
 }
 
@@ -18,11 +20,17 @@ export enum AppStatus {
   Done = 'done',
   Error = 'error',
 }
+enum STREAMING_EVENTS {
+  SESSION_ID = '[SESSION_ID]',
+  SOURCE = '[SOURCE]',
+  DONE = '[DONE]',
+}
 
 const GLOBAL_STATE: GlobalStateType = {
   status: AppStatus.Idle,
   conversation: [],
   sessionId: null,
+  sources: [],
 }
 const API_HOST = 'http://localhost:3001/api'
 
@@ -31,6 +39,16 @@ const globalSlice = createSlice({
   name: 'global',
   initialState: GLOBAL_STATE as GlobalStateType,
   reducers: {
+    addSource: (state, action) => {
+      const source = action.payload.source
+      const rootSource = state.sources.find((s) => s.name === source.name)
+
+      if (rootSource) {
+        rootSource.summary = [...rootSource.summary, source.summary]
+      } else {
+        state.sources.push({ ...source, summary: [source.summary] })
+      }
+    },
     setStatus: (state, action) => {
       state.status = action.payload.status
     },
@@ -65,6 +83,7 @@ const globalSlice = createSlice({
       state.status = AppStatus.Idle
       state.sessionId = null
       state.conversation = []
+      state.sources = []
     },
   },
 })
@@ -114,7 +133,6 @@ export const thunkActions = {
       dispatch(
         actions.addMessage({
           conversation: {
-            loading: true,
             isHuman: false,
             content: '',
             id: conversationId,
@@ -148,41 +166,48 @@ export const thunkActions = {
               throw new FatalError(event.data)
             }
 
-            if (event.data.startsWith('[SESSION_ID]')) {
+            if (event.data.startsWith(STREAMING_EVENTS.SESSION_ID)) {
               const sessionId = event.data.split(' ')[1].trim()
               dispatch(actions.setSessionId({ sessionId }))
-            } else if (event.data.startsWith('[SOURCE]')) {
-              const source = event.data.replace('[SOURCE] ', '')
+            } else if (event.data.startsWith(STREAMING_EVENTS.SOURCE)) {
+              const source = event.data.replace(
+                `${STREAMING_EVENTS.SOURCE} `,
+                ''
+              )
 
               try {
                 if (source) {
-                  const parsedSource = JSON.parse(source.replaceAll('\n', ''))
+                  const parsedSource: {
+                    name: string
+                    page_content: string
+                    url?: string
+                  } = JSON.parse(source.replaceAll('\n', ''))
 
-                  if (sourcesMap.has(parsedSource.name)) {
-                    const source = sourcesMap.get(parsedSource.name)!
-
-                    source.summary = [
-                      ...source.summary,
-                      parsedSource.page_content,
-                    ]
-                  } else {
-                    sourcesMap.set(parsedSource.name, {
-                      ...parsedSource,
-                      summary: [parsedSource.page_content],
-                    })
+                  if (parsedSource.page_content && parsedSource.name) {
+                    dispatch(
+                      actions.addSource({
+                        source: {
+                          name: parsedSource.name,
+                          url: parsedSource.url,
+                          summary: parsedSource.page_content,
+                        },
+                      })
+                    )
                   }
                 }
               } catch (e) {
                 console.log('error', source, event.data)
                 console.error(e)
               }
-            } else if (event.data === '[DONE]') {
-              dispatch(
-                actions.updateMessage({
-                  id: conversationId,
-                  sources: Array.from(sourcesMap.values()),
-                })
-              )
+            } else if (event.data === STREAMING_EVENTS.DONE) {
+              parseSources(message, (sources) => {
+                dispatch(
+                  actions.updateMessage({
+                    id: conversationId,
+                    sources,
+                  })
+                )
+              })
               dispatch(actions.setStatus({ status: AppStatus.Done }))
             } else {
               message += message && event.data === '' ? '\n' : event.data
@@ -244,6 +269,24 @@ export const thunkActions = {
       )
     }
   },
+}
+
+const parseSources = (
+  message: string,
+  callback: (sources: string[]) => void
+) => {
+  const html = document.createElement('html')
+  html.innerHTML = message
+
+  const sources = Array.from(
+    html.querySelectorAll<HTMLElement>('span[data-source]')
+  )
+    .map((el) => el.innerText.replace(/\"/g, ''))
+    .filter((text) => !!text)
+
+  if (sources.length) {
+    callback(sources)
+  }
 }
 
 export const GlobalStateProvider = ({ children }) => {

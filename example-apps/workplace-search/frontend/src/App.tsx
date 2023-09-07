@@ -14,6 +14,7 @@ import SearchInput from 'components/search_input'
 const App = () => {
   const dispatch = useAppDispatch()
   const status = useAppSelector((state) => state.status)
+  const sources = useAppSelector((state) => state.sources)
   const [summary, ...messages] = useAppSelector((state) => state.conversation)
   const hasSummary = useAppSelector(
     (state) => !!state.conversation?.[0]?.content
@@ -82,29 +83,29 @@ const App = () => {
                   onAbortRequest={handleAbortRequest}
                 />
 
-                {!!summary?.sources?.length && (
+                {sources?.length && (
                   <>
                     <h3 className="text-lg mb-4 font-bold">Sources chunks</h3>
                     <div className="">
-                      {summary?.sources?.map((result) => (
+                      {sources?.map((source) => (
                         <div
                           className="bg-white border border-light-fog mb-4 p-4 rounded-xl shadow-md"
-                          key={result.name}
+                          key={source.name}
                         >
                           <h4 className="flex flex-row space-x-1.5 pb-2 text-md mb-1 font-semibold">
-                            {result.url ? (
+                            {source.url ? (
                               <a
                                 className="hover:text-blue text-dark-blue"
-                                href={result?.url}
+                                href={source?.url}
                               >
-                                {result.name}
+                                {source.name}
                               </a>
                             ) : (
-                              result.name
+                              source.name
                             )}
                           </h4>
 
-                          {result.summary?.map((text, index) => (
+                          {source.summary?.map((text, index) => (
                             <Fragment key={index}>
                               {!!index && <p>...</p>}
                               <p className="text-sm mb-2 text-light-ink">

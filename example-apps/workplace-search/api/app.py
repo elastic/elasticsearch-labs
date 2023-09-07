@@ -87,7 +87,7 @@ llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=0.2)
 
 general_system_template = """ 
 Use the following passages to answer the user's question.
-Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passage you are answering from, in the format of SOURCE: <source>.
+Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passage you are answering from, put it in the end of message with that structure <span data-source style="display:none;">"source"</div>.
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 ----
