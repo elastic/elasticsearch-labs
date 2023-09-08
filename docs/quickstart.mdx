@@ -9,7 +9,7 @@ tags: []
 related: []
 ---
 
-<DocCallOut>
+<DocCallOut title="Set up Elasticsearch">
 This section assumes you have an <DocLink id="genaiSetup" text="((es)) setup"/>, so you can start using the API Client to index and search documents.
 </DocCallOut>
 
@@ -17,8 +17,8 @@ Quickly get started indexing and querying ((es)) documents using our Python API 
 
 You can quick start in two ways:
 
-1. Use our [Quick start Python notebook](https://github.com/elastic/vector-gen-ai/blob/main/notebooks/search/00-quick-start.ipynb) for a concrete, interactive example of indexing and searching with ((es)).
-This doesn't require any local setup.similar
+1. Use our [Quick start Python notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb) for a concrete, interactive example of indexing and searching with ((es)).
+This doesn't require any local setup.
 2. Follow the commands below and run them in your local development environment.
 
 ## Run locally
@@ -34,7 +34,7 @@ $ python -m pip install elasticsearch
 ### Initialize the client
 
 We need to initialize the client to start using it.
-In this example, we assume you are using the [Elastic Cloud](https://cloud.elastic.co) and have a Cloud ID and password.
+In this example, we assume you are using [Elastic Cloud](https://cloud.elastic.co) and have a Cloud ID and password.
 
 ```python
 from elasticsearch import ((es))

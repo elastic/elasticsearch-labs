@@ -1,7 +1,7 @@
 {
-    "mission": "Developer guide",
+    "mission": "AI Developer guide",
     "id": "vectorGenAI",
-    "landingPageId": "overview",
+    "landingPageId": "genaiOverview",
     "icon": "logoElasticsearch",
     "description": "For developers who want to test and build applications that combine ((es))’s machine learning and vector search capabilities with generative AI.",
     "items": [
