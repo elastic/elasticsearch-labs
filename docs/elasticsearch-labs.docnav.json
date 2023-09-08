@@ -56,6 +56,12 @@
           { "id": "genaiIntegrationsLangChain"},
           { "id": "genaiIntegrationsLlamaIndex"}
         ]
+      },
+      {
+        "label": "Python Notebooks",
+        "items": [
+          { "id": "genaiNotebooks"}
+        ]
       }
     ]
   }
