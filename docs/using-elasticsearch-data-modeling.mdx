@@ -9,11 +9,11 @@ tags: []
 related: ['usingElasticsearchQuerying', 'usingElasticsearchDataIndexing', 'usingElasticsearchRelevance', 'usingElasticsearchFiltering']
 ---
 
-Depending on the type of use-case you are building, you will need to model your data differently.
+Depending on your use-case, you will need to model your data differently.
 
 ## Long unstructured text
 
-If each document contains long text, you should consider breaking up the text into smaller chunks called passages.
+If each document contains long text, you should consider breaking up the text into smaller chunks called *passages*.
 Long texts are hard to represent as a single vector, especially if the text has multiple topics.
 We recommend breaking up the text into smaller chunks, and indexing each passage as a separate document.
 
