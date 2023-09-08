@@ -159,11 +159,13 @@ docker run -p 9200:9200 \
   -e "discovery.type=single-node" \
   -e "xpack.security.enabled=false" \
   -e "xpack.security.http.ssl.enabled=false" \
-  -e "run.license_type=trial" \
+  -e "xpack.license.self_generated.type=trial" \
   docker.elastic.co/elasticsearch/elasticsearch:8.9.0
 ```
 
 Elasticsearch is now running on http://localhost:9200
+
+We're using the trial licence which lasts for up to 30 days. Some features like RRF and Elasticsearch ML inference are not available to the basic licences. Developers can use the basic licence which is free forever. On Cloud, you have a Platium licence. 
 
 ### Example: Use Elasticsearch with Elastic Cloud
 
