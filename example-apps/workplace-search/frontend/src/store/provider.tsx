@@ -299,10 +299,12 @@ const parseSources = (
 
   try {
     const script = html.querySelector<HTMLElement>('script')
-    const sources = JSON.parse(script?.innerText || '')
+    if (script) {
+      const sources = JSON.parse(script?.innerText)
 
-    if (sources.length) {
-      callback(sources)
+      if (sources.length) {
+        callback(sources)
+      }
     }
   } catch (e) {
     console.error(e)
