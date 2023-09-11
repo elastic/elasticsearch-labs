@@ -44,7 +44,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           {loading && <Loader />}
         </div>
       </div>
-      {sources && (
+      {!!sources?.length && (
         <div className="mt-6 gap-2 inline-flex">
           {messageIcon}
           <Sources sources={sources || []} onSourceClick={onSourceClick} />
