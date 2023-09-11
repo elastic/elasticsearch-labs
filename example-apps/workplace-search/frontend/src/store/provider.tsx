@@ -86,7 +86,7 @@ const globalSlice = createSlice({
       )
 
       if (messageIndex !== -1) {
-        delete state.conversation[messageIndex]
+        state.conversation.splice(messageIndex, 1)
       }
     },
     sourceToggle: (state, action) => {

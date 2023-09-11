@@ -29,7 +29,7 @@ export const SearchResult: React.FC<SearchResultProps> = ({
     if (blockHeight) {
       setBlockHeight(blockHeight)
     }
-  }, [])
+  }, [summary])
 
   return (
     <div
