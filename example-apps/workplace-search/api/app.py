@@ -46,6 +46,7 @@ class QueueCallbackHandler(BaseCallbackHandler):
                     "name": doc.metadata["name"],
                     "page_content": doc.page_content,
                     "url": doc.metadata["url"],
+                    "icon": doc.metadata["category"]
                 }
                 self.queue.put(f"{SOURCE_TAG} {json.dumps(source)}")
 

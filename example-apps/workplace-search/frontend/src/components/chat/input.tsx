@@ -9,8 +9,8 @@ import {
 import autosize from 'autosize'
 import { cn } from 'lib/utils'
 import Conversation from 'images/conversation'
-import SendIcon from 'images/send_icon'
-import StopIcon from 'images/stop_icon'
+import { ReactComponent as SendIcon } from 'images/paper_airplane_icon.svg'
+import { ReactComponent as StopIcon } from 'images/stop_icon.svg'
 
 export default function ChatInput({
   isMessageLoading,
@@ -29,6 +29,7 @@ export default function ChatInput({
       onSubmit(message)
 
       setMessage('')
+      autosize(textareaReference.current)
     }
   }
   const onChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,43 +55,36 @@ export default function ChatInput({
   }, [])
 
   return (
-    <form className="flex space-x-2 relative" onSubmit={handleSubmit}>
+    <form
+      className="flex relative space-x-2 items-center gap-2"
+      onSubmit={handleSubmit}
+    >
       <textarea
-        className="hover:border-blue disabled:border-smoke disabled:opacity-75 w-full h-10 p-2 border border-smoke rounded-md bg-gray-50 focus:bg-white pl-9 resize-none"
+        className="disabled:border-smoke disabled:opacity-75 h-12 w-full p-2 border-2 rounded-md bg-gray-50 focus:bg-white pl-9 flex items-center resize-none"
         ref={textareaReference}
         value={message}
-        placeholder="Ask a follow up question about this answer"
+        placeholder="Ask a follow up question"
         onKeyDown={handleKeyDown}
         onChange={onChange}
         disabled={isMessageLoading}
       ></textarea>
-      <span className="absolute left-1 top-3">
+      <span className="absolute left-2 top-3.5">
         <Conversation />
       </span>
       {isMessageLoading ? (
         <button
           onClick={onAbortRequest}
-          className={cn(
-            'hover:bg-light-ink bg-ink text-light-fog font-medium flex-row items-center justify-center w-36 px-4 py-2 rounded-md border cursor-pointer inline-flex'
-          )}
+          className="hover:bg-red-600 bg-red-400 px-4 py-2 h-12 rounded-md border cursor-pointer text-white animate-pulse hover:animate-pulse-stop self-end"
         >
-          <span className="mr-3">
-            <StopIcon />
-          </span>
-          Stop
+          <StopIcon width={24} height={24} />
         </button>
       ) : (
         <button
           disabled={isSubmitDisabled}
           type="submit"
-          className={cn(
-            'enabled:hover:bg-light-ink disabled:opacity-75 bg-ink text-light-fog font-medium flex-row items-center justify-center w-36 px-4 py-2 rounded-md border disabled:cursor-not-allowed cursor-pointer inline-flex'
-          )}
+          className="enabled:hover:bg-blue-600 disabled:opacity-75 bg-blue-500 px-4 py-2 h-12 rounded-md border disabled:cursor-not-allowed cursor-pointer self-end"
         >
-          Send
-          <span className="ml-3">
-            <SendIcon />
-          </span>
+          <SendIcon width={24} height={24} />
         </button>
       )}
     </form>

@@ -1,30 +1,30 @@
-import { SourceItem } from './source_item'
+import { SourceItem } from '../source_item'
+import { SourceType } from 'types'
 
 export type SourcesProps = {
-  sources: string[]
+  sources: SourceType[]
   showDisclaimer?: boolean
+  onSourceClick: (source: string) => void
 }
 export const Sources: React.FC<SourcesProps> = ({
   sources,
   showDisclaimer,
+  onSourceClick,
 }) => {
   return (
     (sources.length > 0 && (
       <>
         {showDisclaimer && (
-          <h5 className="text-xs font-medium tracking-normal leading-normal uppercase text-lighter-ink mb-3">
-            The answer was formed from
-            <br />
-            information found in this document
-          </h5>
+          <h5 className="text-zinc-400 text-sm mb-2">Sourced from</h5>
         )}
+
         <div className="flex space-x-2 flex-wrap">
           {sources.map((source) => (
             <SourceItem
-              key={source}
-              name={source}
-              // icon={source.icon}
-              // url={source.url}
+              key={source.name}
+              name={source.name}
+              icon={source.icon}
+              onSourceClick={onSourceClick}
             />
           ))}
         </div>

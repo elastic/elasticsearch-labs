@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { cn } from 'lib/utils'
-import { Reload } from 'images/reload'
-import SearchIcon from 'images/search_icon'
+import { ReactComponent as RefreshIcon } from 'images/refresh_icon.svg'
+import { ReactComponent as SearchIcon } from 'images/search_icon.svg'
+import { ReactComponent as ArrowIcon } from 'images/arrow_icon.svg'
 import { AppStatus } from 'store/provider'
 
 export default function SearchInput({ onSearch, value, appStatus }) {
@@ -21,37 +21,36 @@ export default function SearchInput({ onSearch, value, appStatus }) {
 
   return (
     <form className="w-full" onSubmit={handleSubmit}>
-      <label className="text-xs font-bold leading-none text-gray-900">
-        Search everything
-      </label>
-      <div className="relative mt-1 flex w-full items-center space-x-2">
+      <div className="relative mt-1 flex w-full items-center h-14 gap-2">
         <input
-          type="text"
-          className="hover:border-blue w-full rounded-md border border-light-smoke px-3 py-2.5 pl-10 text-base font-medium placeholder-gray-400"
+          type="search"
+          className="hover:border-blue w-full h-14 rounded-md border-2 border-zinc-300 px-3 py-2.5 pl-12 text-base font-medium placeholder-gray-400 "
           value={query}
           onChange={handleChange}
-          placeholder="Ask your question here"
+          placeholder="What is on your mind?"
         />
-        <span className="pointer-events-none absolute left-2">
+        <span className="pointer-events-none absolute left-4">
           <SearchIcon />
         </span>
-        <button
-          className={cn(
-            'hover:bg-blue flex flex-row bg-dark-blue text-light-fog py-2.5 w-48 rounded-md font-medium items-center justify-center'
-          )}
-          type="submit"
-        >
-          {appStatus === AppStatus.Idle ? (
-            'Search'
-          ) : (
-            <>
-              <span className="mr-2">
-                <Reload />
-              </span>
-              Start over
-            </>
-          )}
-        </button>
+        {appStatus === AppStatus.Idle ? (
+          <button
+            className="hover:bg-blue disabled:bg-blue-400 px-4 py-2 h-14 bg-blue-500 rounded flex items-center"
+            type="submit"
+            disabled={!query.length}
+          >
+            <ArrowIcon width={24} height={24} />
+          </button>
+        ) : (
+          <button
+            className="hover:bg-blue-400 hover:text-blue-100 h-14 px-4 py-2 bg-blue-100 rounded flex justify-center items-center text-blue-400 font-bold"
+            type="submit"
+          >
+            <span className="mr-2">
+              <RefreshIcon width={24} height={24} />
+            </span>
+            Start over
+          </button>
+        )}
       </div>
     </form>
   )

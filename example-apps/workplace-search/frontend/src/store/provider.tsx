@@ -2,8 +2,7 @@ import type { TypedUseSelectorHook } from 'react-redux'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { configureStore, createSlice } from '@reduxjs/toolkit'
-import { ChatMessageType } from 'components/chat/message'
-import { SourceType } from 'types'
+import { SourceType, ChatMessageType } from 'types'
 
 type GlobalStateType = {
   status: AppStatus
@@ -70,6 +69,17 @@ const globalSlice = createSlice({
         }
       }
     },
+    setMessageSource: (state, action) => {
+      const message = state.conversation.find((c) => c.id === action.payload.id)
+
+      if (message) {
+        message.sources = action.payload.sources
+          .map((sourceName) =>
+            state.sources.find((stateSource) => stateSource.name === sourceName)
+          )
+          .filter((source) => !!source)
+      }
+    },
     removeMessage: (state, action) => {
       const messageIndex = state.conversation.findIndex(
         (c) => c.id === action.payload.id
@@ -77,6 +87,13 @@ const globalSlice = createSlice({
 
       if (messageIndex !== -1) {
         delete state.conversation[messageIndex]
+      }
+    },
+    sourceToggle: (state, action) => {
+      const source = state.sources.find((s) => s.name === action.payload.name)
+
+      if (source) {
+        source.expanded = action.payload.expanded ?? !source.expanded
       }
     },
     reset: (state) => {
@@ -181,6 +198,7 @@ export const thunkActions = {
                     name: string
                     page_content: string
                     url?: string
+                    icon?: string
                   } = JSON.parse(source.replaceAll('\n', ''))
 
                   if (parsedSource.page_content && parsedSource.name) {
@@ -190,6 +208,7 @@ export const thunkActions = {
                           name: parsedSource.name,
                           url: parsedSource.url,
                           summary: parsedSource.page_content,
+                          icon: parsedSource.icon,
                         },
                       })
                     )
@@ -202,7 +221,7 @@ export const thunkActions = {
             } else if (event.data === STREAMING_EVENTS.DONE) {
               parseSources(message, (sources) => {
                 dispatch(
-                  actions.updateMessage({
+                  actions.setMessageSource({
                     id: conversationId,
                     sources,
                   })

@@ -1,13 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
-import { ChatMessageType, ChatMessage } from './message'
+import React, { useEffect, useRef, useState } from 'react'
+import { ChatMessage } from './message'
+import { ChatMessageType } from 'types'
 
 type ChatMessageListType = {
   messages: ChatMessageType[]
   isMessageLoading: boolean
+  onSourceClick: (source: string) => void
 }
 export const ChatMessageList: React.FC<ChatMessageListType> = ({
   messages,
   isMessageLoading,
+  onSourceClick,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [userScrolled, setUserScrolled] = useState(false)
@@ -32,7 +35,7 @@ export const ChatMessageList: React.FC<ChatMessageListType> = ({
 
   return (
     <div
-      className="w-full mb-8 overflow-y-auto max-h-96 pb-5 px-5 overflow-x-visible"
+      className="w-full overflow-y-auto max-h-96 pb-5 px-5 overflow-x-visible"
       ref={containerRef}
       onScroll={handleScroll}
     >
@@ -44,6 +47,7 @@ export const ChatMessageList: React.FC<ChatMessageListType> = ({
             !message.content.length &&
             isMessageLoading
           }
+          onSourceClick={onSourceClick}
           {...message}
         />
       ))}

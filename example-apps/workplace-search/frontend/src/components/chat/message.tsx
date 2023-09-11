@@ -1,73 +1,55 @@
 import React from 'react'
-import { SourceType } from 'types'
+import { ChatMessageType, SourceType } from 'types'
 import { Loader } from 'components/loader'
-import { Sources } from 'components/sources'
+import { Sources } from 'components/chat/sources'
+import { ReactComponent as UserLogo } from 'images/user.svg'
+import { ReactComponent as ElasticLogo } from 'images/elastic_logo.svg'
 
-export type ChatMessageType = {
-  id: number | string
-  content: string
-  isHuman?: boolean
-  loading?: boolean
-  sources?: string[]
+type ChatMessageProps = Omit<ChatMessageType, 'id'> & {
+  onSourceClick: (source: string) => void
 }
-export const ChatMessage: React.FC<ChatMessageType> = ({
-  id,
+export const ChatMessage: React.FC<ChatMessageProps> = ({
   content,
   isHuman,
   sources,
   loading,
+  onSourceClick,
 }) => {
-  const styles = {
-    wrapper: {
-      display: 'flex',
-      width: '100%',
-      justifyContent: isHuman ? 'flex-end' : 'flex-start',
-      marginTop: '1.5rem',
-      gap: '12px',
-    },
-    message: {
-      padding: '12px',
-      width: '400px',
-      background: isHuman
-        ? 'linear-gradient(180deg, #1BA9F5 0%, #52C3FF 100%)'
-        : 'linear-gradient(180deg, #F7F9FC 0%, #F1F4FA 100%)',
-      boxShadow: isHuman
-        ? '0px 0.7px 3.4px rgba(0, 0, 0, 0.15), 0px 1.9px 8px rgba(0, 0, 0, 0.03), 0px 4.5px 16px rgba(0, 0, 0, 0.1), inset 0px 1px 1px rgba(255, 255, 255, 0.22)'
-        : '0px 0.7px 3.4px rgba(0, 0, 0, 0.15), 0px 1.9px 8px rgba(0, 0, 0, 0.03), 0px 4.5px 16px rgba(0, 0, 0, 0.1), inset 0px 1px 1px #FFFFFF',
-      borderRadius: '12px',
-    },
-    messageContent: {
-      color: isHuman ? '#000000' : '#1C1E23',
-      fontWeight: 500,
-      textShadow: isHuman
-        ? '0px 1px 0px rgba(140, 215, 255, 0.51)'
-        : '0px 1px 0px #FFFFFF',
-    },
-    sourceList: {
-      display: 'inline-flex',
-      paddingLeft: '44px',
-      flexDirection: 'column',
-      gap: '8px',
-      paddingTop: '1rem',
-    },
-  }
+  const messageIcon = isHuman ? (
+    <span className="self-end p-2 rounded-md border border-zind-200 bg-white">
+      <UserLogo width={24} height={24} />
+    </span>
+  ) : (
+    <span className="self-end p-2 rounded-md bg-blue-50 shadow">
+      <ElasticLogo width={24} height={24} />
+    </span>
+  )
+
   return (
-    <>
-      <div style={styles.wrapper}>
-        <div style={styles.message}>
+    <div>
+      <div className={`flex mt-6 gap-2 ${isHuman ? 'justify-end' : ''}`}>
+        {messageIcon}
+
+        <div
+          className={`w-96 p-4 rounded-md ${
+            isHuman
+              ? 'rounded-br-none text-white bg-blue-500 -order-1'
+              : 'bg-white shadow border-2 border-blue-100 rounded-bl-none text-zinc-700'
+          }`}
+        >
           <span
-            style={styles.messageContent}
             className="whitespace-pre-wrap leading-normal"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: content || '' }}
           ></span>
           {loading && <Loader />}
         </div>
       </div>
       {sources && (
-        <div className="mt-4">
-          <Sources sources={sources || []} />
+        <div className="mt-6 gap-2 inline-flex">
+          {messageIcon}
+          <Sources sources={sources || []} onSourceClick={onSourceClick} />
         </div>
       )}
-    </>
+    </div>
   )
 }

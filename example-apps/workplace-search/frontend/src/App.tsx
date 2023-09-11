@@ -1,6 +1,7 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 
 import {
+  actions,
   AppStatus,
   thunkActions,
   useAppDispatch,
@@ -10,6 +11,8 @@ import { Header } from 'components/header'
 import { Loader } from 'components/loader'
 import { Chat } from 'components/chat/chat'
 import SearchInput from 'components/search_input'
+import { ReactComponent as ChatIcon } from 'images/chat_icon.svg'
+import { SearchResults } from './components/search_results'
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -30,6 +33,18 @@ const App = () => {
   const handleAbortRequest = () => {
     dispatch(thunkActions.abortRequest())
   }
+  const handleToggleSource = (name) => {
+    dispatch(actions.sourceToggle({ name }))
+  }
+  const handleSourceClick = (name) => {
+    dispatch(actions.sourceToggle({ name, expanded: true }))
+
+    setTimeout(() => {
+      document
+        .querySelector(`[data-source="${name}"]`)
+        ?.scrollIntoView({ behavior: 'smooth' })
+    }, 300)
+  }
 
   const suggestedQueries = [
     'What is our work from home policy?',
@@ -42,24 +57,24 @@ const App = () => {
   return (
     <>
       <Header />
-      <div className="p-8">
-        <div className="max-w-2xl mx-auto">
-          <SearchInput
-            onSearch={handleSearch}
-            value={searchQuery}
-            appStatus={status}
-          />
-        </div>
+
+      <div className="p-4 max-w-2xl mx-auto">
+        <SearchInput
+          onSearch={handleSearch}
+          value={searchQuery}
+          appStatus={status}
+        />
 
         {status === AppStatus.Idle ? (
-          <div className="text-left mt-20 w-96 mx-auto">
-            <h1 className="text-xl font-bold mb-4">Ask a question about</h1>
+          <div className="mx-auto my-6">
+            <h2 className="text-zinc-400 text-sm font-medium mb-3  inline-flex items-center gap-2">
+              <ChatIcon /> Common questions
+            </h2>
             <div className="flex flex-col space-y-4">
               {suggestedQueries.map((query) => (
-                <a
+                <button
                   key={query}
-                  href="#"
-                  className="text-lg text-dark-blue hover:text-blue-700"
+                  className="hover:-translate-y-1 hover:shadow-lg hover:bg-zinc-300 transition-transform h-12 px-4 py-2 bg-zinc-200 rounded-md shadow flex items-center text-zinc-700"
                   onClick={(e) => {
                     e.preventDefault()
                     setSearchQuery(query)
@@ -67,7 +82,7 @@ const App = () => {
                   }}
                 >
                   {query}
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -81,43 +96,13 @@ const App = () => {
                   summary={summary}
                   onSend={handleSendChatMessage}
                   onAbortRequest={handleAbortRequest}
+                  onSourceClick={handleSourceClick}
                 />
 
-                {sources?.length && (
-                  <>
-                    <h3 className="text-lg mb-4 font-bold">Sources chunks</h3>
-                    <div className="">
-                      {sources?.map((source) => (
-                        <div
-                          className="bg-white border border-light-fog mb-4 p-4 rounded-xl shadow-md"
-                          key={source.name}
-                        >
-                          <h4 className="flex flex-row space-x-1.5 pb-2 text-md mb-1 font-semibold">
-                            {source.url ? (
-                              <a
-                                className="hover:text-blue text-dark-blue"
-                                href={source?.url}
-                              >
-                                {source.name}
-                              </a>
-                            ) : (
-                              source.name
-                            )}
-                          </h4>
-
-                          {source.summary?.map((text, index) => (
-                            <Fragment key={index}>
-                              {!!index && <p>...</p>}
-                              <p className="text-sm mb-2 text-light-ink">
-                                {text}
-                              </p>
-                            </Fragment>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
+                <SearchResults
+                  results={sources}
+                  toggleSource={handleToggleSource}
+                />
               </div>
             ) : (
               <Loader className="relative w-24 mx-auto py-10 opacity-30" />

@@ -25,5 +25,15 @@ export interface Result {
 export type SourceType = {
   name: string
   summary: string[]
-  url?: string
+  url: string
+  icon: string
+  expanded: boolean
+}
+
+export type ChatMessageType = {
+  id: string
+  content: string
+  isHuman?: boolean
+  loading?: boolean
+  sources?: SourceType[]
 }
