@@ -60,7 +60,7 @@ export default function ChatInput({
       onSubmit={handleSubmit}
     >
       <textarea
-        className="disabled:border-smoke disabled:opacity-75 h-12 w-full p-2 border-2 rounded-md bg-gray-50 focus:bg-white pl-9 flex items-center resize-none"
+        className="disabled:border-smoke disabled:opacity-75 h-14 w-full p-2 pr-20 border-2 rounded-md bg-gray-50 focus:bg-white pl-9 flex items-center resize-none"
         ref={textareaReference}
         value={message}
         placeholder="Ask a follow up question"
@@ -74,7 +74,7 @@ export default function ChatInput({
       {isMessageLoading ? (
         <button
           onClick={onAbortRequest}
-          className="hover:bg-red-600 bg-red-400 px-4 py-2 h-12 rounded-md border cursor-pointer text-white animate-pulse hover:animate-pulse-stop self-end"
+          className="hover:bg-red-600 bg-red-500 px-4 py-2 rounded-md border cursor-pointer text-white animate-pulse hover:animate-pulse-stop self-end absolute right-2 bottom-2"
         >
           <StopIcon width={24} height={24} />
         </button>
@@ -82,7 +82,7 @@ export default function ChatInput({
         <button
           disabled={isSubmitDisabled}
           type="submit"
-          className="enabled:hover:bg-blue-600 disabled:opacity-75 bg-blue-500 px-4 py-2 h-12 rounded-md border disabled:cursor-not-allowed cursor-pointer self-end"
+          className="enabled:hover:bg-blue-600 disabled:opacity-75 bg-blue-500 px-4 py-2 rounded-md border disabled:cursor-not-allowed cursor-pointer self-end absolute right-2 bottom-2"
         >
           <SendIcon width={24} height={24} />
         </button>
