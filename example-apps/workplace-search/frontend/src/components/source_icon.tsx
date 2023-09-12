@@ -16,6 +16,7 @@ import word from 'images/word.png'
 import faq from 'images/faq.png'
 
 export type SourceIconType = {
+  className?: string
   icon:
     | 'confluence'
     | 'docs'
@@ -33,7 +34,7 @@ export type SourceIconType = {
     | 'faq'
     | string
 }
-export const SourceIcon: React.FC<SourceIconType> = ({ icon }) => {
+export const SourceIcon: React.FC<SourceIconType> = ({ className, icon }) => {
   const iconNameToImageMap = {
     confluence,
     docs,
@@ -50,19 +51,9 @@ export const SourceIcon: React.FC<SourceIconType> = ({ icon }) => {
     github,
     faq,
   }
-  const styles = {
-    iconWrapper: {
-      width: '24px',
-      height: '24px',
-    },
-    icon: {
-      maxWidth: '24px',
-      maxHeight: '24px',
-    },
-  }
   return (
-    <span style={styles.iconWrapper}>
-      <img style={styles.icon} src={iconNameToImageMap[icon]} alt={icon} />
+    <span className={className}>
+      <img className="w-6 h-6" src={iconNameToImageMap[icon]} alt={icon} />
     </span>
   )
 }

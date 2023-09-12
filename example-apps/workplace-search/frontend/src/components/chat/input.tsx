@@ -60,7 +60,7 @@ export default function ChatInput({
       onSubmit={handleSubmit}
     >
       <textarea
-        className="disabled:border-smoke disabled:opacity-75 h-14 w-full p-2 pr-20 border-2 rounded-md bg-gray-50 focus:bg-white pl-9 flex items-center resize-none"
+        className="disabled:border-smoke disabled:opacity-75 h-14 w-full px-2 py-3.5 pr-20 border-2 rounded-md bg-gray-50 leadingd-9 focus:bg-white pl-9 flex items-center resize-none"
         ref={textareaReference}
         value={message}
         placeholder="Ask a follow up question"
@@ -68,7 +68,7 @@ export default function ChatInput({
         onChange={onChange}
         disabled={isMessageLoading}
       ></textarea>
-      <span className="absolute left-2 top-3.5">
+      <span className="absolute left-2 top-5">
         <Conversation />
       </span>
       {isMessageLoading ? (
