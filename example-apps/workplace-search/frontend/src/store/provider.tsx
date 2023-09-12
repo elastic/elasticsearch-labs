@@ -199,6 +199,7 @@ export const thunkActions = {
                     page_content: string
                     url?: string
                     icon?: string
+                    updated_at?: string | null
                   } = JSON.parse(source.replaceAll('\n', ''))
 
                   if (parsedSource.page_content && parsedSource.name) {
@@ -209,6 +210,7 @@ export const thunkActions = {
                           url: parsedSource.url,
                           summary: parsedSource.page_content,
                           icon: parsedSource.icon,
+                          updated_at: parsedSource.updated_at,
                         },
                       })
                     )

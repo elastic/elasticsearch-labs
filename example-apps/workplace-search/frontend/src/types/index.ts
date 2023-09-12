@@ -27,7 +27,7 @@ export type SourceType = {
   summary: string[]
   url: string
   icon: string
-  updated_at?: string
+  updated_at?: string | null
   expanded: boolean
 }
 
