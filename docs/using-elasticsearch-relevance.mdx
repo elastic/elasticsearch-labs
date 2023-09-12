@@ -1,0 +1,114 @@
+---
+id: usingElasticsearchRelevance
+slug: /vector-gen-ai/using-elasticsearch/relevance
+title: Relevance
+image:
+description: Learn how to tune relevance in ((es))
+date: 2023-09-07
+tags: ['', '']
+related: ['usingElasticsearchIndexing', 'usingElasticsearchDataModeling', 'usingElasticsearchQuerying', 'usingElasticsearchFiltering']
+---
+
+Now that you are able to index and search documents, lets start to tweak the relevance of your search results.
+
+## Semantic search
+
+Text embedding models like [sentence-transformers](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) transform your text into vectors (arrays of floating-point numbers) that capture semantic information. These vectors represent the contextual meaning of sentences. When users make a search query, you can encode their query into a vector (using the same embedding model) and search for similar documents.
+
+**NOTE**: You must use the same embedding model to encode your documents and queries.
+
+<DocCallOut>
+📒 Test out semantic search in our [quick start notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/00-quick-start.ipynb).
+</DocCallOut>
+
+### Example: Semantic search with ((es))
+
+```python
+
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+
+response = es.search(index="demo", body={
+    "knn": {
+      "field": "text",
+      "query_vector": model.encode("javascript books?"),
+      "k": 10,
+      "num_candidates": 100
+    }
+})
+
+```
+
+## Text search
+
+With BM25, you can retrieve relevant documents based on the keywords in the query, matching the keywords in the document. This is useful for retrieving documents that are relevant to the query (although they may not be semantically similar). The advantage of using BM25 is that it is very fast, and can be used to retrieve relevant documents in milliseconds.
+
+<DocCallOut>
+📒 Test out text search in this [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/01-keyword-querying-filtering.ipynb).
+</DocCallOut>
+
+### Example: Text search with ((es))
+
+```python
+
+response = es.search(index="demo", body={
+    "query": {
+      "match": {
+        "title": "javascript books?"
+      }
+    }
+})
+
+```
+
+## Hybrid search
+
+((es)) allows you to combine both semantic search and text search in a single query. Using this technique, you tend to get better retrieval accuracy than vector similarity alone. This gives you the ability to retrieve documents that are both semantically similar and lexically close to the query.
+
+<DocCallOut>
+📒 Test out hybrid search in this [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/02-hybrid-search.ipynb).
+
+</DocCallOut>
+
+### Example: Hybrid search with ((es))
+
+**Note** This example uses [Reciprocal Rank Fusion (RRF)](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html) to balance the scores from both the vector search and text search with different relevance indicators into a single result set. Requires ((es)) **8.8.0+**.
+
+```python
+
+response = es.search(index="demo", body={
+    "query": {
+      "match": {
+        "title": "javascript books?"
+      }
+    },
+    "knn": {
+      "field": "text",
+      "query_vector": model.encode("javascript books?"),
+      "k": 10,
+      "num_candidates": 100
+    },
+    "rank" : {
+      "rrf" : {}
+    }
+  }
+)
+```
+
+## Search with sparse vector and ELSER
+
+The Elastic Learned Sparse EncodER is Elastic's proprietary model that enables you to perform semantic search to retrieve relevant documents.
+This model works out of the box and does not require dense vector embeddings.
+To learn more, refer to the [ELSER Guide](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html) in the Elastic Machine Learning documentation.
+
+To get started, you must first deploy the ELSER model into ((es)).
+Follow the instructions in the Elastic Machine Learning documentation on how to [deploy the ELSER model](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html#download-deploy-elser).
+
+<DocCallOut>
+📒 For a full working example of getting started with this model, check out our [ELSER notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/search/03-ELSER.ipynb).
+</DocCallOut>
+
+{/* ## Boosting & Re-ranking
+
+TODO Notebook */}

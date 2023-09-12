@@ -1,0 +1,33 @@
+---
+id: genaiFAQ
+slug: /vector-gen-ai/genai-faq
+title: FAQ
+image:
+description: Frequently asked questions about ((es)), vector search, and generative AI.
+date: 2023-09-07
+tags: []
+related: []
+---
+
+{/* Consider reusing some ESRE docs FAQs
+https://www.elastic.co/guide/en/esre/current/faq.html
+*/}
+
+### Does Elasticsearch support vector search?
+
+Yes! Elasticsearch supports vector search using:
+- Dense vectors with the [dense vector field type](https://www.elastic.co/guide/en/elasticsearch/reference/master/dense-vector.html)
+- Sparse vectors with the [rank feature field type](https://www.elastic.co/guide/en/elasticsearch/reference/master/rank-feature.html)
+
+### Can I do semantic search with Elasticsearch?
+
+Yes! You have many options for semantic search with Elasticsearch.
+For example, you can use an embedding model, such as [sentence-transformers](https://www.sbert.net/), to transform your text into vectors and store these in Elasticsearch.
+
+Then you can use Elasticsearch's vector search capabilities to find similar documents.
+
+### Can I combine semantic search and full-text search?
+
+Yes! You can combine semantic search and full-text search in what's known as a "hybrid" query strategy.
+Hybrid search involves retrieving relevant documents using both vector search and full-text search,
+and balancing the scores from both queries using a ranking algorithm.
