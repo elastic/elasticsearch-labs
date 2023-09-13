@@ -12,14 +12,17 @@ from langchain.prompts.chat import (
 )
 from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import ElasticsearchStore
+from langchain.docstore.document import Document
 from queue import Queue
 from uuid import uuid4
 import json
 import os
 import threading
+from dotenv import load_dotenv
+load_dotenv()
 
-INDEX = "workplace-app-docs"
-INDEX_CHAT_HISTORY = "workplace-app-docs-chat-history"
+INDEX = os.getenv("ELASTIC_INDEX")
+INDEX_CHAT_HISTORY = INDEX + "-chat-history"
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
 ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME")
 ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
@@ -30,6 +33,95 @@ SESSION_ID_TAG = "[SESSION_ID]"
 SOURCE_TAG = "[SOURCE]"
 DONE_TAG = "[DONE]"
 
+def query(self):
+    def _query(
+         query_vector,
+         query,
+         k,
+         fetch_k,
+         vector_query_field,
+         text_field,
+         filter,
+         similarity,
+    ):
+        return {
+             "query": {
+                 "bool": {
+                     "must": [
+                         {
+                             "text_expansion": {
+                                 vector_query_field: {
+                                     "model_id": self.model_id,
+                                     "model_text": query,
+                                 }
+                             }
+                         }
+                     ],
+                     "filter": filter,
+                 }
+             }
+        }
+
+    return _query
+
+def search(self):
+    def _search(
+       query = None,
+       k = 4,
+       query_vector = None,
+       fetch_k = 50,
+       fields = None,
+       filter = None,
+       custom_query = None):
+        if fields is None:
+            fields = ["title", "url", "last_crawled_at", "website_area"]
+
+        if self.query_field not in fields:
+            fields.append(self.query_field)
+
+        if self.embedding and query is not None:
+            query_vector = self.embedding.embed_query(query)
+
+        query_body = self.strategy.query(
+            query_vector=query_vector,
+            query=query,
+            k=k,
+            fetch_k=fetch_k,
+            vector_query_field=self.vector_query_field,
+            text_field=self.query_field,
+            filter=filter or [],
+            similarity=self.distance_strategy,
+        )
+
+        if custom_query is not None:
+            query_body = custom_query(query_body, query)
+
+        response = self.client.search(
+            index=self.index_name,
+            **query_body,
+            size=k,
+            source=fields,
+        )
+
+        hits = [hit for hit in response["hits"]["hits"]]
+
+        docs_and_scores = [
+            (
+                Document(
+                    page_content=hit["_source"][self.query_field],
+                    metadata=hit["_source"],
+                ),
+                hit["_score"],
+            )
+            for hit in hits
+        ]
+
+        return docs_and_scores
+
+    return _search
+
+strategy = ElasticsearchStore.SparseVectorRetrievalStrategy()
+strategy.query = query(strategy)
 
 class QueueCallbackHandler(BaseCallbackHandler):
     def __init__(
@@ -43,11 +135,11 @@ class QueueCallbackHandler(BaseCallbackHandler):
         if len(documents) > 0:
             for doc in documents:
                 source = {
-                    "name": doc.metadata["name"],
+                    "name": doc.metadata["title"],
                     "page_content": doc.page_content,
                     "url": doc.metadata["url"],
-                    "icon": doc.metadata["category"],
-                    "updated_at": doc.metadata.get("updated_at", None)
+                    "updated_at": doc.metadata["last_crawled_at"],
+                    "icon": doc.metadata["website_area"],
                 }
                 self.queue.put(f"{SOURCE_TAG} {json.dumps(source)}")
 
@@ -80,8 +172,11 @@ elasticsearch_client = Elasticsearch(
 store = ElasticsearchStore(
     es_connection=elasticsearch_client,
     index_name=INDEX,
-    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(),
+    strategy=strategy,
+    vector_query_field="ml.inference.body_expanded.predicted_value",
+    query_field="body"
 )
+store._search = search(store)
 
 retriever = store.as_retriever()
 
@@ -90,6 +185,7 @@ llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=0.2)
 general_system_template = """ 
 Use the following passages to answer the user's question.
 Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them as an array of strings in here <script>[sources]</script>.
+Don't mention the sources of passages in answer until it contains in source.
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 ----
@@ -106,10 +202,10 @@ qa_prompt = ChatPromptTemplate.from_messages(
 )
 
 document_prompt = PromptTemplate(
-    input_variables=["page_content", "name"],
+    input_variables=["page_content", "title"],
     template="""
 ---
-NAME: "{name}"
+NAME: "{title}"
 PASSAGE: 
 {page_content}
 ---

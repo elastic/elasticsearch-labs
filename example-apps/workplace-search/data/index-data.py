@@ -9,7 +9,7 @@ load_dotenv()
 # Global variables
 # Modify these if you want to use a different file, index or model
 FILE = f'{os.path.dirname(__file__)}/data.json'
-INDEX = 'workplace-app-docs'
+INDEX = 'workplace-app-docs-2'
 ELASTIC_CLOUD_ID = os.getenv('ELASTIC_CLOUD_ID')
 ELASTIC_USERNAME = os.getenv('ELASTIC_USERNAME')
 ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
@@ -57,5 +57,6 @@ if __name__ == "__main__":
         docs,
         es_connection=elasticsearch_client,
         index_name=INDEX,
-        strategy=ElasticsearchStore.SparseVectorRetrievalStrategy()
+        strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(),
+        vector_query_field="ml"
     )

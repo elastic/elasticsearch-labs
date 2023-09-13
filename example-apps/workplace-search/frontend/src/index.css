@@ -15,4 +15,10 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+  @apply text-green-700;
+}
+
+pre {
+  @apply bg-gray-100;
+  @apply my-2;
 }

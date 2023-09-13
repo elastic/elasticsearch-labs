@@ -4,6 +4,7 @@ import { Loader } from 'components/loader'
 import { Sources } from 'components/chat/sources'
 import { ReactComponent as UserLogo } from 'images/user.svg'
 import { ReactComponent as ElasticLogo } from 'images/elastic_logo.svg'
+import ReactMarkdown from 'react-markdown'
 
 type ChatMessageProps = Omit<ChatMessageType, 'id'> & {
   onSourceClick: (source: string) => void
@@ -37,10 +38,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
               : 'bg-white shadow border-2 border-blue-100 rounded-bl-none text-zinc-700'
           }`}
         >
-          <span
-            className="whitespace-pre-wrap leading-normal"
-            dangerouslySetInnerHTML={{ __html: content || '' }}
-          ></span>
+          {/*<div*/}
+          {/*  className="whitespace-pre-wrap leading-normal"*/}
+          {/*  dangerouslySetInnerHTML={{ __html: content || '' }}*/}
+          {/*></div>*/}
+          <ReactMarkdown>{content}</ReactMarkdown>
           {loading && <Loader />}
         </div>
       </div>

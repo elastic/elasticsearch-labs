@@ -14,6 +14,7 @@ import teams from 'images/teams.png'
 import sql_server from 'images/sql server.png'
 import word from 'images/word.png'
 import faq from 'images/faq.png'
+import elastic from 'images/elastic_logo.svg'
 
 export type SourceIconType = {
   className?: string
@@ -21,6 +22,7 @@ export type SourceIconType = {
     | 'confluence'
     | 'docs'
     | 'dropbox'
+    | 'elastic'
     | 'excel'
     | 'onedrive'
     | 'pdf'
@@ -39,6 +41,7 @@ export const SourceIcon: React.FC<SourceIconType> = ({ className, icon }) => {
     confluence,
     docs,
     dropbox,
+    elastic,
     excel,
     onedrive,
     pdf,
@@ -53,7 +56,11 @@ export const SourceIcon: React.FC<SourceIconType> = ({ className, icon }) => {
   }
   return (
     <span className={className}>
-      <img className="w-6 h-6" src={iconNameToImageMap[icon]} alt={icon} />
+      <img
+        className="w-6 h-6"
+        src={iconNameToImageMap[icon] || iconNameToImageMap.elastic}
+        alt={icon}
+      />
     </span>
   )
 }

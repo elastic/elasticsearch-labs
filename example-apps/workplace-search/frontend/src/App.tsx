@@ -47,9 +47,9 @@ const App = () => {
   }
 
   const suggestedQueries = [
-    'What is our work from home policy?',
-    "What's the NASA sales team?",
-    'Does the company own my personal project?',
+    'What type of query does elastic have?',
+    'How do I setup a dense vector field?\n',
+    'Does ELSER has some limitations?',
     'What job openings do we have?',
     'How does compensation work?',
   ]
