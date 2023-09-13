@@ -6,6 +6,8 @@ This repository contains executable Python notebooks, sample apps, and resources
 - Test Elastic's leading-edge, out-of-the-box capabilities like the [Elastic Learned Sparse Encoder](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html) and [reciprocal rank fusion (RRF)](<https://www.elastic.co/blog/whats-new-elastic-enterprise-search-8-9-0#hybrid-search-with-reciprocal-rank-fusion-(rrf)-combines-multiple-search-techniques-for-better-results>), which produce best-in-class results without training or tuning.
 - Integrate with projects like OpenAI, Hugging Face, and LangChain to use Elasticsearch as the backbone of your LLM-powered applications. For use cases like retrieval augmented generation (RAG), summarization, and question answering (QA).
 
+To read more about the rationale for using Elastic for all modern search experiences powered by AI/ML and more, bookmark or subscribe for updates to [Search Labs](https://github.com/elastic/elasticsearch-labs). 
+
 # Developer Guide 📖
 
 The [`developer-guide`](developer-guide.md) contains resources for developers who want to learn how to use Elasticsearch for vector search and other use cases.
