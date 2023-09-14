@@ -3,7 +3,7 @@ import { AppStatus } from 'store/provider'
 import ChatInput from 'components/chat/input'
 import { AnswerMessage } from 'components/chat/answer_message'
 import { ChatMessageList } from 'components/chat/message_list'
-import { ChatMessageType } from 'types'
+import { ChatMessageType, SourceType } from 'types'
 
 interface ChatProps {
   status: AppStatus
@@ -11,7 +11,7 @@ interface ChatProps {
   summary: ChatMessageType
   onSend: (message: string) => void
   onAbortRequest: () => void
-  onSourceClick: (sourceName: string) => void
+  onSourceClick: (source: SourceType) => void
 }
 
 export const Chat: React.FC<ChatProps> = ({

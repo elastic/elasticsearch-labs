@@ -36,7 +36,7 @@ const App = () => {
   const handleToggleSource = (name) => {
     dispatch(actions.sourceToggle({ name }))
   }
-  const handleSourceClick = (name) => {
+  const handleSourceClick = ({ name }) => {
     dispatch(actions.sourceToggle({ name, expanded: true }))
 
     setTimeout(() => {

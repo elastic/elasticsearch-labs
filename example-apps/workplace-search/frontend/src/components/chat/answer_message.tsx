@@ -1,12 +1,12 @@
 import { Sources } from './sources'
-import { ChatMessageType } from '../../types'
+import { ChatMessageType, SourceType } from 'types'
 import ReactMarkdown from 'react-markdown'
 import React from 'react'
 
 interface AnswerMessageProps {
   text: ChatMessageType['content']
   sources: ChatMessageType['sources']
-  onSourceClick: (source: string) => void
+  onSourceClick: (source: SourceType) => void
 }
 
 export const AnswerMessage: React.FC<AnswerMessageProps> = ({

@@ -7,7 +7,7 @@ import { ReactComponent as ElasticLogo } from 'images/elastic_logo.svg'
 import ReactMarkdown from 'react-markdown'
 
 type ChatMessageProps = Omit<ChatMessageType, 'id'> & {
-  onSourceClick: (source: string) => void
+  onSourceClick: (source: SourceType) => void
 }
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   content,

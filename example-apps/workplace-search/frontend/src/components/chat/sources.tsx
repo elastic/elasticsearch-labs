@@ -4,7 +4,7 @@ import { SourceType } from 'types'
 export type SourcesProps = {
   sources: SourceType[]
   showDisclaimer?: boolean
-  onSourceClick: (source: string) => void
+  onSourceClick: (source: SourceType) => void
 }
 export const Sources: React.FC<SourcesProps> = ({
   sources,
@@ -24,8 +24,7 @@ export const Sources: React.FC<SourcesProps> = ({
               {sources.map((source) => (
                 <SourceItem
                   key={source.name}
-                  name={source.name}
-                  icon={source.icon}
+                  {...source}
                   onSourceClick={onSourceClick}
                 />
               ))}

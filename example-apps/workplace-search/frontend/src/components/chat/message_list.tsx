@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ChatMessage } from './message'
-import { ChatMessageType } from 'types'
+import { ChatMessageType, SourceType } from 'types'
 
 type ChatMessageListType = {
   messages: ChatMessageType[]
   isMessageLoading: boolean
-  onSourceClick: (source: string) => void
+  onSourceClick: (source: SourceType) => void
 }
 export const ChatMessageList: React.FC<ChatMessageListType> = ({
   messages,
