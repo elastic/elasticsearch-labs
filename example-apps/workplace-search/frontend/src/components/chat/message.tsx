@@ -38,11 +38,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
               : 'bg-white shadow border-2 border-blue-100 rounded-bl-none text-zinc-700'
           }`}
         >
-          {/*<div*/}
-          {/*  className="whitespace-pre-wrap leading-normal"*/}
-          {/*  dangerouslySetInnerHTML={{ __html: content || '' }}*/}
-          {/*></div>*/}
-          <ReactMarkdown>{content}</ReactMarkdown>
+          <ReactMarkdown skipHtml>{content}</ReactMarkdown>
           {loading && <Loader />}
         </div>
       </div>

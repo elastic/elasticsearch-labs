@@ -29,13 +29,7 @@ export const AnswerMessage: React.FC<AnswerMessageProps> = ({
         </div>
       </div>
 
-      {text && (
-        // <div
-        //   className="text-base leading-tight text-gray-800 whitespace-pre-wrap mb-8"
-        //   dangerouslySetInnerHTML={{ __html: text }}
-        // ></div>
-        <ReactMarkdown>{text}</ReactMarkdown>
-      )}
+      {text && <ReactMarkdown skipHtml>{text}</ReactMarkdown>}
       {sources && (
         <Sources
           showDisclaimer

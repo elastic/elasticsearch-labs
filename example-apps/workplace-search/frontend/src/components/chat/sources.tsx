@@ -31,7 +31,7 @@ export const Sources: React.FC<SourcesProps> = ({
               ))}
             </div>
           </div>
-          <span className="absolute right-0 h-full w-24 bg-gradient-to-r from-transparent to-white" />
+          <span className="absolute right-0 h-full w-6 bg-gradient-to-r from-transparent to-white" />
         </div>
       </>
     )) ||
