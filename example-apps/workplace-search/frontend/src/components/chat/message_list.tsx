@@ -3,11 +3,13 @@ import { ChatMessage } from './message'
 import { ChatMessageType, SourceType } from 'types'
 
 type ChatMessageListType = {
+  className?: string
   messages: ChatMessageType[]
   isMessageLoading: boolean
   onSourceClick: (source: SourceType) => void
 }
 export const ChatMessageList: React.FC<ChatMessageListType> = ({
+  className,
   messages,
   isMessageLoading,
   onSourceClick,
@@ -35,7 +37,9 @@ export const ChatMessageList: React.FC<ChatMessageListType> = ({
 
   return (
     <div
-      className="w-full overflow-y-auto max-h-96 pb-5 px-5 overflow-x-visible"
+      className={`w-full overflow-y-auto max-h-96 pb-5 px-5 overflow-x-visible ${
+        className || ''
+      }`}
       ref={containerRef}
       onScroll={handleScroll}
     >
