@@ -16,7 +16,7 @@ export const SourceItem: React.FC<SourceProps> = ({
     onClick={() => {
       onSourceClick(name)
     }}
-    className="hover:text-blue-600 hover:border-blue-500 inline-flex gap-2 items-center cursor-pointer px-4 py-3 border-2 rounded-md border-blue-300 text-blue-500 font-medium"
+    className="hover:text-blue-600 hover:border-blue-500 flex-shrink-0 inline-flex gap-2 items-center cursor-pointer px-4 py-3 border-2 rounded-md border-blue-300 text-blue-500 font-medium"
   >
     <SourceIcon icon={icon} />
     <span>{name}</span>

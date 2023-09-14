@@ -18,15 +18,20 @@ export const Sources: React.FC<SourcesProps> = ({
           <h5 className="text-zinc-400 text-sm mb-2">Sourced from</h5>
         )}
 
-        <div className="flex space-x-2 flex-wrap">
-          {sources.map((source) => (
-            <SourceItem
-              key={source.name}
-              name={source.name}
-              icon={source.icon}
-              onSourceClick={onSourceClick}
-            />
-          ))}
+        <div className="relative inline-flex">
+          <div className="overflow-auto scroll-smooth no-scrollbar">
+            <div className="inline-flex gap-2">
+              {sources.map((source) => (
+                <SourceItem
+                  key={source.name}
+                  name={source.name}
+                  icon={source.icon}
+                  onSourceClick={onSourceClick}
+                />
+              ))}
+            </div>
+          </div>
+          <span className="absolute right-0 h-full w-24 bg-gradient-to-r from-transparent to-white" />
         </div>
       </>
     )) ||
