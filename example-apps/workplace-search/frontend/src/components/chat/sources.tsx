@@ -18,7 +18,7 @@ export const Sources: React.FC<SourcesProps> = ({
           <h5 className="text-zinc-400 text-sm mb-2">Sourced from</h5>
         )}
 
-        <div className="relative inline-flex">
+        <div className="relative inline-flex w-full">
           <div className="overflow-auto scroll-smooth no-scrollbar">
             <div className="inline-flex gap-2">
               {sources.map((source) => (

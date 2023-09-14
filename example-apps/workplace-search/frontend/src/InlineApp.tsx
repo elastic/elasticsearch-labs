@@ -1,7 +1,6 @@
 import { thunkActions, useAppDispatch, useAppSelector } from './store/provider'
-import { InlineChat } from './inline_chat'
 import { ReactComponent as ElasticLogo } from 'images/elastic_logo.svg'
-import './inline_chat.css'
+import { InlineChat } from 'components/chat/inline_chat'
 
 const InlineApp = () => {
   const dispatch = useAppDispatch()

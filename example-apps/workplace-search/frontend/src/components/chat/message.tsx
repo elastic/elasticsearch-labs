@@ -27,7 +27,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   )
 
   return (
-    <div>
+    <div className="w-full">
       <div className={`flex mt-6 gap-2 ${isHuman ? 'justify-end' : ''}`}>
         {messageIcon}
 
@@ -43,7 +43,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         </div>
       </div>
       {!!sources?.length && (
-        <div className="mt-6 gap-2 inline-flex">
+        <div className="mt-6 gap-2 inline-flex w-full">
           {messageIcon}
           <Sources sources={sources || []} onSourceClick={onSourceClick} />
         </div>
