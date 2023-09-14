@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import autosize from 'autosize'
-import { cn } from 'lib/utils'
 import Conversation from 'images/conversation'
 import { ReactComponent as SendIcon } from 'images/paper_airplane_icon.svg'
 import { ReactComponent as StopIcon } from 'images/stop_icon.svg'
@@ -76,7 +75,7 @@ export default function ChatInput({
           onClick={onAbortRequest}
           className="hover:bg-red-600 bg-red-500 px-4 py-2 rounded-md border cursor-pointer text-white animate-pulse hover:animate-pulse-stop self-end absolute right-2 bottom-2"
         >
-          <StopIcon width={24} height={24} />
+          <StopIcon className="w-6 h-6" />
         </button>
       ) : (
         <button
@@ -84,7 +83,7 @@ export default function ChatInput({
           type="submit"
           className="enabled:hover:bg-blue-600 disabled:opacity-75 bg-blue-500 px-4 py-2 rounded-md border disabled:cursor-not-allowed cursor-pointer self-end absolute right-2 bottom-2"
         >
-          <SendIcon width={24} height={24} />
+          <SendIcon className="w-6 h-6" />
         </button>
       )}
     </form>

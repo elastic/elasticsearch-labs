@@ -18,11 +18,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
   const messageIcon = isHuman ? (
     <span className="self-end p-2 rounded-md border border-zind-200 bg-white">
-      <UserLogo width={24} height={24} />
+      <UserLogo className="w-6 h-6" />
     </span>
   ) : (
     <span className="self-end p-2 rounded-md bg-blue-50 shadow">
-      <ElasticLogo width={24} height={24} />
+      <ElasticLogo className="w-6 h-6" />
     </span>
   )
 
