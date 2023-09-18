@@ -38,7 +38,7 @@ tar -xz --strip=2 elasticsearch-labs-main/example-apps/openai-embeddings
 
 ### 3. Create Elastic Cloud account and credentials
 
-- Go to https://cloud.elastic.co/ and sign up
+- [Sign up](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-samples) for a Elastic cloud account
 - Make note of the master username/password shown to you during creation of the deployment
 - Make note of the Elastic Cloud ID after the deployment
 

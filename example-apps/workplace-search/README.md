@@ -24,8 +24,14 @@ export ELASTIC_PASSWORD=...
 export OPENAI_API_KEY=...
 ```
 
-Note: you can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
+Note:
 
+- If you don't have an Elastic Cloud deployment, sign up [here](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-samples) for a free trial.
+
+  1. Go to the [Create deployment](https://cloud.elastic.co/deployments/create) page
+  2. Select **Create deployment** and follow the instructions
+
+- you can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
 
 ## 3. Index Data
 
