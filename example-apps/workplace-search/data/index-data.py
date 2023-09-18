@@ -25,6 +25,7 @@ def metadata_func(record: dict, metadata: dict) -> dict:
     metadata["summary"] = record.get("summary")
     metadata["url"] = record.get("url")
     metadata["category"] = record.get("category")
+    metadata["updated_at"] = record.get("updated_at")
 
     return metadata
 

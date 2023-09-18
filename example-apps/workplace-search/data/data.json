@@ -5,6 +5,7 @@
     "name": "Work From Home Policy",
     "url": "./sharepoint/Work from home policy.txt",
     "created_on": "2020-03-01",
+    "updated_at": "2020-03-01",
     "category": "teams",
     "_run_ml_inference": true,
     "rolePermissions": ["demo", "manager"]
@@ -15,6 +16,7 @@
     "name": "April Work From Home Update",
     "url": "./sharepoint/April work from home update.txt",
     "created_on": "2022-04-29",
+    "updated_at": "2022-04-29",
     "category": "teams",
     "_run_ml_inference": true,
     "rolePermissions": ["demo", "manager"]
@@ -25,6 +27,7 @@
     "name": "Wfh Policy Update May 2023",
     "url": "./sharepoint/WFH policy update May 2023.txt",
     "created_on": "2023-05-01",
+    "updated_at": "2023-05-01",
     "category": "teams",
     "_run_ml_inference": true,
     "rolePermissions": ["demo", "manager"]
@@ -36,6 +39,7 @@
     "url": "./sharepoint/FY2024 Company Sales Strategy.txt",
     "category": "teams",
     "created_on": "2023-04-15",
+    "updated_at": "2023-04-15",
     "_run_ml_inference": true,
     "rolePermissions": ["demo", "manager"]
   },
@@ -45,6 +49,7 @@
     "name": "Company Vacation Policy",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/ES6rw9bKZxVBobG1WUoJpikBF9Bhx1pw_GvJWbsg-Z_HNA?e=faSHVt",
     "created_on": "2018-04-15",
+    "updated_at": "2018-04-16",
     "category": "sharepoint",
     "_run_ml_inference": true,
     "rolePermissions": ["demo", "manager"]

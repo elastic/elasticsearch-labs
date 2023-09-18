@@ -87,7 +87,9 @@ export const SearchResult: React.FC<SearchResultProps> = ({
         <span className="self-end mt-1 text-zinc-400 text-xs tracking-tight font-medium uppercase">
           {`UPDATED ${updatedAtDate.toLocaleDateString('common', {
             month: 'short',
-          })} ${updatedAtDate.getDay()}, ${updatedAtDate.getFullYear()}`}
+          })} ${updatedAtDate.toLocaleDateString('common', {
+            day: 'numeric',
+          })}, ${updatedAtDate.getFullYear()}`}
         </span>
       )}
     </div>
