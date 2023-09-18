@@ -50,8 +50,7 @@ const App = () => {
     'What type of query does elastic have?',
     'How do I setup a dense vector field?\n',
     'Does ELSER has some limitations?',
-    'What job openings do we have?',
-    'How does compensation work?',
+    'How to configure ingest pipeline?',
   ]
 
   return (
