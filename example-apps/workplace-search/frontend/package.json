@@ -1,8 +1,8 @@
 {
-  "name": "2023-05-11-searchkit",
+  "name": "workplace-search-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:4000",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "@radix-ui/react-slot": "^1.0.1",
@@ -33,6 +33,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "format": "prettier --write .",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -61,7 +62,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.8.8",
+    "prettier": "3.0.3",
     "tailwindcss": "^3.3.2"
   }
 }
