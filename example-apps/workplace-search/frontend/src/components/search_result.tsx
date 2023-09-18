@@ -32,6 +32,8 @@ export const SearchResult: React.FC<SearchResultProps> = ({
     }
   }, [summary])
 
+  const updatedAtDate = new Date(updated_at || '')
+
   return (
     <div className="flex flex-col">
       <div
@@ -82,8 +84,10 @@ export const SearchResult: React.FC<SearchResultProps> = ({
         </div>
       </div>
       {updated_at && (
-        <span className="self-end mt-1 text-zinc-400 text-xs tracking-tight font-medium">
-          UPDATED {updated_at}
+        <span className="self-end mt-1 text-zinc-400 text-xs tracking-tight font-medium uppercase">
+          {`UPDATED ${updatedAtDate.toLocaleDateString('common', {
+            month: 'short',
+          })} ${updatedAtDate.getDay()}, ${updatedAtDate.getFullYear()}`}
         </span>
       )}
     </div>
