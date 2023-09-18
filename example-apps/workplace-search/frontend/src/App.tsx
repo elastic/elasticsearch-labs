@@ -8,10 +8,10 @@ import {
   useAppSelector,
 } from 'store/provider'
 import { Header } from 'components/header'
-import { Loader } from 'components/loader'
 import { Chat } from 'components/chat/chat'
 import SearchInput from 'components/search_input'
 import { ReactComponent as ChatIcon } from 'images/chat_icon.svg'
+import { ReactComponent as ElasticLogo } from 'images/elastic_logo.svg'
 import { SearchResults } from './components/search_results'
 
 const App = () => {
@@ -104,7 +104,12 @@ const App = () => {
                 />
               </div>
             ) : (
-              <Loader className="relative w-24 mx-auto py-10 opacity-30" />
+              <div className="h-36 p-6 bg-white rounded-md shadow flex flex-col justify-start items-center gap-4 mt-6">
+                <ElasticLogo className="w-16 h-16" />
+                <p className="text-center text-zinc-400 text-sm ">
+                  Looking that up for you...
+                </p>
+              </div>
             )}
           </>
         )}
