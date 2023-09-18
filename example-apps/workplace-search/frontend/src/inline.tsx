@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import './inline.css'
 import InlineApp from './InlineApp'
 import { GlobalStateProvider } from './store/provider'
 

@@ -48,7 +48,7 @@ const App = () => {
 
   const suggestedQueries = [
     'What type of query does elastic have?',
-    'How do I setup a dense vector field?\n',
+    'How do I setup a dense vector field?',
     'Does ELSER has some limitations?',
     'How to configure ingest pipeline?',
   ]
