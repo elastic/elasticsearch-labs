@@ -8,6 +8,10 @@ Prior to opening a pull request, please:
 - Create an issue to [discuss the scope of your proposal](https://github.com/elastic/elasticsearch-labs/issues). We are happy to provide guidance to make for a pleasant contribution experience.
 - Sign the [Contributor License Agreement](https://www.elastic.co/contributor-agreement/). We are not asking you to assign copyright to us, but to give us the right to distribute your code without restriction. We ask this of all contributors in order to assure our users of the origin and continuing existence of the code. You only need to sign the CLA once.
 
+## General instruction
+
+- If the notebook or code sample requires signing up a Elastic cloud instance, make sure to add appropriate `utm_source` and `utm_content` in the cloud registration url. For example, the Elastic cloud sign up url for the Python notebooks should have `utm_source=github&utm_content=elasticsearch-labs-notebook` and code examples should have `utm_source=github&utm_content=elasticsearch-labs-samples`.
+  
 ## Contributing to Python notebooks 📒
 
 ### Why
