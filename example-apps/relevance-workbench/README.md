@@ -14,7 +14,7 @@ To run this demo successfully, you will need an Elasticsearch deployment (> 8.8)
 
 ## Deploy Elasticsearch in Elastic Cloud
 
-If you don't have an Elastic Cloud account, you can start by signing up for a [free Elastic Cloud trial](https://cloud.elastic.co/registration). After creating an account, you’ll have an active subscription, and you’ll be prompted to create your first deployment.
+If you don't have an Elastic Cloud account, you can start by signing up for a [free Elastic Cloud trial](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-samples). After creating an account, you’ll have an active subscription, and you’ll be prompted to create your first deployment.
 
 Follow the steps to Create a new deployment. For more details, refer to [Create a deployment](https://www.elastic.co/guide/en/cloud/current/ec-create-deployment.html) in the Elastic Cloud documentation.
 
@@ -87,7 +87,7 @@ python3 index-data.py --es_password=<ELASTICSEARCH_PASSWORD> --cloud_id=<CLOUD_I
 - ELASTICSEARCH_PASSWORD: Use the default admin password previously saved
 - CLOUD_ID: See instructions above to retrieve it
 
-Note that by default, only  subset of the dataset (100 movies) is indexed. If you're interested in indexing the whole data (7918 movies), you can select the `movies.json.gz` file by adding the option `--gzip_file=movies.json.gz` to the command line. Note that it might take up to 1 hour to index the full dataset.
+Note that by default, only subset of the dataset (100 movies) is indexed. If you're interested in indexing the whole data (7918 movies), you can select the `movies.json.gz` file by adding the option `--gzip_file=movies.json.gz` to the command line. Note that it might take up to 1 hour to index the full dataset.
 
 ## Run the application
 
@@ -96,6 +96,7 @@ Once the data have been successfully indexed, you can run the application to sta
 The application is composed of a backend Python API and a React frontend. You can run the whole application locally using Docker compose.
 
 Edit the `docker-compose.yml` file to replace values for. Reuse the same information that you use for loading the data.
+
 - CLOUD_ID=<CLOUD_ID>
 - ELASTICSEARCH_PASSWORD=<ELASTICSEARCH_PASSWORD>
 
@@ -170,6 +171,7 @@ datasets = {
 ```
 
 In the configuration of the new dataset, provides the following informations:
+
 - index: Name of the index
 - search_fields: Fields to query for BM25
 - elser_search_fields: Fields to query for ELSER
