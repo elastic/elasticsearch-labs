@@ -10,4 +10,4 @@ This directory contains supporting content for the blog posts on [Elastic.co Blo
 
 
 ### Notebooks
-- [Multilingual search with the E5 embedding model](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/multilingual-e5/multilingual-e5.ipynb). See the associated [blog](https://www.elastic.co/search-labs/multilingual-vector-search-e5-embedding-model)https://www.elastic.co/search-labs/multilingual-vector-search-e5-embedding-model for more details.  
+- [Multilingual search with the E5 embedding model](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/multilingual-e5/multilingual-e5.ipynb). See the associated [blog](https://www.elastic.co/search-labs/multilingual-vector-search-e5-embedding-model) for more details.  
