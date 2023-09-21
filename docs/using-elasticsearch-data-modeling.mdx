@@ -1,0 +1,46 @@
+---
+id: usingElasticsearchDataModeling
+slug: /vector-gen-ai/using-elasticsearch/data-modeling
+title: Data modeling
+image:
+description: Learn how to model data for ((es))
+date: 2023-09-07
+tags: []
+related: ['usingElasticsearchQuerying', 'usingElasticsearchDataIndexing', 'usingElasticsearchRelevance', 'usingElasticsearchFiltering']
+---
+
+Depending on your use-case, you will need to model your data differently.
+
+## Long unstructured text
+
+If each document contains long text, you should consider breaking up the text into smaller chunks called *passages*.
+Long texts are hard to represent as a single vector, especially if the text has multiple topics.
+We recommend breaking up the text into smaller chunks, and indexing each passage as a separate document.
+
+Breaking up the text into passages allows you to retrieve more relevant results, as you can find the most relevant passages in one or more documents that match the query.
+
+Another advantage is for Retrieval Augmented Generation (RAG) use-cases.
+Passing smaller, relevant passages to the model, instead of the entire document, will improve the quality of the answer and avoid hitting token limits.
+
+### Example: Chunking long text into passages using LangChain
+
+```python
+metadata = []
+content = []
+
+for doc in docs:
+  content.append(doc["content"])
+  metadata.append({
+      "name": doc["name"],
+      "summary": doc["summary"]
+  })
+
+text_splitter = CharacterTextSplitter(chunk_size=800, chunk_overlap=400)
+docs = text_splitter.create_documents(content, metadatas=metadata)
+```
+
+<DocCallOut color="warning" title="Chunking">
+    This example is illustrative. Chunking is a complex and important topic! We'll have a dedicated guide on chunking soon.
+
+    For a full working example using `langchain.text_splitter` check out this [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/notebooks/generative-ai/question-answering.ipynb).
+</DocCallOut>

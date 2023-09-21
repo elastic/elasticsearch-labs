@@ -1,0 +1,55 @@
+---
+id: usingElasticsearchQuerying
+slug: /vector-gen-ai/using-elasticsearch/querying
+title: Querying
+image:
+description: Learn how to query ((es))
+date: 2023-09-07
+tags: ['', '']
+related: ['usingElasticsearchIndexing', 'usingElasticsearchDataModeling', 'usingElasticsearchRelevance', 'usingElasticsearchFiltering']
+---
+
+Once you have indexed documents, you can search for them using the `search` API.
+
+### Example: Query for similar documents
+
+In this example, we search for similar documents to the query vector.
+
+```python
+
+response = es.search(index="demo", body={
+    "knn": {
+      "field": "text",
+      "query_vector": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+      "k": 10, # return top 10 most similar documents
+      "num_candidates": 100
+    }
+})
+
+```
+
+### Example: Using model in ((es))
+
+In this example, instead of passing the query vector, we pass the query text and ((es)) will use the embedding model deployed in ((es)) to transform the text into a vector.
+
+To deploy the model in ((es)), follow the instructions in the [Elastic Machine Learning documentation](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-deploy-models.html).
+
+{/* TODO add model deployment section to this guide */}
+
+```python
+response = es.search(index="demo", body={
+    "knn": {
+      "field": "text",
+      "k": 10,
+      "num_candidates": 50,
+      "query_vector_builder": {
+        "text_embedding": {
+          "model_id": "sentence-transformers__all-minilm-l6-v2", # model id deployed in ((es))
+          "model_text": "example query"
+        }
+      }
+    }
+  }
+)
+
+```

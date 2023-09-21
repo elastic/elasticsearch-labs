@@ -1,10 +1,15 @@
 # Elasticsearch Examples & Apps
 
-This repository contains executable Python notebooks, sample apps, and resources for testing out the Elastic platform:
+This repo contains executable Python notebooks, sample apps, and resources for testing out the Elastic platform:
 
-- Learn how to use Elasticsearch as a vector database to store embeddings, power hybrid and semantic search experiences, and more.
+- Learn how to use Elasticsearch as a vector database to store embeddings, power hybrid and semantic search experiences.
+- Build use cases such as retrieval augmented generation (RAG), summarization, and question answering (QA).
 - Test Elastic's leading-edge, out-of-the-box capabilities like the [Elastic Learned Sparse Encoder](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html) and [reciprocal rank fusion (RRF)](<https://www.elastic.co/blog/whats-new-elastic-enterprise-search-8-9-0#hybrid-search-with-reciprocal-rank-fusion-(rrf)-combines-multiple-search-techniques-for-better-results>), which produce best-in-class results without training or tuning.
-- Integrate with projects like OpenAI, Hugging Face, and LangChain to use Elasticsearch as the backbone of your LLM-powered applications. For use cases like retrieval augmented generation (RAG), summarization, and question answering (QA).
+- Integrate with projects like OpenAI, Hugging Face, and LangChain, and use Elasticsearch as the backbone of your LLM-powered applications. 
+
+Elastic enables all modern search experiences powered by AI/ML.
+* Bookmark or subscribe to [Elasticsearch Labs on Github](https://github.com/elastic/elasticsearch-labs)
+* Read our latest articles at [elastic.co/search-labs](https://www.elastic.co/search-labs)  
 
 # Developer Guide 📖
 

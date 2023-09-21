@@ -1,67 +1,40 @@
-import React from "react";
+import React from 'react'
 
-// eslint-disable-next-line 
-// @ts-ignore
-import confluence from "./images/confluence.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import docs from "./images/docs.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import dropbox from "./images/dropbox.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import excel from "./images/excel.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import onedrive from "./images/onedrive.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import pdf from "./images/pdf.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import github from "./images/github.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import sharepoint from "./images/sharepoint.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import sheets from "./images/sheets.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import slides from "./images/slides.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import teams from "./images/teams.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import sql_server from "./images/sql server.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import word from "./images/word.png";
-// eslint-disable-next-line 
-// @ts-ignore
-import faq from "./images/faq.png";
+import confluence from 'images/confluence.png'
+import docs from 'images/docs.png'
+import dropbox from 'images/dropbox.png'
+import excel from 'images/excel.png'
+import onedrive from 'images/onedrive.png'
+import pdf from 'images/pdf.png'
+import github from 'images/github.png'
+import sharepoint from 'images/sharepoint.png'
+import sheets from 'images/sheets.png'
+import slides from 'images/slides.png'
+import teams from 'images/teams.png'
+import sql_server from 'images/sql server.png'
+import word from 'images/word.png'
+import faq from 'images/faq.png'
 
 export type SourceIconType = {
+  className?: string
   icon:
-    | "confluence"
-    | "docs"
-    | "dropbox"
-    | "excel"
-    | "onedrive"
-    | "pdf"
-    | "sharepoint"
-    | "sheets"
-    | "slides"
-    | "teams"
-    | "sql_server"
-    | "word"
-    | "github"
-    | "faq"
-    | string;
-};
-export const SourceIcon: React.FC<SourceIconType> = ({ icon }) => {
+    | 'confluence'
+    | 'docs'
+    | 'dropbox'
+    | 'excel'
+    | 'onedrive'
+    | 'pdf'
+    | 'sharepoint'
+    | 'sheets'
+    | 'slides'
+    | 'teams'
+    | 'sql_server'
+    | 'word'
+    | 'github'
+    | 'faq'
+    | string
+}
+export const SourceIcon: React.FC<SourceIconType> = ({ className, icon }) => {
   const iconNameToImageMap = {
     confluence,
     docs,
@@ -77,20 +50,10 @@ export const SourceIcon: React.FC<SourceIconType> = ({ icon }) => {
     word,
     github,
     faq,
-  };
-  const styles = {
-    iconWrapper: {
-      width: "24px",
-      height: "24px",
-    },
-    icon: {
-      maxWidth: "24px",
-      maxHeight: "24px",
-    },
-  };
+  }
   return (
-    <span style={styles.iconWrapper}>
-      <img style={styles.icon} src={iconNameToImageMap[icon]} alt={icon} />
+    <span className={className}>
+      <img className="w-6 h-6" src={iconNameToImageMap[icon]} alt={icon} />
     </span>
-  );
-};
+  )
+}
