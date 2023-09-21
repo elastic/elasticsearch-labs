@@ -1,4 +1,5 @@
 from elasticsearch import Elasticsearch
+from typings import Dict
 from lib.elasticsearch_chat_message_history import ElasticsearchChatMessageHistory
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
@@ -47,7 +48,7 @@ class QueueCallbackHandler(BaseCallbackHandler):
                     "page_content": doc.page_content,
                     "url": doc.metadata["url"],
                     "icon": doc.metadata["category"],
-                    "updated_at": doc.metadata.get("updated_at", None)
+                    "updated_at": doc.metadata.get("updated_at", None),
                 }
                 self.queue.put(f"{SOURCE_TAG} {json.dumps(source)}")
 
@@ -76,16 +77,6 @@ class QueueCallbackHandler(BaseCallbackHandler):
 elasticsearch_client = Elasticsearch(
     cloud_id=ELASTIC_CLOUD_ID, basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD)
 )
-
-store = ElasticsearchStore(
-    es_connection=elasticsearch_client,
-    index_name=INDEX,
-    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(),
-)
-
-retriever = store.as_retriever()
-
-llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=0.2)
 
 general_system_template = """ 
 Use the following passages to answer the user's question.
@@ -116,14 +107,6 @@ PASSAGE:
 """,
 )
 
-chat = ConversationalRetrievalChain.from_llm(
-    llm=llm,
-    retriever=store.as_retriever(),
-    return_source_documents=True,
-    combine_docs_chain_kwargs={"prompt": qa_prompt, "document_prompt": document_prompt},
-    verbose=True,
-)
-
 app = Flask(__name__, static_folder="../frontend/public")
 CORS(app)
 
@@ -134,6 +117,36 @@ def api_index():
 
 
 def ask_question(question, queue, chat_history):
+    store = ElasticsearchStore(
+        es_connection=elasticsearch_client,
+        index_name=INDEX,
+        strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(),
+    )
+
+    llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=0.2)
+
+    # Elsticsearch filters syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
+    # filters = [{"term": {"category": "People"}}]
+    filters = []
+
+    # Custom query function to adjust the query body before it is sent to Elasticsearch
+    def custom_query_fn(query_body: Dict, query: str):
+        print(query_body)
+        return query_body
+
+    chat = ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        retriever=store.as_retriever(
+            search_kwargs={"filter": filters, "custom_query": custom_query_fn}
+        ),
+        return_source_documents=True,
+        combine_docs_chain_kwargs={
+            "prompt": qa_prompt,
+            "document_prompt": document_prompt,
+        },
+        verbose=True,
+    )
+
     result = chat(
         {"question": question, "chat_history": chat_history.messages},
         callbacks=[QueueCallbackHandler(queue)],
