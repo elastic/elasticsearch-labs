@@ -21,7 +21,6 @@ This app requires the following environment variables to be set:
 export ELASTIC_CLOUD_ID=...
 export ELASTIC_USERNAME=...
 export ELASTIC_PASSWORD=...
-export OPENAI_API_KEY=...
 ```
 
 Note:
@@ -31,7 +30,46 @@ Note:
   1. Go to the [Create deployment](https://cloud.elastic.co/deployments/create) page
   2. Select **Create deployment** and follow the instructions
 
-- you can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
+
+To use llm other than openai you can set up the LLM_TYPE environment variable to one of the following values:
+```sh
+# azure|openai|vertex|bedrock
+export LLM_TYPE=azure
+```
+
+### 2.1. OpenAI LLM
+
+To use OpenAI LLM, you will need to set up only OPENAI_API_KEY environment variable:
+
+```sh
+export OPENAI_API_KEY=...
+```
+You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
+### 2.2. Azure OPENAI LLM
+
+If you are using Azure LLM, you will need to set the following environment variables:
+
+```sh
+export OPENAI_VERSION=... # e.g. 2023-05-15
+export OPENAI_BASE_URL=...
+export OPENAI_API_KEY=...
+export OPENAI_ENGINE=... # deployment name in Azure
+```
+
+### 2.2. Google Vertex LLM
+
+### 2.3. Bedrock LLM
+
+To use Bedrock LLM first of all you need to install pre-release version of `boto3` and `botocore` packages:
+Follow this guide to download and install https://d2eo22ngex1n9g.cloudfront.net/Documentation/BedrockUserGuide.pdf page 21
+
+Then you need to set the following environment variables:
+    
+```sh
+    export AWS_ACCESS_KEY=...
+    export AWS_SECRET_KEY=...
+    export AWS_REGION=... # e.g. us-east-1
+```
 
 ## 3. Index Data
 
