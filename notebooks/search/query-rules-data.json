@@ -31,5 +31,16 @@
       "plug_type": "C",
       "voltage": "230V"
     }
+  },
+  {
+    "id": "preview1",
+    "content": {
+      "name": "PureJuice Pro - Pre-order next version",
+      "description": "Newest version of the PureJuice Pro wireless charger, coming soon! The newest model of the PureJuice Pro boasts a 2x faster charge than the current model, and a sturdier cable with an eighteen month full warranty. We also have a battery backup to charge on-the-go, up to two full charges. Pre-order yours today!",
+      "price": 36.00,
+      "currency": "USD",
+      "plug_type": ["B", "C", "G"],
+      "voltage": ["230V", "120V"]
+    }
   }
 ]
