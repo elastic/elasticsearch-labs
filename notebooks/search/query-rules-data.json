@@ -1,0 +1,46 @@
+[
+  {
+    "id": "us1",
+    "content": {
+      "name": "PureJuice Pro",
+      "description": "PureJuice Pro: Experience the pinnacle of wireless charging. Blending rapid charging tech with sleek design, it ensures your devices are powered swiftly and safely. The future of charging is here.",
+      "price": 15.00,
+      "currency": "USD",
+      "plug_type": "B",
+      "voltage": "120v"
+    }
+  },
+  {
+    "id": "uk1",
+    "content": {
+      "name": "PureJuice Pro - UK Compatible",
+      "description": "PureJuice Pro: Redefining wireless charging. Seamlessly merging swift charging capabilities with a refined aesthetic, it guarantees your devices receive rapid and secure power. Welcome to the next generation of charging.",
+      "price": 20.00,
+      "currency": "GBP",
+      "plug_type": "G",
+      "voltage": "230V"
+    }
+  },
+  {
+    "id": "eu1",
+    "content": {
+      "name": "PureJuice Pro - Wireless Charger suitable for European plugs",
+      "description": "PureJuice Pro: Elevating wireless charging. Combining unparalleled charging speeds with elegant design, it promises both rapid and dependable energy for your devices. Embrace the future of wireless charging.",
+      "price": 18.00,
+      "currency": "EUR",
+      "plug_type": "C",
+      "voltage": "230V"
+    }
+  },
+  {
+    "id": "preview1",
+    "content": {
+      "name": "PureJuice Pro - Pre-order next version",
+      "description": "Newest version of the PureJuice Pro wireless charger, coming soon! The newest model of the PureJuice Pro boasts a 2x faster charge than the current model, and a sturdier cable with an eighteen month full warranty. We also have a battery backup to charge on-the-go, up to two full charges. Pre-order yours today!",
+      "price": 36.00,
+      "currency": "USD",
+      "plug_type": ["B", "C", "G"],
+      "voltage": ["230V", "120V"]
+    }
+  }
+]
