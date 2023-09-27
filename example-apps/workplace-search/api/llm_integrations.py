@@ -24,11 +24,14 @@ def init_azure_chat():
         streaming=True,
         temperature=0.2)
 def init_bedrock():
-    AWS_ACCESS_KEY=os.getenv("AWS_ACCESS_KEY")
-    AWS_SECRET_KEY=os.getenv("AWS_SECRET_KEY")
-    AWS_REGION=os.getenv("AWS_REGION")
-    BEDROCK_CLIENT=boto3.client("bedrock", region_name=AWS_REGION, aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    return BedrockChat(model_id="amazon.titan-tg1-large", client=BEDROCK_CLIENT)
+#     AWS_ACCESS_KEY=os.getenv("AWS_ACCESS_KEY")
+#     AWS_SECRET_KEY=os.getenv("AWS_SECRET_KEY")
+#     AWS_REGION=os.getenv("AWS_REGION")
+#     BEDROCK_CLIENT=boto3.client("bedrock", region_name=AWS_REGION, aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    return BedrockChat(
+        model_id="anthropic.claude-v2",
+        streaming=True,
+        model_kwargs={"temperature":0.2})
 
 MAP_LLM_TYPE_TO_CHAT_MODEL = {
     "azure": init_azure_chat,
