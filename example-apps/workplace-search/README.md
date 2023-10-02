@@ -70,6 +70,15 @@ Then you need to set the following environment variables:
     export AWS_SECRET_KEY=...
     export AWS_REGION=... # e.g. us-east-1
 ```
+or you can create config file `~/.aws/config` as it described here:
+https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#configuring-credentials
+
+```
+[default]
+aws_access_key_id=...
+aws_secret_access_key=...
+region=...
+```
 
 ## 3. Index Data
 
