@@ -10,7 +10,7 @@ You can also try with your own data by forking this repo and plugging the applic
 
 ## Pre-requisites
 
-To run this demo successfully, you will need an Elasticsearch deployment (> 8.8) with the ELSER model deployed. The easiest way for this is to use Elastic Cloud as described in the next part but you can also deploy Elasticsearch locally.
+To run this demo successfully, you will need an Elasticsearch deployment (> 8.11) with the ELSER model deployed. The easiest way for this is to use Elastic Cloud as described in the next part but you can also deploy Elasticsearch locally.
 
 ## Deploy Elasticsearch in Elastic Cloud
 
@@ -32,7 +32,7 @@ You can follow this [documentation](https://www.elastic.co/guide/en/machine-lear
 
 The best approach is to use Enterprise Search to create a new index and configure the ingest pipeline to enrich the data.
 
-From the landing page in Kibana, navigate to Enterprise Search.
+From the landing page in Kibana, navigate to Search.
 
 ![ent-search-landing](./images/ent-search-landing.png)
 
