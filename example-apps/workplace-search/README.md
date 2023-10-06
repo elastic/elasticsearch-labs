@@ -58,10 +58,7 @@ export OPENAI_ENGINE=... # deployment name in Azure
 
 ### 2.3. Bedrock LLM
 
-To use Bedrock LLM first of all you need to install pre-release version of `boto3` and `botocore` packages:
-Follow this guide to download and install https://d2eo22ngex1n9g.cloudfront.net/Documentation/BedrockUserGuide.pdf page 21
-
-Then you need to set the following environment variables:
+To use Bedrock LLM you need to set the following environment variables:
     
 ```sh
     export AWS_ACCESS_KEY=...

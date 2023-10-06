@@ -29,7 +29,7 @@ def init_bedrock():
     AWS_SECRET_KEY=os.getenv("AWS_SECRET_KEY")
     AWS_REGION=os.getenv("AWS_REGION")
     AWS_MODEL_ID=os.getenv("AWS_MODEL_ID", "anthropic.claude-v2")
-    BEDROCK_CLIENT=boto3.client(service_name="bedrock", region_name=AWS_REGION, aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    BEDROCK_CLIENT=boto3.client(service_name="bedrock-runtime", region_name=AWS_REGION, aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     return BedrockChat(
         client=BEDROCK_CLIENT,
         model_id=AWS_MODEL_ID,
