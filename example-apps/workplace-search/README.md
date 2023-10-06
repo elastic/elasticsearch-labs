@@ -56,8 +56,6 @@ export OPENAI_API_KEY=...
 export OPENAI_ENGINE=... # deployment name in Azure
 ```
 
-### 2.2. Google Vertex LLM
-
 ### 2.3. Bedrock LLM
 
 To use Bedrock LLM first of all you need to install pre-release version of `boto3` and `botocore` packages:
