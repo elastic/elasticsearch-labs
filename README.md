@@ -41,6 +41,7 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`02-hybrid-search.ipynb`](./notebooks/search/02-hybrid-search.ipynb)
 - [`03-ELSER.ipynb`](./notebooks/search/03-ELSER.ipynb)
 - [`04-multilingual.ipynb`](./notebooks/search/04-multilingual.ipynb)
+- [`05-query-rules.ipynb`](./notebooks/search/05-query-rules.ipynb)
 
 ### Integrations
 
