@@ -47,6 +47,7 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 
 - [`loading-model-from-hugging-face.ipynb`](./notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb)
 - [`openai-semantic-search-RAG.ipynb`](./notebooks/integrations/openai/openai-KNN-RAG.ipynb)
+- [`aws-bedrock-langchain-qa-example.ipynb`](./notebooks/integrations/aws-bedrock/langchain-qa-example.ipynb)
 
 # Example apps 💻
 
