@@ -1,6 +1,6 @@
-# Elastic Workplace Sample App
+# Elastic Langchain Sample App
 
-This is a sample app that combines Elasticsearch and OpenAI to create a semantic search experience.
+This is a sample app that combines Elasticsearch, Langchain and a number of different LLMs to create a semantic search experience with ELSER.
 
 ![Screenshot of the sample app](./app-demo.gif)
 
@@ -13,9 +13,9 @@ curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/example-apps/workplace-search
 ```
 
-## 2. Credentials
+## 2. Connecting to Elasticsearch
 
-This app requires the following environment variables to be set:
+This app requires the following environment variables to be set to connect to Elasticsearch
 
 ```sh
 export ELASTIC_CLOUD_ID=...
@@ -30,22 +30,33 @@ Note:
   1. Go to the [Create deployment](https://cloud.elastic.co/deployments/create) page
   2. Select **Create deployment** and follow the instructions
 
+## 3. Connecting to LLM
 
-To use llm other than openai you can set up the LLM_TYPE environment variable to one of the following values:
+We support three LLM providers: Azure, OpenAI and Bedrock.
+
+To use one of them, you need to set the `LLM_TYPE` environment variable:
+
 ```sh
-# azure|openai|vertex|bedrock
 export LLM_TYPE=azure
+# export LLM_TYPE=bedrock
+# export LLM_TYPE=openai
 ```
 
-### 2.1. OpenAI LLM
+### OpenAI
 
-To use OpenAI LLM, you will need to set up only OPENAI_API_KEY environment variable:
+`LLM_TYPE=openai`
+
+To use OpenAI LLM, you will need to provide the OpenAI key via `OPENAI_API_KEY` environment variable:
 
 ```sh
 export OPENAI_API_KEY=...
 ```
+
 You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
-### 2.2. Azure OPENAI LLM
+
+### Azure OpenAI
+
+`LLM_TYPE=azure`
 
 If you are using Azure LLM, you will need to set the following environment variables:
 
@@ -56,16 +67,22 @@ export OPENAI_API_KEY=...
 export OPENAI_ENGINE=... # deployment name in Azure
 ```
 
-### 2.3. Bedrock LLM
+### Bedrock LLM
 
-To use Bedrock LLM you need to set the following environment variables:
-    
+`LLM_TYPE=bedrock`
+
+To use Bedrock LLM you need to set the following environment variables in order to AWS.
+
 ```sh
     export AWS_ACCESS_KEY=...
     export AWS_SECRET_KEY=...
     export AWS_REGION=... # e.g. us-east-1
+    export AWS_MODEL_ID=... # Default is anthropic.claude-v2
 ```
-or you can create config file `~/.aws/config` as it described here:
+
+#### AWS Config
+
+Optionally, you can connect to AWS via the config file in `~/.aws/config` described here:
 https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#configuring-credentials
 
 ```
@@ -75,15 +92,21 @@ aws_secret_access_key=...
 region=...
 ```
 
-## 3. Index Data
+## 3. Ingest Data
 
-You can index the data from the provided .json files in the `data` folder:
+You can index the sample data from the provided .json files in the `data` folder:
 
 ```sh
 python data/index-data.py
 ```
 
-## Developing
+### Indexing your own data
+
+`index-data.py` is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `CharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
+
+Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
+
+## Running the app
 
 With the environment variables set, you can run the following commands to start the server and frontend.
 

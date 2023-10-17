@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch
-from lib.elasticsearch_chat_message_history import ElasticsearchChatMessageHistory
+from langchain.memory import ElasticsearchChatMessageHistory
+
 import os
 
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
@@ -10,7 +11,8 @@ elasticsearch_client = Elasticsearch(
     cloud_id=ELASTIC_CLOUD_ID, basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD)
 )
 
+
 def get_elasticsearch_chat_message_history(index, session_id):
     return ElasticsearchChatMessageHistory(
-        client=elasticsearch_client, index=index, session_id=session_id
+        es_connection=elasticsearch_client, index=index, session_id=session_id
     )
