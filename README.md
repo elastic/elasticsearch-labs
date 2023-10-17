@@ -42,7 +42,6 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`03-ELSER.ipynb`](./notebooks/search/03-ELSER.ipynb)
 - [`04-multilingual.ipynb`](./notebooks/search/04-multilingual.ipynb)
 - [`05-query-rules.ipynb`](./notebooks/search/05-query-rules.ipynb)
-- [`06-upgrading-index-elser.ipynb`](notebooks/search/06-upgrading-index-elser.ipynb)
 
 ### Integrations
 
@@ -50,6 +49,9 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`openai-semantic-search-RAG.ipynb`](./notebooks/integrations/openai/openai-KNN-RAG.ipynb)
 - [`aws-bedrock-langchain-qa-example.ipynb`](./notebooks/integrations/aws-bedrock/langchain-qa-example.ipynb)
 
+### Model Upgrades
+- [`upgrading-index-to-use-elser.ipynb`](notebooks/model-upgrades/upgrading-index-to-use-elser.ipynb)
+  
 # Example apps 💻
 
 The [`example-apps`](example-apps/README.md) folder contains example apps that demonstrate Elasticsearch for a number of use cases, using different programming languages and frameworks.
