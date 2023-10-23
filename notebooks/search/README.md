@@ -9,7 +9,7 @@ The following notebooks are available:
 2. [Hybrid search](#2-hybrid-search)
 3. [Semantic search with ELSER](#3-semantic-search-with-elser)
 4. [Multilingual semantic search](#4-multilingual-semantic-search)
-5. Query rules
+5. [Query rules](#5-query-rules)
 6. [Synonyms API quick start](#6-synonyms-api-quick-start)
 
 ## Notebooks
@@ -66,6 +66,14 @@ In the [`04-multilingual.ipynb`](./04-multilingual.ipynb) notebook, you'll learn
 - Transform fields in the sample dataset into embeddings using the Sentence Transformer model and index them into Elasticsearch.
 - Use filtering with a `kNN` semantic search.
 - Walk through a super simple toy example that demonstrates, step by step, how multilingual search works across languages, and within non-English languages.
+
+### 5. Query rules
+
+In the [`05-query-rules.ipynb`](./05-query-rules.ipynb) notebook, you'll learn how to:
+
+- Create & update a query ruleset
+- Get a query ruleset
+- Use `rule_query` to apply a query ruleset
 
 ### 6. Synonyms API quick start
 
