@@ -69,7 +69,7 @@ In the [`04-multilingual.ipynb`](./04-multilingual.ipynb) notebook, you'll learn
 
 ### 6. Synonyms API quick start
 
-In the [`06-synonyms-api.ipynb`](./06-synonymys-api.ipynb) notebook, you'll learn how to:
+In the [`06-synonyms-api.ipynb`](./06-synonyms-api.ipynb) notebook, you'll learn how to:
 
 - Create a synonyms set
 - Configure an index to use search-time synonyms
