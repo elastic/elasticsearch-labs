@@ -71,15 +71,14 @@ In the [`04-multilingual.ipynb`](./04-multilingual.ipynb) notebook, you'll learn
 
 In the [`05-query-rules.ipynb`](./05-query-rules.ipynb) notebook, you'll learn how to:
 
-- Create & update a query ruleset
-- Get a query ruleset
-- Use `rule_query` to apply a query ruleset
+- Use the query rules management APIs to create and edit promotional rules based on contextual queries
+- Apply these query rules by using the `rule_query` in Query DSL
 
 ### 6. Synonyms API quick start
 
 In the [`06-synonyms-api.ipynb`](./06-synonyms-api.ipynb) notebook, you'll learn how to:
 
-- Create a synonyms set
+- Use the synonyms management API to create a synonyms set to enhance your search recall
 - Configure an index to use search-time synonyms
 - Update synonyms in real time
 - Run queries that are enhanced by synonyms
