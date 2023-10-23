@@ -6,7 +6,7 @@ ENV PATH /node_modules/.bin:$PATH
 COPY frontend ./frontend
 RUN rm -rf /app/frontend/node_modules
 RUN cd frontend && yarn install
-RUN cd frontend && yarn build
+RUN cd frontend && REACT_APP_API_HOST=/api yarn build
 
 FROM python:3.9-slim
 
@@ -24,7 +24,8 @@ RUN apt-get update && apt-get install -y \
 
 
 COPY api ./api
-RUN pip3 install -r ./api/requirements.txt
+COPY requirements.txt ./requirements.txt
+RUN pip3 install -r ./requirements.txt
 ENV FLASK_ENV production
 
 EXPOSE 4000

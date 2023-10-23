@@ -5,12 +5,14 @@ from uuid import uuid4
 from chat import chat, ask_question, parse_stream_message
 import threading
 
-app = Flask(__name__, static_folder="../frontend/public")
+app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
 CORS(app)
+
 
 @app.route("/")
 def api_index():
     return app.send_static_file("index.html")
+
 
 @app.route("/api/chat", methods=["POST"])
 def api_chat():
@@ -28,7 +30,9 @@ def api_chat():
         target=ask_question, args=(question, stream_queue, session_id)
     ).start()
 
-    return Response(parse_stream_message(session_id, stream_queue), mimetype="text/event-stream")
+    return Response(
+        parse_stream_message(session_id, stream_queue), mimetype="text/event-stream"
+    )
 
 
 if __name__ == "__main__":
