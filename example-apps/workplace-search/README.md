@@ -30,9 +30,9 @@ Note:
   1. Go to the [Create deployment](https://cloud.elastic.co/deployments/create) page
   2. Select **Create deployment** and follow the instructions
 
-### Adjusting the index and chat_history index
+### Change the Elasticsearch index and chat_history index
 
-By default, the app will be `workplace_search` and the chat history index will be `chat_history`. If you want to change these, you can set the following environment variables:
+By default, the app will use the `workplace-app-docs` index and the chat history index will be `workplace-app-docs-chat-history`. If you want to change these, you can set the following environment variables:
 
 ```sh
 ES_INDEX=workplace-app-docs
@@ -121,7 +121,7 @@ Remember to keep the `ES_INDEX` environment variable set to the index you want t
 
 ## Running the App
 
-There are two ways to run the app: via Docker or locally. Docker is advised for testing & production use. Locally is advised for development.
+Once you have indexed data into the Elasticsearch index, there are two ways to run the app: via Docker or locally. Docker is advised for testing & production use. Locally is advised for development.
 
 ### Through Docker
 
