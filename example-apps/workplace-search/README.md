@@ -30,6 +30,15 @@ Note:
   1. Go to the [Create deployment](https://cloud.elastic.co/deployments/create) page
   2. Select **Create deployment** and follow the instructions
 
+### Change the Elasticsearch index and chat_history index
+
+By default, the app will use the `workplace-app-docs` index and the chat history index will be `workplace-app-docs-chat-history`. If you want to change these, you can set the following environment variables:
+
+```sh
+ES_INDEX=workplace-app-docs
+ES_INDEX_CHAT_HISTORY=workplace-app-docs-chat-history
+```
+
 ## 3. Connecting to LLM
 
 We support three LLM providers: Azure, OpenAI and Bedrock.
@@ -100,22 +109,52 @@ You can index the sample data from the provided .json files in the `data` folder
 python data/index-data.py
 ```
 
+by default, this will index the data into the `workplace-app-docs` index. You can change this by setting the `ES_INDEX` environment variable.
+
 ### Indexing your own data
 
 `index-data.py` is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `CharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
 
 Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
 
-## Running the app
+Remember to keep the `ES_INDEX` environment variable set to the index you want to index into and to query from.
+
+## Running the App
+
+Once you have indexed data into the Elasticsearch index, there are two ways to run the app: via Docker or locally. Docker is advised for testing & production use. Locally is advised for development.
+
+### Through Docker
+
+Build the Docker image and run it with the following environment variables.
+
+```sh
+docker build -f Dockerfile -t workplace-search-app .
+```
+
+Then run it with the following environment variables. In the example below, we are using OpenAI LLM.
+
+If you're using one of the other LLMs, you will need to set the appropriate environment variables via `-e` flag.
+
+```sh
+docker run -p 4000:4000 \
+  -e "ELASTIC_CLOUD_ID=<cloud_id>" \
+  -e "ELASTIC_USERNAME=elastic" \
+  -e "ELASTIC_PASSWORD=<password>" \
+  -e "LLM_TYPE=openai" \
+  -e "OPENAI_API_KEY=<openai_key>" \
+  -d workplace-search-app
+```
+
+### Locally (for development)
 
 With the environment variables set, you can run the following commands to start the server and frontend.
 
-### Pre-requisites
+#### Pre-requisites
 
 - Python 3.8+
 - Node 14+
 
-### Install the dependencies
+#### Install the dependencies
 
 For Python we recommend using a virtual environment.
 
@@ -137,7 +176,7 @@ pip install -r requirements.txt
 cd frontend && yarn
 ```
 
-### Run API and frontend
+#### Run API and frontend
 
 ```sh
 # Launch API app
@@ -148,10 +187,3 @@ cd frontend && yarn start
 ```
 
 You can now access the frontend at http://localhost:3000. Changes are automatically reloaded.
-
-## Running the Docker container
-
-```
-docker build -f Dockerfile -t python-flask-example .
-docker run -p 4000:4000 -d python-flask-example
-```

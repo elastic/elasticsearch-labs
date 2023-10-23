@@ -31,7 +31,7 @@ const GLOBAL_STATE: GlobalStateType = {
   sessionId: null,
   sources: [],
 }
-const API_HOST = 'http://localhost:3001/api'
+const API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:3001/api'
 
 let abortController: AbortController | null = null
 const globalSlice = createSlice({
