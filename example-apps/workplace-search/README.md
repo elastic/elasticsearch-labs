@@ -101,6 +101,17 @@ aws_secret_access_key=...
 region=...
 ```
 
+### Vertex AI
+
+`LLM_TYPE=vertex`
+
+To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
+
+```sh
+    export VERTEX_PROJECT_ID=<gcp-project-id>
+    export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
+```
+
 ## 3. Ingest Data
 
 You can index the sample data from the provided .json files in the `data` folder:
