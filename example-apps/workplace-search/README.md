@@ -109,6 +109,7 @@ To use Vertex AI you need to set the following environment variables. More infos
 
 ```sh
     export VERTEX_PROJECT_ID=<gcp-project-id>
+    export VERTEX_REGION=<gcp-region> # Default is us-central1
     export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
 ```
 
