@@ -51,11 +51,10 @@ export LLM_TYPE=azure
 
 ### OpenAI
 
-`LLM_TYPE=openai`
-
 To use OpenAI LLM, you will need to provide the OpenAI key via `OPENAI_API_KEY` environment variable:
 
 ```sh
+export LLM_TYPE=openai
 export OPENAI_API_KEY=...
 ```
 
@@ -78,11 +77,11 @@ export OPENAI_ENGINE=... # deployment name in Azure
 To use Bedrock LLM you need to set the following environment variables in order to AWS.
 
 ```sh
-    export LLM_TYPE=bedrock
-    export AWS_ACCESS_KEY=...
-    export AWS_SECRET_KEY=...
-    export AWS_REGION=... # e.g. us-east-1
-    export AWS_MODEL_ID=... # Default is anthropic.claude-v2
+export LLM_TYPE=bedrock
+export AWS_ACCESS_KEY=...
+export AWS_SECRET_KEY=...
+export AWS_REGION=... # e.g. us-east-1
+export AWS_MODEL_ID=... # Default is anthropic.claude-v2
 ```
 
 #### AWS Config
@@ -102,9 +101,9 @@ region=...
 To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
 
 ```sh
-    export LLM_TYPE=vertex
-    export VERTEX_PROJECT_ID=<gcp-project-id>
-    export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
+export LLM_TYPE=vertex
+export VERTEX_PROJECT_ID=<gcp-project-id>
+export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
 ```
 
 ## 3. Ingest Data
