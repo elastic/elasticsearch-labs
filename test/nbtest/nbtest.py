@@ -14,7 +14,7 @@ from jupyter_core.paths import jupyter_data_dir
 from jupyter_client.kernelspec import KernelSpecManager
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
-from rich import print
+from rich import print as rprint
 from rich.markdown import Markdown
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -59,24 +59,33 @@ def diff_output(source_output, test_output):
     test_lines = [line + '\n' for line in test_output.split('\n')]
     diff = ''.join(difflib.unified_diff(
         source_lines, test_lines, fromfile='source.txt', tofile='test.txt'))
-    print(Markdown(f'```diff\n{diff}```\n', code_theme='vim'))
+    rprint(Markdown(f'```diff\n{diff}```\n', code_theme='vim'))
 
 
-def nbtest(notebook):
-    """Main entry point. The given notebook is executed, and for any cells that
-    include output, the newly generated output is diffed.
-    """
-    with open(notebook, 'rt') as f:
-        nb = nbformat.read(f, as_version=4)
+def nbtest_one(notebook, verbose):
+    """Run a notebook and ensure output is the same as in the original."""
+    rprint(f'Running [yellow]{notebook}[default]...', end='')
+
+    try:
+        with open(notebook, 'rt') as f:
+            nb = nbformat.read(f, as_version=4)
+    except FileNotFoundError:
+        rprint(' [red]Not found[default]')
+        return 1
     original_cells = deepcopy(nb.cells)
 
     ep = ExecutePreprocessor(timeout=600, kernel_name='python3-test')
-    ep.preprocess(nb, {'metadata': {'path': basedir}})
+    try:
+        ep.preprocess(nb, {'metadata': {'path': basedir}})
+    except Exception as exc:
+        rprint(' [red]Failed[default]')
+        print(exc)
+        return 1
 
     ret = 0
-    cell_number = 0
+    cell = 0
     for source, test in zip(original_cells, nb.cells):
-        cell_number += 1
+        cell += 1
         if source['cell_type'] == 'code':
             source_output = {
                 output.get('name', '?'): output.get('text', '')
@@ -88,35 +97,58 @@ def nbtest(notebook):
             }
             for name in source_output:
                 if name not in ['stdout', 'stderr']:
-                    print(f'>>>>> [magenta]code cell #{cell_number}({name})'
-                          '[default]: [dim white]Skipped[default]')
+                    if verbose:
+                        rprint(f'>>>>> [magenta]code cell #{cell}({name})'
+                               '[default]: [dim white]Skipped[default]')
                     continue
                 base = preprocess_output(str(source_output[name]))
                 current = preprocess_output(str(test_output.get(name, '')))
                 if  base == current:
-                    print(f'>>>>> [yellow]code cell #{cell_number}/({name})'
-                          '[default]: [green]OK[default]')
+                    if verbose:
+                        rprint(f'>>>>> [yellow]code cell #{cell}/({name})'
+                               '[default]: [green]OK[default]')
                 else:
-                    print(f'>>>>> [yellow]code cell #{cell_number}/({name})'
-                          '[default]: [red]Error[default]')
+                    if ret == 0:
+                        ret = 1
+                        rprint(' [red]Failed[default]')
+                    rprint(f'>>>>> [yellow]code cell #{cell}/({name})'
+                           '[default]: [red]Error[default]')
                     diff_output(base, current)
-                    ret = 1
         else:
-            print(f'>>>>> [magenta]{source["cell_type"]} cell #{cell_number}'
-                  '[default]: [dim white]Skipped[default]')
+            if verbose:
+                rprint(f'>>>>> [magenta]{source["cell_type"]} cell #{cell}'
+                       '[default]: [dim white]Skipped[default]')
+    if ret == 0:
+        rprint(' [green]OK[default]')
+    return ret
+
+
+
+def nbtest(notebook, verbose):
+    """Main entry point. The given notebooks are executed, and for any cells
+    that include output, the newly generated output is diffed.
+    """
+    ret = 0
+    for nb in notebook:
+        ret += nbtest_one(notebook=nb, verbose=verbose)
     return ret
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('notebook')
+    parser.add_argument('notebooks', nargs='+')
+    parser.add_argument('-v', '--verbose', action='store_true')
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
     args = parse_args()
     register_python3_test_kernel()
     try:
         sys.exit(nbtest(**args.__dict__))
     finally:
         unregister_python3_test_kernel()
+
+
+if __name__ == '__main__':
+    main()
