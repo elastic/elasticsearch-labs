@@ -231,7 +231,7 @@ export const thunkActions = {
         
               dispatch(actions.setStatus({ status: AppStatus.Done }))
             } else {
-              message += message && event.data === '' ? '\n' : event.data
+              message += message && event.data.trim() === '' ? '\n' : event.data
 
               dispatch(
                 actions.updateMessage({
@@ -300,7 +300,9 @@ const parseSources = (
   message = message.replaceAll("\"", "");
   const match = message.match(/SOURCES: (.+)+/)
   if (match) {
-    return match[1].split(',')
+    return match[1].split(',').map(element => {
+      return element.trim();
+    });
   }
   return  []
 

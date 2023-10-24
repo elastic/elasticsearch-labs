@@ -76,14 +76,15 @@ store = ElasticsearchStore(
 
 general_system_template = """
 Human: Use the following passages to answer the user's question. 
-Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them in a comma seperated list, prefixed at the start with SOURCES: $sources.
+Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them in a comma seperated list, prefixed at the start with SOURCES: $sources then print an empty line.
 
 Example:
 
 Question: What is the meaning of life?
 Response:
-The meaning of life is 42. 
-SOURCES: Hitchhiker's Guide to the Galaxy
+The meaning of life is 42. \n
+
+SOURCES: Hitchhiker's Guide to the Galaxy \n
 
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
@@ -129,7 +130,6 @@ def parse_stream_message(session_id, queue: Queue):
     break_out_flag = False
     while True:
         message = queue.get()
-
         for line in message.splitlines():
             if line == POISON_MESSAGE:
                 break_out_flag = True
