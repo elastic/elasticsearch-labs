@@ -8,7 +8,6 @@ from langchain.prompts.chat import (
 from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import ElasticsearchStore
 from queue import Queue
-from time import sleep
 from llm_integrations import get_llm
 from elasticsearch_client import (
     elasticsearch_client,
@@ -130,9 +129,8 @@ def parse_stream_message(session_id, queue: Queue):
     break_out_flag = False
     while True:
         message = queue.get()
-        
+
         for line in message.splitlines():
-            print(line)
             if line == POISON_MESSAGE:
                 break_out_flag = True
                 break
