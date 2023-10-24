@@ -4,7 +4,7 @@ from langchain.memory import ElasticsearchChatMessageHistory
 import os
 
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
-ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME")
+ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME", "elastic")
 ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
 
 elasticsearch_client = Elasticsearch(

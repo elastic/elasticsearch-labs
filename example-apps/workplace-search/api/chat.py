@@ -75,8 +75,16 @@ store = ElasticsearchStore(
 )
 
 general_system_template = """
-Use the following passages to answer the user's question.
-Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them as an array of strings in here <script>[sources]</script>.
+Human: Use the following passages to answer the user's question. 
+Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them in a comma seperated list, prefixed at the start with SOURCES: $sources.
+
+Example:
+
+Question: What is the meaning of life?
+Response:
+The meaning of life is 42. 
+SOURCES: Hitchhiker's Guide to the Galaxy
+
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 ----
@@ -118,12 +126,17 @@ def parse_stream_message(session_id, queue: Queue):
     yield f"data: {SESSION_ID_TAG} {session_id}\n\n"
 
     message = None
+    break_out_flag = False
     while True:
         message = queue.get()
 
-        if message == POISON_MESSAGE:
+        for line in message.splitlines():
+            if line == POISON_MESSAGE:
+                break_out_flag = True
+                break
+            yield f"data: {line}\n\n"
+        if break_out_flag:
             break
-        yield f"data: {message}\n\n"
 
     yield f"data: {DONE_TAG}\n\n"
 
