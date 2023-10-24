@@ -15,3 +15,27 @@ To test all notebooks, you can run `make` from the top-level directory:
 ```bash
 make
 ```
+
+## Handling of `getpass`
+
+The `nbtest` script runs the notebooks with an alternative version of the
+`getpass()` function that looks for requested values in environment variables
+that need to be set before invoking the script.
+
+Consider the following example, which is used in many Elastic notebooks:
+
+```python
+CLOUD_ID = getpass("Elastic Cloud ID:")
+CLOUD_PASSWORD = getpass("Elastic Password:")
+```
+
+The `getpass()` function used by `nbtest` takes the prompt given as an
+argument, and converts it to an environment variable name with the following
+rules:
+
+- Spaces are converted to underscores
+- Non-alphanumeric characters are removed
+- Letters are uppercased
+
+In the above example, the variables that will be used are `ELASTIC_CLOUD_ID`
+and `ELASTIC_PASSWORD`.

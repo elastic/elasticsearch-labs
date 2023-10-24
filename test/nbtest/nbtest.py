@@ -136,7 +136,7 @@ def nbtest(notebook, verbose):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('notebooks', nargs='+')
+    parser.add_argument('notebook', nargs='+')
     parser.add_argument('-v', '--verbose', action='store_true')
     return parser.parse_args()
 
