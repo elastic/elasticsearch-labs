@@ -47,17 +47,14 @@ To use one of them, you need to set the `LLM_TYPE` environment variable:
 
 ```sh
 export LLM_TYPE=azure
-# export LLM_TYPE=bedrock
-# export LLM_TYPE=openai
 ```
 
 ### OpenAI
 
-`LLM_TYPE=openai`
-
 To use OpenAI LLM, you will need to provide the OpenAI key via `OPENAI_API_KEY` environment variable:
 
 ```sh
+export LLM_TYPE=openai
 export OPENAI_API_KEY=...
 ```
 
@@ -65,11 +62,10 @@ You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.
 
 ### Azure OpenAI
 
-`LLM_TYPE=azure`
-
 If you are using Azure LLM, you will need to set the following environment variables:
 
 ```sh
+export LLM_TYPE=azure
 export OPENAI_VERSION=... # e.g. 2023-05-15
 export OPENAI_BASE_URL=...
 export OPENAI_API_KEY=...
@@ -78,15 +74,14 @@ export OPENAI_ENGINE=... # deployment name in Azure
 
 ### Bedrock LLM
 
-`LLM_TYPE=bedrock`
-
 To use Bedrock LLM you need to set the following environment variables in order to AWS.
 
 ```sh
-    export AWS_ACCESS_KEY=...
-    export AWS_SECRET_KEY=...
-    export AWS_REGION=... # e.g. us-east-1
-    export AWS_MODEL_ID=... # Default is anthropic.claude-v2
+export LLM_TYPE=bedrock
+export AWS_ACCESS_KEY=...
+export AWS_SECRET_KEY=...
+export AWS_REGION=... # e.g. us-east-1
+export AWS_MODEL_ID=... # Default is anthropic.claude-v2
 ```
 
 #### AWS Config
@@ -103,11 +98,10 @@ region=...
 
 ### Vertex AI
 
-`LLM_TYPE=vertex`
-
 To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
 
 ```sh
+    export LLM_TYPE=vertex
     export VERTEX_PROJECT_ID=<gcp-project-id>
     export VERTEX_REGION=<gcp-region> # Default is us-central1
     export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
