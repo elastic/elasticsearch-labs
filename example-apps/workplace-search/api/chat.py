@@ -76,7 +76,15 @@ store = ElasticsearchStore(
 
 general_system_template = """
 Use the following passages to answer the user's question.
-Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them as an array of strings in here <script>[sources]</script>.
+Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them in a comma seperated list, prefixed at the start with SOURCES: $sources.
+
+Example:
+
+Question: What is the meaning of life?
+Response:
+The meaning of life is 42. 
+SOURCES: Hitchhiker's Guide to the Galaxy
+
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 ----

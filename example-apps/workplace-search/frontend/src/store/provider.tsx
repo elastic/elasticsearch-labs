@@ -221,14 +221,14 @@ export const thunkActions = {
                 console.error(e)
               }
             } else if (event.data === STREAMING_EVENTS.DONE) {
-              parseSources(message, (sources) => {
-                dispatch(
-                  actions.setMessageSource({
-                    id: conversationId,
-                    sources,
-                  })
-                )
-              })
+              const sources = parseSources(message)
+              dispatch(
+                actions.setMessageSource({
+                  id: conversationId,
+                  sources,
+                })
+              )
+        
               dispatch(actions.setStatus({ status: AppStatus.Done }))
             } else {
               message += message && event.data === '' ? '\n' : event.data
@@ -236,7 +236,7 @@ export const thunkActions = {
               dispatch(
                 actions.updateMessage({
                   id: conversationId,
-                  content: message,
+                  content: message.replace(/SOURCES: (.+)+/, ''),
                 })
               )
             }
@@ -293,24 +293,14 @@ export const thunkActions = {
 }
 
 const parseSources = (
-  message: string,
-  callback: (sources: string[]) => void
+  message: string
 ) => {
-  const html = document.createElement('html')
-  html.innerHTML = message
-
-  try {
-    const script = html.querySelector<HTMLElement>('script')
-    if (script) {
-      const sources = JSON.parse(script?.innerText)
-
-      if (sources.length) {
-        callback(sources)
-      }
-    }
-  } catch (e) {
-    console.error(e)
+  const match = message.match(/SOURCES: (.+)+/)
+  if (match) {
+    return match[1].split(',')
   }
+  return  []
+
 }
 
 export const GlobalStateProvider = ({ children }) => {
