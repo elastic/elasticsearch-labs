@@ -242,6 +242,7 @@ export const thunkActions = {
             }
           },
           async onopen(response) {
+
             if (response.ok) {
               return
             } else if (
@@ -255,6 +256,7 @@ export const thunkActions = {
             }
           },
           onerror(err) {
+
             if (err instanceof FatalError || countRetiresError > 3) {
               dispatch(actions.setStatus({ status: AppStatus.Error }))
 
@@ -295,6 +297,7 @@ export const thunkActions = {
 const parseSources = (
   message: string
 ) => {
+  message = message.replaceAll("\"", "");
   const match = message.match(/SOURCES: (.+)+/)
   if (match) {
     return match[1].split(',')
