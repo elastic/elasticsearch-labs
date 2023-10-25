@@ -10,7 +10,8 @@ def init_openai_chat():
     return ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=0.2)
 def init_vertex_chat():
     VERTEX_PROJECT_ID = os.getenv("VERTEX_PROJECT_ID")
-    vertexai.init(project=VERTEX_PROJECT_ID, location="us-central1")
+    VERTEX_REGION = os.getenv("VERTEX_REGION", "us-central1")
+    vertexai.init(project=VERTEX_PROJECT_ID, location=VERTEX_REGION)
     return ChatVertexAI(streaming=True, temperature=0.2)
 def init_azure_chat():
     OPENAI_VERSION=os.getenv("OPENAI_VERSION", "2023-05-15")

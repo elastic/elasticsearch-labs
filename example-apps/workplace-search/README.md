@@ -101,9 +101,10 @@ region=...
 To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
 
 ```sh
-export LLM_TYPE=vertex
-export VERTEX_PROJECT_ID=<gcp-project-id>
-export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
+    export LLM_TYPE=vertex
+    export VERTEX_PROJECT_ID=<gcp-project-id>
+    export VERTEX_REGION=<gcp-region> # Default is us-central1
+    export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
 ```
 
 ## 3. Ingest Data
