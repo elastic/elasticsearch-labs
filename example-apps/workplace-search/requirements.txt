@@ -56,3 +56,4 @@ urllib3==1.26.16
 Werkzeug==2.3.7
 yarl==1.9.2
 zipp==3.17.0
+google-cloud-aiplatform==1.35.0

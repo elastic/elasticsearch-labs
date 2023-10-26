@@ -30,6 +30,15 @@ Note:
   1. Go to the [Create deployment](https://cloud.elastic.co/deployments/create) page
   2. Select **Create deployment** and follow the instructions
 
+### Change the Elasticsearch index and chat_history index
+
+By default, the app will use the `workplace-app-docs` index and the chat history index will be `workplace-app-docs-chat-history`. If you want to change these, you can set the following environment variables:
+
+```sh
+ES_INDEX=workplace-app-docs
+ES_INDEX_CHAT_HISTORY=workplace-app-docs-chat-history
+```
+
 ## 3. Connecting to LLM
 
 We support three LLM providers: Azure, OpenAI and Bedrock.
@@ -38,17 +47,14 @@ To use one of them, you need to set the `LLM_TYPE` environment variable:
 
 ```sh
 export LLM_TYPE=azure
-# export LLM_TYPE=bedrock
-# export LLM_TYPE=openai
 ```
 
 ### OpenAI
 
-`LLM_TYPE=openai`
-
 To use OpenAI LLM, you will need to provide the OpenAI key via `OPENAI_API_KEY` environment variable:
 
 ```sh
+export LLM_TYPE=openai
 export OPENAI_API_KEY=...
 ```
 
@@ -56,11 +62,10 @@ You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.
 
 ### Azure OpenAI
 
-`LLM_TYPE=azure`
-
 If you are using Azure LLM, you will need to set the following environment variables:
 
 ```sh
+export LLM_TYPE=azure
 export OPENAI_VERSION=... # e.g. 2023-05-15
 export OPENAI_BASE_URL=...
 export OPENAI_API_KEY=...
@@ -69,15 +74,14 @@ export OPENAI_ENGINE=... # deployment name in Azure
 
 ### Bedrock LLM
 
-`LLM_TYPE=bedrock`
-
 To use Bedrock LLM you need to set the following environment variables in order to AWS.
 
 ```sh
-    export AWS_ACCESS_KEY=...
-    export AWS_SECRET_KEY=...
-    export AWS_REGION=... # e.g. us-east-1
-    export AWS_MODEL_ID=... # Default is anthropic.claude-v2
+export LLM_TYPE=bedrock
+export AWS_ACCESS_KEY=...
+export AWS_SECRET_KEY=...
+export AWS_REGION=... # e.g. us-east-1
+export AWS_MODEL_ID=... # Default is anthropic.claude-v2
 ```
 
 #### AWS Config
@@ -92,6 +96,17 @@ aws_secret_access_key=...
 region=...
 ```
 
+### Vertex AI
+
+To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
+
+```sh
+    export LLM_TYPE=vertex
+    export VERTEX_PROJECT_ID=<gcp-project-id>
+    export VERTEX_REGION=<gcp-region> # Default is us-central1
+    export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
+```
+
 ## 3. Ingest Data
 
 You can index the sample data from the provided .json files in the `data` folder:
@@ -100,22 +115,52 @@ You can index the sample data from the provided .json files in the `data` folder
 python data/index-data.py
 ```
 
+by default, this will index the data into the `workplace-app-docs` index. You can change this by setting the `ES_INDEX` environment variable.
+
 ### Indexing your own data
 
 `index-data.py` is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `CharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
 
 Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
 
-## Running the app
+Remember to keep the `ES_INDEX` environment variable set to the index you want to index into and to query from.
+
+## Running the App
+
+Once you have indexed data into the Elasticsearch index, there are two ways to run the app: via Docker or locally. Docker is advised for testing & production use. Locally is advised for development.
+
+### Through Docker
+
+Build the Docker image and run it with the following environment variables.
+
+```sh
+docker build -f Dockerfile -t workplace-search-app .
+```
+
+Then run it with the following environment variables. In the example below, we are using OpenAI LLM.
+
+If you're using one of the other LLMs, you will need to set the appropriate environment variables via `-e` flag.
+
+```sh
+docker run -p 4000:4000 \
+  -e "ELASTIC_CLOUD_ID=<cloud_id>" \
+  -e "ELASTIC_USERNAME=elastic" \
+  -e "ELASTIC_PASSWORD=<password>" \
+  -e "LLM_TYPE=openai" \
+  -e "OPENAI_API_KEY=<openai_key>" \
+  -d workplace-search-app
+```
+
+### Locally (for development)
 
 With the environment variables set, you can run the following commands to start the server and frontend.
 
-### Pre-requisites
+#### Pre-requisites
 
 - Python 3.8+
 - Node 14+
 
-### Install the dependencies
+#### Install the dependencies
 
 For Python we recommend using a virtual environment.
 
@@ -137,7 +182,7 @@ pip install -r requirements.txt
 cd frontend && yarn
 ```
 
-### Run API and frontend
+#### Run API and frontend
 
 ```sh
 # Launch API app
@@ -148,10 +193,3 @@ cd frontend && yarn start
 ```
 
 You can now access the frontend at http://localhost:3000. Changes are automatically reloaded.
-
-## Running the Docker container
-
-```
-docker build -f Dockerfile -t python-flask-example .
-docker run -p 4000:4000 -d python-flask-example
-```

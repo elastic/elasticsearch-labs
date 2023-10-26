@@ -42,12 +42,13 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`03-ELSER.ipynb`](./notebooks/search/03-ELSER.ipynb)
 - [`04-multilingual.ipynb`](./notebooks/search/04-multilingual.ipynb)
 - [`05-query-rules.ipynb`](./notebooks/search/05-query-rules.ipynb)
+- [`06-synonyms-api.ipynb`](./notebooks/search/06-synonyms-api.ipynb)
 
 ### Integrations
 
 - [`loading-model-from-hugging-face.ipynb`](./notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb)
 - [`openai-semantic-search-RAG.ipynb`](./notebooks/integrations/openai/openai-KNN-RAG.ipynb)
-- [`aws-bedrock-langchain-qa-example.ipynb`](./notebooks/integrations/aws-bedrock/langchain-qa-example.ipynb)
+- [`amazon-bedrock-langchain-qa-example.ipynb`](notebooks/integrations/amazon-bedrock/langchain-qa-example.ipynb)
 
 ### Model Upgrades
 - [`upgrading-index-to-use-elser.ipynb`](notebooks/model-upgrades/upgrading-index-to-use-elser.ipynb)

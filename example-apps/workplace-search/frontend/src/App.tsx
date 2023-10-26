@@ -49,7 +49,7 @@ const App = () => {
   const suggestedQueries = [
     'What is our work from home policy?',
     "What's the NASA sales team?",
-    'Does the company own my personal project?',
+    'Does the company own my side project?',
     'What job openings do we have?',
     'How does compensation work?',
   ]
