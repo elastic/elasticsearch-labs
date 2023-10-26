@@ -1,0 +1,15 @@
+[project]
+name = "nbtest"
+version = "0.1.0"
+description = "Notebook testing tool"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project.scripts]
+nbtest = "nbtest:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
