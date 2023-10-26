@@ -5,4 +5,5 @@ NBTEST_DIR=$SCRIPT_DIR/../test/nbtest
 if [[ ! -f $NBTEST_DIR/.venv/bin/nbtest ]]; then
     make -C $NBTEST_DIR
 fi
-$NBTEST_DIR/.venv/bin/nbtest $*
+source $NBTEST_DIR/.venv/bin/activate
+nbtest $*

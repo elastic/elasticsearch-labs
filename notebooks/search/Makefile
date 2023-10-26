@@ -1,4 +1,4 @@
-NBTEST = ../../test/nbtest/.venv/bin/nbtest
+NBTEST = ../../bin/nbtest
 
 .PHONY: all
 
