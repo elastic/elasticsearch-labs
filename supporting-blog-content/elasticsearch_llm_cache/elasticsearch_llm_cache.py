@@ -130,25 +130,37 @@ class ElasticsearchLLMCache:
 
     def query(self,
               prompt_text: str,
-              similarity_threshold: Optional[float] = 0.5
+              similarity_threshold: Optional[float] = 0.5,
+              num_candidates: Optional[int] = 1000,
+              create_date_gte: Optional[str] = "now-1y/y"
               ) -> dict:
         """
         Query the index to find similar prompts and update the `last_hit_date` for that document if a hit is found.
 
         :param prompt_text: The text of the prompt to find similar entries for.
         :param similarity_threshold: The similarity threshold for filtering results; defaults to 0.5.
+        :param num_candidates: The number of candidates to consider; defaults to 1000.
+        :param create_date_gte: The date range to consider results; defaults to "now-1y/y".
         :return: A dictionary containing the hits or an empty dictionary if no hits are found.
         """
         knn = [
             {
                 "field": "prompt_vector",
                 "k": 1,
-                "num_candidates": 1000,
+                "num_candidates": num_candidates,
                 "similarity": similarity_threshold,
                 "query_vector_builder": {
                     "text_embedding": {
                         "model_id": self.es_model_id,
                         "model_text": prompt_text
+                    }
+                },
+                "filter": {
+                    "range": {
+                        "create_date": {
+                            "gte": create_date_gte
+
+                        }
                     }
                 }
             }
@@ -197,7 +209,7 @@ class ElasticsearchLLMCache:
     def add(self, prompt: str,
             response: str,
             source: Optional[str] = None
-            ) -> dict:
+            ) -> Dict:
         """
         Add a new document to the index.
 
@@ -216,5 +228,10 @@ class ElasticsearchLLMCache:
             "prompt_vector": prompt_vector,
             "source": source  # Optional
         }
-        self.es.index(index=self.index_name, document=doc)
-        return {'success caching new prompt & response': True}
+        try:
+            self.es.index(index=self.index_name, document=doc)
+            return {'success': True}
+        except Exception as e:
+            logger.error(e)
+            return {'success': False,
+                    'error': e}
