@@ -2,7 +2,7 @@
 A Python library to utilize Elasticsearch as a caching layer for Generative AI applications. By caching the responses from Language Models (LLMs), this library helps in reducing costs associated with LLM services and improving response speed from the user's perspective.
 
 # Blog Post
-This library is covered in depth in the blog post [Elasticsearch as a GenAI Caching Layer](https://www.elastic.co/blog/lasticsearch-as-a-genai-caching-layer).
+This library is covered in depth in the blog post [Elasticsearch as a GenAI Caching Layer](https://www.elastic.co/search-labs/elasticsearch-as-a-genai-caching-layer).
 
 ## Key Benefits
 - Reduce costs for LLM services by reusing previous responses.

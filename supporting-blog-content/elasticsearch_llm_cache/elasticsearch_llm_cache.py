@@ -44,7 +44,7 @@ add_result = llm_cache.add(prompt, response)
 
 This library is covered in depth in the blog post
 Elasticsearch as a GenAI Caching Layer
-https://www.elastic.co/blog/lasticsearch-as-a-genai-caching-layer
+https://www.elastic.co/search-labs/elasticsearch-as-a-genai-caching-layer
 
 Author: Jeff Vestal
 Version: 1.0.0
