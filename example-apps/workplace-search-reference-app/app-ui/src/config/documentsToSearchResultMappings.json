@@ -1,0 +1,16 @@
+{
+  "search-mongo": {
+    "title": "name",
+    "created": "_timestamp",
+    "previewText": "summary",
+    "fullText": "description",
+    "link": "listing_url"
+  },
+  "search-mysql": {
+    "title": "name",
+    "created": "_timestamp",
+    "previewText": "summary",
+    "fullText": "description",
+    "link": "listing_url"
+  }
+}
