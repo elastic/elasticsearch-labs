@@ -1,7 +1,7 @@
 # osx
 .idea
 .DS_Store
-test/nbtest/.venv
-test/nbtest/__pycache__
-test/nbtest/nbtest.egg-info
-
+.ipynb_checkpoints
+*.egg-info
+__pycache__
+.venv
