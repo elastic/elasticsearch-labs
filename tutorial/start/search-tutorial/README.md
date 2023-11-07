@@ -1,3 +1,3 @@
-# Elasticsearch Tutorial
+# Elasticsearch Search Tutorial
 
-This directory contains a starter Flask project used in the Search Labs Elasticsearch tutorial.
+This directory contains a starter Flask project used in the Search tutorial.
