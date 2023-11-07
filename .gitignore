@@ -5,3 +5,4 @@
 *.egg-info
 __pycache__
 .venv
+notebooks/**/temp.json
