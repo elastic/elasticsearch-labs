@@ -39,7 +39,19 @@ def handle_search():
                 **search_query,
                 **filters
             }
-        }, size=5, from_=from_
+        },
+        knn={
+            'field': 'embedding',
+            'query_vector': es.get_embedding(parsed_query),
+            'k': 10,
+            'num_candidates': 50,
+            **filters,
+        },
+        rank={
+            'rrf': {}
+        },
+        size=5,
+        from_=from_,
     )
     return render_template('index.html', results=results['hits']['hits'],
                            query=query, from_=from_,
