@@ -24,9 +24,6 @@ class Search:
             'properties': {
                 'embedding': {
                     'type': 'dense_vector',
-                    'dims': 384,
-                    'index': True,
-                    'similarity': 'dot_product',
                 }
             }
         })

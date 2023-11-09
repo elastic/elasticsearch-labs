@@ -17,29 +17,24 @@ def handle_search():
     filters, parsed_query = extract_filters(query)
     from_ = request.form.get('from_', type=int, default=0)
 
-    if parsed_query:
-        search_query = {
-            'must': {
-                'multi_match': {
-                    'query': parsed_query,
-                    'fields': ['name', 'summary', 'content'],
-                }
-            }
-        }
-    else:
-        search_query = {
-            'must': {
-                'match_all': {}
-            }
-        }
-
     results = es.search(
         query={
             'bool': {
-                **search_query,
-                **filters
+                'must': [
+                    {
+                        'text_expansion': {
+                            'elser_embedding': {
+                                'model_id': '.elser_model_2',
+                                'model_text': parsed_query,
+                            }
+                        },
+                    }
+                ],
+                **filters,
             }
-        }, size=5, from_=from_
+        },
+        size=5,
+        from_=from_,
     )
     return render_template('index.html', results=results['hits']['hits'],
                            query=query, from_=from_,
@@ -60,6 +55,17 @@ def reindex():
     response = es.reindex()
     print(f'Index with {len(response["items"])} documents created '
           f'in {response["took"]} milliseconds.')
+
+
+@app.cli.command()
+def deploy_elser():
+    """Deploy the ELSER v2 model to Elasticsearch."""
+    try:
+        es.deploy_elser()
+    except Exception as exc:
+        print(f'Error: {exc}')
+    else:
+        print(f'ELSER model deployed.')
 
 
 def extract_filters(query):

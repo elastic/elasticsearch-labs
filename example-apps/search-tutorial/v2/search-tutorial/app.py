@@ -71,7 +71,7 @@ def reindex():
     """Regenerate the Elasticsearch index."""
     response = es.reindex()
     print(f'Index with {len(response["items"])} documents created '
-          f'in {response["took"]} seconds.')
+          f'in {response["took"]} milliseconds.')
 
 
 def extract_filters(query):
