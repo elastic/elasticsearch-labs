@@ -12,6 +12,8 @@ This repo shows how to leverage Elastic search capabilities (both text and vecto
 
 ## Configuration steps
 
+!!! NEW !!! Now available a detailed step-by-step walkthrough to implement this repo [here](https://github.com/valerioarvizzigno/homecraft_vertex_lab) (also usable for external workshops)  
+
 1. Setup your Elastic cluster with ML nodes
 
 2. Install python on your local machine. If using Homebew on macOS simply use
@@ -26,7 +28,7 @@ brew install python@3.11
 python -m venv homecraftenv
 ```
 
-4. (Optional) If step 3 is followed, activate your virtual env. Check here https://docs.python.org/3/tutorial/venv.html commands depending on your OS. For Unix or macOS use
+4. (Optional) If step 3 is followed, activate your virtual env. Check [here](https://docs.python.org/3/tutorial/venv.html) to check commands depending on your OS. For Unix or macOS use
 
 ```bash
 source homecraftenv/bin/activate
@@ -44,7 +46,7 @@ git clone https://github.com/valerioarvizzigno/homecraft_vertex.git
 pip install -r requirements.txt 
 ```
 
-7. Install gcloud SDK. It is needed to connect to VertexAI APIs. (https://cloud.google.com/sdk/docs/install-sdk)
+7. Install gcloud SDK. It is needed to connect to VertexAI APIs. [docs here](https://cloud.google.com/sdk/docs/install-sdk)
    Follow the instructions at the link depending on your OS. If using Homebrew on macOS you can simply install it with
 
  ```bash
@@ -57,13 +59,13 @@ brew install --cask google-cloud-sdk
 gcloud init
 ```  
 
-9. Authenticate the VertexAI SDK (it has been installed with requirements.txt). More info here https://googleapis.dev/python/google-api-core/latest/auth.html
+9. Authenticate the VertexAI SDK (it has been installed with requirements.txt). More info [here](https://googleapis.dev/python/google-api-core/latest/auth.html)
 
  ```bash
 gcloud auth application-default login
 ```  
 
-10. Load the all-distillroberta-v1 (https://huggingface.co/sentence-transformers/all-distilroberta-v1) ML model in you Elastic cluster via Eland client and start it. To run Eland client you need docker installed. An easy way to accomplish this step without python/docker installation is via Google's Cloud Shell.
+10. Load the [all-distillroberta-v1](https://huggingface.co/sentence-transformers/all-distilroberta-v1) ML model in you Elastic cluster via Eland client and start it. To run Eland client you need docker installed. An easy way to accomplish this step without python/docker installation is via Google's Cloud Shell.
 
  ```bash
 git clone https://github.com/elastic/eland.git
@@ -72,10 +74,7 @@ cd eland/
 
 docker build -t elastic/eland .
 
-docker run -it --rm elastic/eland eland_import_hub_model 
---url https://<elastic_user>:<elastic_password>@<your_elastic_endpoint>:9243/ 
---hub-model-id sentence-transformers/all-distilroberta-v1 
---start
+docker run -it --rm elastic/eland eland_import_hub_model --url https://<elastic_user>:<elastic_password>@<your_elastic_endpoint>:9243/ --hub-model-id sentence-transformers/all-distilroberta-v1 --start
  ```
 
 11. Index  general data from a retailer website (I used https://www.ikea.com/gb/en/) with Elastic Enterprise Search's webcrawler and give the index the "search-homecraft-ikea" name (for immediate compatibility with this repo code, otherwise change the index references in all homecraft_*.py files). For better crawling performance search the sitemap.xml file inside the robots.txt file of the target webserver, and add its path to the Site Maps tab. Set a custom ingest pipeline, named "ml-inference-title-vector", working directly at crawling time, to enrich crawled documents with dense vectors. Use the previously loaded ML model for inference on the "title" field as source, and set "title-vector" as target field for dense vectors.
@@ -98,7 +97,7 @@ POST search-homecraft-ikea/_mapping
 
 13. Start crawling.
 
-14. Index the Home Depot products dataset (https://www.kaggle.com/datasets/thedevastator/the-home-depot-products-dataset) into elastic.
+14. Index the Home Depot [products dataset](https://www.kaggle.com/datasets/thedevastator/the-home-depot-products-dataset) into elastic.
 
 15. Create a new empty index that will host the dense vectors called "home-depot-product-catalog-vector" (for immediate compatibility with this repo code, otherwise change the index references in all homecraft_*.py files) and specify mappings.
 
@@ -135,23 +134,24 @@ POST _reindex
 
 17. Leverage the BigQuery to Elasticsearch Dataflow's [native integration](https://www.elastic.co/blog/ingest-data-directly-from-google-bigquery-into-elastic-using-google-dataflow) to move a [sample e-commerce dataset](https://console.cloud.google.com/marketplace/product/bigquery-public-data/thelook-ecommerce?project=elastic-sa) into Elastic. Take a look ad tables available in this dataset withih BigQuery explorer UI. Copy the ID of the "Order_items" table and create a new Dataflow job to move data from this BQ table to an index named "bigquery-thelook-order-items". You need to create an API key on the Elastic cluster and pass it along with Elastic cluster's cloud_id, user and pass to the job config. This new index will be used for retrieving user orders.
 
-18. Clone this repo in your project folder.
+18. Set up the environment variables cloud_id (the elastic CloudID - find it on the Elastic admin console), cloud_pass and cloud_user (Elastic deployments's user details) and gcp_project_id (the GCP project you're working in). This variables are used inside of the app code to reference the correct systems to communicate with (Elastic cluster and VertexAI API in your GCP project)
 
 ```bash
-git clone https://github.com/valerioarvizzigno/homecraft_vertex.git
+export cloud_id='<replaceHereYourElasticCloudID>'
+export cloud_user='elastic'
+export cloud_pass='<replaceHereYourElasticDeploymentPassword>'
+export gcp_project_id='<replaceHereTheGCPProjectID>'
 ```
 
-19. Set up the environment variables cloud_id, cloud_pass, cloud_user (Elastic deployment) and gcp_project_id (the GCP project you're working in)
+19. Fine-tune text-bison@001 via VertexAI fine-tuning feature, using the fine-tuning/fine_tuning_dataset.jsonl file. This will instruct the model in advertizing partner network when specific questions are asked. For more information about fine-tuning look at [these docs](https://cloud.google.com/vertex-ai/docs/generative-ai/models/tune-models#generative-ai-tune-model-python)
 
-20. Fine-tune text-bison@001 via VertexAI fine-tuning feature, using the fine-tuning/fine_tuning_dataset.jsonl file. This will instruct the model in advertizing partner network when specific questions are asked. For more information about fine-tuning look at https://cloud.google.com/vertex-ai/docs/generative-ai/models/tune-models#generative-ai-tune-model-python
-
-21. Run streamlit app
+20. Run streamlit app
 
  ```bash
 streamlit run homecraft_home.py
 ```  
 
-
+## Sample questions
 
 ---USE THE HOME PAGE FOR BASE DEMO---
 
