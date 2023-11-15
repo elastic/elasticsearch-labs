@@ -28,7 +28,7 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 
 ### LangChain
 
-- [`langchain-elasticsearch-embeddings.ipynb`](./notebooks/langchain/langchain-elasticsearch-embeddings.ipynb)
+- [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)
 - [`langchain-self-query-retriever.ipynb`](./notebooks/langchain/langchain-self-query-retriever.ipynb)
 - [`langchain-vector-store.ipynb`](./notebooks/langchain/langchain-vector-store.ipynb)
 - [`langchain-vector-store-using-elser.ipynb`](./notebooks/langchain/langchain-vector-store-using-elser.ipynb)
