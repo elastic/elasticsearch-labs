@@ -1,6 +1,14 @@
 # Elasticsearch LLM Cache
 A Python library to utilize Elasticsearch as a caching layer for Generative AI applications. By caching the responses from Language Models (LLMs), this library helps in reducing costs associated with LLM services and improving response speed from the user's perspective.
 
+# pip install
+This library can now be installed via pip
+
+`pip install elasticsearch-llm-cache`
+
+[pypi library page](https://pypi.org/project/elasticsearch-llm-cache)
+
+
 # Blog Post
 This library is covered in depth in the blog post [Elasticsearch as a GenAI Caching Layer](https://www.elastic.co/search-labs/elasticsearch-as-a-genai-caching-layer).
 
