@@ -23,11 +23,26 @@ There are a number of ways to install Elasticsearch. Cloud is best for most use-
 
 This app requires the following environment variables to be set to connect to Elasticsearch
 
+### Elastic Cloud
+
+To connect to Elasticsearch on Elastic Cloud, you will need to set the following environment variables:
+
 ```sh
 export ELASTIC_CLOUD_ID=...
-export ELASTIC_USERNAME=...
-export ELASTIC_PASSWORD=...
+export ELASTIC_API_KEY=...
 ```
+
+You can read more on how to get the Cloud ID and API key [here](https://www.elastic.co/search-labs/tutorials/install-elasticsearch/elastic-cloud).
+
+### Local Elasticsearch
+
+To connect to a local Elasticsearch instance, you will need to set the following environment variables:
+
+```sh
+export ELASTICSEARCH_URL=http://localhost:9200
+```
+
+You can read more on how to install Elasticsearch locally [here](https://www.elastic.co/search-labs/tutorials/install-elasticsearch/docker).
 
 ### Change the Elasticsearch index and chat_history index
 
