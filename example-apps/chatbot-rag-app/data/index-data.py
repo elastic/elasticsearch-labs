@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch
 from langchain.vectorstores import ElasticsearchStore
 from langchain.document_loaders import JSONLoader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
 import os
 
@@ -9,15 +9,24 @@ load_dotenv()
 
 # Global variables
 # Modify these if you want to use a different file, index or model
-FILE = f"{os.path.dirname(__file__)}/data.json"
 INDEX = os.getenv("ES_INDEX", "workplace-app-docs")
+FILE = os.getenv("FILE", f"{os.path.dirname(__file__)}/data.json")
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
-ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME")
-ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
+ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
+ELASTIC_API_KEY = os.getenv("ELASTIC_API_KEY")
 
-elasticsearch_client = Elasticsearch(
-    cloud_id=ELASTIC_CLOUD_ID, basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD)
-)
+if ELASTICSEARCH_URL:
+    elasticsearch_client = Elasticsearch(
+        hosts=[ELASTICSEARCH_URL],
+    )
+elif ELASTIC_CLOUD_ID:
+    elasticsearch_client = Elasticsearch(
+        cloud_id=ELASTIC_CLOUD_ID, api_key=ELASTIC_API_KEY
+    )
+else:
+    raise ValueError(
+        "Please provide either ELASTICSEARCH_URL or ELASTIC_CLOUD_ID and ELASTIC_API_KEY"
+    )
 
 
 # Metadata extraction function
@@ -44,7 +53,9 @@ if __name__ == "__main__":
 
     print(f"Loaded {len(workplace_docs)} documents")
 
-    text_splitter = CharacterTextSplitter(chunk_size=800, chunk_overlap=400)
+    text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        chunk_size=512, chunk_overlap=256
+    )
 
     docs = text_splitter.transform_documents(workplace_docs)
 
@@ -58,5 +69,7 @@ if __name__ == "__main__":
         docs,
         es_connection=elasticsearch_client,
         index_name=INDEX,
-        strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(),
+        strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(
+            model_id=".elser_model_2"
+        ),
     )

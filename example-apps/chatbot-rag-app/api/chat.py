@@ -71,7 +71,9 @@ class QueueCallbackHandler(BaseCallbackHandler):
 store = ElasticsearchStore(
     es_connection=elasticsearch_client,
     index_name=INDEX,
-    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(),
+    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(
+        model_id=".elser_model_2"
+    ),
 )
 
 general_system_template = """

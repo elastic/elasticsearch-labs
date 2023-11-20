@@ -2,8 +2,13 @@ from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from queue import Queue
 from uuid import uuid4
-from chat import chat, ask_question, parse_stream_message
+from chat import ask_question, parse_stream_message
 import threading
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
 CORS(app)

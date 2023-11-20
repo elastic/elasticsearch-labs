@@ -118,7 +118,7 @@ by default, this will index the data into the `workplace-app-docs` index. You ca
 
 ### Indexing your own data
 
-`index-data.py` is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `CharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
+`index-data.py` is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `RecursiveCharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
 
 Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
 

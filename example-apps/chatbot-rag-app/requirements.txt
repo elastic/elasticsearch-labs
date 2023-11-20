@@ -27,7 +27,7 @@ jmespath==1.0.1
 jq==1.4.1
 jsonpatch==1.33
 jsonpointer==2.4
-langchain==0.0.315
+langchain==0.0.333
 MarkupSafe==2.1.3
 marshmallow==3.20.1
 multidict==6.0.4
@@ -57,3 +57,5 @@ Werkzeug==2.3.7
 yarl==1.9.2
 zipp==3.17.0
 google-cloud-aiplatform==1.35.0
+python-dotenv==0.19.1
+tiktoken==0.5.1

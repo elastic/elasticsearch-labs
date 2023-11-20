@@ -4,12 +4,21 @@ from langchain.memory import ElasticsearchChatMessageHistory
 import os
 
 ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
-ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME", "elastic")
-ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
+ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
+ELASTIC_API_KEY = os.getenv("ELASTIC_API_KEY")
 
-elasticsearch_client = Elasticsearch(
-    cloud_id=ELASTIC_CLOUD_ID, basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD)
-)
+if ELASTICSEARCH_URL:
+    elasticsearch_client = Elasticsearch(
+        hosts=[ELASTICSEARCH_URL],
+    )
+elif ELASTIC_CLOUD_ID:
+    elasticsearch_client = Elasticsearch(
+        cloud_id=ELASTIC_CLOUD_ID, api_key=ELASTIC_API_KEY
+    )
+else:
+    raise ValueError(
+        "Please provide either ELASTICSEARCH_URL or ELASTIC_CLOUD_ID and ELASTIC_API_KEY"
+    )
 
 
 def get_elasticsearch_chat_message_history(index, session_id):
