@@ -4,6 +4,8 @@ from queue import Queue
 from uuid import uuid4
 from chat import chat, ask_question, parse_stream_message
 import threading
+import os
+import sys
 
 app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
 CORS(app)
@@ -33,6 +35,16 @@ def api_chat():
     return Response(
         parse_stream_message(session_id, stream_queue), mimetype="text/event-stream"
     )
+
+
+@app.cli.command()
+def create_index():
+    """Create or re-create the Elasticsearch index."""
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    sys.path.append(f'{basedir}/../')
+
+    from data import index_data
+    index_data.main()
 
 
 if __name__ == "__main__":
