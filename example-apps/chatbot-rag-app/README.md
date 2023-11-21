@@ -4,7 +4,7 @@ This is a sample app that combines Elasticsearch, Langchain and a number of diff
 
 ![Screenshot of the sample app](./app-demo.gif)
 
-## 1. Download the Project
+## Download the Project
 
 Download the project from Github and extract the `chatbot-rag-app` folder.
 
@@ -13,7 +13,7 @@ curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/example-apps/chatbot-rag-app
 ```
 
-## 2. Installing and connecting to Elasticsearch
+## Installing and connecting to Elasticsearch
 
 ### Install Elasticsearch
 
@@ -21,28 +21,22 @@ There are a number of ways to install Elasticsearch. Cloud is best for most use-
 
 ### Connect to Elasticsearch
 
-This app requires the following environment variables to be set to connect to Elasticsearch
-
-### Elastic Cloud
-
-To connect to Elasticsearch on Elastic Cloud, you will need to set the following environment variables:
+This app requires the following environment variables to be set to connect to Elasticsearch hosted on Elastic Cloud:
 
 ```sh
 export ELASTIC_CLOUD_ID=...
 export ELASTIC_API_KEY=...
 ```
 
-You can read more on how to get the Cloud ID and API key [here](https://www.elastic.co/search-labs/tutorials/install-elasticsearch/elastic-cloud).
+You can add these to a _.env_ file for convenience. See the _env.example_ file for a .env file template.
 
-### Local Elasticsearch
+#### Self-Hosted Elasticsearch
 
-To connect to a local Elasticsearch instance, you will need to set the following environment variables:
+You can also connect to a self-hosted Elasticsearch instance. To do so, you will need to set the following environment variables:
 
 ```sh
-export ELASTICSEARCH_URL=http://localhost:9200
+export ELASTICSEARCH_URL=...
 ```
-
-You can read more on how to install Elasticsearch locally [here](https://www.elastic.co/search-labs/tutorials/install-elasticsearch/docker).
 
 ### Change the Elasticsearch index and chat_history index
 
@@ -53,7 +47,7 @@ ES_INDEX=workplace-app-docs
 ES_INDEX_CHAT_HISTORY=workplace-app-docs-chat-history
 ```
 
-## 3. Connecting to LLM
+## Connecting to LLM
 
 We support three LLM providers: Azure, OpenAI and Bedrock.
 
@@ -115,29 +109,11 @@ region=...
 To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
 
 ```sh
-    export LLM_TYPE=vertex
-    export VERTEX_PROJECT_ID=<gcp-project-id>
-    export VERTEX_REGION=<gcp-region> # Default is us-central1
-    export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
+export LLM_TYPE=vertex
+export VERTEX_PROJECT_ID=<gcp-project-id>
+export VERTEX_REGION=<gcp-region> # Default is us-central1
+export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
 ```
-
-## 3. Ingest Data
-
-You can index the sample data from the provided .json files in the `data` folder:
-
-```sh
-python data/index-data.py
-```
-
-by default, this will index the data into the `workplace-app-docs` index. You can change this by setting the `ES_INDEX` environment variable.
-
-### Indexing your own data
-
-`index-data.py` is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `RecursiveCharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
-
-Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
-
-Remember to keep the `ES_INDEX` environment variable set to the index you want to index into and to query from.
 
 ## Running the App
 
@@ -151,18 +127,22 @@ Build the Docker image and run it with the following environment variables.
 docker build -f Dockerfile -t chatbot-rag-app .
 ```
 
-Then run it with the following environment variables. In the example below, we are using OpenAI LLM.
+#### Ingest data
 
-If you're using one of the other LLMs, you will need to set the appropriate environment variables via `-e` flag.
+Make sure you have a _.env_ file with all your variables, then run:
 
 ```sh
-docker run -p 4000:4000 \
-  -e "ELASTIC_CLOUD_ID=<cloud_id>" \
-  -e "ELASTIC_USERNAME=elastic" \
-  -e "ELASTIC_PASSWORD=<password>" \
-  -e "LLM_TYPE=openai" \
-  -e "OPENAI_API_KEY=<openai_key>" \
-  -d chatbot-rag-app
+docker run --rm --env-file .env chatbot-rag-app flask create-index
+```
+
+See "Ingest data" section under Running Locally for more details about the `flask create-index` command.
+
+#### Run API and frontend
+
+You will need to set the appropriate environment variables in your _.env_ file. See the _env.example_ file for instructions.
+
+```sh
+docker run --rm -p 4000:4000 --env-file .env -d chatbot-rag-app
 ```
 
 ### Locally (for development)
@@ -186,21 +166,37 @@ python -m venv .venv
 
 # Activate the virtual environment
 source .venv/bin/activate
-```
 
-```sh
 # Install Python dependencies
-pip install -r requirements.txt
+pip install -r api/requirements.txt
 
 # Install Node dependencies
-cd frontend && yarn
+cd frontend && yarn && cd ..
 ```
+
+#### Ingest data
+
+You can index the sample data from the provided .json files in the `data` folder:
+
+```sh
+flask create-index
+```
+
+By default, this will index the data into the `workplace-app-docs` index. You can change this by setting the `ES_INDEX` environment variable.
+
+##### Indexing your own data
+
+The ingesting logic is stored in `data/index-data.py`. This is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `CharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
+
+Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
+
+Remember to keep the `ES_INDEX` environment variable set to the index you want to index into and to query from.
 
 #### Run API and frontend
 
 ```sh
 # Launch API app
-python api/app.py
+flask run
 
 # In a separate terminal launch frontend app
 cd frontend && yarn start

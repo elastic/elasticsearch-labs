@@ -14,6 +14,7 @@ WORKDIR /app
 RUN mkdir -p ./frontend/build
 COPY --from=build-step ./app/frontend/build ./frontend/build 
 RUN mkdir ./api
+RUN mkdir ./data
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -24,6 +25,7 @@ RUN apt-get update && apt-get install -y \
 
 
 COPY api ./api
+COPY data ./data
 COPY requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
 ENV FLASK_ENV production

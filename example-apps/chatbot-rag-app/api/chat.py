@@ -20,6 +20,7 @@ INDEX = os.getenv("ES_INDEX", "workplace-app-docs")
 INDEX_CHAT_HISTORY = os.getenv(
     "ES_INDEX_CHAT_HISTORY", "workplace-app-docs-chat-history"
 )
+ELSER_MODEL = os.getenv("ELSER_MODEL", ".elser_model_2")
 POISON_MESSAGE = "~~~END~~~"
 SESSION_ID_TAG = "[SESSION_ID]"
 SOURCE_TAG = "[SOURCE]"
@@ -71,9 +72,7 @@ class QueueCallbackHandler(BaseCallbackHandler):
 store = ElasticsearchStore(
     es_connection=elasticsearch_client,
     index_name=INDEX,
-    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(
-        model_id=".elser_model_2"
-    ),
+    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(model_id=ELSER_MODEL),
 )
 
 general_system_template = """
