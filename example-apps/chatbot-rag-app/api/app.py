@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from queue import Queue
 from uuid import uuid4
-from chat import chat, ask_question, parse_stream_message
+from chat import ask_question, parse_stream_message
 import threading
 import os
 import sys
@@ -41,9 +41,10 @@ def api_chat():
 def create_index():
     """Create or re-create the Elasticsearch index."""
     basedir = os.path.abspath(os.path.dirname(__file__))
-    sys.path.append(f'{basedir}/../')
+    sys.path.append(f"{basedir}/../")
 
     from data import index_data
+
     index_data.main()
 
 

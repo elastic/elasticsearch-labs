@@ -1,25 +1,26 @@
 # Elasticsearch Examples & Apps
 
+**Visit [Search Docs](https://www.elastic.co/search-labs) for the latest articles and tutorials on using Elasticsearch for search and AI/ML-powered search experiences**
+
 This repo contains executable Python notebooks, sample apps, and resources for testing out the Elastic platform:
 
 - Learn how to use Elasticsearch as a vector database to store embeddings, power hybrid and semantic search experiences.
 - Build use cases such as retrieval augmented generation (RAG), summarization, and question answering (QA).
 - Test Elastic's leading-edge, out-of-the-box capabilities like the [Elastic Learned Sparse Encoder](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-elser.html) and [reciprocal rank fusion (RRF)](<https://www.elastic.co/blog/whats-new-elastic-enterprise-search-8-9-0#hybrid-search-with-reciprocal-rank-fusion-(rrf)-combines-multiple-search-techniques-for-better-results>), which produce best-in-class results without training or tuning.
-- Integrate with projects like OpenAI, Hugging Face, and LangChain, and use Elasticsearch as the backbone of your LLM-powered applications. 
+- Integrate with projects like OpenAI, Hugging Face, and LangChain, and use Elasticsearch as the backbone of your LLM-powered applications.
 
 Elastic enables all modern search experiences powered by AI/ML.
-* Bookmark or subscribe to [Elasticsearch Labs on Github](https://github.com/elastic/elasticsearch-labs)
-* Read our latest articles at [elastic.co/search-labs](https://www.elastic.co/search-labs)  
 
-# Developer Guide 📖
+- Bookmark or subscribe to [Elasticsearch Labs on Github](https://github.com/elastic/elasticsearch-labs)
+- Read our latest articles at [elastic.co/search-labs](https://www.elastic.co/search-labs)
 
-The [`developer-guide`](developer-guide.md) contains resources for developers who want to learn how to use Elasticsearch for vector search and other use cases.
+# Apps
+
+- [Chatbot RAG App](./example-apps/chatbot-rag-app/)
 
 # Python notebooks 📒
 
 The [`notebooks`](notebooks/README.md) folder contains a range of executable Python notebooks, so you can test these features out for yourself. Colab provides an easy-to-use Python virtual environment in the browser.
-
-## Notebook quick links
 
 ### Generative AI
 
@@ -51,15 +52,8 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`amazon-bedrock-langchain-qa-example.ipynb`](notebooks/integrations/amazon-bedrock/langchain-qa-example.ipynb)
 
 ### Model Upgrades
+
 - [`upgrading-index-to-use-elser.ipynb`](notebooks/model-upgrades/upgrading-index-to-use-elser.ipynb)
-  
-# Example apps 💻
-
-The [`example-apps`](example-apps/README.md) folder contains example apps that demonstrate Elasticsearch for a number of use cases, using different programming languages and frameworks.
-
-# Blog content 📄
-
-The [`supporting-blog-content`](supporting-blog-content/README.md) folder has content that is referenced in [Elastic blogs](https://www.elastic.co/blog/).
 
 # Contributing 🎁
 

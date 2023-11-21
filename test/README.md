@@ -26,7 +26,7 @@ Consider the following example, which is used in many Elastic notebooks:
 
 ```python
 CLOUD_ID = getpass("Elastic Cloud ID:")
-CLOUD_PASSWORD = getpass("Elastic Password:")
+ELASTIC_API_KEY = getpass("Elastic Api Key:")
 ```
 
 The `getpass()` function used by `nbtest` takes the prompt given as an
@@ -38,4 +38,4 @@ rules:
 - Letters are uppercased
 
 In the above example, the variables that will be used are `ELASTIC_CLOUD_ID`
-and `ELASTIC_PASSWORD`.
+and `ELASTIC_API_KEY`.

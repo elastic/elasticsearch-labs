@@ -2,6 +2,8 @@
 
 This is a sample app that combines Elasticsearch, Langchain and a number of different LLMs to create a chatbot experience with ELSER with your own private data.
 
+**Requires at least 8.11.0 of Elasticsearch.**
+
 ![Screenshot of the sample app](./app-demo.gif)
 
 ## Download the Project
@@ -21,15 +23,22 @@ There are a number of ways to install Elasticsearch. Cloud is best for most use-
 
 ### Connect to Elasticsearch
 
-This app requires the following environment variables to be set to connect to Elasticsearch
+This app requires the following environment variables to be set to connect to Elasticsearch hosted on Elastic Cloud:
 
 ```sh
 export ELASTIC_CLOUD_ID=...
-export ELASTIC_USERNAME=...
-export ELASTIC_PASSWORD=...
+export ELASTIC_API_KEY=...
 ```
 
-You can add these to a *.env* file for convenience. See the *env.example* file for a .env file template.
+You can add these to a `.env` file for convenience. See the `env.example` file for a .env file template.
+
+#### Self-Hosted Elasticsearch
+
+You can also connect to a self-hosted Elasticsearch instance. To do so, you will need to set the following environment variables:
+
+```sh
+export ELASTICSEARCH_URL=...
+```
 
 ### Change the Elasticsearch index and chat_history index
 
@@ -122,7 +131,7 @@ docker build -f Dockerfile -t chatbot-rag-app .
 
 #### Ingest data
 
-Make sure you have a *.env* file with all your variables, then run:
+Make sure you have a `.env` file with all your variables, then run:
 
 ```sh
 docker run --rm --env-file .env chatbot-rag-app flask create-index
@@ -132,7 +141,7 @@ See "Ingest data" section under Running Locally for more details about the `flas
 
 #### Run API and frontend
 
-You will need to set the appropriate environment variables in your *.env* file. See the *env.example* file for instructions.
+You will need to set the appropriate environment variables in your `.env` file. See the `env.example` file for instructions.
 
 ```sh
 docker run --rm -p 4000:4000 --env-file .env -d chatbot-rag-app
