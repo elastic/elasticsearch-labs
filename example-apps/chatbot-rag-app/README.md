@@ -2,6 +2,8 @@
 
 This is a sample app that combines Elasticsearch, Langchain and a number of different LLMs to create a chatbot experience with ELSER with your own private data.
 
+**Requires at least 8.11.0 of Elasticsearch.**
+
 ![Screenshot of the sample app](./app-demo.gif)
 
 ## Download the Project
