@@ -7,11 +7,6 @@ import threading
 import os
 import sys
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-
 app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
 CORS(app)
 
@@ -46,9 +41,10 @@ def api_chat():
 def create_index():
     """Create or re-create the Elasticsearch index."""
     basedir = os.path.abspath(os.path.dirname(__file__))
-    sys.path.append(f'{basedir}/../')
+    sys.path.append(f"{basedir}/../")
 
     from data import index_data
+
     index_data.main()
 
 
