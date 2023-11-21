@@ -28,7 +28,7 @@ export ELASTIC_CLOUD_ID=...
 export ELASTIC_API_KEY=...
 ```
 
-You can add these to a _.env_ file for convenience. See the _env.example_ file for a .env file template.
+You can add these to a `.env` file for convenience. See the `env.example` file for a .env file template.
 
 #### Self-Hosted Elasticsearch
 
@@ -129,7 +129,7 @@ docker build -f Dockerfile -t chatbot-rag-app .
 
 #### Ingest data
 
-Make sure you have a _.env_ file with all your variables, then run:
+Make sure you have a `.env` file with all your variables, then run:
 
 ```sh
 docker run --rm --env-file .env chatbot-rag-app flask create-index
@@ -139,7 +139,7 @@ See "Ingest data" section under Running Locally for more details about the `flas
 
 #### Run API and frontend
 
-You will need to set the appropriate environment variables in your _.env_ file. See the _env.example_ file for instructions.
+You will need to set the appropriate environment variables in your `.env` file. See the `env.example` file for instructions.
 
 ```sh
 docker run --rm -p 4000:4000 --env-file .env -d chatbot-rag-app
