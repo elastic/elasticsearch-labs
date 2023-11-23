@@ -5,15 +5,15 @@ import boto3
 
 LLM_TYPE = os.getenv("LLM_TYPE", "openai")
 
-def init_openai_chat():
+def init_openai_chat(temperature):
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    return ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=0.2)
-def init_vertex_chat():
+    return ChatOpenAI(openai_api_key=OPENAI_API_KEY, streaming=True, temperature=temperature)
+def init_vertex_chat(temperature):
     VERTEX_PROJECT_ID = os.getenv("VERTEX_PROJECT_ID")
     VERTEX_REGION = os.getenv("VERTEX_REGION", "us-central1")
     vertexai.init(project=VERTEX_PROJECT_ID, location=VERTEX_REGION)
-    return ChatVertexAI(streaming=True, temperature=0.2)
-def init_azure_chat():
+    return ChatVertexAI(streaming=True, temperature=temperature)
+def init_azure_chat(temperature):
     OPENAI_VERSION=os.getenv("OPENAI_VERSION", "2023-05-15")
     BASE_URL=os.getenv("OPENAI_BASE_URL")
     OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
@@ -24,8 +24,8 @@ def init_azure_chat():
         openai_api_version=OPENAI_VERSION,
         openai_api_key=OPENAI_API_KEY,
         streaming=True,
-        temperature=0.2)
-def init_bedrock():
+        temperature=temperature)
+def init_bedrock(temperature):
     AWS_ACCESS_KEY=os.getenv("AWS_ACCESS_KEY")
     AWS_SECRET_KEY=os.getenv("AWS_SECRET_KEY")
     AWS_REGION=os.getenv("AWS_REGION")
@@ -35,7 +35,7 @@ def init_bedrock():
         client=BEDROCK_CLIENT,
         model_id=AWS_MODEL_ID,
         streaming=True,
-        model_kwargs={"temperature":0.2})
+        model_kwargs={"temperature":temperature})
 
 MAP_LLM_TYPE_TO_CHAT_MODEL = {
     "azure": init_azure_chat,
@@ -44,8 +44,8 @@ MAP_LLM_TYPE_TO_CHAT_MODEL = {
     "vertex": init_vertex_chat,
 }
 
-def get_llm():
+def get_llm(temperature=0.2):
     if not LLM_TYPE in MAP_LLM_TYPE_TO_CHAT_MODEL:
         raise Exception("LLM type not found. Please set LLM_TYPE to one of: " + ", ".join(MAP_LLM_TYPE_TO_CHAT_MODEL.keys()) + ".")
 
-    return MAP_LLM_TYPE_TO_CHAT_MODEL[LLM_TYPE]()
+    return MAP_LLM_TYPE_TO_CHAT_MODEL[LLM_TYPE](temperature=temperature)
