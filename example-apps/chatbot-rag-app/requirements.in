@@ -1,0 +1,25 @@
+# package management
+pip-tools
+
+# core dependencies
+elasticsearch
+langchain
+tiktoken
+flask
+flask-cors
+python-dotenv
+
+# OpenAI dependencies
+openai
+
+# Vertex AI dependencies
+google-cloud-aiplatform
+grpcio-status
+
+# BedRock dependencies
+boto3
+
+# TBD if these are still needed
+exceptiongroup
+importlib-metadata
+numexpr
