@@ -30,7 +30,9 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 ### LangChain
 
 - [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)
-- [`langchain-self-query-retriever.ipynb`](./notebooks/langchain/langchain-self-query-retriever.ipynb)
+- [`langchain-self-query-retriever.ipynb`](./notebooks/langchain/self-query-retriever-examples/langchain-self-query-retriever.ipynb)
+- [`Question Answering with Self Query Retriever`](./notebooks/langchain/self-query-retriever-examples/chatbot-example.ipynb)
+- [`BM25 and Self-querying retriever with elasticsearch and LangChain`](./notebooks/langchain/self-query-retriever-examples/chatbot-with-bm25-only-example.ipynb)
 - [`langchain-vector-store.ipynb`](./notebooks/langchain/langchain-vector-store.ipynb)
 - [`langchain-vector-store-using-elser.ipynb`](./notebooks/langchain/langchain-vector-store-using-elser.ipynb)
 - [`langchain-using-own-model.ipynb`](./notebooks/langchain/langchain-using-own-model.ipynb)
