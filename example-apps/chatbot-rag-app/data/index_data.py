@@ -1,8 +1,9 @@
 from elasticsearch import Elasticsearch, NotFoundError
 from langchain.vectorstores import ElasticsearchStore
-from langchain.document_loaders import JSONLoader
+from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
+import json
 import os
 import time
 
@@ -55,29 +56,19 @@ def install_elser():
         )
 
 
-# Metadata extraction function
-def metadata_func(record: dict, metadata: dict) -> dict:
-    metadata["name"] = record.get("name")
-    metadata["summary"] = record.get("summary")
-    metadata["url"] = record.get("url")
-    metadata["category"] = record.get("category")
-    metadata["updated_at"] = record.get("updated_at")
-
-    return metadata
-
-
 def main():
     install_elser()
 
     print(f"Loading data from ${FILE}")
 
-    loader = JSONLoader(
-        file_path=FILE,
-        jq_schema=".[]",
-        content_key="content",
-        metadata_func=metadata_func,
-    )
-    workplace_docs = loader.load()
+    metadata_keys = ['name', 'summary', 'url', 'category', 'updated_at']
+    workplace_docs = []
+    with open(FILE, 'rt') as f:
+        for doc in json.loads(f.read()):
+            workplace_docs.append(Document(
+                page_content=doc['content'],
+                metadata={k: doc.get(k) for k in metadata_keys}
+            ))
 
     print(f"Loaded {len(workplace_docs)} documents")
 
