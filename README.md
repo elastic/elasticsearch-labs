@@ -35,6 +35,9 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`langchain-vector-store-using-elser.ipynb`](./notebooks/langchain/langchain-vector-store-using-elser.ipynb)
 - [`langchain-using-own-model.ipynb`](./notebooks/langchain/langchain-using-own-model.ipynb)
 
+### Document Chunking
+- [`Document Chunking with Ingest Pipelines`](./notebooks/document-chunking/with-index-pipelines.ipynb)
+
 ### Search
 
 - [`00-quick-start.ipynb`](./notebooks/search/00-quick-start.ipynb)
