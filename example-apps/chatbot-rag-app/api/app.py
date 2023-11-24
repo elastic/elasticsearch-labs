@@ -22,9 +22,6 @@ def api_chat():
         return jsonify({"msg": "Missing question from request JSON"}), 400
 
     session_id = request.args.get("session_id", str(uuid4()))
-
-    print("Chat session ID: ", session_id)
-
     return Response(ask_question(question, session_id), mimetype="text/event-stream")
 
 
