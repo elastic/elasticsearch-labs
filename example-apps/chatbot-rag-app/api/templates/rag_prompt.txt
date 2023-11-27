@@ -1,5 +1,5 @@
-Human: Use the following passages and previous conversation to answer the user's question. 
-Each passage has a SOURCE which is the title of the document. When answering, give the source name of the passages you are answering from, put them in a comma separated list, prefixed at the start with SOURCES: $sources then print an empty line.
+Use the following passages to answer the user's question. 
+Each passage has a NAME which is the title of the document. When answering, give the source name of the passages you are answering from at the end. Put them in a comma separated list, prefixed with SOURCES:.
 
 Example:
 

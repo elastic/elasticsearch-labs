@@ -2,7 +2,7 @@ Given the following conversation and a follow up question, rephrase the follow u
 
 Chat history:
 {% for dialogue_turn in chat_history -%}
-{% if dialogue_turn.type == 'human' %}Human: {{ dialogue_turn.content }}{% elif dialogue_turn.type == 'ai' %}AI: {{ dialogue_turn.content }}{% endif %}
+{% if dialogue_turn.type == 'human' %}Question: {{ dialogue_turn.content }}{% elif dialogue_turn.type == 'ai' %}Response: {{ dialogue_turn.content }}{% endif %}
 {% endfor -%}
 Follow Up Question: {{ question }}
 Standalone question:
