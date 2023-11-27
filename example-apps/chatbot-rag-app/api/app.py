@@ -1,9 +1,7 @@
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
-from queue import Queue
 from uuid import uuid4
-from chat import ask_question, parse_stream_message
-import threading
+from chat import ask_question
 import os
 import sys
 
@@ -23,18 +21,8 @@ def api_chat():
     if question is None:
         return jsonify({"msg": "Missing question from request JSON"}), 400
 
-    stream_queue = Queue()
     session_id = request.args.get("session_id", str(uuid4()))
-
-    print("Chat session ID: ", session_id)
-
-    threading.Thread(
-        target=ask_question, args=(question, stream_queue, session_id)
-    ).start()
-
-    return Response(
-        parse_stream_message(session_id, stream_queue), mimetype="text/event-stream"
-    )
+    return Response(ask_question(question, session_id), mimetype="text/event-stream")
 
 
 @app.cli.command()

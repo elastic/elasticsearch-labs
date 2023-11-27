@@ -1,0 +1,8 @@
+Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
+
+Chat history:
+{% for dialogue_turn in chat_history -%}
+{% if dialogue_turn.type == 'human' %}Question: {{ dialogue_turn.content }}{% elif dialogue_turn.type == 'ai' %}Response: {{ dialogue_turn.content }}{% endif %}
+{% endfor -%}
+Follow Up Question: {{ question }}
+Standalone question:
