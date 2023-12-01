@@ -1,0 +1,8 @@
+masks:
+- "'name': '[^']+'"
+- "'cluster_name': '[^']+'"
+- "'cluster_uuid': '[^']+'"
+- "'build_flavor': '[^']+'"
+- '[0-9]+\.[0-9]+\.[0-9]+'
+- "'build_hash': '[^']+'"
+- "'build_date': '[^']+'"
