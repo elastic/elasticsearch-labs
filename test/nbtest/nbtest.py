@@ -5,6 +5,7 @@ import difflib
 import os
 import re
 import sys
+import yaml
 
 # these suppress jupyter warnings on startup
 os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
@@ -13,26 +14,23 @@ os.environ['JUPYTER_PLATFORM_DIRS'] = '1'
 from jupyter_core.paths import jupyter_data_dir
 from jupyter_client.kernelspec import KernelSpecManager
 import nbformat
-from nbconvert.preprocessors import ExecutePreprocessor
+from nbconvert.preprocessors import ExecutePreprocessor as OriginalExecutePreprocessor
 from rich import print as rprint
 from rich.markdown import Markdown
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# The list of tuples below is used for masking parts of the output of code
-# cells so that they do not trigger spurious diff errors.
-# Each tuple has a regular expression to match, and a replacement string.
-MASKS = [
-    (r'instance-[0-9]+', 'instance-XXXXX'),
-    (r'[0-9]+\.[0-9]+\.[0-9]+', '<major>.<minor>.<patch>'),
-    (r"'cluster_name': '[^']+'", "'cluster_name': 'XXXXX'"),
-    (r"'cluster_uuid': '[^']+'", "'cluster_uuid': 'XXXXX'"),
-    (r"'build_hash': '[^']+'", "'build_hash': 'XXXXX'"),
-    (r"'build_date': '[^']+'", "'build_date': 'XXXXX'"),
-    (r"'_version': [0-9]+", "'_version': X"),
-    (r'^ID: .*$', 'ID: XXXXX', 'ID: XXXXXX'),
-    (r'^Score: [0-9]+\.[0-9][0-9]*$', 'Score: X.XXX'),
-]
+
+class ExecutePreprocessor(OriginalExecutePreprocessor):
+    def __init__(self, **kwargs):
+        self.inject = kwargs.pop('inject', {})
+        super().__init__(**kwargs)
+
+    def preprocess_cell(self, cell, resources, index):
+        """Inject the notebook name as variable NBTEST_NOTEBOOK"""
+        if cell['cell_type'] == 'code':
+            cell['source'] = f'NBTEST = {self.inject}\n{cell["source"]}'
+        return super().preprocess_cell(cell, resources, index)
 
 
 def register_python3_test_kernel():
@@ -46,10 +44,10 @@ def unregister_python3_test_kernel():
     kernel_spec_manager.remove_kernel_spec('python3-test')
 
 
-def preprocess_output(output):
+def preprocess_output(output, masks):
     """This function masks the output to hide insignificant differences."""
-    for mask in MASKS:
-        output = re.sub(mask[0], mask[1], output, flags=re.MULTILINE)
+    for mask in masks:
+        output = re.sub(mask, '<masked>', output, flags=re.MULTILINE)
     return output
 
 
@@ -62,10 +60,48 @@ def diff_output(source_output, test_output):
     rprint(Markdown(f'```diff\n{diff}```\n', code_theme='vim'))
 
 
+def nbtest_setup_teardown(notebooks, inject={}):
+    ep = ExecutePreprocessor(timeout=600, kernel_name='python3-test',
+                             inject=inject)
+    for nb in notebooks:
+        try:
+            with open(nb, 'rt') as f:
+                nb = nbformat.read(f, as_version=4)
+        except FileNotFoundError:
+            pass
+        else:
+            try:
+                ep.preprocess(nb, {'metadata': {'path': basedir}})
+            except Exception as exc:
+                rprint(f' [red]Failed in {nb}[default]')
+                print(exc)
+                return 1
+
+
 def nbtest_one(notebook, verbose):
     """Run a notebook and ensure output is the same as in the original."""
     rprint(f'Running [yellow]{notebook}[default]...', end='')
 
+    notebook_dir = os.path.dirname(notebook)
+    notebook_name = os.path.basename(notebook)
+
+    # import the .nbtest.yml config file from the notebook's directory
+    config = {'masks': []}
+    try:
+        with open(os.path.join(notebook_dir, '.nbtest.yml'), mode='rt') as f:
+            config.update(yaml.safe_load(f.read()))
+    except FileNotFoundError:
+        pass
+
+    # run the setup notebooks (if available)
+    setup_notebooks = [
+        os.path.join(notebook_dir, '_nbtest.setup.ipynb'),
+        os.path.join(notebook_dir, f'_nbtest.setup.{notebook_name}'),
+    ]
+    nbtest_setup_teardown(setup_notebooks, inject={'notebook': notebook_name})
+ 
+    # run the target notebook
+    ep = ExecutePreprocessor(timeout=600, kernel_name='python3-test')
     try:
         with open(notebook, 'rt') as f:
             nb = nbformat.read(f, as_version=4)
@@ -74,52 +110,59 @@ def nbtest_one(notebook, verbose):
         return 1
     original_cells = deepcopy(nb.cells)
 
-    ep = ExecutePreprocessor(timeout=600, kernel_name='python3-test')
+    ret = 0
     try:
         ep.preprocess(nb, {'metadata': {'path': basedir}})
     except Exception as exc:
         rprint(' [red]Failed[default]')
         print(exc)
-        return 1
+        ret = 1
 
-    ret = 0
-    cell = 0
-    for source, test in zip(original_cells, nb.cells):
-        cell += 1
-        if source['cell_type'] == 'code':
-            source_output = {
-                output.get('name', '?'): output.get('text', '')
-                for output in source['outputs']
-            }
-            test_output = {
-                output.get('name', '?'): output.get('text', '')
-                for output in test['outputs']
-            }
-            for name in source_output:
-                if name not in ['stdout', 'stderr']:
-                    if verbose:
-                        rprint(f'>>>>> [magenta]code cell #{cell}({name})'
-                               '[default]: [dim white]Skipped[default]')
-                    continue
-                base = preprocess_output(str(source_output[name]))
-                current = preprocess_output(str(test_output.get(name, '')))
-                if  base == current:
-                    if verbose:
-                        rprint(f'>>>>> [yellow]code cell #{cell}/({name})'
-                               '[default]: [green]OK[default]')
-                else:
-                    if ret == 0:
-                        ret = 1
-                        rprint(' [red]Failed[default]')
-                    rprint(f'>>>>> [yellow]code cell #{cell}/({name})'
-                           '[default]: [red]Error[default]')
-                    diff_output(base, current)
-        else:
-            if verbose:
-                rprint(f'>>>>> [magenta]{source["cell_type"]} cell #{cell}'
-                       '[default]: [dim white]Skipped[default]')
     if ret == 0:
-        rprint(' [green]OK[default]')
+        cell = 0
+        for source, test in zip(original_cells, nb.cells):
+            cell += 1
+            if source['cell_type'] == 'code':
+                source_output = {
+                    output.get('name', '?'): output.get('text', '')
+                    for output in source['outputs']
+                }
+                test_output = {
+                    output.get('name', '?'): output.get('text', '')
+                    for output in test['outputs']
+                }
+                for name in source_output:
+                    if name not in ['stdout', 'stderr']:
+                        if verbose:
+                            rprint(f'>>>>> [magenta]code cell #{cell}({name})'
+                                   '[default]: [dim white]Skipped[default]')
+                        continue
+                    base = preprocess_output(str(source_output[name]), config['masks'])
+                    current = preprocess_output(str(test_output.get(name, '')), config['masks'])
+                    if  base == current:
+                        if verbose:
+                            rprint(f'>>>>> [yellow]code cell #{cell}/({name})'
+                                   '[default]: [green]OK[default]')
+                    else:
+                        if ret == 0:
+                            ret = 1
+                            rprint(' [red]Failed[default]')
+                        rprint(f'>>>>> [yellow]code cell #{cell}/({name})'
+                               '[default]: [red]Error[default]')
+                        diff_output(base, current)
+            else:
+                if verbose:
+                    rprint(f'>>>>> [magenta]{source["cell_type"]} cell #{cell}'
+                           '[default]: [dim white]Skipped[default]')
+        if ret == 0:
+            rprint(' [green]OK[default]')
+
+    # run the teardown notebooks (if available)
+    teardown_notebooks = [
+        os.path.join(notebook_dir, f'_nbtest.teardown.{notebook_name}'),
+        os.path.join(notebook_dir, '_nbtest.teardown.ipynb'),
+    ]
+    nbtest_setup_teardown(teardown_notebooks, inject={'notebook': notebook_name})
     return ret
 
 
@@ -130,7 +173,8 @@ def nbtest(notebook, verbose):
     """
     ret = 0
     for nb in notebook:
-        ret += nbtest_one(notebook=nb, verbose=verbose)
+        if not nb.startswith('_nbtest'):
+            ret += nbtest_one(notebook=nb, verbose=verbose)
     return ret
 
 

@@ -1,7 +1,10 @@
 NBTEST = ../../bin/nbtest
+NOTEBOOKS = \
+        with-index-pipelines.ipynb
 
-.PHONY: all
+.PHONY: all $(NOTEBOOKS)
 
-all:
-	$(NBTEST) \
-		with-index-pipelines.ipynb
+all: $(NOTEBOOKS)
+
+$(NOTEBOOKS):
+	$(NBTEST) $@

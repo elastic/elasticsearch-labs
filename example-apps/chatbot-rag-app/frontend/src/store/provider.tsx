@@ -43,7 +43,9 @@ const globalSlice = createSlice({
       const rootSource = state.sources.find((s) => s.name === source.name)
 
       if (rootSource) {
-        rootSource.summary = [...rootSource.summary, source.summary]
+        if (!rootSource.summary.find((summary) => summary === source.summary)) {
+          rootSource.summary = [...rootSource.summary, source.summary]
+        }
       } else {
         state.sources.push({ ...source, summary: [source.summary] })
       }

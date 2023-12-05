@@ -233,7 +233,9 @@ python-dateutil==2.8.2
 python-json-logger==2.0.7
     # via jupyter-events
 pyyaml==6.0.1
-    # via jupyter-events
+    # via
+    #   -r requirements.in
+    #   jupyter-events
 pyzmq==25.1.1
     # via
     #   ipykernel
