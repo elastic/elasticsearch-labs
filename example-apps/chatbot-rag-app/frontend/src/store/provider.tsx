@@ -233,7 +233,7 @@ export const thunkActions = {
         
               dispatch(actions.setStatus({ status: AppStatus.Done }))
             } else {
-              message += message && event.data.trim() === '' ? '\n' : event.data
+              message += event.data
 
               dispatch(
                 actions.updateMessage({
