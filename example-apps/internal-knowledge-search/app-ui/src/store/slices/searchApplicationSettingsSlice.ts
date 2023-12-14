@@ -1,9 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {SearchApplicationSettingsModel} from "../../models/SearchApplicationSettingsModel";
 const initialState: SearchApplicationSettingsModel = {
-    appName: process.env.SEARCH_APP_NAME || "some-search-application",
-    apiKey: process.env.SEARCH_APP_API_KEY || "xxxxxxxxxxxxxxxxxxx",
-    searchEndpoint: process.env.SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
+    appName: process.env.REACT_APP_SEARCH_APP_NAME || "some-search-application",
+    apiKey: process.env.REACT_APP_SEARCH_APP_API_KEY || "xxxxxxxxxxxxxxxxxxx",
+    searchEndpoint: process.env.REACT_APP_SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
 };
 
 const searchApplicationSettingsSlice = createSlice({
