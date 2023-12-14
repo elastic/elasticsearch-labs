@@ -8,7 +8,7 @@ export interface FilterState {
 const initialState: FilterState = {
     //TODO: fetch via API somewhere else
     filters: {
-        "Data sources": {options: ["search-mongo", "search-mongo-2", "search-mysql"], values: ["search-mongo"]}
+        "Data sources": {options: ["search-mongo", "search-mongo-2", "search-mysql", "search-sharepoint"], values: ["search-sharepoint"]}
     }
 };
 
