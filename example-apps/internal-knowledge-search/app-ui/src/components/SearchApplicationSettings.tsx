@@ -1,23 +1,41 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {updateSettings} from "../store/slices/searchApplicationSettingsSlice";
 import {useToast} from "../contexts/ToastContext";
 import {MessageType} from "./Toast";
 import {RootState} from "../store/store";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faAngleDown, faAngleUp} from "@fortawesome/free-solid-svg-icons";
+
 
 const SearchApplicationSettings: React.FC = () => {
     const dispatch = useDispatch();
-    const {appName, apiKey, searchEndpoint} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, apiKey, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {showToast} = useToast();
+    const searchPersonaOptions = [
+        "admin",
+        "user"
+    ]
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handlePersonaChange = (value: string) => {
+        updateSearchPersona(value);
+    };
 
     const handleSave = () => {
-        dispatch(updateSettings({appName, apiKey, searchEndpoint}));
+        dispatch(updateSettings({appName, apiKey, searchEndpoint, searchPersona}));
         showToast("Settings saved!", MessageType.Info);
     };
 
-    const updateAppName = (e) => dispatch(updateSettings({appName: e.target.value, apiKey, searchEndpoint}))
-    const updateApiKey = (e) => dispatch(updateSettings({appName, apiKey: e.target.value, searchEndpoint}))
-    const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, apiKey, searchEndpoint: e.target.value}))
+    const updateAppName = (e) => dispatch(updateSettings({appName: e.target.value, apiKey, searchEndpoint, searchPersona}))
+    const updateApiKey = (e) => dispatch(updateSettings({appName, apiKey: e.target.value, searchEndpoint, searchPersona}))
+    const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, apiKey, searchEndpoint: e.target.value, searchPersona}))
+
+    const updateSearchPersona = (e) => dispatch(updateSettings({appName, apiKey, searchEndpoint, searchPersona: e}))
 
     return (
         <div className="container mx-auto p-4 bg-white rounded shadow-md">
@@ -54,9 +72,9 @@ const SearchApplicationSettings: React.FC = () => {
                     htmlFor="apiKey"
                     className="block text-sm font-medium mb-1 text-gray-700"
                 >
-                    API Key:
+                    Application API Key:
                 </label>
-                <p className="text-xs mb-2 text-gray-500">Your unique API key used for authentication.</p>
+                <p className="text-xs mb-2 text-gray-500">Your application's unique API key used for looking up identities.</p>
                 <input
                     id="apiKey"
                     type="password"
@@ -82,6 +100,29 @@ const SearchApplicationSettings: React.FC = () => {
                     className="p-2 w-full border rounded focus:outline-none focus:shadow-outline"
                 />
             </div>
+
+            <div className="text-left mb-6 p-4 border rounded bg-gray-50">
+                <label
+                    htmlFor="searchPersona"
+                    className="block text-sm font-medium mb-1 text-gray-700"
+                >
+                    Search Persona:
+                </label>
+                <p className="text-xs mb-2 text-gray-500">The persona on whose behalf searches will be executed</p>
+                <div className="relative">
+                    <select
+                        onChange={(event) => handlePersonaChange(event.target.value)}
+                        className="flex items-center space-x-2 p-2 bg-white rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                    >
+                        {searchPersonaOptions.map((option, index) => (
+                            <option value={option}  className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
 
             <button
                 onClick={handleSave}
