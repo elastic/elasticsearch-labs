@@ -38,7 +38,9 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`langchain-using-own-model.ipynb`](./notebooks/langchain/langchain-using-own-model.ipynb)
 
 ### Document Chunking
+
 - [`Document Chunking with Ingest Pipelines`](./notebooks/document-chunking/with-index-pipelines.ipynb)
+- ['Document Chunking with LangChain Splitters'](./notebooks/document-chunking/with-langchain-splitters.ipynb)
 
 ### Search
 
