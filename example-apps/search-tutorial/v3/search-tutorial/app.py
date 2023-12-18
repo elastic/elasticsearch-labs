@@ -17,22 +17,58 @@ def handle_search():
     filters, parsed_query = extract_filters(query)
     from_ = request.form.get('from_', type=int, default=0)
 
-    results = es.search(
-        query={
-            'bool': {
-                'must': [
-                    {
-                        'text_expansion': {
-                            'elser_embedding': {
-                                'model_id': '.elser_model_2',
-                                'model_text': parsed_query,
-                            }
-                        },
+    if parsed_query:
+        search_query = {
+            'sub_searches': [
+                {
+                    'query': {
+                        'bool': {
+                            'must': {
+                                'multi_match': {
+                                    'query': parsed_query,
+                                    'fields': ['name', 'summary', 'content'],
+                                }
+                            },
+                            **filters
+                        }
                     }
-                ],
-                **filters,
+                },
+                {
+                    'query': {
+                        'bool': {
+                            'must': [
+                                {
+                                    'text_expansion': {
+                                        'elser_embedding': {
+                                            'model_id': '.elser_model_2',
+                                            'model_text': parsed_query,
+                                        }
+                                    },
+                                }
+                            ],
+                            **filters,
+                        }
+                    },
+                },
+            ],
+            'rank': {
+                'rrf': {}
+            },
+        }
+    else:
+        search_query = {
+            'query': {
+                'bool': {
+                    'must': {
+                        'match_all': {}
+                    },
+                    **filters
+                }
             }
-        },
+        }
+
+    results = es.search(
+        **search_query,
         size=5,
         from_=from_,
     )

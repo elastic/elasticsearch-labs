@@ -44,7 +44,7 @@ MAP_LLM_TYPE_TO_CHAT_MODEL = {
     "vertex": init_vertex_chat,
 }
 
-def get_llm(temperature=0.2):
+def get_llm(temperature=0):
     if not LLM_TYPE in MAP_LLM_TYPE_TO_CHAT_MODEL:
         raise Exception("LLM type not found. Please set LLM_TYPE to one of: " + ", ".join(MAP_LLM_TYPE_TO_CHAT_MODEL.keys()) + ".")
 
