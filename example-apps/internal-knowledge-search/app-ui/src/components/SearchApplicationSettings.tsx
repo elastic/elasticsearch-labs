@@ -115,7 +115,7 @@ const SearchApplicationSettings: React.FC = () => {
                         className="flex items-center space-x-2 p-2 bg-white rounded border border-gray-300 focus:outline-none focus:border-blue-500"
                     >
                         {searchPersonaOptions.map((option, index) => (
-                            <option value={option}  className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
+                            <option value={option} selected={option == searchPersona} className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
                                 {option}
                             </option>
                         ))}
