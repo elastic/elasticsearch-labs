@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {updateSettings} from "../store/slices/searchApplicationSettingsSlice";
 import {useToast} from "../contexts/ToastContext";
@@ -6,16 +6,32 @@ import {MessageType} from "./Toast";
 import {RootState} from "../store/store";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleDown, faAngleUp} from "@fortawesome/free-solid-svg-icons";
+import {json} from "react-router-dom";
 
 
 const SearchApplicationSettings: React.FC = () => {
     const dispatch = useDispatch();
     const {appName, apiKey, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {showToast} = useToast();
-    const searchPersonaOptions = [
-        "admin",
-        "user"
-    ]
+
+    const fetchPersonaOptions = async () => {
+        const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
+        const identitiesPath = searchEndpoint+"/"+identitiesIndex+"/_search"
+        const response = await fetch(identitiesPath, {headers: {"Authorization": "ApiKey "+apiKey}});
+        const jsonData = await response.json();
+        const ids = jsonData.hits.hits.map((hit) => hit._id)
+        return ids
+    }
+
+    const [searchPersonaOptions, setSearchPersonaOptions] = useState(["admin", "user"]);
+
+    useEffect(()=>{
+        (async()=>{
+            const fetched = await fetchPersonaOptions()
+            setSearchPersonaOptions(fetched)
+        })()
+    },[])
+
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {

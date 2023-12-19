@@ -117,6 +117,7 @@ You need to set `REACT_APP_SEARCH_APP_NAME`, `REACT_APP_SEARCH_APP_API_KEY` and 
 6. define mappings, as above in this README
 7. create search application
 8. enable cors: https://www.elastic.co/guide/en/elasticsearch/reference/master/search-application-security.html#search-application-security-cors-elasticsearch
+9. create an API key that has read access to `.search-acl-filter-search-sharepoint` and the search application (`sharepoint`)
 
 
 ### Make it go
