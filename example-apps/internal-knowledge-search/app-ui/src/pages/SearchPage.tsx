@@ -13,7 +13,6 @@ import dataSourceToLogoPathLookup from '../config/dataSourceToLogoPathLookup.jso
 import documentsToSearchResultsMappings from '../config/documentsToSearchResultMappings.json';
 import {RootState} from "../store/store";
 
-
 const mapHitToSearchResult = (hit) => {
     const doc = hit._source;
     const dataSource = hit._index;
@@ -38,7 +37,7 @@ export default function SearchPage() {
     //TODO: simplify query state and move it to one place
     const [query, setQuery] = useState<string>("");
 
-    const {appName, apiKey, searchEndpoint} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, apiKey: adminApiKey, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {sorts} = useSelector((state: RootState) => state.sort);
     const indexFilter = useSelector((state: RootState) => state.filter)["filters"]["Data sources"].values;
 
@@ -46,11 +45,73 @@ export default function SearchPage() {
     useEffect(() => {
         const fetchData = async () => await handleSearchSubmit();
         fetchData();
-    }, [indexFilter, sorts, appName, apiKey, searchEndpoint]);
+    }, [indexFilter, sorts, appName, adminApiKey, searchEndpoint]);
+
+    const getOrCreateApiKey = async () => {
+        if (searchPersona == "admin"){
+            return adminApiKey
+        }
+        else {
+            const permissions = ['foo'] // todo
+            const apiKeyRoleDescriptor = {
+                name: searchPersona,
+                role_descriptors: {
+                    "dls-role": {
+                        "cluster": ["all"],
+                        "indices": [
+                            {
+                                "names": ["search-sharepoint"],
+                                "privileges": ["read"],
+                                "query": {
+                                    "template": {
+                                        "params": {
+                                            "permissions": permissions
+                                        },
+                                        'source': `
+                                        {
+                                          "bool": {
+                                            "filter": {
+                                              "bool": {
+                                                "should": [
+                                                  {
+                                                    "bool": {
+                                                      "must_not": {
+                                                        "exists": {
+                                                          "field": "_allow_access_control"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  {
+                                                    "terms": {
+                                                      "_allow_access_control": {{#toJson}}permissions{{/toJson}}
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        }
+                                        `
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
+            // TODO Use fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+            return "missing"
+        }
+    }
 
     const handleSearchSubmit = async () => {
         try {
             setLoading(true);
+
+            const apiKey = await getOrCreateApiKey()
+            showToast("API key is: "+apiKey)
 
             const client = SearchApplicationClient(appName, searchEndpoint, apiKey, {
                 "facets": {
