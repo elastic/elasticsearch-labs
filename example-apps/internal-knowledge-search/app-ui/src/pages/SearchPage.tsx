@@ -52,7 +52,12 @@ export default function SearchPage() {
             return adminApiKey
         }
         else {
-            const permissions = ['foo'] // todo
+            const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
+            const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + searchPersona
+            const response = await fetch(identityPath, {headers: {"Authorization": "ApiKey " + adminApiKey}});
+            const jsonData = await response.json();
+            console.log(jsonData)
+            const permissions = jsonData._source.query.template.params.access_control
             const apiKeyRoleDescriptor = {
                 name: searchPersona,
                 role_descriptors: {
@@ -60,7 +65,7 @@ export default function SearchPage() {
                         "cluster": ["all"],
                         "indices": [
                             {
-                                "names": ["search-sharepoint"],
+                                "names": ["search-sharepoint"],// TODO: hardcoded
                                 "privileges": ["read"],
                                 "query": {
                                     "template": {

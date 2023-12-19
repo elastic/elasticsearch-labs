@@ -15,15 +15,21 @@ const SearchApplicationSettings: React.FC = () => {
     const {showToast} = useToast();
 
     const fetchPersonaOptions = async () => {
-        const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
-        const identitiesPath = searchEndpoint+"/"+identitiesIndex+"/_search"
-        const response = await fetch(identitiesPath, {headers: {"Authorization": "ApiKey "+apiKey}});
-        const jsonData = await response.json();
-        const ids = jsonData.hits.hits.map((hit) => hit._id)
-        return ids
+        try {
+            const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
+            const identitiesPath = searchEndpoint + "/" + identitiesIndex + "/_search"
+            const response = await fetch(identitiesPath, {headers: {"Authorization": "ApiKey " + apiKey}});
+            const jsonData = await response.json();
+            const ids = jsonData.hits.hits.map((hit) => hit._id)
+            return ids
+        } catch (e) {
+            console.log("Something went wrong tying to fetch ACL identities")
+            console.log(e)
+            return ["admin"]
+        }
     }
 
-    const [searchPersonaOptions, setSearchPersonaOptions] = useState(["admin", "user"]);
+    const [searchPersonaOptions, setSearchPersonaOptions] = useState(["admin"]);
 
     useEffect(()=>{
         (async()=>{
@@ -128,10 +134,11 @@ const SearchApplicationSettings: React.FC = () => {
                 <div className="relative">
                     <select
                         onChange={(event) => handlePersonaChange(event.target.value)}
+                        value={searchPersona}
                         className="flex items-center space-x-2 p-2 bg-white rounded border border-gray-300 focus:outline-none focus:border-blue-500"
                     >
                         {searchPersonaOptions.map((option, index) => (
-                            <option value={option} selected={option == searchPersona} className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
+                            <option value={option} key={option} className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
                                 {option}
                             </option>
                         ))}
