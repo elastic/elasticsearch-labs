@@ -37,7 +37,7 @@ export default function SearchPage() {
     //TODO: simplify query state and move it to one place
     const [query, setQuery] = useState<string>("");
 
-    const {appName, apiKey: adminApiKey, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, appUser, appPassword, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {sorts} = useSelector((state: RootState) => state.sort);
     const indexFilter = useSelector((state: RootState) => state.filter)["filters"]["Data sources"].values;
 
@@ -45,16 +45,16 @@ export default function SearchPage() {
     useEffect(() => {
         const fetchData = async () => await handleSearchSubmit();
         fetchData();
-    }, [indexFilter, sorts, appName, adminApiKey, searchEndpoint]);
+    }, [indexFilter, sorts, appName, appUser, appPassword, searchEndpoint]);
 
     const getOrCreateApiKey = async () => {
         if (searchPersona == "admin"){
-            return adminApiKey
+            return "admin key" //TODO fix hardcoded
         }
         else {
             const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
             const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + searchPersona
-            const response = await fetch(identityPath, {headers: {"Authorization": "ApiKey " + adminApiKey}});
+            const response = await fetch(identityPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
             const jsonData = await response.json();
             console.log(jsonData)
             const permissions = jsonData._source.query.template.params.access_control

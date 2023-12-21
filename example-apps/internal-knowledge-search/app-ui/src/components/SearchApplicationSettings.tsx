@@ -11,14 +11,14 @@ import {json} from "react-router-dom";
 
 const SearchApplicationSettings: React.FC = () => {
     const dispatch = useDispatch();
-    const {appName, apiKey, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, appUser, appPassword, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {showToast} = useToast();
 
     const fetchPersonaOptions = async () => {
         try {
             const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
             const identitiesPath = searchEndpoint + "/" + identitiesIndex + "/_search"
-            const response = await fetch(identitiesPath, {headers: {"Authorization": "ApiKey " + apiKey}});
+            const response = await fetch(identitiesPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
             const jsonData = await response.json();
             const ids = jsonData.hits.hits.map((hit) => hit._id)
             return ids
@@ -49,15 +49,19 @@ const SearchApplicationSettings: React.FC = () => {
     };
 
     const handleSave = () => {
-        dispatch(updateSettings({appName, apiKey, searchEndpoint, searchPersona}));
+        dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona}));
         showToast("Settings saved!", MessageType.Info);
     };
 
-    const updateAppName = (e) => dispatch(updateSettings({appName: e.target.value, apiKey, searchEndpoint, searchPersona}))
-    const updateApiKey = (e) => dispatch(updateSettings({appName, apiKey: e.target.value, searchEndpoint, searchPersona}))
-    const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, apiKey, searchEndpoint: e.target.value, searchPersona}))
+    const updateAppName = (e) => dispatch(updateSettings({appName: e.target.value, appUser, appPassword, searchEndpoint, searchPersona}))
 
-    const updateSearchPersona = (e) => dispatch(updateSettings({appName, apiKey, searchEndpoint, searchPersona: e}))
+    const updateAppUser = (e) => dispatch(updateSettings({appName, appUser: e.target.value, appPassword, searchEndpoint, searchPersona}))
+
+    const updateAppPassword = (e) => dispatch(updateSettings({appName, appUser, appPassword: e.target.value, searchEndpoint, searchPersona}))
+
+    const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint: e.target.value, searchPersona}))
+
+    const updateSearchPersona = (e) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona: e}))
 
     return (
         <div className="container mx-auto p-4 bg-white rounded shadow-md">
@@ -91,17 +95,34 @@ const SearchApplicationSettings: React.FC = () => {
 
             <div className="text-left mb-6 p-4 border rounded bg-gray-50">
                 <label
-                    htmlFor="apiKey"
+                    htmlFor="appUser"
                     className="block text-sm font-medium mb-1 text-gray-700"
                 >
-                    Application API Key:
+                    Application Elasticsearch Username:
                 </label>
-                <p className="text-xs mb-2 text-gray-500">Your application's unique API key used for looking up identities.</p>
+                <p className="text-xs mb-2 text-gray-500">The Elasticsearch username to use to establish a connection with.</p>
                 <input
-                    id="apiKey"
+                    id="appUser"
+                    type="text"
+                    value={appUser}
+                    onChange={updateAppUser}
+                    className="p-2 w-full border rounded focus:outline-none focus:shadow-outline"
+                />
+            </div>
+
+            <div className="text-left mb-6 p-4 border rounded bg-gray-50">
+                <label
+                    htmlFor="appPassword"
+                    className="block text-sm font-medium mb-1 text-gray-700"
+                >
+                    Application Elasticsearch Password:
+                </label>
+                <p className="text-xs mb-2 text-gray-500">The Elasticsearch password to use to establish a connection with.</p>
+                <input
+                    id="appPassword"
                     type="password"
-                    value={apiKey}
-                    onChange={updateApiKey}
+                    value={appPassword}
+                    onChange={updateAppPassword}
                     className="p-2 w-full border rounded focus:outline-none focus:shadow-outline"
                 />
             </div>
