@@ -16,7 +16,16 @@ const SearchApplicationSettings: React.FC = () => {
         try {
             const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
             const identitiesPath = searchEndpoint + "/" + identitiesIndex + "/_search"
-            const response = await fetch(identitiesPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
+            const response = await fetch(identitiesPath, {
+                method: "POST",
+                headers: {
+                    "Authorization": "Basic " + btoa(appUser + ":" + appPassword),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "size": 30 //TODO: fix magic number. This is just how many identities I have in my data
+                })
+            });
             const jsonData = await response.json();
             const ids = jsonData.hits.hits.map((hit) => hit._id)
             return ids
@@ -55,9 +64,9 @@ const SearchApplicationSettings: React.FC = () => {
             }
         }
     }
-    const personaRoleDescriptor = async () => {
+    const personaRoleDescriptor = async (persona) => {
         const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
-        const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + searchPersona
+        const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + persona
         const response = await fetch(identityPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
         const jsonData = await response.json();
         console.log("Permissions lookup response is:")
@@ -68,39 +77,37 @@ const SearchApplicationSettings: React.FC = () => {
                 "cluster": ["all"],
                 "indices": [
                     {
-                        "names": ["search-sharepoint"],// TODO: hardcoded
+                        "names": [appName],
                         "privileges": ["read"],
-                        "query": {
+                        "query" : {
                             "template": {
                                 "params": {
-                                    "permissions": permissions
+                                    "access_control": permissions
                                 },
-                                'source': `
-                                    {
-                                      "bool": {
+                                "source" : `{
+                                    "bool": {
                                         "filter": {
-                                          "bool": {
-                                            "should": [
-                                              {
-                                                "bool": {
-                                                  "must_not": {
-                                                    "exists": {
-                                                      "field": "_allow_access_control"
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "bool": {
+                                                            "must_not": {
+                                                                "exists": {
+                                                                    "field": "_allow_access_control"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "terms": {
+                                                            "_allow_access_control.enum": {{#toJson}}access_control{{/toJson}}
+                                                        }
                                                     }
-                                                  }
-                                                }
-                                              },
-                                              {
-                                                "terms": {
-                                                  "_allow_access_control": {{#toJson}}permissions{{/toJson}}
-                                                }
-                                              }
-                                            ]
-                                          }
+                                                ]
+                                            }
                                         }
-                                      }
                                     }
-                                    `
+                                }`
                             }
                         }
                     }
@@ -114,7 +121,7 @@ const SearchApplicationSettings: React.FC = () => {
         }
     }
     const createPersonaAPIKey = async(persona) => {
-        const roleDescriptor = persona == "admin" ? defaultRoleDescriptor : await personaRoleDescriptor()
+        const roleDescriptor = persona == "admin" ? defaultRoleDescriptor : await personaRoleDescriptor(persona)
         const apiKeyPath = searchEndpoint + "/_security/api_key"
         const response = await fetch(apiKeyPath, {
             method: "POST",
