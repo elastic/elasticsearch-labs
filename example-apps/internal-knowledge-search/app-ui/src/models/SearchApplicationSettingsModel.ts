@@ -7,4 +7,6 @@ export interface SearchApplicationSettingsModel {
     searchEndpoint: string;
 
     searchPersona: string;
+
+    searchPersonaAPIKey: string;
 }
