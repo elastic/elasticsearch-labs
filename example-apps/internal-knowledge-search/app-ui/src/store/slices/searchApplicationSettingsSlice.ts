@@ -5,7 +5,8 @@ import {SearchApplicationSettingsModel} from "../../models/SearchApplicationSett
 
 const initialState: SearchApplicationSettingsModel = {
     appName: process.env.REACT_APP_SEARCH_APP_NAME || "some-search-application",
-    apiKey: process.env.REACT_APP_SEARCH_APP_API_KEY || "xxxxxxxxxxxxxxxxxxx",
+    appUser: process.env.REACT_APP_SEARCH_USER || "elastic",
+    appPassword: process.env.REACT_APP_SEARCH_PASSWORD || "changeme",
     searchEndpoint: process.env.REACT_APP_SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
     searchPersona: "admin"
 };
