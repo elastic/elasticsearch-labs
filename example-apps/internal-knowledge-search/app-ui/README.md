@@ -106,7 +106,7 @@ To be able to use the index filtering and sorting in the UI you should update th
 
 ### Setting the environment variables
 
-You need to set `REACT_APP_SEARCH_APP_NAME`, `REACT_APP_SEARCH_APP_API_KEY` and `REACT_APP_SEARCH_APP_ENDPOINT` inside [.env](.env) to the corresponding values, which you'll get when [creating a search application](https://www.elastic.co/guide/en/enterprise-search/current/search-applications.html).
+You need to set `REACT_APP_SEARCH_APP_NAME`, `REACT_APP_SEARCH_APP_USER`, `REACT_APP_SEARCH_APP_PASSWORD` and `REACT_APP_SEARCH_APP_ENDPOINT` inside [.env](.env) to the corresponding values, which you'll get when [creating a search application](https://www.elastic.co/guide/en/enterprise-search/current/search-applications.html).
 
 ### Set up DLS with SPO
 1. create a connector in kibana named `search-sharepoint` 
@@ -117,7 +117,6 @@ You need to set `REACT_APP_SEARCH_APP_NAME`, `REACT_APP_SEARCH_APP_API_KEY` and 
 6. define mappings, as above in this README
 7. create search application
 8. enable cors: https://www.elastic.co/guide/en/elasticsearch/reference/master/search-application-security.html#search-application-security-cors-elasticsearch
-9. create an API key that has read access to `.search-acl-filter-search-sharepoint` and the search application (`sharepoint`)
 
 
 ### Make it go

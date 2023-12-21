@@ -37,7 +37,7 @@ export default function SearchPage() {
     //TODO: simplify query state and move it to one place
     const [query, setQuery] = useState<string>("");
 
-    const {appName, appUser, appPassword, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, appUser, appPassword, searchEndpoint, searchPersonaAPIKey} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {sorts} = useSelector((state: RootState) => state.sort);
     const indexFilter = useSelector((state: RootState) => state.filter)["filters"]["Data sources"].values;
 
@@ -47,75 +47,11 @@ export default function SearchPage() {
         fetchData();
     }, [indexFilter, sorts, appName, appUser, appPassword, searchEndpoint]);
 
-    const getOrCreateApiKey = async () => {
-        if (searchPersona == "admin"){
-            return "admin key" //TODO fix hardcoded
-        }
-        else {
-            const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
-            const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + searchPersona
-            const response = await fetch(identityPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
-            const jsonData = await response.json();
-            console.log(jsonData)
-            const permissions = jsonData._source.query.template.params.access_control
-            const apiKeyRoleDescriptor = {
-                name: searchPersona,
-                role_descriptors: {
-                    "dls-role": {
-                        "cluster": ["all"],
-                        "indices": [
-                            {
-                                "names": ["search-sharepoint"],// TODO: hardcoded
-                                "privileges": ["read"],
-                                "query": {
-                                    "template": {
-                                        "params": {
-                                            "permissions": permissions
-                                        },
-                                        'source': `
-                                        {
-                                          "bool": {
-                                            "filter": {
-                                              "bool": {
-                                                "should": [
-                                                  {
-                                                    "bool": {
-                                                      "must_not": {
-                                                        "exists": {
-                                                          "field": "_allow_access_control"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  {
-                                                    "terms": {
-                                                      "_allow_access_control": {{#toJson}}permissions{{/toJson}}
-                                                    }
-                                                  }
-                                                ]
-                                              }
-                                            }
-                                          }
-                                        }
-                                        `
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-
-            // TODO Use fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
-            return "missing"
-        }
-    }
-
     const handleSearchSubmit = async () => {
         try {
             setLoading(true);
 
-            const apiKey = await getOrCreateApiKey()
+            const apiKey = searchPersonaAPIKey
             showToast("API key is: "+apiKey)
 
             const client = SearchApplicationClient(appName, searchEndpoint, apiKey, {

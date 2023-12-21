@@ -4,14 +4,12 @@ import {updateSettings} from "../store/slices/searchApplicationSettingsSlice";
 import {useToast} from "../contexts/ToastContext";
 import {MessageType} from "./Toast";
 import {RootState} from "../store/store";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faAngleDown, faAngleUp} from "@fortawesome/free-solid-svg-icons";
-import {json} from "react-router-dom";
+
 
 
 const SearchApplicationSettings: React.FC = () => {
     const dispatch = useDispatch();
-    const {appName, appUser, appPassword, searchEndpoint, searchPersona} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, appUser, appPassword, searchEndpoint, searchPersona, searchPersonaAPIKey} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {showToast} = useToast();
 
     const fetchPersonaOptions = async () => {
@@ -29,12 +27,127 @@ const SearchApplicationSettings: React.FC = () => {
         }
     }
 
+    const roleName = appName+"-key-role"
+    const defaultRoleDescriptor = {
+        [roleName]: {
+            "cluster": [],
+            "indices": [
+                {
+                    "names": [
+                        appName
+                    ],
+                    "privileges": [
+                        "read"
+                    ],
+                    "allow_restricted_indices": false
+                }
+            ],
+            "applications": [],
+            "run_as": [],
+            "metadata": {},
+            "transient_metadata": {
+                "enabled": true
+            },
+            "restriction": {
+                "workflows": [
+                    "search_application_query"
+                ]
+            }
+        }
+    }
+    const personaRoleDescriptor = async () => {
+        const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
+        const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + searchPersona
+        const response = await fetch(identityPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
+        const jsonData = await response.json();
+        console.log("Permissions lookup response is:")
+        console.log(jsonData)
+        const permissions = jsonData._source.query.template.params.access_control
+        return {
+            "dls-role": {
+                "cluster": ["all"],
+                "indices": [
+                    {
+                        "names": ["search-sharepoint"],// TODO: hardcoded
+                        "privileges": ["read"],
+                        "query": {
+                            "template": {
+                                "params": {
+                                    "permissions": permissions
+                                },
+                                'source': `
+                                    {
+                                      "bool": {
+                                        "filter": {
+                                          "bool": {
+                                            "should": [
+                                              {
+                                                "bool": {
+                                                  "must_not": {
+                                                    "exists": {
+                                                      "field": "_allow_access_control"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "terms": {
+                                                  "_allow_access_control": {{#toJson}}permissions{{/toJson}}
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    }
+                                    `
+                            }
+                        }
+                    }
+                ],
+                "restriction": {
+                    "workflows": [
+                        "search_application_query"
+                    ]
+                }
+            }
+        }
+    }
+    const createPersonaAPIKey = async(persona) => {
+        const roleDescriptor = persona == "admin" ? defaultRoleDescriptor : await personaRoleDescriptor()
+        const apiKeyPath = searchEndpoint + "/_security/api_key"
+        const response = await fetch(apiKeyPath, {
+            method: "POST",
+            headers: {
+                "Authorization": "Basic " + btoa(appUser + ":" + appPassword),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "name": appName+"-internal-knowledge-search-example-"+persona,
+                "expiration": "1h",
+                "role_descriptors": roleDescriptor,
+                "metadata": {
+                    "application": appName,
+                    "createdBy": appUser
+                }
+            })
+        })
+        const jsonData = await response.json()
+        console.log("API key create response is:")
+        console.log(jsonData)
+        return jsonData.encoded
+    }
+
     const [searchPersonaOptions, setSearchPersonaOptions] = useState(["admin"]);
 
     useEffect(()=>{
         (async()=>{
-            const fetched = await fetchPersonaOptions()
-            setSearchPersonaOptions(fetched)
+            const fetchedPersonas = await fetchPersonaOptions()
+            setSearchPersonaOptions(fetchedPersonas)
+            if (searchPersonaAPIKey == "missing") {
+                const createdAPIKey = await createPersonaAPIKey(searchPersona)
+                updateSearchPersonaAPIKey(createdAPIKey)
+            }
         })()
     },[])
 
@@ -44,24 +157,26 @@ const SearchApplicationSettings: React.FC = () => {
         setIsOpen(!isOpen);
     };
 
-    const handlePersonaChange = (value: string) => {
-        updateSearchPersona(value);
+    const handlePersonaChange = async (value: string) => {
+        updateSearchPersona(value, await createPersonaAPIKey(value));
     };
 
     const handleSave = () => {
-        dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona}));
+        dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona, searchPersonaAPIKey}));
         showToast("Settings saved!", MessageType.Info);
     };
 
-    const updateAppName = (e) => dispatch(updateSettings({appName: e.target.value, appUser, appPassword, searchEndpoint, searchPersona}))
+    const updateAppName = (e) => dispatch(updateSettings({appName: e.target.value, appUser, appPassword, searchEndpoint, searchPersona, searchPersonaAPIKey}))
 
-    const updateAppUser = (e) => dispatch(updateSettings({appName, appUser: e.target.value, appPassword, searchEndpoint, searchPersona}))
+    const updateAppUser = (e) => dispatch(updateSettings({appName, appUser: e.target.value, appPassword, searchEndpoint, searchPersona, searchPersonaAPIKey}))
 
-    const updateAppPassword = (e) => dispatch(updateSettings({appName, appUser, appPassword: e.target.value, searchEndpoint, searchPersona}))
+    const updateAppPassword = (e) => dispatch(updateSettings({appName, appUser, appPassword: e.target.value, searchEndpoint, searchPersona, searchPersonaAPIKey}))
 
-    const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint: e.target.value, searchPersona}))
+    const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint: e.target.value, searchPersona, searchPersonaAPIKey}))
 
-    const updateSearchPersona = (e) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona: e}))
+    const updateSearchPersona = (persona, apiKey) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona: persona, searchPersonaAPIKey: apiKey}))
+
+    const updateSearchPersonaAPIKey = (apiKey) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona, searchPersonaAPIKey: apiKey}))
 
     return (
         <div className="container mx-auto p-4 bg-white rounded shadow-md">
@@ -154,10 +269,13 @@ const SearchApplicationSettings: React.FC = () => {
                 <p className="text-xs mb-2 text-gray-500">The persona on whose behalf searches will be executed</p>
                 <div className="relative">
                     <select
-                        onChange={(event) => handlePersonaChange(event.target.value)}
+                        onChange={ async (event) => await handlePersonaChange(event.target.value)}
                         value={searchPersona}
                         className="flex items-center space-x-2 p-2 bg-white rounded border border-gray-300 focus:outline-none focus:border-blue-500"
                     >
+                        {searchPersonaOptions.includes(searchPersona) ? "" : <option value={searchPersona} key={searchPersona} className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
+                            {searchPersona}
+                        </option>}
                         {searchPersonaOptions.map((option, index) => (
                             <option value={option} key={option} className="block text-left p-2 hover:bg-gray-100 cursor-pointer">
                                 {option}

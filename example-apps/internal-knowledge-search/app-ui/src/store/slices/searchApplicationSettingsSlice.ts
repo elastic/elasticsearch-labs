@@ -8,7 +8,8 @@ const initialState: SearchApplicationSettingsModel = {
     appUser: process.env.REACT_APP_SEARCH_USER || "elastic",
     appPassword: process.env.REACT_APP_SEARCH_PASSWORD || "changeme",
     searchEndpoint: process.env.REACT_APP_SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
-    searchPersona: "admin"
+    searchPersona: "admin",
+    searchPersonaAPIKey: "missing"
 };
 
 const searchApplicationSettingsSlice = createSlice({
