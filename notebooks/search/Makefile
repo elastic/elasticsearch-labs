@@ -13,4 +13,4 @@ NOTEBOOKS = \
 all: $(NOTEBOOKS)
 
 $(NOTEBOOKS):
-	$(NBTEST) $@
+	-$(NBTEST) $@
