@@ -173,7 +173,8 @@ def nbtest(notebook, verbose):
     """
     ret = 0
     for nb in notebook:
-        if not nb.startswith('_nbtest'):
+        nbfilename = nb.split('/')[-1]
+        if not nbfilename.startswith('_nbtest'):
             ret += nbtest_one(notebook=nb, verbose=verbose)
     return ret
 
