@@ -52,7 +52,6 @@ export default function SearchPage() {
             setLoading(true);
 
             const apiKey = searchPersonaAPIKey
-            showToast("API key is: "+apiKey)
 
             const client = SearchApplicationClient(appName, searchEndpoint, apiKey, {
                 "facets": {
