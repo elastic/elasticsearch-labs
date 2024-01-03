@@ -147,6 +147,8 @@ You will need to set the appropriate environment variables in your `.env` file. 
 docker run --rm -p 4000:4000 --env-file .env -d chatbot-rag-app
 ```
 
+Note that if you are using an LLM that requires an external credentials file (such as Vertex AI), you will need to make this file accessible to the container in the `run` command above. For this you can use a bind mount, or you can also edit the Dockerfile to copy the credentials file to the container image at build time.
+
 ### Locally (for development)
 
 With the environment variables set, you can run the following commands to start the server and frontend.
