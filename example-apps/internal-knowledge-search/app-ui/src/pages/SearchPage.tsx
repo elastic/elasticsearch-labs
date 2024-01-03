@@ -60,6 +60,8 @@ export default function SearchPage() {
                         type: 'text',
                     },
                 }
+            }, {
+                disableCache: true
             })
 
             const sortArray = Object.values(sorts).map(sort => ({
