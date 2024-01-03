@@ -14,7 +14,7 @@ const SearchApplicationSettings: React.FC = () => {
 
     const fetchPersonaOptions = async () => {
         try {
-            const identitiesIndex = ".search-acl-filter-search-sharepoint" //TODO fix hardcoded
+            const identitiesIndex = await fetchIdentitiesIndex(await fetchSearchApplicationIndices())
             const identitiesPath = searchEndpoint + "/" + identitiesIndex + "/_search"
             const response = await fetch(identitiesPath, {
                 method: "POST",
@@ -33,6 +33,43 @@ const SearchApplicationSettings: React.FC = () => {
             console.log("Something went wrong tying to fetch ACL identities")
             console.log(e)
             return ["admin"]
+        }
+    }
+
+    const fetchSearchApplicationIndices = async () => {
+        try {
+            const searchApplicationPath = searchEndpoint + "/_application/search_application/" + appName
+            const response = await fetch(searchApplicationPath, {
+                headers: {
+                    "Authorization": "Basic " + btoa(appUser + ":" + appPassword)
+                }
+            })
+            const jsonData = await response.json();
+            const indices = jsonData.indices
+            return indices
+        } catch (e) {
+            console.log("Something went wrong trying to fetch the Search Application underlying indices")
+            console.log(e)
+            return []
+        }
+    }
+
+    const fetchIdentitiesIndex = async(applicationIndices) => {
+        try {
+            const identitiesIndexPath = searchEndpoint + "/.search-acl-filter*"
+            const response = await fetch(identitiesIndexPath, {
+                headers: {
+                    "Authorization": "Basic " + btoa(appUser + ":" + appPassword)
+                }
+            })
+            const jsonData = await response.json();
+            const identityIndices = Object.keys(jsonData)
+            const securedIndex = applicationIndices.find((applicationIndex) => identityIndices.includes(".search-acl-filter-"+applicationIndex))
+            return ".search-acl-filter-"+securedIndex
+        } catch (e) {
+            console.log("Something went wrong trying to fetch the Identities Index")
+            console.log(e)
+            return
         }
     }
 
@@ -69,8 +106,6 @@ const SearchApplicationSettings: React.FC = () => {
         const identityPath = searchEndpoint + "/" + identitiesIndex + "/_doc/" + persona
         const response = await fetch(identityPath, {headers: {"Authorization": "Basic " + btoa(appUser + ":" + appPassword)}});
         const jsonData = await response.json();
-        console.log("Permissions lookup response is:")
-        console.log(jsonData)
         const permissions = jsonData._source.query.template.params.access_control
         return {
             "dls-role": {
@@ -140,8 +175,6 @@ const SearchApplicationSettings: React.FC = () => {
             })
         })
         const jsonData = await response.json()
-        console.log("API key create response is:")
-        console.log(jsonData)
         return jsonData.encoded
     }
 
