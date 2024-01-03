@@ -108,3 +108,6 @@ To be able to use the index filtering and sorting in the UI you should update th
 
 You need to set `REACT_APP_SEARCH_APP_NAME`, `REACT_APP_SEARCH_APP_API_KEY` and `REACT_APP_SEARCH_APP_ENDPOINT` inside [.env](.env) to the corresponding values, which you'll get when [creating a search application](https://www.elastic.co/guide/en/enterprise-search/current/search-applications.html).
 
+### Security consideration
+
+As you provide the `REACT_APP_SEARCH_APP_API_KEY`, make sure this is a restricted API Key as this will be available in the browser. More information about Search application security and alternatives approaches can be found [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-application-security.html). 
