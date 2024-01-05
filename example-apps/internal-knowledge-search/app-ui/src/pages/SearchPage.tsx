@@ -43,8 +43,7 @@ export default function SearchPage() {
 
 
     useEffect(() => {
-        const fetchData = async () => await handleSearchSubmit();
-        fetchData();
+        handleSearchSubmit();
     }, [indexFilter, sorts, appName, appUser, appPassword, searchEndpoint]);
 
     const handleSearchSubmit = async () => {
