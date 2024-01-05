@@ -286,7 +286,7 @@ const SearchApplicationSettings: React.FC = () => {
                     htmlFor="appPassword"
                     className="block text-sm font-medium mb-1 text-gray-700"
                 >
-                    Application Elasticsearch Password:
+                    Search Application User's Password:
                 </label>
                 <p className="text-xs mb-2 text-gray-500">The Elasticsearch password to use to establish a connection with.</p>
                 <input
