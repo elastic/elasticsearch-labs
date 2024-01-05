@@ -14,7 +14,8 @@ const SearchApplicationSettings: React.FC = () => {
 
     const fetchPersonaOptions = async () => {
         try {
-            const identitiesIndex = await fetchIdentitiesIndex(await fetchSearchApplicationIndices())
+            const searchAppIndices = await fetchSearchApplicationIndices()
+            const identitiesIndex = await fetchIdentitiesIndex(searchAppIndices)
             const identitiesPath = searchEndpoint + "/" + identitiesIndex + "/_search"
             const response = await fetch(identitiesPath, {
                 method: "POST",
