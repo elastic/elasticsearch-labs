@@ -182,7 +182,7 @@ const SearchApplicationSettings: React.FC = () => {
     const [searchPersonaOptions, setSearchPersonaOptions] = useState(["admin"]);
 
     // Populate personas dropdown options
-    useEffect(()=>{
+    useEffect(() => {
         (async()=>{
             const fetchedPersonas = await fetchPersonaOptions()
             setSearchPersonaOptions(fetchedPersonas)
@@ -190,14 +190,22 @@ const SearchApplicationSettings: React.FC = () => {
     },[])
 
     // Ensure we have an API key and override the "missing" default
-    useEffect(()=>{
-        (async()=>{
+    useEffect(() => {
+        (async() => {
             if (searchPersonaAPIKey == "missing") {
                 const createdAPIKey = await createPersonaAPIKey(searchPersona)
                 updateSearchPersonaAPIKey(createdAPIKey)
             }
         })()
     }, [])
+
+    // Ensure that the API key is updated when searchPersona changes
+    useEffect( () => {
+        (async() => {
+            const apiKey = await createPersonaAPIKey(searchPersona);
+            updateSearchPersonaAPIKey(apiKey);
+        })()
+    }, [searchPersona]);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -206,7 +214,7 @@ const SearchApplicationSettings: React.FC = () => {
     };
 
     const handlePersonaChange = async (value: string) => {
-        updateSearchPersona(value, await createPersonaAPIKey(value));
+        updateSearchPersona(value);
     };
 
     const handleSave = () => {
@@ -222,7 +230,7 @@ const SearchApplicationSettings: React.FC = () => {
 
     const updateSearchEndpoint = (e) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint: e.target.value, searchPersona, searchPersonaAPIKey}))
 
-    const updateSearchPersona = (persona, apiKey) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona: persona, searchPersonaAPIKey: apiKey}))
+    const updateSearchPersona = (persona) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona: persona, searchPersonaAPIKey}))
 
     const updateSearchPersonaAPIKey = (apiKey) => dispatch(updateSettings({appName, appUser, appPassword, searchEndpoint, searchPersona, searchPersonaAPIKey: apiKey}))
 
