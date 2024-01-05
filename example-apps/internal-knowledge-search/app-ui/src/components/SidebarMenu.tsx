@@ -4,8 +4,8 @@ import {Link} from "react-router-dom";
 
 
 const navItems = [
-    { label: 'Search', icon: <FaMagnifyingGlass/>, route: '/' },
-    { label: 'Settings', icon: <FaGear/>, route: '/settings' }
+    { label: 'Search', icon: <FaMagnifyingGlass/>, route: '/search' },
+    { label: 'Settings', icon: <FaGear/>, route: '/' }
 ];
 
 const SidebarMenu: React.FC = () => {

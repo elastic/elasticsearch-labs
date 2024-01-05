@@ -13,7 +13,6 @@ import dataSourceToLogoPathLookup from '../config/dataSourceToLogoPathLookup.jso
 import documentsToSearchResultsMappings from '../config/documentsToSearchResultMappings.json';
 import {RootState} from "../store/store";
 
-
 const mapHitToSearchResult = (hit) => {
     const doc = hit._source;
     const dataSource = hit._index;
@@ -38,19 +37,20 @@ export default function SearchPage() {
     //TODO: simplify query state and move it to one place
     const [query, setQuery] = useState<string>("");
 
-    const {appName, apiKey, searchEndpoint} = useSelector((state: RootState) => state.searchApplicationSettings);
+    const {appName, appUser, appPassword, searchEndpoint, searchPersonaAPIKey} = useSelector((state: RootState) => state.searchApplicationSettings);
     const {sorts} = useSelector((state: RootState) => state.sort);
     const indexFilter = useSelector((state: RootState) => state.filter)["filters"]["Data sources"].values;
 
 
     useEffect(() => {
-        const fetchData = async () => await handleSearchSubmit();
-        fetchData();
-    }, [indexFilter, sorts, appName, apiKey, searchEndpoint]);
+        handleSearchSubmit();
+    }, [indexFilter, sorts, appName, appUser, appPassword, searchEndpoint]);
 
     const handleSearchSubmit = async () => {
         try {
             setLoading(true);
+
+            const apiKey = searchPersonaAPIKey
 
             const client = SearchApplicationClient(appName, searchEndpoint, apiKey, {
                 "facets": {
@@ -58,6 +58,8 @@ export default function SearchPage() {
                         type: 'text',
                     },
                 }
+            }, {
+                disableCache: true
             })
 
             const sortArray = Object.values(sorts).map(sort => ({

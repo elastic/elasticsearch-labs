@@ -1,5 +1,6 @@
 {
   "search-mongo": "data-source-logos/mongodb_logo.webp",
   "search-mongo-2": "data-source-logos/mongodb_logo.webp",
-  "search-mysql": "data-source-logos/mysql.webp"
+  "search-mysql": "data-source-logos/mysql.webp",
+  "search-sharepoint": "data-source-logos/sharepoint_icon.webp"
 }

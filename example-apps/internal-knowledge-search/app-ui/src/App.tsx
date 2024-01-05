@@ -21,8 +21,8 @@ function App() {
                         <SidebarMenu/>
                         <main className="flex-1 p-6">
                             <Routes>
-                                <Route path="/" element={<SearchPage/>}/>
-                                <Route path="/settings" element={<SettingsPage/>}/>
+                                <Route path="/" element={<SettingsPage/>}/>
+                                <Route path="/search" element={<SearchPage/>}/>
                             </Routes>
                         </main>
                     </div>
