@@ -181,16 +181,23 @@ const SearchApplicationSettings: React.FC = () => {
 
     const [searchPersonaOptions, setSearchPersonaOptions] = useState(["admin"]);
 
+    // Populate personas dropdown options
     useEffect(()=>{
         (async()=>{
             const fetchedPersonas = await fetchPersonaOptions()
             setSearchPersonaOptions(fetchedPersonas)
+        })()
+    },[])
+
+    // Ensure we have an API key and override the "missing" default
+    useEffect(()=>{
+        (async()=>{
             if (searchPersonaAPIKey == "missing") {
                 const createdAPIKey = await createPersonaAPIKey(searchPersona)
                 updateSearchPersonaAPIKey(createdAPIKey)
             }
         })()
-    },[])
+    }, [])
 
     const [isOpen, setIsOpen] = useState(false);
 
