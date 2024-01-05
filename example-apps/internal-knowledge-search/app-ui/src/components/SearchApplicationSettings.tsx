@@ -269,7 +269,7 @@ const SearchApplicationSettings: React.FC = () => {
                     htmlFor="appUser"
                     className="block text-sm font-medium mb-1 text-gray-700"
                 >
-                    Application Elasticsearch Username:
+                    Search Application Username:
                 </label>
                 <p className="text-xs mb-2 text-gray-500">The Elasticsearch username to use to establish a connection with.</p>
                 <input
