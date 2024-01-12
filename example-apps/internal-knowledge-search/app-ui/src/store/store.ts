@@ -1,19 +1,18 @@
 import {configureStore} from '@reduxjs/toolkit';
-import searchApplicationSettingsReducer from './slices/searchApplicationSettingsSlice';
-import searchResultsReducer from './slices/searchResultsSlice';
-import sortReducer from './slices/sortSlice';
-import filterReducer from './slices/filterSlice';
-import queryReducer from './slices/querySlice';
+import { searchApplicationSettingsSlice } from './slices/searchApplicationSettingsSlice';
+import { searchResultsSlice } from './slices/searchResultsSlice';
+import { sortSlice } from './slices/sortSlice';
+import { filterSlice } from './slices/filterSlice';
+import { querySlice } from './slices/querySlice';
 
-const store = configureStore({
+export const store = configureStore({
     reducer: {
-        searchApplicationSettings: searchApplicationSettingsReducer,
-        searchResults: searchResultsReducer,
-        sort: sortReducer,
-        filter: filterReducer,
-        query: queryReducer
+        searchApplicationSettings: searchApplicationSettingsSlice.reducer,
+        searchResults: searchResultsSlice.reducer,
+        sort: sortSlice.reducer,
+        filter: filterSlice.reducer,
+        query: querySlice.reducer
     },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
-export default store;

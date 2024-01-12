@@ -10,7 +10,7 @@ const initialState: SearchResultsState = {
     results: []
 };
 
-const searchResultsSlice = createSlice({
+export const searchResultsSlice = createSlice({
     name: 'searchResults',
     initialState,
     reducers: {
@@ -21,4 +21,3 @@ const searchResultsSlice = createSlice({
 });
 
 export const { updateSearchResults } = searchResultsSlice.actions;
-export default searchResultsSlice.reducer;

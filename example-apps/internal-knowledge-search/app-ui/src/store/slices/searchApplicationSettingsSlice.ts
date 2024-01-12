@@ -5,22 +5,40 @@ import {SearchApplicationSettingsModel} from "../../models/SearchApplicationSett
 
 const initialState: SearchApplicationSettingsModel = {
     appName: process.env.REACT_APP_SEARCH_APP_NAME || "some-search-application",
-    appUser: process.env.REACT_APP_SEARCH_USER || "elastic",
-    appPassword: process.env.REACT_APP_SEARCH_PASSWORD || "changeme",
+    indices: [],
     searchEndpoint: process.env.REACT_APP_SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
     searchPersona: "admin",
     searchPersonaAPIKey: "missing"
 };
 
-const searchApplicationSettingsSlice = createSlice({
+export const searchApplicationSettingsSlice = createSlice({
     name: 'searchApplicationSettings',
     initialState,
     reducers: {
+        updateAppName: (state, action: PayloadAction<string>) => {
+            state.appName = action.payload;
+            return state;
+        },
+        updateIndices: (state, action: PayloadAction<string[]>) => {
+            state.indices = action.payload;
+            return state;
+        },
         updateSettings: (state, action: PayloadAction<SearchApplicationSettingsModel>) => {
             return action.payload;
         },
+        updateSearchEndpoint: (state, action: PayloadAction<string>) => {
+            state.searchEndpoint = action.payload;
+            return state;
+        },
+        updateSearchPersona: (state, action: PayloadAction<string>) => {
+            state.searchPersona = action.payload;
+            return state;
+        },
+        updateSearchPersonaAPIKey: (state, action: PayloadAction<string>) => {
+            state.searchPersonaAPIKey = action.payload;
+            return state;
+        }
     },
 });
 
-export const { updateSettings } = searchApplicationSettingsSlice.actions;
-export default searchApplicationSettingsSlice.reducer;
+export const { updateAppName, updateIndices, updateSettings, updateSearchEndpoint, updateSearchPersona, updateSearchPersonaAPIKey } = searchApplicationSettingsSlice.actions;
