@@ -4,9 +4,9 @@ import {SearchApplicationSettingsModel} from "../../models/SearchApplicationSett
 
 
 const initialState: SearchApplicationSettingsModel = {
-    appName: process.env.REACT_APP_SEARCH_APP_NAME || "some-search-application",
+    appName: "some-search-application",
     indices: [],
-    searchEndpoint: process.env.REACT_APP_SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
+    searchEndpoint: "https://some-search-end-point.co",
     searchPersona: "admin",
     searchPersonaAPIKey: "missing"
 };
@@ -23,9 +23,6 @@ export const searchApplicationSettingsSlice = createSlice({
             state.indices = action.payload;
             return state;
         },
-        updateSettings: (state, action: PayloadAction<SearchApplicationSettingsModel>) => {
-            return action.payload;
-        },
         updateSearchEndpoint: (state, action: PayloadAction<string>) => {
             state.searchEndpoint = action.payload;
             return state;
@@ -41,4 +38,4 @@ export const searchApplicationSettingsSlice = createSlice({
     },
 });
 
-export const { updateAppName, updateIndices, updateSettings, updateSearchEndpoint, updateSearchPersona, updateSearchPersonaAPIKey } = searchApplicationSettingsSlice.actions;
+export const { updateAppName, updateIndices, updateSearchEndpoint, updateSearchPersona, updateSearchPersonaAPIKey } = searchApplicationSettingsSlice.actions;
