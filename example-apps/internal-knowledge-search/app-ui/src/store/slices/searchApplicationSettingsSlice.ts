@@ -1,20 +1,41 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {SearchApplicationSettingsModel} from "../../models/SearchApplicationSettingsModel";
+
+
+
 const initialState: SearchApplicationSettingsModel = {
-    appName: process.env.SEARCH_APP_NAME || "some-search-application",
-    apiKey: process.env.SEARCH_APP_API_KEY || "xxxxxxxxxxxxxxxxxxx",
-    searchEndpoint: process.env.SEARCH_APP_ENDPOINT || "https://some-search-end-point.co",
+    appName: "some-search-application",
+    indices: [],
+    searchEndpoint: "https://some-search-end-point.co",
+    searchPersona: "admin",
+    searchPersonaAPIKey: "missing"
 };
 
-const searchApplicationSettingsSlice = createSlice({
+export const searchApplicationSettingsSlice = createSlice({
     name: 'searchApplicationSettings',
     initialState,
     reducers: {
-        updateSettings: (state, action: PayloadAction<SearchApplicationSettingsModel>) => {
-            return action.payload;
+        updateAppName: (state, action: PayloadAction<string>) => {
+            state.appName = action.payload;
+            return state;
         },
+        updateIndices: (state, action: PayloadAction<string[]>) => {
+            state.indices = action.payload;
+            return state;
+        },
+        updateSearchEndpoint: (state, action: PayloadAction<string>) => {
+            state.searchEndpoint = action.payload;
+            return state;
+        },
+        updateSearchPersona: (state, action: PayloadAction<string>) => {
+            state.searchPersona = action.payload;
+            return state;
+        },
+        updateSearchPersonaAPIKey: (state, action: PayloadAction<string>) => {
+            state.searchPersonaAPIKey = action.payload;
+            return state;
+        }
     },
 });
 
-export const { updateSettings } = searchApplicationSettingsSlice.actions;
-export default searchApplicationSettingsSlice.reducer;
+export const { updateAppName, updateIndices, updateSearchEndpoint, updateSearchPersona, updateSearchPersonaAPIKey } = searchApplicationSettingsSlice.actions;

@@ -7,4 +7,5 @@ export interface SearchResultModel {
     fullText: string;
     link?: string;
     additionalProps?: Record<string, any>;
+    source?: Record<string, any>;
 }

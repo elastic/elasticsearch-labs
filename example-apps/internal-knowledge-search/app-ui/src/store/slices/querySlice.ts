@@ -8,15 +8,15 @@ const initialState: QueryState = {
     query: ""
 };
 
-const querySlice = createSlice({
+export const querySlice = createSlice({
     name: 'query',
     initialState,
     reducers: {
         setQuery: (state, action: PayloadAction<string>) => {
             state.query = action.payload
+            return state;
         },
     },
 });
 
 export const {setQuery} = querySlice.actions;
-export default querySlice.reducer;

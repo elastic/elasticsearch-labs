@@ -1,0 +1,9 @@
+# package management
+pip-tools
+
+# core dependencies
+elasticsearch
+flask
+flask-cors
+python-dotenv
+requests
