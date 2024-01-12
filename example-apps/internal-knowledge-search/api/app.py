@@ -83,9 +83,9 @@ def indices():
 
     except Exception as e:
         current_app.logger.warn(
-            "Encountered error %s while fetching personas, returning default persona", e
+            "Encountered error %s while fetching indices, returning no indices", e
         )
-        return ["admin"]
+        return []
 
 
 @app.route("/api/api_key", methods=["GET"])
@@ -172,13 +172,6 @@ def api_key():
         current_app.logger.warn(
             "Encountered error %s while fetching api key", e)
         raise e
-
-
-@app.cli.command()
-def create_index():
-    """Create or re-create the Elasticsearch index."""
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    sys.path.append(f"{basedir}/../")
 
 
 if __name__ == "__main__":

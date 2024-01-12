@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateAppName,
-  updateIndices,
   updateSearchEndpoint,
   updateSearchPersona,
-  updateSearchPersonaAPIKey,
-  updateSettings,
 } from "../store/slices/searchApplicationSettingsSlice";
 import { useToast } from "../contexts/ToastContext";
 import { MessageType } from "./Toast";
@@ -17,11 +14,6 @@ import {
   fetchIndices,
   fetchPersonas,
 } from "api/search_application";
-import {
-  DATA_SOURCES,
-  setFilterOptions,
-  setFilterValue,
-} from "store/slices/filterSlice";
 
 export const SearchApplicationSettings: React.FC = () => {
   const dispatch = useDispatch();

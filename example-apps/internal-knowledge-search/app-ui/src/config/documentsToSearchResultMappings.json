@@ -1,6 +1,6 @@
 {
-  "search-spo": {
-    "title": "Title",
+  "search-mongo": {
+    "title": "name",
     "created": "_timestamp",
     "previewText": "summary",
     "fullText": "description",
