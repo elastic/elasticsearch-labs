@@ -4,5 +4,9 @@
 .ipynb_checkpoints
 *.egg-info
 __pycache__
+temp.json
+test/nbtest/build
+test/nbtest/dist
+venv
 .venv
-notebooks/**/temp.json
+.env*
