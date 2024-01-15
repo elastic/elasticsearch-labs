@@ -1,15 +1,37 @@
 [project]
-name = "nbtest"
+name = "elastic-nbtest"
 version = "0.1.0"
-description = "Notebook testing tool"
-dynamic = ["dependencies"]
+authors = [
+    {name = "Miguel Grinberg", email = "miguel.grinberg@elastic.co"},
+]
+maintainers = [
+    {name = "Miguel Grinberg", email = "miguel.grinberg@elastic.co"},
+]
+description = "Notebook testing tool from Elastic's Search Labs"
+license = {file = "LICENSE"}
+requires-python = ">=3.6"
+dependencies = [
+    "jupyter",
+    "rich",
+    "pyyaml",
+]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+[tool.setuptools]
+zip-safe = false
+include-package-data = true
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+namespaces = false
 
 [project.scripts]
 nbtest = "nbtest:main"
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61.2"]
 build-backend = "setuptools.build_meta"

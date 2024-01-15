@@ -1,0 +1,2 @@
+include README.md
+include src/nbtest/python3-test/*
