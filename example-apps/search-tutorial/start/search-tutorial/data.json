@@ -56,6 +56,7 @@
     "name": "Swe Career Matrix",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/EVYuEyRhHh5Aqc3a39sqbGcBkqKIHRWtJBjjUjNs6snpMg?e=nv1mf4",
     "created_on": "2018-04-15",
+    "updated_at": "2018-04-15",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -65,6 +66,7 @@
     "name": "Sales Engineering Collaboration",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/EW21-KJnfHBFoRiF49_uJMcBfHyPKimuPOFsCcJypQWaBQ?e=mGdIqe",
     "created_on": "2019-04-15",
+    "updated_at": "2019-04-15",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -74,6 +76,7 @@
     "name": "Intellectual Property Policy",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/EWz3cYEVdzBNsiHsYbKhms4BVYGhravyrUw3T3lzxL4pTg?e=mPIgbO",
     "created_on": "2021-06-15",
+    "updated_at": "2021-06-15",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -84,6 +87,7 @@
     "name": "Code Of Conduct",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/ER3xmeKaZ_pAqPeJWyyNR0QBg6QmoWIGPhwfEyCABWHrPA?e=cvzrgV",
     "created_on": "2018-01-12",
+    "updated_at": "2018-01-12",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -93,6 +97,7 @@
     "name": "Office Pet Policy",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/ETf-69wBeaZJpAn3CY7ExRABQWvav-p24VOnB6C0A4l2pQ?e=X72WuK",
     "created_on": "2018-01-12",
+    "updated_at": "2018-01-12",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -102,6 +107,7 @@
     "name": "Performance Management Policy",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/ERsxt9p1uehJqeJu4JlxkakBavbKwcldrYv_hpv3xHikAw?e=pf5R2C",
     "created_on": "2018-01-12",
+    "updated_at": "2018-01-12",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -112,6 +118,7 @@
     "name": "Sales Organization Overview",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/EYsr1eqgn9hMslMJFLR-k54BBX-O3iC26bK7xNEBtYIBkg?e=xeAjiT",
     "created_on": "2018-01-15",
+    "updated_at": "2018-01-15",
     "category": "sharepoint",
     "rolePermissions": ["demo", "manager"]
   },
@@ -121,6 +128,7 @@
     "name": "Compensation Framework For It Teams",
     "url": "https://enterprisesearch.sharepoint.com/:t:/s/MSBuilddemo/EaAFec6004tAg21g4i67rfgBBRqCm1yY7AZLLQyyaMtsEQ?e=wTMb4z",
     "created_on": "2018-01-12",
+    "updated_at": "2018-01-12",
     "category": "sharepoint",
     "rolePermissions": ["manager"]
   },
@@ -130,6 +138,7 @@
     "name": "Updating Your Tax Elections Forms",
     "url": "./github/Updating Your Tax Elections Forms.txt",
     "created_on": "2022-12-20",
+    "updated_at": "2022-12-20",
     "category": "github",
     "rolePermissions": ["demo", "manager"]
   },
@@ -139,6 +148,7 @@
     "name": "New Employee Onboarding Guide",
     "url": "./github/New Employee Onboarding guide.txt",
     "created_on": "2018-01-12",
+    "updated_at": "2018-01-12",
     "category": "github",
     "rolePermissions": ["demo", "manager"]
   }

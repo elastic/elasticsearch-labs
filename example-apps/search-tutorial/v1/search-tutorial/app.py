@@ -39,11 +39,38 @@ def handle_search():
                 **search_query,
                 **filters
             }
-        }, size=5, from_=from_
+        },
+        aggs={
+            'category-agg': {
+                'terms': {
+                    'field': 'category.keyword',
+                }
+            },
+            'year-agg': {
+                'date_histogram': {
+                    'field': 'updated_at',
+                    'calendar_interval': 'year',
+                    'format': 'yyyy',
+                },
+            },
+        },
+        size=5,
+        from_=from_
     )
+    aggs = {
+        'Category': {
+            bucket['key']: bucket['doc_count']
+            for bucket in results['aggregations']['category-agg']['buckets']
+        },
+        'Year': {
+            bucket['key_as_string']: bucket['doc_count']
+            for bucket in results['aggregations']['year-agg']['buckets']
+            if bucket['doc_count'] > 0
+        },
+    }
     return render_template('index.html', results=results['hits']['hits'],
                            query=query, from_=from_,
-                           total=results['hits']['total']['value'])
+                           total=results['hits']['total']['value'], aggs=aggs)
 
 
 @app.get('/document/<id>')
@@ -63,19 +90,31 @@ def reindex():
 
 
 def extract_filters(query):
+    filters = []
+
     filter_regex = r'category:([^\s]+)\s*'
     m = re.search(filter_regex, query)
-    if m is None:
-        return {}, query  # no filters
-    filters = {
-        'filter': [{
+    if m:
+        filters.append({
             'term': {
                 'category.keyword': {
                     'value': m.group(1)
                 }
-            }
-        }]
-    }
-    query = re.sub(filter_regex, '', query).strip()
-    return filters, query
+            },
+        })
+        query = re.sub(filter_regex, '', query).strip()
 
+    filter_regex = r'year:([^\s]+)\s*'
+    m = re.search(filter_regex, query)
+    if m:
+        filters.append({
+            'range': {
+                'updated_at': {
+                    'gte': f'{m.group(1)}||/y',
+                    'lte': f'{m.group(1)}||/y',
+                }
+            },
+        })
+        query = re.sub(filter_regex, '', query).strip()
+
+    return {'filter': filters}, query
