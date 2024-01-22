@@ -200,7 +200,7 @@ export const thunkActions = {
                     name: string
                     page_content: string
                     url?: string
-                    icon?: string
+                    category?: string
                     updated_at?: string | null
                   } = JSON.parse(source.replaceAll('\n', ''))
 
@@ -211,7 +211,7 @@ export const thunkActions = {
                           name: parsedSource.name,
                           url: parsedSource.url,
                           summary: parsedSource.page_content,
-                          icon: parsedSource.icon,
+                          icon: parsedSource.category,
                           updated_at: parsedSource.updated_at,
                         },
                       })
