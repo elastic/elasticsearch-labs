@@ -3,6 +3,9 @@ masks:
 - "'cluster_name': '[^']+'"
 - "'cluster_uuid': '[^']+'"
 - "'build_flavor': '[^']+'"
-- '[0-9]+\.[0-9]+\.[0-9]+'
+- '[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?'
+- "'build_snapshot': [^,]+"
 - "'build_hash': '[^']+'"
 - "'build_date': '[^']+'"
+- '^ID: .*$'
+- '^Score: [0-9]+\.[0-9][0-9]*$'
