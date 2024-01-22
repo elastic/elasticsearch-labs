@@ -1,4 +1,11 @@
-.PHONY: test nbtest notebooks
+.PHONY: pre-commit test nbtest notebooks
+
+pre-commit:
+	python -m venv .venv
+	.venv/bin/pip install -r requirements-dev.txt
+	.venv/bin/pre-commit install
+
+all: test
 
 test: nbtest notebooks
 
