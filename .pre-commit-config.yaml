@@ -1,0 +1,15 @@
+repos:
+- repo: https://github.com/sirwart/ripsecrets
+  rev: v0.1.7  # Use latest tag on GitHub
+  hooks:
+  - id: ripsecrets
+    args:
+    # OpenAI keys
+    - --additional-pattern
+    - '(?:sk-)[0-9a-zA-Z_-]{48}'
+    # generic [...]_API_KEY=[...] pattern
+    - --additional-pattern
+    - '_API_KEY=[0-9a-zA-Z_-]{10}'
+    # generic [...]_PASSWORD=[...] pattern
+    - --additional-pattern
+    - '_PASSWORD=[0-9a-zA-Z_-]{10}'
