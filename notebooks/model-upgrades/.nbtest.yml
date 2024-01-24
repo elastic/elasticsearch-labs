@@ -1,0 +1,12 @@
+masks:
+- "'name': '[^']+'"
+- "'build_flavor': '[^']+'"
+- '[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?'
+- "'build_snapshot': [^,]+"
+- "'cluster_name': '[^']+'"
+- "'cluster_uuid': '[^']+'"
+- "'build_hash': '[^']+'"
+- "'build_date': '[^']+'"
+- "'_version': [0-9]+"
+- '^ID: .*$'
+- '^Score: [0-9]+\.[0-9][0-9]*$'
