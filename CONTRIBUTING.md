@@ -56,6 +56,30 @@ python -m venv .venv
 * Test your notebook end to end before submitting a pull request.
 * Example of a well-formed notebook: [question-answering.ipynb](../notebooks/generative-ai/question-answering.ipynb).
 
+### Automated testing
+
+Some notebooks in this repository are automatically tested with our [nbtest](https://github.com/elastic/nbtest) tool and we welcome any new notebooks to also be included.
+
+The following command shows how to run a notebook with our tester:
+
+```bash
+bin/nbtest notebook/search/00-quick-start.ipynb
+```
+
+The `bin/nbtest` script is a wrapper that install `nbtest`. Alternatively, you can install it directly on your own virtual environment with this command:
+
+```bash
+pip install elastic-nbtest
+```
+
+To run all supported notebooks under this tool, run the following from the top-level directory of this repository:
+
+```bash
+make test
+```
+
+To add a new notebook to our automated testing, you will need to modify the `Makefile` in the directory where your notebook is located. If there is no Makefile in your directory, you can use the one in the `notebooks/search` directory as a model to create one, and then add a reference to it in the top-level `Makefile`.
+
 ## Contributing to example applications 💻
 
 ### Why
