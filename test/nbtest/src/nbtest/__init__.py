@@ -1,1 +1,0 @@
-from .nbtest import main
