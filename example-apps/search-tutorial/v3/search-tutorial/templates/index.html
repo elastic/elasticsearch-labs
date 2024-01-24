@@ -3,43 +3,59 @@
 {% block content %}
     <form method="POST" action="{{ url_for('handle_search') }}">
       <div class="mb-3">
-        <input type="text" class="form-control" name="query" id="query" placeholder="Enter your search query" autofocus>
+          <input type="text" class="form-control" name="query" id="query" placeholder="Enter your search query" value="{{ query }}" autofocus>
       </div>
     </form>
     {% if results %}
         <div class="row mb-3">
-            <div class="col-sm-auto my-auto">
-                Showing results {{ from_ + 1 }}-{{ from_ + results|length }} out of {{ total }}.
+            <div class="col-2 mt-2">
+                <p><a href="javascript:history.back(1)">← Back</a></p>
+                {% for agg in aggs %}
+                    <h6 class="mt-3">{{ agg }}</h6>
+                    {% for key, count in aggs[agg].items() %}
+                        <form method="POST">
+                            <input type="hidden" name="query" value="{{ agg|lower }}:{{key}} {{ query }}">
+                            <button type="submit" class="btn btn-link btn-sm"{% if aggs[agg]|length == 1 %} disabled{% endif %}>{{ key }} ({{ count }})</button>
+                        </form>
+                    {% endfor %}
+                {% endfor %}
             </div>
-            {% if from_ > 0 %}
-                <div class="col-sm-auto my-auto">
-                    <a href="javascript:history.back(1)" class="btn btn-primary">← Previous page</a>
-                </div> 
-            {% endif %}
-            {% if from_ + results|length < total %}
-                <div class="col-sm-auto my-auto">
-                    <form method="POST">
-                        <input type="hidden" name="query" value="{{ query }}">
-                        <input type="hidden" name="from_" value="{{ from_ + results|length }}">
-                        <button type="submit" class="btn btn-primary">Next page →</button>
-                    </form>
+            <div class="col-10">
+                <div class="row mb-3">
+                    <div class="col-sm-auto my-auto">
+                        Showing results {{ from_ + 1 }}-{{ from_ + results|length }} out of {{ total }}.
+                    </div>
+                    {% if from_ > 0 %}
+                        <div class="col-sm-auto my-auto">
+                            <a href="javascript:history.back(1)" class="btn btn-primary">← Previous page</a>
+                        </div>
+                    {% endif %}
+                    {% if from_ + results|length < total %}
+                        <div class="col-sm-auto my-auto">
+                            <form method="POST">
+                                <input type="hidden" name="query" value="{{ query }}">
+                                <input type="hidden" name="from_" value="{{ from_ + results|length }}">
+                                <button type="submit" class="btn btn-primary">Next page →</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    <div class="col"></div>
                 </div>
-            {% endif %}
-            <div class="col"></div>
+                {% for result in results %}
+                    <p>
+                        {{ from_ + loop.index }}. <b><a href="{{ url_for('get_document', id=result._id) }}">{{ result._source.name }}</a></b>
+                        <br>
+                        {{ result._source.summary }}
+                        <br>
+                        <small>
+                            Category: {{ result._source.category }}.
+                            Last updated: {{ result._source.updated_at | default(result._source.created_on) }}.
+                            {% if result._score %}<i>(Score: {{ result._score }})</i>{% endif %}
+                        </small>
+                    </p>
+                {% endfor %}
+            </div>
         </div>
-        {% for result in results %}
-            <p>
-                {{ from_ + loop.index }}. <b><a href="{{ url_for('get_document', id=result._id) }}">{{ result._source.name }}</a></b>
-                <br>
-                {{ result._source.summary }}
-                <br>
-                <small>
-                    Category: {{ result._source.category }}.
-                    Last updated: {{ result._source.updated_at | default(result._source.created_on) }}.
-                    {% if result._score %}<i>(Score: {{ result._score }})</i>{% endif %}
-                </small>
-            </p>
-        {% endfor %}
     {% elif request.method == 'POST' %}
         <p>No results found.</p>
     {% endif %}

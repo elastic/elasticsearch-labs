@@ -69,12 +69,37 @@ def handle_search():
 
     results = es.search(
         **search_query,
+        aggs={
+            'category-agg': {
+                'terms': {
+                    'field': 'category.keyword',
+                }
+            },
+            'year-agg': {
+                'date_histogram': {
+                    'field': 'updated_at',
+                    'calendar_interval': 'year',
+                    'format': 'yyyy',
+                },
+            },
+        },
         size=5,
         from_=from_,
     )
+    aggs = {
+        'Category': {
+            bucket['key']: bucket['doc_count']
+            for bucket in results['aggregations']['category-agg']['buckets']
+        },
+        'Year': {
+            bucket['key_as_string']: bucket['doc_count']
+            for bucket in results['aggregations']['year-agg']['buckets']
+            if bucket['doc_count'] > 0
+        },
+    }
     return render_template('index.html', results=results['hits']['hits'],
                            query=query, from_=from_,
-                           total=results['hits']['total']['value'])
+                           total=results['hits']['total']['value'], aggs=aggs)
 
 
 @app.get('/document/<id>')
