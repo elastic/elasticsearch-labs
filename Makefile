@@ -2,13 +2,19 @@
 
 test: nbtest notebooks
 
-notebooks: search document-chunking
+notebooks: search document-chunking model-upgrades langchain
 
 search:
 	$(MAKE) -C notebooks/search
 
 document-chunking:
 	$(MAKE) -C notebooks/document-chunking
+
+model-upgrades:
+	$(MAKE) -C notebooks/model-upgrades
+
+langchain:
+	$(MAKE) -C notebooks/langchain
 
 install: pre-commit nbtest
 
