@@ -6,8 +6,7 @@ NOTEBOOKS = \
 	03-ELSER.ipynb \
 	04-multilingual.ipynb \
 	05-query-rules.ipynb \
-	06-synonyms-api.ipynb \
-	tokenization.ipynb
+	06-synonyms-api.ipynb
 
 .PHONY: all $(NOTEBOOKS)
 
