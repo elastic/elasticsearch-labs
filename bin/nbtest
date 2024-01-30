@@ -4,5 +4,18 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 if [[ ! -f $SCRIPT_DIR/../.venv/bin/nbtest ]]; then
     make nbtest
 fi
+
+if [[ "$PATCH_ES" != "" ]]; then
+    # here we do some Python dark magic to patch the elasticsearch package to
+    # connect to a locally hosted instance in spite of connection arguments
+    # given
+    export ELASTIC_CLOUD_ID=foo
+    export ELASTIC_API_KEY=bar
+    export PYTHONPATH=$SCRIPT_DIR/mocks
+
+    # ensure elasticsearch is installed so that it can be patched
+    $SCRIPT_DIR/../.venv/bin/pip install -qqq elasticsearch
+fi
+
 source $SCRIPT_DIR/../.venv/bin/activate
 $SCRIPT_DIR/../.venv/bin/nbtest $*
