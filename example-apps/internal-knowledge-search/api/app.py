@@ -134,8 +134,6 @@ def api_key():
                                 "template": {
                                     "params": {"access_control": permissions},
                                     "source": """{
-                                "bool": {
-                                    "filter": {
                                         "bool": {
                                             "should": [
                                                 {
@@ -154,9 +152,7 @@ def api_key():
                                                 }
                                             ]
                                         }
-                                    }
-                                }
-                            }""",
+                                    }""",
                                 }
                             },
                         }
