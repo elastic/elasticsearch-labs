@@ -1,5 +1,6 @@
 # osx
 .idea
+*.iml
 .DS_Store
 .ipynb_checkpoints
 *.egg-info
