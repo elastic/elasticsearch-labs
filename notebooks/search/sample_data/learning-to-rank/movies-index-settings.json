@@ -1,0 +1,47 @@
+{
+  "mappings": {
+    "properties": {
+        "id": {"type": "keyword"},
+        "title": {"type": "text", "analyzer": "english"},
+        "overview": {"type": "text", "analyzer": "english"},
+        "year": {"type": "integer"},
+        "budget": {"type": "integer"},
+        "votes": {"type": "integer"},
+        "rating": {"type": "float"},
+        "popularity": {"type": "float"},
+        "url": {"type": "keyword"},
+        "tags": {
+          "type": "text",
+          "analyzer": "english",
+          "fields": {
+              "keyword": {"type": "keyword"}
+          }
+        },
+        "genres": {
+          "type": "text",
+          "analyzer": "english",
+          "fields": {
+              "keyword": {"type": "keyword"}
+          }
+        },
+        "director": {
+          "type": "text",
+          "fields": {
+              "keyword": {"type": "keyword"}
+          }
+        },
+        "actors": {
+            "type": "text",
+            "fields": {
+                "keyword": {"type": "keyword"}
+            }
+        },
+        "characters": {
+          "type": "text",
+          "fields": {
+              "keyword": {"type": "keyword"}
+          }
+        }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+This product contains an adapted version of the "Movie Search Ranking Dataset (MSRD)" dataset, https://github.com/metarank/msrd/, by Metarank Labs Co.,
+https://github.com/metarank/msrd/, is licensed under CC BY, https://creativecommons.org/licenses/by/4.0/legalcode
