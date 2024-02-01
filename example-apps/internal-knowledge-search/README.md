@@ -51,7 +51,7 @@ The other one maps a source index to a corresponding logo.
 
 #### Data mapping
 
-The data mappings are located inside [config/documentsToSearchResultMappings.json](src/config/documentsToSearchResultMappings.json).
+The data mappings are located inside [config/documentsToSearchResultMappings.json](app-ui/src/config/documentsToSearchResultMappings.json).
 Each entry maps the fields of the documents to the search result UI component for a specific index. The mapping expects `title`, `created`, `previewText`, `fullText`, and `link` as keys.
 Specify a field name of the document you want to map for each key.
 
