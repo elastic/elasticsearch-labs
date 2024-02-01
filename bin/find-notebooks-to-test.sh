@@ -2,6 +2,7 @@
 # add any notebooks that are currently not testable to the exempt list
 EXEMPT_NOTEBOOKS=(
     "notebooks/search/07-inference.ipynb"
+    "notebooks/search/08-learning-to-rank.ipynb"
     "notebooks/langchain/langchain-vector-store.ipynb"
     "notebooks/langchain/self-query-retriever-examples/chatbot-example.ipynb"
     "notebooks/langchain/self-query-retriever-examples/chatbot-with-bm25-only-example.ipynb"

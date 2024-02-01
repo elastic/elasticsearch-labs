@@ -12,10 +12,15 @@ on:
       - notebooks/**
 jobs:
   notebook-tests:
+    strategy:
+      matrix:
+        es_stack:
+          - 8.11.4
+          - 8.12.0
     runs-on: ubuntu-latest
     services:
       elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es_stack }}
         env:
           discovery.type: single-node
           xpack.security.enabled: false
