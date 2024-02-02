@@ -1,0 +1,44 @@
+name: tests
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - notebooks/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - notebooks/**
+jobs:
+  notebook-tests:
+    strategy:
+      matrix:
+        es_stack:
+          - 8.11.4
+          - 8.12.0
+    runs-on: ubuntu-latest
+    services:
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es_stack }}
+        env:
+          discovery.type: single-node
+          xpack.security.enabled: false
+          xpack.security.http.ssl.enabled: false
+          xpack.license.self_generated.type: trial
+        ports:
+          - 9200:9200
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Setup nbtest
+        run: make nbtest
+      - name: Warm up
+        continue-on-error: true
+        run: sleep 30 && PATCH_ES=1 ELASTIC_CLOUD_ID=foo ELASTIC_API_KEY=bar bin/nbtest notebooks/search/00-quick-start.ipynb
+      - name: Run tests
+        run: PATCH_ES=1 FORCE_COLOR=1 make -s test
