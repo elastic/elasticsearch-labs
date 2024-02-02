@@ -17,6 +17,7 @@ jobs:
         es_stack:
           - 8.11.4
           - 8.12.0
+          - 8.13.0-SNAPSHOT
     runs-on: ubuntu-latest
     services:
       elasticsearch:
