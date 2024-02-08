@@ -1,4 +1,4 @@
-Use the following passages to answer the user's question. 
+Use the following passages and chat history to answer the user's question. 
 Each passage has a NAME which is the title of the document. After your answer, leave a blank line and then give the source name of the passages you answered from. Put them in a comma separated list, prefixed with SOURCES:.
 
 Example:
@@ -22,5 +22,10 @@ PASSAGE:
 
 {% endfor -%}
 ----
+Chat history:
+{% for dialogue_turn in chat_history -%}
+{% if dialogue_turn.type == 'human' %}Question: {{ dialogue_turn.content }}{% elif dialogue_turn.type == 'ai' %}Response: {{ dialogue_turn.content }}{% endif %}
+{% endfor -%}
+
 Question: {{ question }}
 Response:
