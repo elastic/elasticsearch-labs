@@ -4,18 +4,17 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 
-@app.get('/')
+@app.get("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.post('/')
+@app.post("/")
 def handle_search():
-    query = request.form.get('query', '')
-    return render_template(
-        'index.html', query=query, results=[], from_=0, total=0)
+    query = request.form.get("query", "")
+    return render_template("index.html", query=query, results=[], from_=0, total=0)
 
 
-@app.get('/document/<id>')
+@app.get("/document/<id>")
 def get_document(id):
-    return 'Document not found'
+    return "Document not found"

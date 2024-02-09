@@ -61,14 +61,16 @@ def main():
 
     print(f"Loading data from ${FILE}")
 
-    metadata_keys = ['name', 'summary', 'url', 'category', 'updated_at']
+    metadata_keys = ["name", "summary", "url", "category", "updated_at"]
     workplace_docs = []
-    with open(FILE, 'rt') as f:
+    with open(FILE, "rt") as f:
         for doc in json.loads(f.read()):
-            workplace_docs.append(Document(
-                page_content=doc['content'],
-                metadata={k: doc.get(k) for k in metadata_keys}
-            ))
+            workplace_docs.append(
+                Document(
+                    page_content=doc["content"],
+                    metadata={k: doc.get(k) for k in metadata_keys},
+                )
+            )
 
     print(f"Loaded {len(workplace_docs)} documents")
 
@@ -92,7 +94,7 @@ def main():
         index_name=INDEX,
         strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(model_id=ELSER_MODEL),
         bulk_kwargs={
-            'request_timeout': 60,
+            "request_timeout": 60,
         },
     )
 

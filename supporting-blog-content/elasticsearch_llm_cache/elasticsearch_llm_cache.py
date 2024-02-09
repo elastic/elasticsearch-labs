@@ -62,12 +62,13 @@ logger = logging.getLogger(__name__)
 
 
 class ElasticsearchLLMCache:
-    def __init__(self,
-                 es_client: Elasticsearch,
-                 index_name: Optional[str] = None,
-                 es_model_id: Optional[str] = 'sentence-transformers__all-distilroberta-v1',
-                 create_index=True
-                 ):
+    def __init__(
+        self,
+        es_client: Elasticsearch,
+        index_name: Optional[str] = None,
+        es_model_id: Optional[str] = "sentence-transformers__all-distilroberta-v1",
+        create_index=True,
+    ):
         """
         Initialize the ElasticsearchLLMCache instance.
 
@@ -77,14 +78,12 @@ class ElasticsearchLLMCache:
         :param create_index: Boolean to determine whether to create a new index; defaults to True.
         """
         self.es = es_client
-        self.index_name = index_name or 'llm_cache'
+        self.index_name = index_name or "llm_cache"
         self.es_model_id = es_model_id
         if create_index:
             self.create_index()
 
-    def create_index(self,
-                     dims: Optional[int] = 768
-                     ) -> Dict:
+    def create_index(self, dims: Optional[int] = 768) -> Dict:
         """
         Create the index if it does not already exist.
 
@@ -98,11 +97,12 @@ class ElasticsearchLLMCache:
                         "response": {"type": "text"},
                         "create_date": {"type": "date"},
                         "last_hit_date": {"type": "date"},
-                        "prompt_vector": {"type": "dense_vector",
-                                          "dims": dims,
-                                          "index": True,
-                                          "similarity": "dot_product"
-                                          }
+                        "prompt_vector": {
+                            "type": "dense_vector",
+                            "dims": dims,
+                            "index": True,
+                            "similarity": "dot_product",
+                        },
                     }
                 }
             }
@@ -110,10 +110,10 @@ class ElasticsearchLLMCache:
             self.es.indices.create(index=self.index_name, body=mappings, ignore=400)
             logger.info(f"Index {self.index_name} created.")
 
-            return {'cache_index': self.index_name, 'created_new': True}
+            return {"cache_index": self.index_name, "created_new": True}
         else:
             logger.info(f"Index {self.index_name} already exists.")
-            return {'cache_index': self.index_name, 'created_new': False}
+            return {"cache_index": self.index_name, "created_new": False}
 
     def update_last_hit_date(self, doc_id: str):
         """
@@ -121,19 +121,16 @@ class ElasticsearchLLMCache:
 
         :param doc_id: The ID of the document to update.
         """
-        update_body = {
-            "doc": {
-                "last_hit_date": datetime.now()
-            }
-        }
+        update_body = {"doc": {"last_hit_date": datetime.now()}}
         self.es.update(index=self.index_name, id=doc_id, body=update_body)
 
-    def query(self,
-              prompt_text: str,
-              similarity_threshold: Optional[float] = 0.5,
-              num_candidates: Optional[int] = 1000,
-              create_date_gte: Optional[str] = "now-1y/y"
-              ) -> dict:
+    def query(
+        self,
+        prompt_text: str,
+        similarity_threshold: Optional[float] = 0.5,
+        num_candidates: Optional[int] = 1000,
+        create_date_gte: Optional[str] = "now-1y/y",
+    ) -> dict:
         """
         Query the index to find similar prompts and update the `last_hit_date` for that document if a hit is found.
 
@@ -152,64 +149,40 @@ class ElasticsearchLLMCache:
                 "query_vector_builder": {
                     "text_embedding": {
                         "model_id": self.es_model_id,
-                        "model_text": prompt_text
+                        "model_text": prompt_text,
                     }
                 },
-                "filter": {
-                    "range": {
-                        "create_date": {
-                            "gte": create_date_gte
-
-                        }
-                    }
-                }
+                "filter": {"range": {"create_date": {"gte": create_date_gte}}},
             }
         ]
 
-        fields = [
-            "prompt",
-            "response"
-        ]
+        fields = ["prompt", "response"]
 
-        resp = self.es.search(index=self.index_name,
-                              knn=knn,
-                              fields=fields,
-                              size=1,
-                              source=False
-                              )
+        resp = self.es.search(
+            index=self.index_name, knn=knn, fields=fields, size=1, source=False
+        )
 
-        if resp['hits']['total']['value'] == 0:
+        if resp["hits"]["total"]["value"] == 0:
             return {}
         else:
-            doc_id = resp['hits']['hits'][0]['_id']
+            doc_id = resp["hits"]["hits"][0]["_id"]
             self.update_last_hit_date(doc_id)
-            return resp['hits']['hits'][0]['fields']
+            return resp["hits"]["hits"][0]["fields"]
 
-    def _generate_vector(self,
-                         prompt: str
-                         ) -> List[float]:
+    def _generate_vector(self, prompt: str) -> List[float]:
         """
         Generate a vector for a given prompt using Elasticsearch's text embedding.
 
         :param prompt: The text prompt to generate a vector for.
         :return: A list of floats representing the vector.
         """
-        docs = [
-            {
-                "text_field": prompt
-            }
-        ]
+        docs = [{"text_field": prompt}]
 
-        embedding = self.es.ml.infer_trained_model(model_id=self.es_model_id,
-                                                   docs=docs
-                                                   )
+        embedding = self.es.ml.infer_trained_model(model_id=self.es_model_id, docs=docs)
 
-        return embedding['inference_results'][0]['predicted_value']
+        return embedding["inference_results"][0]["predicted_value"]
 
-    def add(self, prompt: str,
-            response: str,
-            source: Optional[str] = None
-            ) -> Dict:
+    def add(self, prompt: str, response: str, source: Optional[str] = None) -> Dict:
         """
         Add a new document to the index.
 
@@ -226,12 +199,11 @@ class ElasticsearchLLMCache:
             "create_date": datetime.now(),
             "last_hit_date": datetime.now(),
             "prompt_vector": prompt_vector,
-            "source": source  # Optional
+            "source": source,  # Optional
         }
         try:
             self.es.index(index=self.index_name, document=doc)
-            return {'success': True}
+            return {"success": True}
         except Exception as e:
             logger.error(e)
-            return {'success': False,
-                    'error': e}
+            return {"success": False, "error": e}
