@@ -30,6 +30,10 @@ jobs:
         ports:
           - 9200:9200
     steps:
+      - name: Remove unwanted software  # to free up required disk space
+        uses: AdityaGarg8/remove-unwanted-software@v2
+        with:
+          remove-android: 'true'
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup python
