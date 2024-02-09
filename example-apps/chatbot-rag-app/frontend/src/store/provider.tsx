@@ -238,7 +238,7 @@ export const thunkActions = {
               dispatch(
                 actions.updateMessage({
                   id: conversationId,
-                  content: message.replace(/SOURCES: (.+)+/, ''),
+                  content: message.replace(/SOURCES:(.+)*/, ''),
                 })
               )
             }
@@ -300,8 +300,8 @@ const parseSources = (
   message: string
 ) => {
   message = message.replaceAll("\"", "");
-  const match = message.match(/SOURCES: (.+)+/)
-  if (match) {
+  const match = message.match(/SOURCES:(.+)*/)
+  if (match && match[1]) {
     return match[1].split(',').map(element => {
       return element.trim();
     });

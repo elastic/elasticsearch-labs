@@ -38,17 +38,21 @@ def ask_question(question, session_id):
         condense_question_prompt = render_template(
             'condense_question_prompt.txt', question=question,
             chat_history=chat_history.messages)
-        question = get_llm().invoke(condense_question_prompt).content
+        condensed_question = get_llm().invoke(condense_question_prompt).content
+    else:
+        condensed_question = question
 
+    current_app.logger.debug('Condensed question: %s', condensed_question)
     current_app.logger.debug('Question: %s', question)
 
-    docs = store.as_retriever().invoke(question)
+    docs = store.as_retriever().invoke(condensed_question)
     for doc in docs:
         doc_source = {**doc.metadata, 'page_content': doc.page_content}
         current_app.logger.debug('Retrieved document passage from: %s', doc.metadata['name'])
         yield f'data: {SOURCE_TAG} {json.dumps(doc_source)}\n\n'
 
-    qa_prompt = render_template('rag_prompt.txt', question=question, docs=docs)
+    qa_prompt = render_template('rag_prompt.txt', question=question, docs=docs,
+                                chat_history=chat_history.messages)
 
     answer = ''
     for chunk in get_llm().stream(qa_prompt):
