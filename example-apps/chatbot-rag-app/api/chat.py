@@ -36,31 +36,39 @@ def ask_question(question, session_id):
     if len(chat_history.messages) > 0:
         # create a condensed question
         condense_question_prompt = render_template(
-            'condense_question_prompt.txt', question=question,
-            chat_history=chat_history.messages)
+            "condense_question_prompt.txt",
+            question=question,
+            chat_history=chat_history.messages,
+        )
         condensed_question = get_llm().invoke(condense_question_prompt).content
     else:
         condensed_question = question
 
-    current_app.logger.debug('Condensed question: %s', condensed_question)
-    current_app.logger.debug('Question: %s', question)
+    current_app.logger.debug("Condensed question: %s", condensed_question)
+    current_app.logger.debug("Question: %s", question)
 
     docs = store.as_retriever().invoke(condensed_question)
     for doc in docs:
-        doc_source = {**doc.metadata, 'page_content': doc.page_content}
-        current_app.logger.debug('Retrieved document passage from: %s', doc.metadata['name'])
-        yield f'data: {SOURCE_TAG} {json.dumps(doc_source)}\n\n'
+        doc_source = {**doc.metadata, "page_content": doc.page_content}
+        current_app.logger.debug(
+            "Retrieved document passage from: %s", doc.metadata["name"]
+        )
+        yield f"data: {SOURCE_TAG} {json.dumps(doc_source)}\n\n"
 
-    qa_prompt = render_template('rag_prompt.txt', question=question, docs=docs,
-                                chat_history=chat_history.messages)
+    qa_prompt = render_template(
+        "rag_prompt.txt",
+        question=question,
+        docs=docs,
+        chat_history=chat_history.messages,
+    )
 
-    answer = ''
+    answer = ""
     for chunk in get_llm().stream(qa_prompt):
-        yield f'data: {chunk.content}\n\n'
+        yield f"data: {chunk.content}\n\n"
         answer += chunk.content
 
     yield f"data: {DONE_TAG}\n\n"
-    current_app.logger.debug('Answer: %s', answer)
+    current_app.logger.debug("Answer: %s", answer)
 
     chat_history.add_user_message(question)
     chat_history.add_ai_message(answer)

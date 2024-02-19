@@ -31,8 +31,7 @@ elif ELASTIC_CLOUD_ID:
         )
     elif ELASTIC_USERNAME and ELASTIC_PASSWORD:
         elasticsearch_client = Elasticsearch(
-            basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD),
-            cloud_id=ELASTIC_CLOUD_ID
+            basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD), cloud_id=ELASTIC_CLOUD_ID
         )
     else:
         raise ValueError(

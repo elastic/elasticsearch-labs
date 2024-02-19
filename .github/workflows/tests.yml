@@ -30,6 +30,14 @@ jobs:
         ports:
           - 9200:9200
     steps:
+      - name: Remove irrelevant software  # to free up required disk space
+        run: |
+          df -h
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup python
@@ -37,7 +45,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Setup nbtest
-        run: make nbtest
+        run: make install-nbtest
       - name: Warm up
         continue-on-error: true
         run: sleep 30 && PATCH_ES=1 ELASTIC_CLOUD_ID=foo ELASTIC_API_KEY=bar bin/nbtest notebooks/search/00-quick-start.ipynb

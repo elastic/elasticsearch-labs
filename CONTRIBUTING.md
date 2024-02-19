@@ -5,23 +5,33 @@ If you would like to contribute new example apps to the `elasticsearch-labs` rep
 ## Before you start
 
 Prior to opening a pull request, please:
-- Create an issue to [discuss the scope of your proposal](https://github.com/elastic/elasticsearch-labs/issues). We are happy to provide guidance to make for a pleasant contribution experience.
-- Sign the [Contributor License Agreement](https://www.elastic.co/contributor-agreement/). We are not asking you to assign copyright to us, but to give us the right to distribute your code without restriction. We ask this of all contributors in order to assure our users of the origin and continuing existence of the code. You only need to sign the CLA once.
+1. Create an issue to [discuss the scope of your proposal](https://github.com/elastic/elasticsearch-labs/issues). We are happy to provide guidance to make for a pleasant contribution experience.
+2. Sign the [Contributor License Agreement](https://www.elastic.co/contributor-agreement/). We are not asking you to assign copyright to us, but to give us the right to distribute your code without restriction. We ask this of all contributors in order to assure our users of the origin and continuing existence of the code. You only need to sign the CLA once.
+3. Install pre-commit...
 
 ### Pre-commit hook
 
 This repository has a pre-commit hook that ensures that your contributed code follows our guidelines. It is strongly recommended that you install the pre-commit hook on your locally cloned repository, as that will allow you to check the correctness of your submission without having to wait for our continuous integration build. To install the pre-commit hook, clone this repository and then run the following command from its top-level directory:
 
 ```bash
-make pre-commit
+make install
 ```
 
 If you do not have access to the `make` utility, you can also install the pre-commit hook with Python:
 
 ```bash
 python -m venv .venv
+.venv/bin/pip install -qqq -r requirements-dev.txt
 .venv/bin/pre-commit install
 ```
+
+Now it can happen that you get an error when you try to commit, for example if your code or your notebook was not formatted with the [black formatter](https://github.com/psf/black). In this case, please run this command from the repo root:
+
+```bash
+make pre-commit
+```
+
+If you now include the changed files in your commit, it should succeed.
 
 ## General instruction
 

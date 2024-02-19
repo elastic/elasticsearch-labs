@@ -10,10 +10,8 @@ CORS(app)
 
 
 def get_identities_index(search_app_name):
-    search_app = elasticsearch_client.search_application.get(
-        name=search_app_name)
-    identities_indices = elasticsearch_client.indices.get(
-        index=".search-acl-filter*")
+    search_app = elasticsearch_client.search_application.get(name=search_app_name)
+    identities_indices = elasticsearch_client.indices.get(index=".search-acl-filter*")
     secured_index = [
         app_index
         for app_index in search_app["indices"]
@@ -36,7 +34,8 @@ def api_index():
 @app.route("/api/default_settings", methods=["GET"])
 def default_settings():
     return {
-        "elasticsearch_endpoint": os.getenv("ELASTICSEARCH_URL") or "http://localhost:9200"
+        "elasticsearch_endpoint": os.getenv("ELASTICSEARCH_URL")
+        or "http://localhost:9200"
     }
 
 
@@ -44,11 +43,13 @@ def default_settings():
 def search(text):
     response = requests.request(
         method="POST",
-        url=os.getenv("ELASTICSEARCH_URL") + '/' + text,
+        url=os.getenv("ELASTICSEARCH_URL") + "/" + text,
         data=request.get_data(),
         allow_redirects=False,
-        headers={"Authorization": request.headers.get(
-            "Authorization"), "Content-Type": "application/json"}
+        headers={
+            "Authorization": request.headers.get("Authorization"),
+            "Content-Type": "application/json",
+        },
     )
 
     return response.content
@@ -59,8 +60,7 @@ def personas():
     try:
         search_app_name = request.args.get("app_name")
         identities_index = get_identities_index(search_app_name)
-        response = elasticsearch_client.search(
-            index=identities_index, size=1000)
+        response = elasticsearch_client.search(index=identities_index, size=1000)
         hits = response["hits"]["hits"]
         personas = [x["_id"] for x in hits]
         personas.append("admin")
@@ -77,9 +77,8 @@ def personas():
 def indices():
     try:
         search_app_name = request.args.get("app_name")
-        search_app = elasticsearch_client.search_application.get(
-            name=search_app_name)
-        return search_app['indices']
+        search_app = elasticsearch_client.search_application.get(name=search_app_name)
+        return search_app["indices"]
 
     except Exception as e:
         current_app.logger.warn(
@@ -118,8 +117,7 @@ def api_key():
         if persona == "admin":
             role_descriptor = default_role_descriptor
         else:
-            identity = elasticsearch_client.get(
-                index=identities_index, id=persona)
+            identity = elasticsearch_client.get(index=identities_index, id=persona)
             permissions = identity["_source"]["query"]["template"]["params"][
                 "access_control"
             ]
@@ -161,12 +159,14 @@ def api_key():
                 }
             }
         api_key = elasticsearch_client.security.create_api_key(
-            name=search_app_name+"-internal-knowledge-search-example-"+persona, expiration="1h", role_descriptors=role_descriptor)
-        return {"api_key": api_key['encoded']}
+            name=search_app_name + "-internal-knowledge-search-example-" + persona,
+            expiration="1h",
+            role_descriptors=role_descriptor,
+        )
+        return {"api_key": api_key["encoded"]}
 
     except Exception as e:
-        current_app.logger.warn(
-            "Encountered error %s while fetching api key", e)
+        current_app.logger.warn("Encountered error %s while fetching api key", e)
         raise e
 
 
