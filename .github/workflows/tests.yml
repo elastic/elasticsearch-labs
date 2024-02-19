@@ -30,10 +30,12 @@ jobs:
         ports:
           - 9200:9200
     steps:
-      - name: Remove unwanted software  # to free up required disk space
-        uses: AdityaGarg8/remove-unwanted-software@v2
-        with:
-          remove-android: 'true'
+      - name: Remove irrelevant software  # to free up required disk space
+        run: |
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup python
