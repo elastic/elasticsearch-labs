@@ -16,6 +16,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/gemini/vector-search-gemini-elastic.ipynb"
     "notebooks/integrations/gemini/qa-langchain-gemini-elasticsearch.ipynb"
     "notebooks/integrations/openai/openai-KNN-RAG.ipynb"
+    "notebooks/integrations/gemma/rag-gemma-huggingface-elastic.ipynb"
 )
 
 ALL_NOTEBOOKS=$(find notebooks -name "*.ipynb" | grep -v "_nbtest" | grep -v ".ipynb_checkpoints" | sort)
