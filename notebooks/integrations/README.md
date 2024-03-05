@@ -5,3 +5,5 @@ The following subfolders contain notebooks that demonstrate how to integrate pop
   - [OpenAI](./openai/README.md)
   - [Hugging Face](./hugging-face/README.md)
   - [LlamaIndex](./llama-index/README.md)
+  - [Gemini](./gemini)
+  - [Gemma](./gemma)
