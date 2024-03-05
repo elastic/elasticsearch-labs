@@ -1,4 +1,4 @@
-from langchain.vectorstores import ElasticsearchStore
+from langchain_elasticsearch import ElasticsearchStore
 from llm_integrations import get_llm
 from elasticsearch_client import (
     elasticsearch_client,

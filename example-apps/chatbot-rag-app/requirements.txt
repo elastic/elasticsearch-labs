@@ -13,7 +13,9 @@ aiosignal==1.3.1
 annotated-types==0.5.0
     # via pydantic
 anyio==3.7.1
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-core
 async-timeout==4.0.3
     # via aiohttp
 attrs==23.1.0
@@ -27,9 +29,7 @@ botocore==1.31.61
     #   boto3
     #   s3transfer
 build==1.0.3
-    # via
-    #   -r requirements.in
-    #   pip-tools
+    # via pip-tools
 cachetools==5.3.1
     # via google-auth
 certifi==2023.7.22
@@ -48,8 +48,10 @@ dataclasses-json==0.5.14
     # via langchain
 elastic-transport==8.4.0
     # via elasticsearch
-elasticsearch==8.9.0
-    # via -r requirements.in
+elasticsearch==8.12.1
+    # via
+    #   -r requirements.in
+    #   langchain-elasticsearch
 exceptiongroup==1.2.0
     # via -r requirements.in
 flask==2.3.3
@@ -126,13 +128,21 @@ jmespath==1.0.1
     #   boto3
     #   botocore
 jsonpatch==1.33
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-core
 jsonpointer==2.4
     # via jsonpatch
 langchain==0.0.333
     # via -r requirements.in
-langsmith==0.0.65
-    # via langchain
+langchain-core==0.1.23
+    # via langchain-elasticsearch
+langchain-elasticsearch==0.1.0
+    # via -r requirements.in
+langsmith==0.0.87
+    # via
+    #   langchain
+    #   langchain-core
 markupsafe==2.1.3
     # via
     #   jinja2
@@ -150,15 +160,17 @@ numexpr==2.8.5
 numpy==1.25.2
     # via
     #   langchain
+    #   langchain-elasticsearch
     #   numexpr
     #   shapely
 openai==0.27.9
     # via -r requirements.in
-packaging==23.1
+packaging==23.2
     # via
     #   build
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
+    #   langchain-core
     #   marshmallow
 pip-tools==7.3.0
     # via -r requirements.in
@@ -186,13 +198,12 @@ pyasn1-modules==0.3.0
 pydantic==2.3.0
     # via
     #   langchain
+    #   langchain-core
     #   langsmith
 pydantic-core==2.6.3
     # via pydantic
 pyproject-hooks==1.0.0
-    # via
-    #   -r requirements.in
-    #   build
+    # via build
 python-dateutil==2.8.2
     # via
     #   botocore
@@ -200,7 +211,9 @@ python-dateutil==2.8.2
 python-dotenv==1.0.0
     # via -r requirements.in
 pyyaml==6.0.1
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-core
 regex==2023.10.3
     # via tiktoken
 requests==2.31.0
@@ -209,6 +222,7 @@ requests==2.31.0
     #   google-cloud-bigquery
     #   google-cloud-storage
     #   langchain
+    #   langchain-core
     #   langsmith
     #   openai
     #   tiktoken
@@ -225,7 +239,9 @@ sniffio==1.3.0
 sqlalchemy==2.0.20
     # via langchain
 tenacity==8.2.3
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-core
 tiktoken==0.5.1
     # via -r requirements.in
 tqdm==4.66.1
@@ -250,9 +266,7 @@ wheel==0.41.3
 yarl==1.9.2
     # via aiohttp
 zipp==3.17.0
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
