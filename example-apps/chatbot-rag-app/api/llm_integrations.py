@@ -1,4 +1,6 @@
 from langchain.chat_models import ChatOpenAI, ChatVertexAI, AzureChatOpenAI, BedrockChat
+from langchain_core.messages import HumanMessage
+from langchain_mistralai.chat_models import ChatMistralAI
 import os
 import vertexai
 import boto3
@@ -53,12 +55,21 @@ def init_bedrock(temperature):
         model_kwargs={"temperature": temperature},
     )
 
+def init_mistralai_chat(temperature):
+    MISTRAL_API_ENDPOINT = os.getenv("MISTRAL_API_ENDPOINT")
+    MISTRALAI_API_KEY = os.getenv("MISTRALAI_API_KEY")
+    MISTRAL_MODEL = os.getenv("MISTRAL_MODEL")
+    return ChatMistralAI(
+        endpoint=MISTRAL_API_ENDPOINT, mistral_api_key=MISTRALAI_API_KEY, model=MISTRAL_MODEL, temperature=temperature
+    )
+
 
 MAP_LLM_TYPE_TO_CHAT_MODEL = {
     "azure": init_azure_chat,
     "bedrock": init_bedrock,
     "openai": init_openai_chat,
     "vertex": init_vertex_chat,
+    "mistralai": init_mistralai_chat,
 }
 
 
