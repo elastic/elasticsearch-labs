@@ -20,6 +20,9 @@ grpcio-status
 # BedRock dependencies
 boto3
 
+# Mistral dependencies
+langchain-mistralai
+
 # TBD if these are still needed
 exceptiongroup
 importlib-metadata

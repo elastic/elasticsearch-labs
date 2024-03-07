@@ -133,13 +133,13 @@ jsonpatch==1.33
     #   langchain-core
 jsonpointer==2.4
     # via jsonpatch
-langchain==0.0.333
+langchain==0.1.9
     # via -r requirements.in
 langchain-core==0.1.23
     # via langchain-elasticsearch
 langchain-elasticsearch==0.1.0
     # via -r requirements.in
-langsmith==0.0.87
+langsmith==0.1.10
     # via
     #   langchain
     #   langchain-core
@@ -195,12 +195,12 @@ pyasn1==0.5.0
     #   rsa
 pyasn1-modules==0.3.0
     # via google-auth
-pydantic==2.3.0
+pydantic==2.5.2
     # via
     #   langchain
     #   langchain-core
     #   langsmith
-pydantic-core==2.6.3
+pydantic-core==2.14.5
     # via pydantic
 pyproject-hooks==1.0.0
     # via build
@@ -268,6 +268,8 @@ yarl==1.9.2
 zipp==3.17.0
     # via importlib-metadata
 
+langchain-mistralai==0.0.5
+    # via -r requirements.in
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
