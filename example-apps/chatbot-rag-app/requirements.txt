@@ -135,7 +135,7 @@ jsonpointer==2.4
     # via jsonpatch
 langchain==0.1.9
     # via -r requirements.in
-langchain-core==0.1.23
+langchain-core==0.1.27
     # via langchain-elasticsearch
 langchain-elasticsearch==0.1.0
     # via -r requirements.in
