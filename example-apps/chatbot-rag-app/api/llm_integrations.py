@@ -3,8 +3,8 @@ from langchain_community.chat_models import (
     ChatVertexAI,
     AzureChatOpenAI,
     BedrockChat,
+    ChatCohere,
 )
-from langchain_core.messages import HumanMessage
 from langchain_mistralai.chat_models import ChatMistralAI
 import os
 import vertexai
@@ -76,12 +76,21 @@ def init_mistral_chat(temperature):
     return ChatMistralAI(**kwargs)
 
 
+def init_cohere_chat(temperature):
+    COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+    COHERE_MODEL = os.getenv("COHERE_MODEL")
+    return ChatCohere(
+        cohere_api_key=COHERE_API_KEY, model=COHERE_MODEL, temperature=temperature
+    )
+
+
 MAP_LLM_TYPE_TO_CHAT_MODEL = {
     "azure": init_azure_chat,
     "bedrock": init_bedrock,
     "openai": init_openai_chat,
     "vertex": init_vertex_chat,
     "mistral": init_mistral_chat,
+    "cohere": init_cohere_chat,
 }
 
 

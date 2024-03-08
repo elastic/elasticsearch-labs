@@ -64,7 +64,10 @@ def ask_question(question, session_id):
 
     answer = ""
     for chunk in get_llm().stream(qa_prompt):
-        yield f"data: {chunk.content}\n\n"
+        content = chunk.content.replace(
+            "\n", " "
+        )  # the stream can get messed up with newlines
+        yield f"data: {content}\n\n"
         answer += chunk.content
 
     yield f"data: {DONE_TAG}\n\n"
