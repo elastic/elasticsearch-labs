@@ -119,7 +119,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
 
 ### Mistral AI
 
-To use Mistral AI you need to set the following environment variables. The app has been tested with Mistral Large Model deployed through Microsoft Azure. More information [here]https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-mistral
+To use Mistral AI you need to set the following environment variables. The app has been tested with Mistral Large Model deployed through Microsoft Azure. More information [here](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-mistral).
 
 ```
 export LLM_TYPE=mistral
