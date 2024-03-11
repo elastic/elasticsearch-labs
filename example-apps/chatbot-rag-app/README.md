@@ -119,12 +119,12 @@ export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
 
 ### Mistral AI
 
-To use Mistral AI you need to set the following environment variables:
+To use Mistral AI you need to set the following environment variables. The app has been tested with Mistral Large Model deployed through Microsoft Azure. More information [here]https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-mistral
 
 ```
 export LLM_TYPE=mistral
 export MISTRAL_API_KEY=...
-export MISTRAL_API_ENDPOINT=...  # optional
+export MISTRAL_API_ENDPOINT=...  # should be of the form https://<endpoint>.<region>.inference.ai.azure.com
 export MISTRAL_MODEL=...  # optional
 ```
 

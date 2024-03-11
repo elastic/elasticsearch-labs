@@ -64,7 +64,7 @@ def init_bedrock(temperature):
 def init_mistral_chat(temperature):
     MISTRAL_API_ENDPOINT = os.getenv("MISTRAL_API_ENDPOINT")
     MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-    MISTRAL_MODEL = os.getenv("MISTRAL_MODEL")
+    MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "Mistral-large")
     kwargs = {
         "mistral_api_key": MISTRAL_API_KEY,
         "temperature": temperature,
