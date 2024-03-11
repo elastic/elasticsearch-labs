@@ -128,6 +128,16 @@ export MISTRAL_API_ENDPOINT=...  # should be of the form https://<endpoint>.<reg
 export MISTRAL_MODEL=...  # optional
 ```
 
+### Cohere
+
+To use Cohere you need to set the following environment variables:
+
+```
+export LLM_TYPE=cohere
+export COHERE_API_KEY=...
+export COHERE_MODEL=...  # optional
+```
+
 ## Running the App
 
 Once you have indexed data into the Elasticsearch index, there are two ways to run the app: via Docker or locally. Docker is advised for testing & production use. Locally is advised for development.
