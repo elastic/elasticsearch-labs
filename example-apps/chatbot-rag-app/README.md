@@ -51,13 +51,13 @@ ES_INDEX_CHAT_HISTORY=workplace-app-docs-chat-history
 
 ## Connecting to LLM
 
-We support three LLM providers: Azure, OpenAI and Bedrock.
-
-To use one of them, you need to set the `LLM_TYPE` environment variable:
+We support several LLM providers. To use one of them, you need to set the `LLM_TYPE` environment variable. For example:
 
 ```sh
 export LLM_TYPE=azure
 ```
+
+The following sub-sections define the configuration requirements of each supported LLM.
 
 ### OpenAI
 
@@ -72,7 +72,7 @@ You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.
 
 ### Azure OpenAI
 
-If you are using Azure LLM, you will need to set the following environment variables:
+If you want to use Azure LLM, you will need to set the following environment variables:
 
 ```sh
 export LLM_TYPE=azure
@@ -84,7 +84,7 @@ export OPENAI_ENGINE=... # deployment name in Azure
 
 ### Bedrock LLM
 
-To use Bedrock LLM you need to set the following environment variables in order to AWS.
+To use Bedrock LLM you need to set the following environment variables in order to authenticate to AWS.
 
 ```sh
 export LLM_TYPE=bedrock
@@ -108,13 +108,34 @@ region=...
 
 ### Vertex AI
 
-To use Vertex AI you need to set the following environment variables. More infos [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
+To use Vertex AI you need to set the following environment variables. More information [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
 
 ```sh
 export LLM_TYPE=vertex
 export VERTEX_PROJECT_ID=<gcp-project-id>
 export VERTEX_REGION=<gcp-region> # Default is us-central1
 export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
+```
+
+### Mistral AI
+
+To use Mistral AI you need to set the following environment variables. The app has been tested with Mistral Large Model deployed through Microsoft Azure. More information [here](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-mistral).
+
+```
+export LLM_TYPE=mistral
+export MISTRAL_API_KEY=...
+export MISTRAL_API_ENDPOINT=...  # should be of the form https://<endpoint>.<region>.inference.ai.azure.com
+export MISTRAL_MODEL=...  # optional
+```
+
+### Cohere
+
+To use Cohere you need to set the following environment variables:
+
+```
+export LLM_TYPE=cohere
+export COHERE_API_KEY=...
+export COHERE_MODEL=...  # optional
 ```
 
 ## Running the App

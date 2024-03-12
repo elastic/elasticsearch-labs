@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch
-from langchain.memory import ElasticsearchChatMessageHistory
+from langchain_elasticsearch import ElasticsearchChatMessageHistory
 
 import os
 

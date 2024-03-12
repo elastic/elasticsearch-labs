@@ -4,6 +4,7 @@ pip-tools
 # core dependencies
 elasticsearch
 langchain
+langchain-elasticsearch
 tiktoken
 flask
 flask-cors
@@ -18,6 +19,12 @@ grpcio-status
 
 # BedRock dependencies
 boto3
+
+# Mistral dependencies
+langchain-mistralai
+
+# Cohere dependencies
+cohere
 
 # TBD if these are still needed
 exceptiongroup

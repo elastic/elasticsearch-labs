@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch, NotFoundError
-from langchain.vectorstores import ElasticsearchStore
+from langchain_elasticsearch import ElasticsearchStore
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
