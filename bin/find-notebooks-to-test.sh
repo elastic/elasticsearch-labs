@@ -1,6 +1,7 @@
 #!/bin/bash
 # add any notebooks that are currently not testable to the exempt list
 EXEMPT_NOTEBOOKS=(
+    "notebooks/esql/esql-getting-started.ipynb"
     "notebooks/search/07-inference.ipynb"
     "notebooks/search/08-learning-to-rank.ipynb"
     "notebooks/langchain/langchain-vector-store.ipynb"
