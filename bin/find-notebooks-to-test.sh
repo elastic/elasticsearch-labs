@@ -13,6 +13,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/generative-ai/question-answering.ipynb"
     "notebooks/generative-ai/chatbot.ipynb"
     "notebooks/integrations/amazon-bedrock/langchain-qa-example.ipynb"
+    "notebooks/integrations/cohere/inference-cohere.ipynb"
     "notebooks/integrations/llama-index/intro.ipynb"
     "notebooks/integrations/gemini/vector-search-gemini-elastic.ipynb"
     "notebooks/integrations/gemini/qa-langchain-gemini-elasticsearch.ipynb"
