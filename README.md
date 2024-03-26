@@ -40,7 +40,8 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 ### Document Chunking
 
 - [`Document Chunking with Ingest Pipelines`](./notebooks/document-chunking/with-index-pipelines.ipynb)
-- ['Document Chunking with LangChain Splitters'](./notebooks/document-chunking/with-langchain-splitters.ipynb)
+- [`Document Chunking with LangChain Splitters`](./notebooks/document-chunking/with-langchain-splitters.ipynb)
+- [`Calculating tokens for Semantic Search (ELSER and E5)`](./notebooks/document-chunking/tokenization.ipynb)
 
 ### Search
 
@@ -57,6 +58,7 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`loading-model-from-hugging-face.ipynb`](./notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb)
 - [`openai-semantic-search-RAG.ipynb`](./notebooks/integrations/openai/openai-KNN-RAG.ipynb)
 - [`amazon-bedrock-langchain-qa-example.ipynb`](notebooks/integrations/amazon-bedrock/langchain-qa-example.ipynb)
+- [`Semantic Search using the Inference API with the Cohere Service`](/notebooks/integrations/cohere/inference-cohere.ipynb)
 
 ### Model Upgrades
 
