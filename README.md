@@ -17,6 +17,8 @@ Elastic enables all modern search experiences powered by AI/ML.
 # Apps
 
 - [Chatbot RAG App](./example-apps/chatbot-rag-app/)
+- [Internal Knowledge Search](./examples-apps/internal-knowledge-search)
+- [Relevance Workbench](./example-apps/relevance-workbench)
 
 # Python notebooks 📒
 
