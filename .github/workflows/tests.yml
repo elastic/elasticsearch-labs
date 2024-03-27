@@ -10,14 +10,15 @@ on:
       - main
     paths:
       - notebooks/**
+      - .github/workflows/tests.yml
 jobs:
   notebook-tests:
     strategy:
       matrix:
         es_stack:
-          - 8.11.4
-          - 8.12.0
-          - 8.13.0-SNAPSHOT
+          - 8.12.2
+          - 8.13.0
+          - 8.14.0-SNAPSHOT
     runs-on: ubuntu-latest
     services:
       elasticsearch:
