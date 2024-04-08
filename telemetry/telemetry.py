@@ -52,6 +52,6 @@ def enable_telemetry(client, notebook_name=None):
         notebook_name = get_notebook_name()
 
     client.options(
-        headers={**client._headers, "user_agent": f"searchlabs/{notebook_name}"}
+        headers={**client._headers, "User-Agent": f"searchlabs/{notebook_name}"}
     )
     print(f'Telemetry enabled for "{notebook_name}". Thank you!')
