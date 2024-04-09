@@ -15,6 +15,7 @@
 # No other data is collected by this script.
 
 import os
+import sys
 
 
 def get_notebook_name():
@@ -42,16 +43,32 @@ def get_notebook_name():
     return name.split(".ipynb")[0].lower()
 
 
+def get_notebook_platform():
+    """Return the platform under which the notebook is running."""
+    platform = "Unknown"
+
+    if "VSCODE_PID" in os.environ:
+        platform = "VSCode"
+    elif "COLAB_RELEASE_TAG" in os.environ:
+        platform = "Colab"
+    elif "ipykernel" in sys.modules:
+        version = ".".join([str(n) for n in sys.modules["ipykernel"].version_info])
+        platform = "IPython; ipykernel " + version
+    return platform
+
+
 def enable_telemetry(client, notebook_name=None):
     """Enable telemetry for the given elasticsearch client instance."""
     if "nbtest" in os.environ.get("_", ""):
         # no telemetry for tests
         return
 
+    platform = get_notebook_platform()
     if notebook_name is None:
         notebook_name = get_notebook_name()
 
-    client.options(
-        headers={**client._headers, "User-Agent": f"searchlabs/{notebook_name}"}
+    client = client.options(
+        headers={"user-agent": f"searchlabs/{notebook_name} ({platform})"}
     )
     print(f'Telemetry enabled for "{notebook_name}". Thank you!')
+    return client
