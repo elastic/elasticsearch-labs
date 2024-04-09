@@ -61,7 +61,7 @@ def enable_telemetry(client, notebook_name=None):
     """Enable telemetry for the given elasticsearch client instance."""
     if "nbtest" in os.environ.get("_", ""):
         # no telemetry for tests
-        return
+        return client
 
     platform = get_notebook_platform()
     if notebook_name is None:
