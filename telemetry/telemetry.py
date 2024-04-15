@@ -7,15 +7,15 @@
 # What data is collected?
 #
 # This script configures your elasticsearch client to send a custom user agent
-# string with requests made to Elastic Cloud. The new user agent only contains
-# the name of the notebook. Here is an example user agent:
+# string with requests made to Elastic Cloud. The new user agent contains
+# the name of the notebook and the platform you are running it on. Here is an
+# example user agent:
 #
 #     searchlabs-py/00-quick-start (Colab)
 #
 # No other data is collected by this script.
 
 import os
-import sys
 
 SEARCHLABS_USER_AGENT = "searchlabs-py"
 
