@@ -10,12 +10,14 @@
 # string with requests made to Elastic Cloud. The new user agent only contains
 # the name of the notebook. Here is an example user agent:
 #
-#     searchlabs/00-quick-start
+#     searchlabs-py/00-quick-start (Colab)
 #
 # No other data is collected by this script.
 
 import os
 import sys
+
+SEARCHLABS_USER_AGENT = "searchlabs-py"
 
 
 def get_notebook_name():
@@ -51,9 +53,10 @@ def get_notebook_platform():
         platform = "VSCode"
     elif "COLAB_RELEASE_TAG" in os.environ:
         platform = "Colab"
-    elif "ipykernel" in sys.modules:
-        version = ".".join([str(n) for n in sys.modules["ipykernel"].version_info])
-        platform = "IPython; ipykernel " + version
+    elif "JPY_SESSION_NAME" in os.environ:
+        platform = "Jupyter"
+    else:
+        platform = "Unknown"
     return platform
 
 
@@ -68,7 +71,7 @@ def enable_telemetry(client, notebook_name=None):
         notebook_name = get_notebook_name()
 
     client = client.options(
-        headers={"user-agent": f"searchlabs/{notebook_name} ({platform})"}
+        headers={"user-agent": f"{SEARCHLABS_USER_AGENT}/{notebook_name} ({platform})"}
     )
     print(f'Telemetry enabled for "{notebook_name}". Thank you!')
     return client
