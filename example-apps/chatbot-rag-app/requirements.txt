@@ -67,7 +67,9 @@ exceptiongroup==1.2.0
 fastavro==1.9.4
     # via cohere
 filelock==3.13.1
-    # via huggingface-hub
+    # via
+    #   huggingface-hub
+    #   transformers
 flask==2.3.3
     # via
     #   -r requirements.in
@@ -135,7 +137,9 @@ httpcore==1.0.4
 httpx==0.25.2
     # via mistralai
 huggingface-hub==0.21.4
-    # via tokenizers
+    # via
+    #   tokenizers
+    #   transformers
 idna==3.4
     # via
     #   anyio
@@ -204,6 +208,7 @@ numpy==1.25.2
     #   pandas
     #   pyarrow
     #   shapely
+    #   transformers
 openai==0.27.9
     # via -r requirements.in
 orjson==3.9.15
@@ -218,6 +223,7 @@ packaging==23.2
     #   huggingface-hub
     #   langchain-core
     #   marshmallow
+    #   transformers
 pandas==2.2.1
     # via mistralai
 pip-tools==7.3.0
@@ -270,8 +276,11 @@ pyyaml==6.0.1
     #   langchain
     #   langchain-community
     #   langchain-core
+    #   transformers
 regex==2023.10.3
-    # via tiktoken
+    # via
+    #   tiktoken
+    #   transformers
 requests==2.31.0
     # via
     #   cohere
@@ -285,10 +294,13 @@ requests==2.31.0
     #   langsmith
     #   openai
     #   tiktoken
+    #   transformers
 rsa==4.9
     # via google-auth
 s3transfer==0.7.0
     # via boto3
+safetensors==0.4.3
+    # via transformers
 shapely==2.0.2
     # via google-cloud-aiplatform
 six==1.16.0
@@ -309,11 +321,16 @@ tenacity==8.2.3
 tiktoken==0.5.1
     # via -r requirements.in
 tokenizers==0.15.2
-    # via langchain-mistralai
+    # via
+    #   langchain-mistralai
+    #   transformers
 tqdm==4.66.1
     # via
     #   huggingface-hub
     #   openai
+    #   transformers
+transformers==4.39.3
+    # via -r requirements.in
 typing-extensions==4.7.1
     # via
     #   huggingface-hub

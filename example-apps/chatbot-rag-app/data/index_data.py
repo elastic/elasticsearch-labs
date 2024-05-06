@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch, NotFoundError
 from langchain_elasticsearch import ElasticsearchStore
 from langchain.docstore.document import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from transformers import BertTokenizerFast
 from dotenv import load_dotenv
 import json
 import os
@@ -56,6 +56,13 @@ def install_elser():
         )
 
 
+def splitter(text, tokenizer, chunk_size, chunk_overlap):
+    token_ids = tokenizer.encode(text)
+    for i in range(0, len(token_ids), chunk_overlap):
+        chunk_ids = token_ids[i : i + chunk_size]
+        yield tokenizer.decode(chunk_ids)
+
+
 def main():
     install_elser()
 
@@ -74,11 +81,22 @@ def main():
 
     print(f"Loaded {len(workplace_docs)} documents")
 
-    text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=512, chunk_overlap=256
-    )
+    print("Loading tokenizer and splitting documents")
 
-    docs = text_splitter.transform_documents(workplace_docs)
+    bert_tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
+    chunk_size = 512
+    chunk_overlap = 256
+
+    docs = [
+        Document(page_content=chunk, metadata=doc.metadata)
+        for doc in workplace_docs
+        for chunk in splitter(
+            doc.page_content,
+            tokenizer=bert_tokenizer,
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+        )
+    ]
 
     print(f"Split {len(workplace_docs)} documents into {len(docs)} chunks")
 

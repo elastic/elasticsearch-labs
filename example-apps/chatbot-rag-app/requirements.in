@@ -10,6 +10,9 @@ flask
 flask-cors
 python-dotenv
 
+# Tokenizer dependencies
+transformers
+
 # OpenAI dependencies
 openai
 
