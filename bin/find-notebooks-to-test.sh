@@ -22,7 +22,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/gemma/rag-gemma-huggingface-elastic.ipynb"
     "notebooks/integrations/azure-openai/vector-search-azure-openai-elastic.ipynb"
     "notebooks/enterprise-search/app-search-engine-exporter.ipynb"
-    "notebooks/ingestion-and-chunking/json-chunking-ingest.ipynb"
+    # "notebooks/ingestion-and-chunking/json-chunking-ingest.ipynb"
     "notebooks/ingestion-and-chunking/pdf-chunking-ingest.ipynb"
     "notebooks/ingestion-and-chunking/website-chunking-ingest.ipynb"
 )
