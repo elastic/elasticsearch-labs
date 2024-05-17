@@ -47,8 +47,5 @@ jobs:
           python-version: '3.10'
       - name: Setup nbtest
         run: make install-nbtest
-      - name: Warm up
-        continue-on-error: true
-        run: sleep 30 && PATCH_ES=1 ELASTIC_CLOUD_ID=foo ELASTIC_API_KEY=bar bin/nbtest notebooks/search/00-quick-start.ipynb
       - name: Run tests
         run: PATCH_ES=1 FORCE_COLOR=1 make -s test
