@@ -1,0 +1,23 @@
+{
+    "name": "introduction-to-data-loading-in-elasticsearch-with-nodejs",
+    "version": "1.0.0",
+    "description": "A simple script for loading data in Elasticsearch",
+    "main": "loading_data_into_a_index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/JessicaGarson/Introduction-to-Data-Loading-in-Elasticsearch-with-Nodejs.git"
+    },
+    "author": "Jessica Garson",
+    "license": "Apache-2.0",
+    "bugs": {
+      "url": "https://github.com/JessicaGarson/Introduction-to-Data-Loading-in-Elasticsearch-with-Nodejs/issues"
+    },
+    "homepage": "https://github.com/JessicaGarson/Introduction-to-Data-Loading-in-Elasticsearch-with-Nodejs#readme",
+    "dependencies": {
+      "@elastic/elasticsearch": "^8.12.0",
+      "axios": "^0.21.1"
+    }
+  }
