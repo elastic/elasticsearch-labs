@@ -88,7 +88,13 @@ To run all supported notebooks under this tool, run the following from the top-l
 make test
 ```
 
-To add a new notebook to our automated testing, you will need to modify the `Makefile` in the directory where your notebook is located. If there is no Makefile in your directory, you can use the one in the `notebooks/search` directory as a model to create one, and then add a reference to it in the top-level `Makefile`.
+If you want to test under a previous release of Elasticsearch, you can define the `ES_STACK` variable with the target version so that notebooks that are not intended for that or previous versions are skipped. For example, here is how to only run tests for the 8.12 release of Elasticsearch:
+
+```bash
+ES_STACK=8.12 make test
+```
+
+Any notebooks that are added in subdirectories under `notebooks` are automatically picked up for testing. Notebooks that are known to not be suitable for automatic testing should be added to the list of exempt tests in the `bin/find_notebooks_to_test.sh` script. If the notebook should never be tested, add it to the `EXEMPT_NOTEBOOKS` list. If the notebook should be tested only under some versions of Elasticsearch, then add it to the appropriate versioned exemption list. For example, the `EXEMPT_NOTEBOOKS__8_12` list should include notebooks that are not be tested under releases 8.12 and older. New versioned lists are automatically recognized and can be added as needed.
 
 ## Contributing to example applications 💻
 
