@@ -27,12 +27,11 @@ EXEMPT_NOTEBOOKS=(
 )
 
 # Per-version testing exceptions
-# use variables named EXEMPT_NOTEBOOKS__{major}_[minor}_{patch} to list
-# notebooks that cannot run on that stack version or older
+# use variables named EXEMPT_NOTEBOOKS__{major}_[minor} to list notebooks that
+# cannot run on that stack version or older
 # Examples:
 # EXEMPT_NOTEBOOKS__8 for notebooks that must be skipped on all versions 8.x and older
-# EXEMPT_NOTEBOOKS__8_14 for notebooks that must skipped on versions 8.14 and older
-# EXEMPT_NOTEBOOKS__8_13_2 for notebooks that must be skipped on versions 8.13.2 and older
+# EXEMPT_NOTEBOOKS__8_12 for notebooks that must skipped on versions 8.12 and older
 
 EXEMPT_NOTEBOOKS__8_12=(
     # Add any notebooks that must be skipped on versions 8.12 or older here
@@ -43,7 +42,7 @@ EXEMPT_NOTEBOOKS__8_12=(
 )
 
 # this function parses a version given as M[.N[.P]] or M[_N[_P]] into a numeric form
-function parse_version { echo "$@" | awk -F'[._]' '{ printf("%02d%02d%02d\n", $1, $2, $3); }'; }
+function parse_version { echo "$@" | awk -F'[._]' '{ printf("%02d%02d\n", $1, $2); }'; }
 
 # this is the version CI is running
 ci_version=$(parse_version ${ES_STACK:-99.99})
