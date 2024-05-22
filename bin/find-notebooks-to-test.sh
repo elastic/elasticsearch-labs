@@ -34,11 +34,12 @@ EXEMPT_NOTEBOOKS=(
 # EXEMPT_NOTEBOOKS__8_14 for notebooks that must skipped on versions 8.14 and older
 # EXEMPT_NOTEBOOKS__8_13_2 for notebooks that must be skipped on versions 8.13.2 and older
 
-EXEMPT_NOTEBOOKS__8_13=(
-    # Add any notebooks that must be skipped on versions 8.13 or older here
-    "notebooks/search/03-ELSER.ipynb"
-    "notebooks/model-upgrades/upgrading-index-to-use-elser.ipynb"
-    "notebooks/langchain/langchain-vector-store-using-elser.ipynb"
+EXEMPT_NOTEBOOKS__8_12=(
+    # Add any notebooks that must be skipped on versions 8.12 or older here
+    "notebooks/document-chunking/with-index-pipelines.ipynb"
+    "notebooks/document-chunking/with-langchain-splitters.ipynb"
+    "notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb"
+    "notebooks/langchain/langchain-using-own-model.ipynb"
 )
 
 # this function parses a version given as M[.N[.P]] or M[_N[_P]] into a numeric form
