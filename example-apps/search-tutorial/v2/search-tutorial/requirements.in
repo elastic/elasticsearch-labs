@@ -2,4 +2,4 @@ pip-tools
 flask
 python-dotenv
 elasticsearch
-sentence-transformers
+sentence-transformers==2.7.0
