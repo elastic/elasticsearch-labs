@@ -16,9 +16,9 @@ jobs:
     strategy:
       matrix:
         es_stack:
-          - 8.12.2
-          - 8.13.0
-          - 8.14.0-SNAPSHOT
+          - 8.13.4
+          - 8.14.0
+          - 8.15.0-SNAPSHOT
     runs-on: ubuntu-latest
     services:
       elasticsearch:
@@ -31,7 +31,7 @@ jobs:
         ports:
           - 9200:9200
     steps:
-      - name: Remove irrelevant software  # to free up required disk space
+      - name: Remove irrelevant software # to free up required disk space
         run: |
           df -h
           sudo rm -rf /opt/ghc
@@ -44,7 +44,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Setup nbtest
         run: make install-nbtest
       - name: Warm up
