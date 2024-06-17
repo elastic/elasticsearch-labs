@@ -82,3 +82,11 @@ In the [`06-synonyms-api.ipynb`](./06-synonyms-api.ipynb) notebook, you'll learn
 - Configure an index to use search-time synonyms
 - Update synonyms in real time
 - Run queries that are enhanced by synonyms
+
+### 9. Semantic text
+
+In the [`09-semantic-text.ipynb`](./09-semantic-text.ipynb) notebook, you'll learn how to:
+
+- Quickly get started with semantic search with the `semantic_text` field type
+- Use the `semantic` query
+- Implement hybrid search
