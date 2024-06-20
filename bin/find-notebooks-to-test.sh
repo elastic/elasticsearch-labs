@@ -23,6 +23,8 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/openai/openai-KNN-RAG.ipynb"
     "notebooks/integrations/openai/function-calling.ipynb"
     "notebooks/integrations/gemma/rag-gemma-huggingface-elastic.ipynb"
+    "notebooks/integrations/llama3/rag-elastic-llama3-elser.ipynb"
+    "notebooks/integrations/llama3/rag-elastic-llama3.ipynb"
     "notebooks/integrations/azure-openai/vector-search-azure-openai-elastic.ipynb"
     "notebooks/enterprise-search/app-search-engine-exporter.ipynb"
 )
