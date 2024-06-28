@@ -42,6 +42,11 @@ EXEMPT_NOTEBOOKS__8_12=(
     "notebooks/langchain/langchain-using-own-model.ipynb"
 )
 
+EXEMPT_NOTEBOOKS__8_14=(
+    # Add any notebooks that must be skipped on versions 8.14 or older here
+    "notebooks/search/09-semantic-text.ipynb"
+)
+
 # this function parses a version given as M[.N[.P]] or M[_N[_P]] into a numeric form
 function parse_version { echo "$@" | awk -F'[._]' '{ printf("%02d%02d\n", $1, $2); }'; }
 
