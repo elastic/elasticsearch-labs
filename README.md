@@ -29,6 +29,13 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)
 - [`chatbot.ipynb`](./notebooks/generative-ai/chatbot.ipynb)
 
+### Playground RAG Notebooks
+
+Try out Playground in Kibana with the following notebooks:
+
+- [`OpenAI Example`](./notebooks/playground-examples/openai-elasticsearch-client.ipynb)
+- [`Anthropic Claude 3 Example`](./notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb)
+
 ### LangChain
 
 - [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)

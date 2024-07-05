@@ -26,7 +26,10 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/llama3/rag-elastic-llama3-elser.ipynb"
     "notebooks/integrations/llama3/rag-elastic-llama3.ipynb"
     "notebooks/integrations/azure-openai/vector-search-azure-openai-elastic.ipynb"
-    "notebooks/enterprise-search/app-search-engine-exporter.ipynb"
+    "notebooks/enterprise-search/app-search-engine-exporter.ipynb",
+    "notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb",
+    "notebooks/playground-examples/openai-elasticsearch-client.ipynb",
+
 )
 
 # Per-version testing exceptions
