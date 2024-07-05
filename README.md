@@ -62,6 +62,9 @@ Try out Playground in Kibana with the following notebooks:
 - [`04-multilingual.ipynb`](./notebooks/search/04-multilingual.ipynb)
 - [`05-query-rules.ipynb`](./notebooks/search/05-query-rules.ipynb)
 - [`06-synonyms-api.ipynb`](./notebooks/search/06-synonyms-api.ipynb)
+- [`07-inference.ipynb`](./notebooks/search/07-inference.ipynb)
+- [`08-learning-to-rank.ipynb`](./notebooks/search/08-learning-to-rank.ipynb)
+- [`09-semantic-text.ipynb`](./notebooks/search/09-semantic-text.ipynb)
 
 ### Integrations
 
