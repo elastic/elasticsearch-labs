@@ -1,0 +1,2 @@
+masks:
+^.* ElasticsearchWarning: .*$
