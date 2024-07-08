@@ -49,7 +49,10 @@ EXEMPT_NOTEBOOKS__8_12=(
 
 EXEMPT_NOTEBOOKS__8_14=(
     # Add any notebooks that must be skipped on versions 8.14 or older here
-    "notebooks/search/09-semantic-text.ipynb"
+    "notebooks/search/09-semantic-text.ipynb",
+    # This notebook has the text_expansion deprecation notice for 8.15. 
+    # Only running on 8.15 so includes the deprecation notice and newer so the local output is the same as CI
+    "notebooks/langchain/langchain-vector-store-using-elser.ipynb",
 )
 
 # this function parses a version given as M[.N[.P]] or M[_N[_P]] into a numeric form
