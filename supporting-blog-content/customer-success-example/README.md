@@ -1,15 +1,24 @@
 Example of AI Conversational Search using Elasticsearch, OpenAI and Vercel. 
 
+![View of the application](images/app.png)
+
 # Load the data
 
 Export the following environment variables: 
 - ELASTICSEARCH_URL: You can find it in your Elasticsearch deployment
 - ES_API_KEY: Your Elasticsearch API Key
 
-Run the script ingest.py: `python ingest.py` to index the data. 
-
+Run the script ingest.py: [`python ingest.py`](ingest.py) to index the data. 
 
 # Chat application
+
+## High-level architecture 
+
+The application built in Next.JS implements a AI Conversational Search using Next.JS for the stack framework, Elasticsearch as a retrieval system and OpenAI for the LLM.
+
+In the diagram, you can see how the different components interact together when an user ask a question. 
+
+![High-level architecture](images/architecture.png)
 
 ## Install dependencies
 
