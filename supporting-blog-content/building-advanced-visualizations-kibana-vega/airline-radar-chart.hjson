@@ -1,0 +1,437 @@
+{
+  $schema: https://vega.github.io/schema/vega/v5.json
+  description: A radar chart example, showing multiple dimensions in a radial layout.
+
+  // Sizing settings
+  width: 550
+  height: 500
+  padding: 40
+
+  // Tooltips position workaround which reverts to using Vega style tooltips over Kibana HTML style tooltips where the positioning is not quite right
+  config: {
+    kibana: {
+      tooltips: false
+    }
+  }
+
+
+// Disabling autosizing
+  autosize: {
+    type: none
+    contains: padding
+  }
+
+  /* Dynamic values to drive interactive behavior
+  see https://vega.github.io/vega/docs/signals/*/
+  signals: [
+    // Chart radius based on width for sizing
+    {
+      name: radius
+      update: width / 3
+    }
+    // Tooltip
+    {
+      name: tooltip
+      value: {
+      }
+      on: [
+        {
+          events: @category-point:mouseover
+          update: datum
+        }
+        {
+          events: @category-point:mouseout
+          update: "{}"
+        }
+      ]
+    }
+    // Update dashboard filters on click event
+    {
+      name: point_click
+      on: [
+        {
+          events: {
+            source: scope
+            type: click
+            markname: value-text
+          }
+          update:
+            '''
+            kibanaAddFilter({
+            "match_phrase": {
+            "Carrier": datum.datum.carrier
+            }
+            }, "kibana_sample_data_flights", "selected-carrier")
+            '''
+        }
+      ]
+    }
+  ]
+
+  // Define the data source
+  data: [
+    {
+      name: source
+      url: {
+        %context%: true
+        %timefield%: timestamp
+        index: kibana_sample_data_flights
+        body: {
+          aggs: {
+            destinations_and_carriers: {
+              multi_terms: {
+                terms: [
+                  {
+                    field: DestCityName
+                  }
+                  {
+                    field: Carrier
+                  }
+                ]
+              }
+            }
+          }
+          size: 0
+        }
+      }
+      /*
+For our graph, we only need the list of bucket values.  Use the format.property to discard everything else.
+*/
+      format: {
+        property: aggregations.destinations_and_carriers.buckets
+      }
+    }
+    /* Data source where the key array from the multi_terms aggregation is split into two separate fields 
+    see https://vega.github.io/vega/docs/transforms/formula/ */
+    {
+      name: table
+      source: source
+      transform: [
+        {
+          type: formula
+          expr: datum.key[0]
+          as: destination
+        }
+        {
+          type: formula
+          expr: datum.key[1]
+          as: carrier
+        }
+        {
+          type: impute
+          groupby: [
+            carrier
+          ]
+          key: destination
+          field: doc_count
+          method: value
+          value: 0
+        }
+        {
+          type: collect
+          sort: {
+            field: destination
+            order: descending
+          }
+        }
+      ]
+    }
+    /* Data source representing the keys for the outer segment of the radar
+    see https://vega.github.io/vega-lite/docs/aggregate.html*/
+    {
+      name: keys
+      source: table
+      transform: [
+        {
+          type: aggregate
+          groupby: [
+            destination
+          ]
+        }
+      ]
+    }
+  ]
+
+  /* Scales to determine positioning and encoding for the radar graph, outside keys and colors
+  see https://vega.github.io/vega/docs/scales/ */
+  scales: [
+    {
+      name: angular
+      type: point
+      range: {
+        signal: "[-PI, PI]"
+      }
+      padding: 0.5
+      domain: {
+        data: table
+        field: destination
+      }
+    }
+    {
+      name: radial
+      type: linear
+      range: {
+        signal: "[0, radius]"
+      }
+      zero: true
+      nice: false
+      domain: {
+        data: table
+        field: doc_count
+      }
+      domainMin: 0
+    }
+    {
+      name: color
+      type: ordinal
+      domain: {
+        data: table
+        field: carrier
+      }
+      range: {
+        /* Using the in-build category10 color scheme for each carrier
+        see https://vega.github.io/vega/docs/schemes/ for details*/
+        scheme: category10
+      }
+    }
+  ]
+
+  // Initial x and y position
+  encode: {
+    enter: {
+      x: {
+        signal: radius
+      }
+      y: {
+        signal: radius
+      }
+    }
+  }
+
+  // Visualization elements
+  marks: [
+    /* Creating a container mark for the other elements
+    see https://vega.github.io/vega/docs/marks/group */
+    {
+      type: group
+      name: categories
+      zindex: 1
+      from: {
+        /* Partition the data for each group by carrier 
+        see https://vega.github.io/vega/docs/marks/#facet*/
+        facet: {
+          data: table
+          name: facet
+          groupby: [
+            carrier
+          ]
+        }
+      }
+      // Underlying marks
+      marks: [
+        // Inner colored area segments for each airline
+        {
+          type: line
+          name: category-line
+          from: {
+            data: facet
+          }
+          encode: {
+            enter: {
+              interpolate: {
+                value: linear-closed
+              }
+              x: {
+                signal: scale('radial', datum.doc_count) * cos(scale('angular', datum.destination))
+              }
+              y: {
+                signal: scale('radial', datum.doc_count) * sin(scale('angular', datum.destination))
+              }
+              stroke: {
+                scale: color
+                field: carrier
+              }
+              strokeWidth: {
+                value: 1
+              }
+              fill: {
+                scale: color
+                field: carrier
+              }
+              fillOpacity: {
+                value: 0.2
+              }
+            }
+          }
+        }
+        // Text labels for the number of flights for each carrier
+        {
+          type: text
+          name: value-text
+          from: {
+            data: category-line
+          }
+          encode: {
+            enter: {
+              x: {
+                signal: datum.x
+              }
+              y: {
+                signal: datum.y
+              }
+              // Tooltip configuration (tied to mouse-event signals above)
+              tooltip: {
+                signal: "{'Destination': datum.datum.destination, 'Carrier': datum.datum.carrier, 'Count': datum.datum.doc_count}"
+              }
+              text: {
+                signal: datum.datum.doc_count
+              }
+              align: {
+                value: center
+              }
+              baseline: {
+                value: middle
+              }
+              fill: {
+                value: white
+              }
+              fontWeight: {
+                value: bold
+              }
+            }
+          }
+        }
+      ]
+    }
+    // Diagonal lines to center of radar chart
+    {
+      type: rule
+      name: radial-grid
+      from: {
+        data: keys
+      }
+      zindex: 0
+      encode: {
+        enter: {
+          x: {
+            value: 0
+          }
+          y: {
+            value: 0
+          }
+          x2: {
+            signal: radius * cos(scale('angular', datum.destination))
+          }
+          y2: {
+            signal: radius * sin(scale('angular', datum.destination))
+          }
+          stroke: {
+            value: lightgray
+          }
+          strokeWidth: {
+            value: 1
+          }
+        }
+      }
+    }
+    // Outside destination labels
+    {
+      type: text
+      name: key-label
+      from: {
+        data: keys
+      }
+      zindex: 1
+      encode: {
+        enter: {
+          x: {
+            signal: (radius + 5) * cos(scale('angular', datum.destination))
+          }
+          y: {
+            signal: (radius + 5) * sin(scale('angular', datum.destination))
+          }
+          text: {
+            field: destination
+          }
+          align: [
+            {
+              test: abs(scale('angular', datum.destination)) > PI / 2
+              value: right
+            }
+            {
+              value: left
+            }
+          ]
+          baseline: [
+            {
+              test: scale('angular', datum.destination) > 0
+              value: top
+            }
+            {
+              test: scale('angular', datum.destination) == 0
+              value: middle
+            }
+            {
+              value: bottom
+            }
+          ]
+          fill: {
+            value: white
+          }
+          fontWeight: {
+            value: bold
+          }
+        }
+      }
+    }
+    // Outside line
+    {
+      type: line
+      name: outer-line
+      from: {
+        data: radial-grid
+      }
+      encode: {
+        enter: {
+          interpolate: {
+            value: linear-closed
+          }
+          x: {
+            field: x2
+          }
+          y: {
+            field: y2
+          }
+          stroke: {
+            value: lightgray
+          }
+          strokeWidth: {
+            value: 1
+          }
+        }
+      }
+    }
+  ]
+
+  /* Carrier legend 
+  see https://vega.github.io/vega/docs/legends/ */
+  legends: [
+    {
+      fill: color
+      orient: none
+      title: Carrier
+      encode: {
+        legend: {
+          update: {
+            x: {
+              value: 250
+            }
+            y: {
+              value: -150
+            }
+          }
+        }
+      }
+    }
+  ]
+}
