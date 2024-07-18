@@ -117,6 +117,23 @@ For our graph, we only need the list of bucket values.  Use the format.property 
           expr: datum.key[1]
           as: carrier
         }
+        {
+          type: impute
+          groupby: [
+            carrier
+          ]
+          key: destination
+          field: doc_count
+          method: value
+          value: 0
+        }
+        {
+          type: collect
+          sort: {
+            field: destination
+            order: descending
+          }
+        }
       ]
     }
     /* Data source representing the keys for the outer segment of the radar
@@ -242,7 +259,7 @@ For our graph, we only need the list of bucket values.  Use the format.property 
                 field: carrier
               }
               fillOpacity: {
-                value: 0.5
+                value: 0.2
               }
             }
           }
