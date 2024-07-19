@@ -2,6 +2,17 @@ Example of AI Conversational Search using Elasticsearch, OpenAI and Vercel.
 
 ![View of the application](images/app.png)
 
+# Pre-requisites
+
+The application requires the following to run locally: 
+
+- Node 18+
+- Python 3.11+
+
+You will also need an Elasticsearch serverless project or and Elasticsearch deployment version 8.15 minimum. 
+
+Finally you need a paid account with OpenAI to get an API Key. 
+
 # Load the data
 
 Export the following environment variables: 
