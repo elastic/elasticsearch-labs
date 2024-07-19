@@ -35,7 +35,6 @@ async function findRelevantContent(question: string) {
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-
     const result = await streamText({
       model: openai('gpt-4-turbo'),
       system: `You are a customer service assistant, please be concise in your answer. Check your knowledge base before answering any questions.
@@ -52,7 +51,6 @@ export async function POST(req: Request) {
         }),
       },
     });
-
     // Respond with the stream
     return result.toAIStreamResponse();
   } catch (error) {
