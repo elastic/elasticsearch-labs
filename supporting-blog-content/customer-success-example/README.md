@@ -1,6 +1,6 @@
 Example of AI Conversational Search using Elasticsearch, OpenAI and Vercel. 
 
-![View of the application](images/app.png)
+<img src="images/app.png" width="400px" />
 
 # Pre-requisites
 
