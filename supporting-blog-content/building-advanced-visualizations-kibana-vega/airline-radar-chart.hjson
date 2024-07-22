@@ -120,7 +120,8 @@ For our graph, we only need the list of bucket values.  Use the format.property 
         {
           type: impute
           groupby: [
-            carrier
+            carrier,
+            destination
           ]
           key: destination
           field: doc_count
