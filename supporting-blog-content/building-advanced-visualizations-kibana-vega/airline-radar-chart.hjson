@@ -117,6 +117,8 @@ For our graph, we only need the list of bucket values.  Use the format.property 
           expr: datum.key[1]
           as: carrier
         }
+        /* impute processor performs imputation, which is the statistical process of 
+        replacing missing data with substituted values */
         {
           type: impute
           groupby: [
