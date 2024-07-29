@@ -14,7 +14,7 @@ To run this demo successfully, you will need an Elasticsearch deployment (> 8.11
 
 ## Deploy Elasticsearch in Elastic Cloud
 
-If you don't have an Elastic Cloud account, you can start by signing up for a [free Elastic Cloud trial](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-samples). After creating an account, you’ll have an active subscription, and you’ll be prompted to create your first deployment.
+If you don't have an Elastic Cloud account, you can start by signing up for a [free Elastic Cloud trial](https://cloud.elastic.co/registration?onboarding_token=vectorsearch&utm_source=github&utm_content=elasticsearch-labs-samples). After creating an account, you’ll have an active subscription, and you’ll be prompted to create your first deployment.
 
 Follow the steps to Create a new deployment. For more details, refer to [Create a deployment](https://www.elastic.co/guide/en/cloud/current/ec-create-deployment.html) in the Elastic Cloud documentation.
 
