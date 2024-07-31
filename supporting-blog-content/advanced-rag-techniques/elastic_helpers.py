@@ -12,17 +12,19 @@ logger = logging.getLogger(__name__)
 
 class ESConnector:
 
-    def __init__(self, cloud_id: str, credentials: Optional[Tuple[str, str]] = None):
+    def __init__(self, hosts: List[str], credentials: Optional[Tuple[str, str]] = None, use_ssl: bool = True):
         """
         Initialize the ESConnector.
 
         Args:
-            es_url (str): The URL of the Elasticsearch cluster.
+            hosts (List[str]): A list of Elasticsearch host URLs.
             credentials (Optional[Tuple[str, str]]): A tuple containing the username and password for authentication.
+            use_ssl (bool): Whether to use SSL for the connection. Defaults to True.
 
         """
-        self.cloud_id=cloud_id
+        self.hosts = hosts
         self.credentials = credentials
+        self.use_ssl = use_ssl
         self.conn = self.create_es_connection()
 
     def create_es_connection(self) -> Elasticsearch:
@@ -32,13 +34,24 @@ class ESConnector:
         Returns:
             Elasticsearch: An Elasticsearch client instance.
         """
-        username,password=self.credentials[0],self.credentials[1]
-        es = Elasticsearch(
-            cloud_id=self.cloud_id,
-            basic_auth=(username, password)
-        )
-        logger.info(f"Connection created for cloud_id: {self.cloud_id}")
+        if self.credentials:
+            username, password = self.credentials
+            es = Elasticsearch(
+                hosts=self.hosts,
+                basic_auth=(username, password),
+                # use_ssl=self.use_ssl,
+                verify_certs=True
+            )
+        else:
+            es = Elasticsearch(
+                hosts=self.hosts,
+                # use_ssl=self.use_ssl,
+                verify_certs=True
+            )
+        
+        logger.info(f"Connection created for hosts: {self.hosts}")
         return es
+
 
     def ping(self) -> None:
         if self.conn.ping():
