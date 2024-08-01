@@ -439,35 +439,47 @@ class ESQueryMaker(ESConnector):
             should_clauses = self.parse_or_query(query_text, text_fields)
 
             search_body = {
+                # KNN search component
                 "knn": {
-                    "field": vector_field,
-                    "query_vector": query_vector,
-                    "k": num_candidates,
-                    "num_candidates": num_candidates
+                    "field": vector_field,  # The field containing the document vectors
+                    "query_vector": query_vector,  # The query vector to compare against
+                    "k": num_candidates,  # Number of nearest neighbors to retrieve
+                    "num_candidates": num_candidates  # Number of candidates to consider
                 },
                 "query": {
                     "bool": {
+                        # Must clause: Documents MUST satisfy this condition
                         "must": [
                             {
                                 "bool": {
+                                    # Should clauses: At least one of these conditions should match
                                     "should": should_clauses,
+                                    # Ensures at least one 'should' clause matches
                                     "minimum_should_match": 1
                                 }
                             }
                         ],
+                        # Should clause: Boosts relevance but doesn't exclude documents
                         "should": [
                             {
+                                # Custom scoring using a script
                                 "script_score": {
+                                    # Match all documents (script will handle scoring)
                                     "query": {"match_all": {}},
                                     "script": {
+                                        # Script to combine vector similarity and text relevance
                                         "source": """
+                                        # Calculate vector similarity (cosine similarity + 1)
                                         double vector_score = cosineSimilarity(params.query_vector, params.vector_field) + 1.0;
+                                        # Get the text-based relevance score
                                         double text_score = _score;
+                                        # Combine scores: 70% vector similarity, 30% text relevance
                                         return 0.7 * vector_score + 0.3 * text_score;
                                         """,
+                                        # Parameters passed to the script
                                         "params": {
-                                            "query_vector": query_vector,
-                                            "vector_field": vector_field
+                                            "query_vector": query_vector,  # Query vector for similarity calculation
+                                            "vector_field": vector_field  # Field containing document vectors
                                         }
                                     }
                                 }
@@ -476,7 +488,7 @@ class ESQueryMaker(ESConnector):
                     }
                 }
             }
-            
+
             response = self.conn.search(index=index_name, body=search_body, size=num_results)
             logger.info(f"Hybrid search executed on index: {index_name} with text query: {query_text}")
             return response, search_body
