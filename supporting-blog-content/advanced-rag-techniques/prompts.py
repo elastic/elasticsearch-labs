@@ -33,16 +33,20 @@ Guidelines:
 1. Analyze the user's question carefully.
 2. Generate ONLY a query string suitable for Elasticsearch's match query.
 3. Focus on key terms and concepts from the question.
-4. Include synonyms or related terms that might be in relevant documents.
-5. Use simple Elasticsearch query string syntax if helpful (e.g., OR, AND).
+4. Include synonyms, related terms, and various word forms that might be in relevant documents:
+   - Include common synonyms and closely related concepts
+   - Consider different tenses of verbs (e.g., walk, walks, walked, walking)
+   - Include singular and plural forms of nouns
+   - Add common abbreviations or acronyms if applicable
+5. Use simple Elasticsearch query string syntax if helpful (e.g., OR).
 6. Do not use advanced Elasticsearch features or syntax.
 7. Do not include any explanations, comments, or additional text.
 8. Provide only the query string, nothing else.
 
 For the question "What is Clickthrough Data?", we would expect a response like:
-clickthrough data OR click-through data OR click through rate OR CTR OR user clicks OR ad clicks OR search engine results OR web analytics
+clickthrough data OR click-through data OR click through rate OR CTR OR user clicks OR ad clicks OR search engine results OR web analytics OR clicking OR clicked OR click OR clicks OR engagement OR interaction OR conversion OR traffic
 
-AND operator is not allowed. Use only OR.
+Use only OR as the operator. AND is not allowed.
 
 User Question:
 [The user's question will be inserted here]
