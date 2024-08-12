@@ -11,6 +11,10 @@ The following notebooks are available:
 4. [Multilingual semantic search](#4-multilingual-semantic-search)
 5. [Query rules](#5-query-rules)
 6. [Synonyms API quick start](#6-synonyms-api-quick-start)
+7. [Inferencee](#7-inference)
+8. [Learning to rank](#8-learning-to-rank)
+9. [Semantic text](#9-semantic-text)
+10. [Semantic reranking with Cohere reranker](#10-semantic-reranking-retriever-cohere)
 
 ## Notebooks
 
@@ -83,6 +87,10 @@ In the [`06-synonyms-api.ipynb`](./06-synonyms-api.ipynb) notebook, you'll learn
 - Update synonyms in real time
 - Run queries that are enhanced by synonyms
 
+### 7. Inference
+
+### 8. Learning to rank
+
 ### 9. Semantic text
 
 In the [`09-semantic-text.ipynb`](./09-semantic-text.ipynb) notebook, you'll learn how to:
@@ -90,3 +98,10 @@ In the [`09-semantic-text.ipynb`](./09-semantic-text.ipynb) notebook, you'll lea
 - Quickly get started with semantic search with the `semantic_text` field type
 - Use the `semantic` query
 - Implement hybrid search
+
+### 10. Semantic reranking with Cohere reranker
+
+In the [`10-semantic-reranking-retriever-cohere.ipynb`](./10-semantic-reranking-retriever-cohere.ipynb) notebook, you'll learn how to:
+
+- Use the inference API to create an inference endpoint for reranking
+- Use a `retriever` query to search and rerank the results

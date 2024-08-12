@@ -5,6 +5,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/esql/esql-getting-started.ipynb"
     "notebooks/search/07-inference.ipynb"
     "notebooks/search/08-learning-to-rank.ipynb"
+    "notebooks/search/10-semantic-reranking-retriever-cohere.ipynb"
     "notebooks/images/image-similarity.ipynb"
     "notebooks/langchain/langchain-vector-store.ipynb"
     "notebooks/langchain/self-query-retriever-examples/chatbot-example.ipynb"
@@ -37,7 +38,7 @@ EXEMPT_NOTEBOOKS=(
 # cannot run on that stack version or older
 # Examples:
 # EXEMPT_NOTEBOOKS__8 for notebooks that must be skipped on all versions 8.x and older
-# EXEMPT_NOTEBOOKS__8_12 for notebooks that must skipped on versions 8.12 and older
+# EXEMPT_NOTEBOOKS__8_12 for notebooks that must be skipped on versions 8.12 and older
 
 EXEMPT_NOTEBOOKS__8_12=(
     # Add any notebooks that must be skipped on versions 8.12 or older here
