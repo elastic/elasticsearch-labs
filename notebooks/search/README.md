@@ -14,7 +14,7 @@ The following notebooks are available:
 7. [Inferencee](#7-inference)
 8. [Learning to rank](#8-learning-to-rank)
 9. [Semantic text](#9-semantic-text)
-10. [Semantic reranking](#10-semantic-reranking)
+10. [Semantic reranking with Cohere reranker](#10-semantic-reranking-retriever-cohere)
 
 ## Notebooks
 
@@ -99,9 +99,9 @@ In the [`09-semantic-text.ipynb`](./09-semantic-text.ipynb) notebook, you'll lea
 - Use the `semantic` query
 - Implement hybrid search
 
-### 10. Semantic reranking
+### 10. Semantic reranking with Cohere reranker
 
-In the [`10-semantic-reranking.ipynb`](./10-semantic-reranking.ipynb) notebook, you'll learn how to:
+In the [`10-semantic-reranking-retriever-cohere.ipynb`](./10-semantic-reranking-retriever-cohere.ipynb) notebook, you'll learn how to:
 
 - Use the inference API to create an inference endpoint for reranking
 - Use a `retriever` query to search and rerank the results
