@@ -65,7 +65,11 @@ Try out Playground in Kibana with the following notebooks:
 - [`07-inference.ipynb`](./notebooks/search/07-inference.ipynb)
 - [`08-learning-to-rank.ipynb`](./notebooks/search/08-learning-to-rank.ipynb)
 - [`09-semantic-text.ipynb`](./notebooks/search/09-semantic-text.ipynb)
+
+#### Semantic reranking
+
 - [`10-semantic-reranking-retriever-cohere.ipynb`](./notebooks/search/10-semantic-reranking-retriever-cohere.ipynb)
+- [`11-semantic-reranking-hugging-face.ipynb`](./notebooks/search/11-semantic-reranking-hugging-face.ipynb)
 
 ### Integrations
 
