@@ -31,7 +31,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/enterprise-search/app-search-engine-exporter.ipynb",
     "notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb",
     "notebooks/playground-examples/openai-elasticsearch-client.ipynb",
-
+    "notebooks/integrations/cohere/updated-cohere-elasticsearch-inference-api.ipynb",
 )
 
 # Per-version testing exceptions
