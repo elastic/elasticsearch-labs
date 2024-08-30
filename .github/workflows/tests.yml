@@ -14,6 +14,7 @@ on:
 jobs:
   notebook-tests:
     strategy:
+      fail-fast: false
       matrix:
         es_stack:
           - 8.14.2
