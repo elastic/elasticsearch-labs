@@ -1,4 +1,4 @@
-from langchain_elasticsearch import ElasticsearchStore
+from langchain_elasticsearch import ElasticsearchStore, SparseVectorStrategy
 from llm_integrations import get_llm
 from elasticsearch_client import (
     elasticsearch_client,
@@ -20,7 +20,7 @@ DONE_TAG = "[DONE]"
 store = ElasticsearchStore(
     es_connection=elasticsearch_client,
     index_name=INDEX,
-    strategy=ElasticsearchStore.SparseVectorRetrievalStrategy(model_id=ELSER_MODEL),
+    strategy=SparseVectorStrategy(model_id=ELSER_MODEL),
 )
 
 
