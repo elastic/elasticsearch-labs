@@ -29,6 +29,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/enterprise-search/app-search-engine-exporter.ipynb",
     "notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb",
     "notebooks/playground-examples/openai-elasticsearch-client.ipynb",
+    "notebooks/integrations/hugging-face/huggingface-integration-millions-of-documents-with-cohere-reranking.ipynb",
 
 )
 
