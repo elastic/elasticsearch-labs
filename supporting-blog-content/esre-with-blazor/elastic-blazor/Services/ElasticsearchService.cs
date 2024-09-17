@@ -186,6 +186,22 @@ namespace BlazorApp.Services
                 var retrieverQuery = BuildHybridQuery(searchTerm, selectedFacets);
                 var multiMatchQuery = BuildMultiMatchQuery(searchTerm, selectedFacets);
                 var semanticQuery = BuildSemanticQuery(searchTerm, selectedFacets);
+                
+                /**
+                 * * Hybrid Search
+                 */
+                var response = await _client.SearchAsync<BookDoc>(s =>
+                    s.Index("elastic-blazor-books")
+                        .Retriever(retrieverQuery)
+                        .Aggregations(aggs =>
+                            aggs.Add("Authors", agg => agg.Terms(t => t.Field(p => p.Authors)))
+                                .Add(
+                                    "Categories",
+                                    agg => agg.Terms(t => t.Field(p => p.Categories))
+                                )
+                                .Add("Status", agg => agg.Terms(t => t.Field(p => p.Status)))
+                        )
+                );
 
                 /**
                  * * MultiMatch Search
@@ -218,22 +234,6 @@ namespace BlazorApp.Services
                 //                 .Add("Status", agg => agg.Terms(t => t.Field(p => p.Status)))
                 //         )
                 // );
-
-                /**
-                 * * Hybrid Search
-                 */
-                var response = await _client.SearchAsync<BookDoc>(s =>
-                    s.Index("elastic-blazor-books")
-                        .Retriever(retrieverQuery)
-                        .Aggregations(aggs =>
-                            aggs.Add("Authors", agg => agg.Terms(t => t.Field(p => p.Authors)))
-                                .Add(
-                                    "Categories",
-                                    agg => agg.Terms(t => t.Field(p => p.Categories))
-                                )
-                                .Add("Status", agg => agg.Terms(t => t.Field(p => p.Status)))
-                        )
-                );
 
                 if (response.IsValidResponse)
                 {
