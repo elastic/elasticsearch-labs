@@ -1,0 +1,100 @@
+@using BlazorApp.Models
+
+@if (SearchResults != null && SearchResults.Any())
+{
+  <div class="row">
+  @foreach (var result in SearchResults)
+    {
+      <div class="col-12 mb-3">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-md-3 image-container">
+              @if (!string.IsNullOrEmpty(result?.ThumbnailUrl))
+              {
+                <img src="@result?.ThumbnailUrl" class="img-fluid rounded-start" alt="Thumbnail">
+              }
+              else
+              {
+                <div class="placeholder">
+                  @result?.Title
+                </div>
+              }
+            </div>
+
+            <div class="col-md-9"> <!-- Ajustado para ocupar el 75% restante -->
+              <div class="card-body">
+                <h4 class="card-title">
+                  @result?.Title
+                </h4>
+
+                <div class="details-container">
+                  <div class="">
+
+                    @if (result?.Authors?.Any() == true)
+                    {
+                      <p class="card-text p-first">
+                        Authors: <small class="text-muted">@string.Join(", ", result.Authors)</small>
+                      </p>
+                    }
+
+                    @if (result?.Categories?.Any() == true)
+                    {
+                      <p class="card-text p-second">
+                        Categories: <small class="text-muted">@string.Join(", ", result.Categories)</small>
+                      </p>
+                    }
+                  </div>
+                  <div class="numPages-status">
+                    @if (result?.PageCount != null)
+                    {
+                      <p class="card-text p-first">
+                        Pages: <small class="text-muted">@result.PageCount</small>
+                      </p>
+                    }
+
+                    @if (result?.Status != null)
+                    {
+                      <p class="card-text p-second">
+                        Status: <small class="text-muted">@result.Status</small>
+                      </p>
+                    }
+                  </div>
+                </div>
+
+                <div class="long-text-container">
+                  <p class="card-text"><small class="text-muted">@result?.LongDescription?.Text</small></p>
+                </div>
+                @if (!string.IsNullOrEmpty(result?.PublishedDate))
+                {
+                  <div class="date-container">
+                    <p class="card-text">
+                      Published Date: <small class="text-muted small-date">@FormatDate(result.PublishedDate)</small>
+                    </p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+else if (SearchResults != null)
+{
+  <p>No results found.</p>
+}
+
+@code {
+  [Parameter]
+  public List<BookDoc> SearchResults { get; set; } = new List<BookDoc>();
+
+  private string FormatDate(string? date)
+  {
+    if (DateTime.TryParse(date, out DateTime parsedDate))
+    {
+      return parsedDate.ToString("MMMM dd, yyyy");
+    }
+    return "";
+  }
+}
