@@ -1,9 +1,9 @@
 <img src="https://github.com/user-attachments/assets/b2879240-ae16-4544-ae67-3d261a67e2a1" width="50%"/>
 
 ## Elastic Book Search
-This is a companion repository for the article *Navigating an Elastic Vector Database* found [Navigating an Elastic Vector Database](). This contains all of the necessary instructions to create and operate a vector database with Elasticsearch.
+This is a companion codebase for the article *Navigating an Elastic Vector Database* found [Navigating an Elastic Vector Database](). This contains all of the necessary instructions to create and operate a vector database with Elasticsearch.
 
-Repository contents:
+Folder contents:
 
 ### `example.env`
 Update and rename this file to only `.env`. Provide your own credentials for the Elasticsearch Endpoint and Elastic API Key. The default index name for this repository is set to `books`
