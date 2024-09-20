@@ -16,9 +16,10 @@ INDEX_NAME = f"{os.environ.get('INDEX_NAME')}-pipeline"
 es.indices.delete(index=f"{INDEX_NAME}", ignore_unavailable=True)
 es.indices.delete(index=f"failed-{INDEX_NAME}", ignore_unavailable=True)
 
+
 # This function creates an ingest pipeline that uses the sentence-transformers library
-# to embed the book descriptions. 
-# More information here: 
+# to embed the book descriptions.
+# More information here:
 # https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-text-emb-vector-search-example.html
 def create_ingest_pipeline():
     resp = es.ingest.put_pipeline(
@@ -56,6 +57,7 @@ def create_ingest_pipeline():
     )
     print(f"Created ingest pipeline: {resp}")
 
+
 # This function creates the Elasticsearch index with the appropriate mappings.
 def create_books_index():
     mappings = {
@@ -76,7 +78,7 @@ def create_books_index():
 
     es.indices.create(index=INDEX_NAME, body=mappings)
     print(f"Index '{INDEX_NAME}' created.")
-  
+
 
 def create_one_book(book):
 
@@ -88,7 +90,9 @@ def create_one_book(book):
             pipeline="text-embedding",
         )
 
-        print(f"Successfully indexed book: {book.get('book_title', None)} - Result: {resp.get('result', None)}")
+        print(
+            f"Successfully indexed book: {book.get('book_title', None)} - Result: {resp.get('result', None)}"
+        )
 
     except Exception as e:
         print(f"Error occurred while indexing book: {e}")
