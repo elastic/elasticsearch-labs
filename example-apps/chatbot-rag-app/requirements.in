@@ -4,6 +4,7 @@ pip-tools
 # core dependencies
 elasticsearch
 langchain
+langchain-community
 langchain-elasticsearch
 tiktoken
 flask
