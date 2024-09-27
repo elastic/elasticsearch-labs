@@ -1,0 +1,44 @@
+{
+  "name": "app-search-reference-ui-react",
+  "version": "1.8.0",
+  "private": true,
+  "dependencies": {
+    "@elastic/react-search-ui": "latest",
+    "@elastic/search-ui-app-search-connector": "latest",
+    "@elastic/search-ui-elasticsearch-connector": "^1.21.5",
+    "antd": "^5.20.2",
+    "axios": "^1.7.4",
+    "html-react-parser": "^5.1.12",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.0"
+  },
+  "devDependencies": {
+    "rewire": "^6.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build-js": "node ./scripts/build-no-chunks.js",
+    "build": "npm run build-js",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
