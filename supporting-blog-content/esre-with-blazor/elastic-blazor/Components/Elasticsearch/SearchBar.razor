@@ -1,0 +1,24 @@
+@using System.Threading.Tasks
+
+<form @onsubmit="SubmitSearch">
+  <div class="input-group mb-3">
+    <input type="text" @bind-value="searchTerm" class="form-control" placeholder="Enter search term..." />
+    <button type="submit" class="btn btn-primary input-btn">
+      <span class="input-group-svg">
+        Search
+      </span>
+    </button>
+  </div>
+</form>
+
+@code {
+  [Parameter]
+  public EventCallback<string> OnSearch { get; set; }
+
+  private string searchTerm = "";
+
+  private async Task SubmitSearch()
+  {
+    await OnSearch.InvokeAsync(searchTerm);
+  }
+}
