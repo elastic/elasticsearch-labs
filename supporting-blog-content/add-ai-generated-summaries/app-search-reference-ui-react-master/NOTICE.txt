@@ -1,0 +1,3 @@
+Elastic App Search Reference UI.
+
+Copyright 2012-2022 Elasticsearch B.V.
