@@ -47,17 +47,14 @@ def clone_repository(owner, repo, branch, base_path="/tmp"):
             "Branch is not provided and GITHUB_BRANCH environment variable is not set."
         )
 
-
     local_repo_path = os.path.join(base_path, owner, repo)
     clone_url = f"https://github.com/{owner}/{repo}.git"
-
 
     if os.path.exists(local_repo_path):
         print(f"Repository already exists at {local_repo_path}. Skipping clone.")
         return local_repo_path
 
     attempts = 3
-
 
     for attempt in range(attempts):
         try:
@@ -106,7 +103,6 @@ def parse_documents():
             "GITHUB_OWNER and GITHUB_REPO environment variables must be set."
         )
 
-
     local_repo_path = clone_repository(owner, repo, branch, base_path)
 
     nodes = []
@@ -142,7 +138,6 @@ def parse_documents():
             file_summary.append(
                 f"Found {len(matching_files)} {extension_list} files in the repository."
             )
-
 
             loader = SimpleDirectoryReader(
                 input_dir=local_repo_path, required_exts=extensions, recursive=True
