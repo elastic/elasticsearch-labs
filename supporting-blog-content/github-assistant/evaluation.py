@@ -20,20 +20,29 @@ from httpx import ReadTimeout
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-parser = argparse.ArgumentParser(description='Process documents and questions for evaluation.')
-parser.add_argument('--num_documents', type=int, default=None,
-                    help='Number of documents to process (default: all)')
-parser.add_argument('--skip_documents', type=int, default=0,
-                    help='Number of documents to skip at the beginning (default: 0)')
-parser.add_argument('--num_questions', type=int, default=None,
-                    help='Number of questions to process (default: all)')
-parser.add_argument('--skip_questions', type=int, default=0,
-                    help='Number of questions to skip at the beginning (default: 0)')
-parser.add_argument('--process_last_questions', action='store_true',
-                    help='Process last N questions instead of first N')
+parser = argparse.ArgumentParser(description="Process documents and questions for evaluation.")
+parser.add_argument("--num_documents",
+                    type=int, 
+                    default=None,
+                    help="Number of documents to process (default: all)")
+parser.add_argument("--skip_documents", 
+                    type=int, 
+                    default=0,
+                    help="Number of documents to skip at the beginning (default: 0)")
+parser.add_argument("--num_questions", 
+                    type=int, 
+                    default=None,
+                    help="Number of questions to process (default: all)")
+parser.add_argument("--skip_questions",
+                    type=int, 
+                    default=0,
+                    help="Number of questions to skip at the beginning (default: 0)")
+parser.add_argument("--process_last_questions",
+                    action="store_true",
+                    help="Process last N questions instead of first N")
 args = parser.parse_args()
 
-load_dotenv('.env')
+load_dotenv(".env")
 
 reader = SimpleDirectoryReader("/tmp/elastic/production-readiness-review")
 documents = reader.load_data()
@@ -43,10 +52,10 @@ print(f"Thrid document: {documents[2].text}")
 
 
 if args.skip_documents > 0:
-    documents = documents[args.skip_documents:]
+    documents = documents[args.skip_documents :]
 
 if args.num_documents is not None:
-    documents = documents[:args.num_documents]
+    documents = documents[: args.num_documents]
 
 print(f"Number of documents loaded: {len(documents)}")
 
@@ -57,7 +66,7 @@ data_generator = DatasetGenerator.from_documents(documents, llm=llm)
 try:
     eval_questions = data_generator.generate_questions_from_nodes()
     if isinstance(eval_questions, str):
-        eval_questions_list = eval_questions.strip().split('\n')
+        eval_questions_list = eval_questions.strip().split("\n")
     else:
         eval_questions_list = eval_questions
     eval_questions_list = [q for q in eval_questions_list if q.strip()]
@@ -100,32 +109,32 @@ def display_eval_df(
     eval_result_relevancy: EvaluationResult,
     eval_result_faith: EvaluationResult,
 ) -> None:
-    relevancy_feedback = getattr(eval_result_relevancy, 'feedback', '')
-    relevancy_passing = getattr(eval_result_relevancy, 'passing', False)
-    relevancy_passing_str = 'Pass' if relevancy_passing else 'Fail'
+    relevancy_feedback = getattr(eval_result_relevancy, "feedback", "")
+    relevancy_passing = getattr(eval_result_relevancy, "passing", False)
+    relevancy_passing_str = "Pass" if relevancy_passing else "Fail"
 
     relevancy_score = 1.0 if relevancy_passing else 0.0
 
-    faithfulness_feedback = getattr(eval_result_faith, 'feedback', '')
-    faithfulness_passing_bool = getattr(eval_result_faith, 'passing', False)
-    faithfulness_passing = 'Pass' if faithfulness_passing_bool else 'Fail'
+    faithfulness_feedback = getattr(eval_result_faith, "feedback", "")
+    faithfulness_passing_bool = getattr(eval_result_faith, "passing", False)
+    faithfulness_passing = "Pass" if faithfulness_passing_bool else "Fail"
 
     def wrap_text(text, width=50):
         if text is None:
-            return ''
+            return ""
         text = str(text)
-        text = text.replace('\r', '')
-        lines = text.split('\n')
+        text = text.replace("\r", "")
+        lines = text.split("\n")
         wrapped_lines = []
         for line in lines:
             wrapped_lines.extend(textwrap.wrap(line, width=width))
-            wrapped_lines.append('')
-        return '\n'.join(wrapped_lines)
+            wrapped_lines.append("")
+        return "\n".join(wrapped_lines)
 
     if response.source_nodes:
         source_content = wrap_text(response.source_nodes[0].node.get_content())
     else:
-        source_content = ''
+        source_content = ""
 
     eval_data = {
         "Query": wrap_text(query),
@@ -141,7 +150,7 @@ def display_eval_df(
     eval_df = pd.DataFrame([eval_data])
 
     print("\nEvaluation Result:")
-    print(tabulate(eval_df, headers='keys', tablefmt='grid', showindex=False, stralign='left'))
+    print(tabulate(eval_df, headers="keys", tablefmt="grid", showindex=False, stralign="left"))
 
 query_engine = vector_index.as_query_engine(llm=llm)
 
