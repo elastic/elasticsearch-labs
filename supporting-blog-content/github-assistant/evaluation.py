@@ -20,7 +20,9 @@ from httpx import ReadTimeout
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-parser = argparse.ArgumentParser(description="Process documents and questions for evaluation.")
+parser = argparse.ArgumentParser(
+    description="Process documents and questions for evaluation."
+)
 parser.add_argument("--num_documents",
                     type=int, 
                     default=None,
@@ -59,7 +61,7 @@ if args.num_documents is not None:
 
 print(f"Number of documents loaded: {len(documents)}")
 
-llm = OpenAI(model="gpt-4o", request_timeout=120)  
+llm = OpenAI(model="gpt-4o", request_timeout=120)
 
 data_generator = DatasetGenerator.from_documents(documents, llm=llm)
 
@@ -72,13 +74,13 @@ try:
     eval_questions_list = [q for q in eval_questions_list if q.strip()]
 
     if args.skip_questions > 0:
-        eval_questions_list = eval_questions_list[args.skip_questions:]
+        eval_questions_list = eval_questions_list[args.skip_questions :]
 
     if args.num_questions is not None:
         if args.process_last_questions:
-            eval_questions_list = eval_questions_list[-args.num_questions:]
+            eval_questions_list = eval_questions_list[-args.num_questions :]
         else:
-            eval_questions_list = eval_questions_list[:args.num_questions]
+            eval_questions_list = eval_questions_list[: args.num_questions]
 
     print("\All available questions generated:")
     for idx, q in enumerate(eval_questions):
@@ -88,7 +90,9 @@ try:
     for idx, q in enumerate(eval_questions_list, start=1):
         print(f"{idx}. {q}")
 except ReadTimeout as e:
-    print("Request to Ollama timed out during question generation. Please check the server or increase the timeout duration.")
+    print(
+        "Request to Ollama timed out during question generation. Please check the server or increase the timeout duration."
+    )
     traceback.print_exc()
     sys.exit(1)
 except Exception as e:
@@ -150,7 +154,11 @@ def display_eval_df(
     eval_df = pd.DataFrame([eval_data])
 
     print("\nEvaluation Result:")
-    print(tabulate(eval_df, headers="keys", tablefmt="grid", showindex=False, stralign="left"))
+    print(
+        tabulate(
+            eval_df, headers="keys", tablefmt="grid", showindex=False, stralign="left"
+        )
+    )
 
 query_engine = vector_index.as_query_engine(llm=llm)
 
@@ -161,17 +169,17 @@ for idx, question in enumerate(eval_questions_list, start=1):
         eval_result_relevancy = evaluator_relevancy.evaluate_response(
             query=question, response=response_vector
         )
-        eval_result_faith = evaluator_faith.evaluate_response(
-            response=response_vector
-        )
+        eval_result_faith = evaluator_faith.evaluate_response(response=response_vector)
 
         print(f"\nProcessing Question {idx} of {total_questions}:")
-        display_eval_df(question, response_vector, eval_result_relevancy, eval_result_faith)
+        display_eval_df(
+            question, response_vector, eval_result_relevancy, eval_result_faith
+        )
     except ReadTimeout as e:
         print(f"Request to OpenAI timed out while processing question {idx}.")
         traceback.print_exc()
-        continue  
+        continue
     except Exception as e:
         print(f"An error occurred while processing question {idx}: {e}")
         traceback.print_exc()
-        continue  
+        continue
