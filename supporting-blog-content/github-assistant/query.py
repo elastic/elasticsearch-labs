@@ -20,24 +20,24 @@ def run_query_sync():
         query_engine = index.as_query_engine(
             llm=openai_llm,
             similarity_top_k=3,
-            streaming=False, 
+            streaming=False,
             response_mode="tree_summarize",
         )
 
         bundle = QueryBundle(query, embedding=embed_model.get_query_embedding(query))
 
         result = query_engine.query(bundle)
-        return result.response  
+        return result.response
     except Exception as e:
         print(f"An error occurred while running the query: {e}")
     finally:
         if hasattr(openai_llm, "client") and isinstance(
             openai_llm.client, httpx.Client
-            ):
+        ):
             openai_llm.client.close()
         if hasattr(embed_model, "client") and isinstance(
             embed_model.client, httpx.Client
-            ):
+        ):
             embed_model.client.close()
         if hasattr(es_vector_store, "close"):
             es_vector_store.close()

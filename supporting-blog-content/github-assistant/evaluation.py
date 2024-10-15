@@ -23,25 +23,35 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 parser = argparse.ArgumentParser(
     description="Process documents and questions for evaluation."
 )
-parser.add_argument("--num_documents",
+parser.add_argument(
+                    "--num_documents",
                     type=int, 
                     default=None,
-                    help="Number of documents to process (default: all)")
-parser.add_argument("--skip_documents", 
+                    help="Number of documents to process (default: all)"
+)
+parser.add_argument(
+                    "--skip_documents", 
                     type=int, 
                     default=0,
-                    help="Number of documents to skip at the beginning (default: 0)")
-parser.add_argument("--num_questions", 
+                    help="Number of documents to skip at the beginning (default: 0)"
+)
+parser.add_argument(
+                    "--num_questions", 
                     type=int, 
                     default=None,
-                    help="Number of questions to process (default: all)")
-parser.add_argument("--skip_questions",
+                    help="Number of questions to process (default: all)"
+)
+parser.add_argument(
+                    "--skip_questions",
                     type=int, 
                     default=0,
-                    help="Number of questions to skip at the beginning (default: 0)")
-parser.add_argument("--process_last_questions",
+                    help="Number of questions to skip at the beginning (default: 0)"
+)
+parser.add_argument(
+                    "--process_last_questions",
                     action="store_true",
-                    help="Process last N questions instead of first N")
+                    help="Process last N questions instead of first N"
+)
 args = parser.parse_args()
 
 load_dotenv(".env")
