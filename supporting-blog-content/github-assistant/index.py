@@ -123,9 +123,9 @@ def parse_documents():
             )
 
         if len(matching_files) > 0:
-            file_summary.append(
-                f"Found {len(matching_files)} {", ".join(extensions)} files in the repository."
-            )
+            extension_list = ", ".join(extensions)
+            file_summary.append(f"Found {len(matching_files)} {extension_list} files in the repository.")
+            
             loader = SimpleDirectoryReader(
                 input_dir=local_repo_path, required_exts=extensions, recursive=True
             )
@@ -136,10 +136,8 @@ def parse_documents():
 
             nodes.extend(parsed_nodes)
         else:
-            file_summary.append(
-                f"Found {len(matching_files)} {', '.join(extensions)} files in the repository."
-            )
-
+            extension_list = ", ".join(extensions)
+            file_summary.append(f"No {extension_list} files found in the repository.")
 
     collect_and_print_file_summary(file_summary)
     print("\n")
