@@ -8,6 +8,7 @@ import httpx
 embed_model = OpenAIEmbedding(model="text-embedding-3-large")
 Settings.embed_model = embed_model
 
+
 def run_query_sync():
     query = input("Please enter your query: ")
 
@@ -42,6 +43,7 @@ def run_query_sync():
         if hasattr(es_vector_store, "close"):
             es_vector_store.close()
             print("Elasticsearch connection closed.")
+
 
 if __name__ == "__main__":
     try:

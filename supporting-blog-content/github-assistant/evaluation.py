@@ -15,7 +15,7 @@ from tabulate import tabulate
 import textwrap
 import argparse
 import traceback
-from httpx import ReadTimeout  
+from httpx import ReadTimeout
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -24,33 +24,33 @@ parser = argparse.ArgumentParser(
     description="Process documents and questions for evaluation."
 )
 parser.add_argument(
-                    "--num_documents",
-                    type=int, 
-                    default=None,
-                    help="Number of documents to process (default: all)"
+    "--num_documents",
+    type=int, 
+    default=None,
+    help="Number of documents to process (default: all)"
 )
 parser.add_argument(
-                    "--skip_documents", 
-                    type=int, 
-                    default=0,
-                    help="Number of documents to skip at the beginning (default: 0)"
+    "--skip_documents", 
+    type=int, 
+    default=0,
+    help="Number of documents to skip at the beginning (default: 0)"
 )
 parser.add_argument(
-                    "--num_questions", 
-                    type=int, 
-                    default=None,
-                    help="Number of questions to process (default: all)"
+    "--num_questions", 
+    type=int, 
+    default=None,
+    help="Number of questions to process (default: all)"
 )
 parser.add_argument(
-                    "--skip_questions",
-                    type=int, 
-                    default=0,
-                    help="Number of questions to skip at the beginning (default: 0)"
+    "--skip_questions",
+    type=int, 
+    default=0,
+    help="Number of questions to skip at the beginning (default: 0)"
 )
 parser.add_argument(
-                    "--process_last_questions",
-                    action="store_true",
-                    help="Process last N questions instead of first N"
+    "--process_last_questions",
+    action="store_true",
+    help="Process last N questions instead of first N"
 )
 args = parser.parse_args()
 
@@ -117,6 +117,7 @@ evaluator_faith = FaithfulnessEvaluator(llm=llm)
 
 vector_index = VectorStoreIndex.from_documents(documents)
 
+
 def display_eval_df(
     query: str,
     response: Response,
@@ -169,6 +170,7 @@ def display_eval_df(
             eval_df, headers="keys", tablefmt="grid", showindex=False, stralign="left"
         )
     )
+
 
 query_engine = vector_index.as_query_engine(llm=llm)
 
