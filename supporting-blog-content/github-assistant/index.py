@@ -85,7 +85,7 @@ def parse_documents():
     owner = os.getenv("GITHUB_OWNER")
     repo = os.getenv("GITHUB_REPO")
     branch = os.getenv("GITHUB_BRANCH")
-    base_path = os.getenv("BASE_PATH", "/tmp")  
+    base_path = os.getenv("BASE_PATH", "/tmp")
 
     if not owner or not repo:
         raise ValueError(
@@ -124,7 +124,9 @@ def parse_documents():
 
         if len(matching_files) > 0:
             extension_list = ", ".join(extensions)
-            file_summary.append(f"Found {len(matching_files)} {extension_list} files in the repository.")
+            file_summary.append(
+                f"Found {len(matching_files)} {extension_list} files in the repository."
+            )
             
             loader = SimpleDirectoryReader(
                 input_dir=local_repo_path, required_exts=extensions, recursive=True
@@ -142,6 +144,7 @@ def parse_documents():
     collect_and_print_file_summary(file_summary)
     print("\n")
     return nodes
+
 
 def get_es_vector_store():
     print("Initializing Elasticsearch store...")
@@ -166,6 +169,7 @@ def get_es_vector_store():
             time.sleep(10)  
     raise Exception("Failed to initialize Elasticsearch store after multiple attempts")
 
+
 def main():
     nodes = parse_documents()
     es_vector_store = get_es_vector_store()
@@ -180,6 +184,7 @@ def main():
         if hasattr(es_vector_store, "close"):
             es_vector_store.close()
         print("Elasticsearch connection closed.")
+
 
 if __name__ == "__main__":
     main()
