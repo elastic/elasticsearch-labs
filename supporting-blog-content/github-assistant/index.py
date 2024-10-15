@@ -136,7 +136,10 @@ def parse_documents():
 
             nodes.extend(parsed_nodes)
         else:
-            file_summary.append(f"No {", ".join(extensions)} files found in the repository.")
+            file_summary.append(
+                f"Found {len(matching_files)} {', '.join(extensions)} files in the repository."
+            )
+
 
     collect_and_print_file_summary(file_summary)
     print("\n")
