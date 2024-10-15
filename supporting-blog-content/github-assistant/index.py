@@ -1,5 +1,16 @@
-from llama_index.core import Document, Settings, SimpleDirectoryReader, StorageContext, VectorStoreIndex
-from llama_index.core.node_parser import SentenceSplitter, CodeSplitter, MarkdownNodeParser, JSONNodeParser
+from llama_index.core import (
+    Document,
+    Settings,
+    SimpleDirectoryReader,
+    StorageContext,
+    VectorStoreIndex,
+)
+from llama_index.core.node_parser import (
+    SentenceSplitter,
+    CodeSplitter,
+    MarkdownNodeParser,
+    JSONNodeParser,
+)
 from llama_index.vector_stores.elasticsearch import ElasticsearchStore
 from dotenv import load_dotenv
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -17,9 +28,6 @@ import time
 import glob
 import os
 
-#logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-#logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-#logging.getLogger("elasticsearch").setLevel(logging.DEBUG)
 
 nest_asyncio.apply()
 
@@ -38,16 +46,19 @@ def clone_repository(owner, repo, branch, base_path="/tmp"):
         raise ValueError(
             "Branch is not provided and GITHUB_BRANCH environment variable is not set."
         )
-    
+
+
     local_repo_path = os.path.join(base_path, owner, repo)
     clone_url = f"https://github.com/{owner}/{repo}.git"
-    
+
+
     if os.path.exists(local_repo_path):
         print(f"Repository already exists at {local_repo_path}. Skipping clone.")
         return local_repo_path
 
     attempts = 3
-    
+
+
     for attempt in range(attempts):
         try:
             os.makedirs(local_repo_path, exist_ok=True)
@@ -65,6 +76,7 @@ def clone_repository(owner, repo, branch, base_path="/tmp"):
             else:
                 raise Exception("Failed to clone repository after multiple attempts")
 
+
 def print_docs_and_nodes(docs, nodes):
     print("\n=== Documents ===\n")
     for doc in docs:
@@ -76,10 +88,12 @@ def print_docs_and_nodes(docs, nodes):
         print(f"Node ID: {node.id_}")
         print(f"Node Content:\n{node.text}\n\n---\n")
 
+
 def collect_and_print_file_summary(file_summary):
     print("\n=== File Summary ===\n")
     for summary in file_summary:
         print(summary)
+
 
 def parse_documents():
     owner = os.getenv("GITHUB_OWNER")
@@ -91,7 +105,8 @@ def parse_documents():
         raise ValueError(
             "GITHUB_OWNER and GITHUB_REPO environment variables must be set."
         )
-    
+
+
     local_repo_path = clone_repository(owner, repo, branch, base_path)
 
     nodes = []
@@ -127,7 +142,8 @@ def parse_documents():
             file_summary.append(
                 f"Found {len(matching_files)} {extension_list} files in the repository."
             )
-            
+
+
             loader = SimpleDirectoryReader(
                 input_dir=local_repo_path, required_exts=extensions, recursive=True
             )
@@ -166,7 +182,7 @@ def get_es_vector_store():
             return es_vector_store
         except elastic_transport.ConnectionTimeout:
             print(f"Connection attempt {attempt + 1}/{retries} timed out. Retrying...")
-            time.sleep(10)  
+            time.sleep(10)
     raise Exception("Failed to initialize Elasticsearch store after multiple attempts")
 
 
