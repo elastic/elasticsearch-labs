@@ -11,12 +11,12 @@ This in turn was created by merging data from a few different souces with
 the goal of creating datasets appropriate for testing a number of specific
 ES|QL features as they were developed.
 
-* [airports.csv](https://raw.githubusercontent.com/elastic/elasticsearch-labs/tree/main/supporting-blog-content/geospatial-data-ingest/airports.csv)
+* [airports.csv](https://raw.githubusercontent.com/elastic/elasticsearch-labs/tree/main/supporting-blog-content/geospatial-data-ingest/airports/airports.csv)
   * This contains a merger of three datasets:
     * Airports (names, locations and related data) from [Natural Earth](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/airports/)
     * City locations from [SimpleMaps](https://simplemaps.com/data/world-cities)
     * Airport elevations from [The global airport database](https://www.partow.net/miscellaneous/airportdatabase/)
-* [airport_city_boundaries.csv](https://raw.githubusercontent.com/elastic/elasticsearch-labs/tree/main/supporting-blog-content/geospatial-data-ingest/airport_city_boundaries.csv)
+* [airport_city_boundaries.csv](https://raw.githubusercontent.com/elastic/elasticsearch-labs/tree/main/supporting-blog-content/geospatial-data-ingest/airports/airport_city_boundaries.csv)
   * This contains a merger of airport and city names from above with one new source:
     * City boundaries from [OpenStreetMap](https://www.openstreetmap.org/)
 
