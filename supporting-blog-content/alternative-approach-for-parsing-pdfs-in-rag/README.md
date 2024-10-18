@@ -12,6 +12,21 @@
 
 ### Prerequisites
 - Python 3.x
+- Output Directory
+  - Example
+    - `/tmp`
+  - Parsed output file name
+    - Example
+      - `parsed_file.txt`
+- Azure Account
+  - OpenAI deployment
+  - Key
+    - Example
+      - a330xxxxxxxde9xxxxxx
+  - Completions endpoint such as GPT-4o
+    - Example
+      - https://exampledeploy.openai.azure.com/openai/deployments/gpt-35-turbo-16k/chat/completions?api-version=2024-08-01-preview
+  - For more information on getting started with Azure OpenAI, check out the official [Azure OpenAI ChatGPT Quickstart](https://learn.microsoft.com/en-us/azure/ai-services/openai/chatgpt-quickstart?tabs=command-line%2Ctypescript%2Cpython-new&pivots=programming-language-studio).
 
 
 ## Example Use Case
