@@ -44,7 +44,7 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`Document Chunking with Ingest Pipelines`](./notebooks/document-chunking/with-index-pipelines.ipynb)
 - [`Document Chunking with LangChain Splitters`](./notebooks/document-chunking/with-langchain-splitters.ipynb)
 - [`Calculating tokens for Semantic Search (ELSER and E5)`](./notebooks/document-chunking/tokenization.ipynb)
-- [`Fetch surrounding chucks`](./supporting-blog-content/fetch-surrounding-chunks/fetch-surrounding-chunks.ipynb)
+- [`Fetch surrounding chunks`](./supporting-blog-content/fetch-surrounding-chunks/fetch-surrounding-chunks.ipynb)
 
 ### Search
 
