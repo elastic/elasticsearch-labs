@@ -1,6 +1,9 @@
 # Product Store Search
 
-This a example how apply features to improve a search for products.
+This project is an API that allows you to perform searches using both lexical and hybrid search,
+integrating Elasticsearch as a search engine. In addition, the API offers the possibility of
+applying filters to refine the results according to specific criteria.
+
 
 ## Prerequisites
 
