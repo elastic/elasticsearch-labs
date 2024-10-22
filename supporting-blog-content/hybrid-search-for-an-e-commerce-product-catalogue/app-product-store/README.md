@@ -11,6 +11,7 @@ semantic search techniques, offering more accurate and relevant results.
 - **Search Bar**: Allows users to search for products in the catalog.
 - **Faceted Filtering**: Users can filter products by brand and category.
 - **Hybrid Search**: Combines lexical and semantic search to improve the relevance of results.
+- **Behavioral Analytics**: Analyzes user interactions with the search results, providing insights through Behavioral Analytics to improve the search experience.
 
 ## Technologies Used
 

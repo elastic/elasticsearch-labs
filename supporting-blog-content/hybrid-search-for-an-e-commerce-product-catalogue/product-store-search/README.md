@@ -12,6 +12,13 @@ applying filters to refine the results according to specific criteria.
 - **Docker Compose**: Docker Compose is automatically installed with Docker Desktop, but you can check the version and
   install it separately if needed [here](https://docs.docker.com/compose/install/).
 
+## Features
+
+- **Lexical Search**: Allows traditional keyword-based searches, where the results are matched exactly or partially based on the input terms.
+- **Hybrid Search**: Combines both lexical and semantic search techniques to deliver more relevant and meaningful results.
+- **Facets**: Enables the use of filters to narrow down the search results based on specific categories, such as product type, brand, or price range.
+- **Pinned Results**: Allows promoting specific documents to the top of the search results to highlight important or featured content.
+
 ## Steps to Run
 
 1. Clone this repository to your local machine (if you haven't done so already):
