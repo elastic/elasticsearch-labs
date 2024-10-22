@@ -93,7 +93,6 @@ const ProductCard = ({ product, searchTerm, products }) => {
   const defaultImage = "https://via.placeholder.com/100";
 
   const handleClick = () => {
-    //alert(`Produto: ${product.name} - Termo de pesquisa: ${searchTerm}`);
 
     trackSearchClick({
       document: { id: product.id, index: "products-catalog"},
@@ -179,7 +178,7 @@ const ProductPage = () => {
           query: searchTerm,
           selectedCategories: selectedFacets.categories,
           selectedProductTypes: selectedFacets.productTypes,
-          selectedbrands: selectedFacets.brands,
+          selectedBrands: selectedFacets.brands,
           hybrid: isHybridSearch
         }
       });
@@ -212,7 +211,7 @@ const ProductPage = () => {
           query: searchTerm,
           selectedCategories: selectedFacets.categories,
           selectedProductTypes: selectedFacets.productTypes,
-          selectedbrands: selectedFacets.brands,
+          selectedBrands: selectedFacets.brands,
           hybrid: isHybridSearch
         }
       });

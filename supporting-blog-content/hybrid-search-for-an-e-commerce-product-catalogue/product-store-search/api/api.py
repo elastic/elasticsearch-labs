@@ -53,14 +53,14 @@ def build_query(term=None, categories=None, product_types=None, brands=None):
 
 
 def build_hybrid_query(term=None, categories=None, product_types=None, brands=None, hybrid=False):
-    # Query padrão
+    # Standard query
     organic_query = build_query(term, categories, product_types, brands)
 
     if hybrid is True and term:
 
         vector = get_text_vector([term])[0]
 
-        # Query híbrida com RRF (Reciprocal Rank Fusion)
+        # Hybrid query with RRF (Reciprocal Rank Fusion)
         query = {
             "retriever": {
                 "rrf": {
@@ -174,7 +174,7 @@ def search():
     query = request.args.get('query')
     categories = request.args.getlist('selectedCategories[]')
     product_types = request.args.getlist('selectedProductTypes[]')
-    brands = request.args.getlist('selectedbrands[]')
+    brands = request.args.getlist('selectedBrands[]')
     hybrid = request.args.get('hybrid', 'False').lower() == 'true'
     results = search_products(query, categories=categories, product_types=product_types,
                               brands=brands,
@@ -188,7 +188,7 @@ def facets():
     query = request.args.get('query')
     categories = request.args.getlist('selectedCategories[]')
     product_types = request.args.getlist('selectedProductTypes[]')
-    brands = request.args.getlist('selectedbrands[]')
+    brands = request.args.getlist('selectedBrands[]')
     results = get_facets_data(query, categories=categories,
                               product_types=product_types,
                               brands=brands)

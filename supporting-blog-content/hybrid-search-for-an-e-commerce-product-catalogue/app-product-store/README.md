@@ -26,6 +26,7 @@ semantic search techniques, offering more accurate and relevant results.
 2. Navigate to the project directory:
    ```bash
    cd repository-name
+   
 3. Install dependencies:
    ```bash
    npm install

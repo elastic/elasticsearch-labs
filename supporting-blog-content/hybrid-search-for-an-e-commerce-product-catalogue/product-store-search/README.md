@@ -88,8 +88,8 @@ applying filters to refine the results according to specific criteria.
 
 ---
 
-## Referências
+## References
 
-- [Documentação do Docker](https://docs.docker.com/)
-- [Documentação do Docker Compose](https://docs.docker.com/compose/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Docker Compose Documentation](https://docs.docker.com/compose/)
 

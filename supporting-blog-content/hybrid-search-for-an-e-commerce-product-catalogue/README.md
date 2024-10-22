@@ -15,7 +15,7 @@ This project consists of two main components: a front-end application and an API
   
 ### API
 
-- Developed with python
+- Developed with Python
 - Provides endpoints for fetching product data and handling search/filter requests.
 - Implements hybrid search combining lexical and semantic search techniques.
 

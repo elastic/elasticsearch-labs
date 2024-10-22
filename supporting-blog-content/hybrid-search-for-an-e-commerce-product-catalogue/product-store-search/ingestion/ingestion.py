@@ -52,5 +52,4 @@ def index_data_in_batches(file_path, index_name, batch_size=100):
 
 
 if __name__ == '__main__':
-    # print(get_client_es().info())
     index_data_in_batches("../files/dataset/products.json", "products-catalog", batch_size=100)
