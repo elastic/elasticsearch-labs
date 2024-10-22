@@ -1,0 +1,8 @@
+elasticsearch==8.15.1
+requests~=2.26.0
+sentence-transformers~=2.2.2
+Pillow~=9.2.0
+transformers~=4.23.1
+Flask==2.2.3
+Werkzeug==2.2.2
+Flask-CORS==3.0.10
