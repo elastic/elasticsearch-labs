@@ -1,0 +1,81 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using BlazorApp.Models
+@using BlazorApp.Services
+@inject ElasticsearchService ElasticsearchService
+@inject ILogger<Search> Logger
+
+<PageTitle>Search</PageTitle>
+
+<div class="top-row px-4 ">
+
+    <div class="searchbar-container">
+        <h4>Semantic Search with Elasticsearch and Blazor</h4>
+
+        <SearchBar OnSearch="PerformSearch" />
+    </div>
+
+    <a href="https://www.elastic.co/search-labs/esre-with-blazor" target="_blank">About</a>
+</div>
+
+<div class="px-4">
+
+    <div class="search-details-container">
+        <p role="status">Current search term: @currentSearchTerm</p>
+        <p role="status">Total results: @totalResults</p>
+    </div>
+
+    <div class="results-facet-container">
+        <div class="facets-container">
+            <Facet Facets="facets" OnFacetChanged="OnFacetChanged" />
+        </div>
+        <div class="results-container">
+            <Results SearchResults="searchResults" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string currentSearchTerm = "";
+    private long totalResults = 0;
+    private List<BookDoc> searchResults = new List<BookDoc>();
+    private Dictionary<string, Dictionary<string, long>> facets = new Dictionary<string, Dictionary<string, long>>();
+    private Dictionary<string, List<string>> selectedFacets = new Dictionary<string, List<string>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PerformSearch();
+    }
+
+    private async Task PerformSearch(string searchTerm = "")
+    {
+        try
+        {
+            currentSearchTerm = searchTerm;
+
+            var response = await ElasticsearchService.SearchBooksAsync(currentSearchTerm, selectedFacets);
+            if (response != null)
+            {
+                searchResults = response.Documents;
+                facets = response.Facets;
+                totalResults = response.TotalHits;
+            }
+            else
+            {
+                Logger.LogWarning("Search response is null.");
+            }
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error performing search.");
+        }
+    }
+
+    private async Task OnFacetChanged(Dictionary<string, List<string>> newSelectedFacets)
+    {
+        selectedFacets = newSelectedFacets;
+        await PerformSearch(currentSearchTerm);
+    }
+}

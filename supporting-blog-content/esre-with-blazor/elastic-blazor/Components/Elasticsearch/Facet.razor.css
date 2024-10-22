@@ -1,0 +1,17 @@
+.facets-container {
+  font-size: 15px;
+  margin-right: 4rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.results-facet-container {
+  display: flex;
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.results-facet-container > * {
+  flex-shrink: 0;
+}

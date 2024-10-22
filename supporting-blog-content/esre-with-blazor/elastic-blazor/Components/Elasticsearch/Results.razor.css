@@ -1,0 +1,49 @@
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  color: #888;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.details-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+}
+
+.date-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.date-container .small-date {
+  font-weight: bold;
+}
