@@ -1,0 +1,48 @@
+@if (Facets != null)
+{
+  <div class="facets-container">
+  @foreach (var facet in Facets)
+    {
+      <h3>@facet.Key</h3>
+      @foreach (var option in facet.Value)
+      {
+        <div>
+          <input type="checkbox" checked="@IsFacetSelected(facet.Key, option.Key)"
+            @onclick="() => ToggleFacet(facet.Key, option.Key)" />
+          @option.Key (@option.Value)
+        </div>
+      }
+    }
+  </div>
+}
+
+
+@code {
+  [Parameter]
+  public Dictionary<string, Dictionary<string, long>>? Facets { get; set; }
+
+  [Parameter]
+  public EventCallback<Dictionary<string, List<string>>> OnFacetChanged { get; set; }
+
+  private Dictionary<string, List<string>> selectedFacets = new();
+
+  private void ToggleFacet(string facetName, string facetValue)
+  {
+    if (!selectedFacets.TryGetValue(facetName, out var facetValues))
+    {
+      facetValues = selectedFacets[facetName] = new List<string>();
+    }
+
+    if (!facetValues.Remove(facetValue))
+    {
+      facetValues.Add(facetValue);
+    }
+
+    OnFacetChanged.InvokeAsync(selectedFacets);
+  }
+
+  private bool IsFacetSelected(string facetName, string facetValue)
+  {
+    return selectedFacets.ContainsKey(facetName) && selectedFacets[facetName].Contains(facetValue);
+  }
+}
