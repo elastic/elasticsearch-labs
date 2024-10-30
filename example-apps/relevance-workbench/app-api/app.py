@@ -5,6 +5,8 @@ from elasticsearch import Elasticsearch
 CLOUD_ID = os.environ["CLOUD_ID"]
 ES_USER = os.environ["ELASTICSEARCH_USERNAME"]
 ES_PASSWORD = os.environ["ELASTICSEARCH_PASSWORD"]
+ELSER_MODEL = os.getenv("ELSER_MODEL", ".elser_model_2")
+INDEX = os.getenv("ES_INDEX", "search-movies")
 
 datasets = {
     "movies": {
@@ -84,7 +86,7 @@ def get_text_expansion_request_body(query, size=10, **options):
         te = {"text_expansion": {}}
         te["text_expansion"][field] = {
             "model_text": query,
-            "model_id": ".elser_model_1",
+            "model_id": ELSER_MODEL,
             "boost": boost,
         }
         text_expansions.append(te)
@@ -114,7 +116,7 @@ def get_text_expansion_request_body(query, size=10, **options):
         te = {"text_expansion": {}}
         te["text_expansion"][field] = {
             "model_text": query,
-            "model_id": ".elser_model_1",
+            "model_id": ELSER_MODEL,
             "boost": boost,
         }
         text_expansions.append(te)
@@ -159,7 +161,7 @@ def get_hybrid_search_rrf_request_body(query, size=10, **options):
         te = {"text_expansion": {}}
         te["text_expansion"][field] = {
             "model_text": query,
-            "model_id": ".elser_model_1",
+            "model_id": ELSER_MODEL,
             "boost": boost,
         }
         text_expansions.append(te)
