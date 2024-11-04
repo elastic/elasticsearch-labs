@@ -14,7 +14,7 @@ def partition_list(lst, chunk_size):
 
 async def index_data():
     global partitions
-    with open('files/output.json', 'r') as file:
+    with open("files/output.json", "r") as file:
         data_json = json.load(file)
     documents = []
     for doc in data_json:
