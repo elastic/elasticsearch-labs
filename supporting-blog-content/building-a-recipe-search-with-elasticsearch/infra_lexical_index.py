@@ -14,9 +14,9 @@ def create_index():
                 "category": {"type": "keyword"},
                 "brand": {"type": "keyword"},
                 "price": {"type": "float"},
-                "unit": {"type": "keyword"}
+                "unit": {"type": "keyword"},
             }
-        }
+        },
     )
     print(response)
 

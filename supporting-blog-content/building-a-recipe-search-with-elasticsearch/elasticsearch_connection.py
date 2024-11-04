@@ -8,8 +8,7 @@ class ElasticsearchConnection:
         with open(config_file, "r") as f:
             config = yaml.safe_load(f)
             self.client = Elasticsearch(
-                cloud_id=config["cloud_id"],
-                api_key=config["api_key"]
+                cloud_id=config["cloud_id"], api_key=config["api_key"]
             )
 
     def get_client(self):
@@ -21,5 +20,6 @@ class ElasticsearchConnection:
             self.client = AsyncElasticsearch(
                 cloud_id=config["cloud_id"],
                 api_key=config["api_key"],
-                request_timeout=240)
-        return self.client;
+                request_timeout=240,
+            )
+        return self.client

@@ -17,10 +17,10 @@ def create_index_embedding():
                 "unit": {"type": "keyword"},
                 "description_embedding": {
                     "type": "semantic_text",
-                    "inference_id": "elser_embeddings"
-                }
+                    "inference_id": "elser_embeddings",
+                },
             }
-        }
+        },
     )
     print(response)
 
@@ -31,8 +31,9 @@ def create_inference():
         task_type="sparse_embedding",
         body={
             "service": "elser",
-            "service_settings": {"num_allocations": 1, "num_threads": 1}
-        })
+            "service_settings": {"num_allocations": 1, "num_threads": 1},
+        },
+    )
     print(response)
 
 

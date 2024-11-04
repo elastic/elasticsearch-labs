@@ -9,7 +9,7 @@ async_client = ElasticsearchConnection().get_async_client()
 
 
 def partition_list(lst, chunk_size):
-    return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
+    return [lst[i : i + chunk_size] for i in range(0, len(lst), chunk_size)]
 
 
 async def index_data():
@@ -34,7 +34,9 @@ async def index_data():
 
 async def async_bulk_indexing(client, documents):
     success, failed = await helpers.async_bulk(client, documents)
-    print(f"Successfully indexed {success} documents. Failed to index {failed} documents.")
+    print(
+        f"Successfully indexed {success} documents. Failed to index {failed} documents."
+    )
 
 
 async def main():
