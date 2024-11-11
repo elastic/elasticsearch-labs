@@ -71,7 +71,7 @@ code {
 }
 .search-bar {
   display: flex;
-  align-items: center; /* Alinha verticalmente o input e o botão */
+  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -80,7 +80,7 @@ code {
   padding: 10px;
   font-size: 16px;
   margin-right: 10px;
-  box-sizing: border-box; /* Garante que o padding não altere a largura do input */
+  box-sizing: border-box;
 }
 
 .search-bar button {
@@ -91,7 +91,7 @@ code {
   border: none;
   cursor: pointer;
   margin-bottom: 20px;
-  height: 100%; /* Garante que o botão tenha a mesma altura do input */
+  height: 100%;
 }
 
 .search-bar button:hover {
@@ -114,9 +114,8 @@ code {
   font-weight: bold;
 }
 
-/* Definindo cores diferentes para cada tag */
-.tag-0 { background-color: #ff5733; }  /* Laranja */
-.tag-1 { background-color: #33ff57; }  /* Verde */
-.tag-2 { background-color: #3357ff; }  /* Azul */
-.tag-3 { background-color: #ff33a1; }  /* Rosa */
-.tag-4 { background-color: #ff9933; }  /* Amarelo */
+.tag-0 { background-color: #ff5733; }  /* orange */
+.tag-1 { background-color: #33ff57; }  /* green */
+.tag-2 { background-color: #3357ff; }  /* blue */
+.tag-3 { background-color: #ff33a1; }  /* pink */
+.tag-4 { background-color: #ff9933; }  /* yellow */
