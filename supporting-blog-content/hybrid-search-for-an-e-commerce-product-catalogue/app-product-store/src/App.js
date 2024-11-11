@@ -26,7 +26,7 @@ const Facets = ({ categories = [], productTypes = [], brands = [], selectedFacet
             checked={selectedFacets.categories.includes(facet.category)}
             onChange={() => onFacetChange('categories', facet.category)}
           />
-          <label>{facet.category || "Outros"} ({facet.count})</label>
+          <label>{facet.category || "Others"} ({facet.count})</label>
         </div>
       ))}
 
@@ -38,7 +38,7 @@ const Facets = ({ categories = [], productTypes = [], brands = [], selectedFacet
             checked={selectedFacets.brands.includes(facet.brand)}
             onChange={() => onFacetChange('brands', facet.brand)}
           />
-          <label>{facet.brand || "Outros"} ({facet.count})</label>
+          <label>{facet.brand || "Others"} ({facet.count})</label>
         </div>
       ))}
 
@@ -68,12 +68,12 @@ const SearchBar = ({ searchQuery, setSearchQuery, onSearch, isHybridSearch, setI
     <div className="search-bar">
       <input
         type="text"
-        placeholder="Buscar produtos..."
+        placeholder="Search products..."
         value={searchQuery}
         onKeyDown={handleKeyDown}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <button onClick={onSearch}>Pesquisar</button>
+      <button onClick={onSearch}>Search</button>
       <div className="hybrid-search-checkbox">
         <label>
           <input
@@ -152,7 +152,7 @@ const ProductList = ({ products, searchTerm }) => {
           <ProductCard key={product.id} product={product} searchTerm={searchTerm} products={products} />
         ))
       ) : (
-        <p>Nenhum produto encontrado</p>
+        <p>No products found</p>
       )}
     </div>
   );
@@ -199,11 +199,10 @@ const ProductPage = () => {
         },
       });
     } catch (error) {
-      console.error('Erro ao buscar produtos', error);
+      console.error('Failed to ger products', error);
     }
   };
 
-  // Função para buscar os facets
   const fetchFacets = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:5000/api/products/facets`, {
@@ -217,7 +216,7 @@ const ProductPage = () => {
       });
       setFacets(response.data);
     } catch (error) {
-      console.error('Erro ao buscar facets', error);
+      console.error('Failed to get facets', error);
     }
   };
 
