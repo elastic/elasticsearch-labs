@@ -1,15 +1,26 @@
 import csv
 import json
 
-desired_fields = ["id", "brand", "name", "price", "price_sign", "currency",
-                  "image_link", "description", "rating", "category",
-                  "product_type", "tag_list"]
+desired_fields = [
+    "id",
+    "brand",
+    "name",
+    "price",
+    "price_sign",
+    "currency",
+    "image_link",
+    "description",
+    "rating",
+    "category",
+    "product_type",
+    "tag_list",
+]
 
 input_file = "dataset_products.csv"  # Replace with your actual filename
 output_file = "products.json"
 
 # Open CSV file
-with open(input_file, 'r') as csvfile:
+with open(input_file, "r") as csvfile:
     # Read CSV data using DictReader
     csv_reader = csv.DictReader(csvfile)
 
@@ -37,7 +48,7 @@ with open(input_file, 'r') as csvfile:
         json_data.append(product_data)
 
 # Open JSON file for writing
-with open(output_file, 'w') as jsonfile:
+with open(output_file, "w") as jsonfile:
     # Write JSON data to file with indentation
     json.dump(json_data, jsonfile, indent=4)
 
