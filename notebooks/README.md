@@ -20,5 +20,6 @@ Notebooks are organized into the following folders:
   - [OpenAI](./integrations/openai)
   - [Hugging Face](./integrations/hugging-face)
   - [LlamaIndex](./integrations/llama-index)
+  - [Alibaba Cloud](./integrations/alibabacloud-ai-search)
 
 - [`enterprise-search`](./enterprise-search/): Notebooks that demonstrate use cases for working with and exporting from Elastic Enterprise Search, App Search, or Workplace Search.
