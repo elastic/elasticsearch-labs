@@ -1,4 +1,8 @@
-from langchain_elasticsearch import ElasticsearchStore, DenseVectorStrategy, SparseVectorStrategy
+from langchain_elasticsearch import (
+    ElasticsearchStore,
+    DenseVectorStrategy,
+    SparseVectorStrategy,
+)
 from llm_integrations import get_llm
 from elasticsearch_client import (
     elasticsearch_client,
