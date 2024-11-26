@@ -1,4 +1,8 @@
-from langchain_elasticsearch import ElasticsearchStore, SparseVectorStrategy
+from langchain_elasticsearch import (
+    ElasticsearchStore,
+    DenseVectorStrategy,
+    SparseVectorStrategy,
+)
 from llm_integrations import get_llm
 from elasticsearch_client import (
     elasticsearch_client,
@@ -12,16 +16,33 @@ INDEX = os.getenv("ES_INDEX", "workplace-app-docs")
 INDEX_CHAT_HISTORY = os.getenv(
     "ES_INDEX_CHAT_HISTORY", "workplace-app-docs-chat-history"
 )
-ELSER_MODEL = os.getenv("ELSER_MODEL", ".elser_model_2")
+MODEL_ID = os.getenv("ES_MODEL_ID", ".elser_model_2")
+STRATEGY_TYPE = os.getenv("ES_STRATEGY_TYPE", "sparse")
+VECTOR_FIELD = os.getenv("ES_VECTOR_FIELD", "vector")
+QUERY_FIELD = os.getenv("ES_QUERY_FIELD", "text")
+
 SESSION_ID_TAG = "[SESSION_ID]"
 SOURCE_TAG = "[SOURCE]"
 DONE_TAG = "[DONE]"
 
-store = ElasticsearchStore(
-    es_connection=elasticsearch_client,
-    index_name=INDEX,
-    strategy=SparseVectorStrategy(model_id=ELSER_MODEL),
-)
+if STRATEGY_TYPE == "sparse":
+    strategy = SparseVectorStrategy(model_id=MODEL_ID)
+    store = ElasticsearchStore(
+        es_connection=elasticsearch_client,
+        index_name=INDEX,
+        strategy=strategy,
+    )
+elif STRATEGY_TYPE == "dense":
+    strategy = DenseVectorStrategy(model_id=MODEL_ID, hybrid=True)
+    store = ElasticsearchStore(
+        es_connection=elasticsearch_client,
+        index_name=INDEX,
+        vector_query_field=VECTOR_FIELD,
+        query_field=QUERY_FIELD,
+        strategy=strategy,
+    )
+else:
+    raise ValueError(f"Invalid strategy type: {STRATEGY_TYPE}")
 
 
 @stream_with_context
@@ -50,9 +71,10 @@ def ask_question(question, session_id):
     docs = store.as_retriever().invoke(condensed_question)
     for doc in docs:
         doc_source = {**doc.metadata, "page_content": doc.page_content}
-        current_app.logger.debug(
-            "Retrieved document passage from: %s", doc.metadata["name"]
-        )
+        if "name" in doc.metadata:
+            current_app.logger.debug(
+                "Retrieved document passage from: %s", doc.metadata["name"]
+            )
         yield f"data: {SOURCE_TAG} {json.dumps(doc_source)}\n\n"
 
     qa_prompt = render_template(
