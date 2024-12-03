@@ -1,0 +1,34 @@
+# Local configuration files
+.env
+.vscode/
+.idea/
+
+# Generated files
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# Cache files
+.cache/
+npm-cache/
+
+# Test files
+tests/
+*.pytest_cache
+
+# Generated documentation files
+docs/_build/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Large or binary files
+*.mp4
+*.avi
+*.mov
+*.zip
+*.tar.gz

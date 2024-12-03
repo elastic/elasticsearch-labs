@@ -1,0 +1,4 @@
+elasticsearch
+aiohttp
+pyyaml
+pandas
