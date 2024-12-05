@@ -8,7 +8,7 @@ RUN rm -rf /app/frontend/node_modules
 RUN cd frontend && yarn install
 RUN cd frontend && REACT_APP_API_HOST=/api yarn build
 
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 RUN mkdir -p ./frontend/build
