@@ -358,7 +358,8 @@ yarl==1.11.1
     # via aiohttp
 zipp==3.20.2
     # via importlib-metadata
-
+langchain-elasticsearch==0.3.0
+langtrace-python-sdk>=3.3.14
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools

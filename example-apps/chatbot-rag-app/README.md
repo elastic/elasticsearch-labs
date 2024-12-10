@@ -21,6 +21,8 @@ tar -xz --strip=2 elasticsearch-labs-main/example-apps/chatbot-rag-app
 
 There are a number of ways to install Elasticsearch. Cloud is best for most use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/tutorials/install-elasticsearch) for more information.
 
+Note: This example needs a ELSER model so make sure a ML node with at least 8GB RAM on the cluster is deployed and then deploy the ELSER model on the node.
+
 ### Connect to Elasticsearch
 
 This app requires the following environment variables to be set to connect to Elasticsearch hosted on Elastic Cloud:
@@ -176,7 +178,7 @@ With the environment variables set, you can run the following commands to start 
 
 #### Pre-requisites
 
-- Python 3.8+
+- Python 3.8+ and <3.12 (tiktoken will not install for python >= 3.12)
 - Node 14+
 
 #### Install the dependencies
