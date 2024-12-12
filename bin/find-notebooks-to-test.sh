@@ -7,6 +7,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/search/08-learning-to-rank.ipynb"
     "notebooks/search/10-semantic-reranking-retriever-cohere.ipynb"
     "notebooks/search/11-semantic-reranking-hugging-face.ipynb"
+    "notebooks/search/12-semantic-reranking-elastic-rerank.ipynb"
     "notebooks/images/image-similarity.ipynb"
     "notebooks/langchain/langchain-vector-store.ipynb"
     "notebooks/langchain/self-query-retriever-examples/chatbot-example.ipynb"
