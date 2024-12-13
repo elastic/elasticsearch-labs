@@ -15,6 +15,8 @@ The following notebooks are available:
 8. [Learning to rank](#8-learning-to-rank)
 9. [Semantic text](#9-semantic-text)
 10. [Semantic reranking with Cohere reranker](#10-semantic-reranking-retriever-cohere)
+11. [Semantic reranking with a Hugging Face model](#11-semantic-reranking-hugging-face)
+12. [Semantic reranking with Elastic Rerank](#12-semantic-reranking-elastic-rerank)
 
 ## Notebooks
 
