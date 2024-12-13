@@ -15,6 +15,8 @@ The following notebooks are available:
 8. [Learning to rank](#8-learning-to-rank)
 9. [Semantic text](#9-semantic-text)
 10. [Semantic reranking with Cohere reranker](#10-semantic-reranking-retriever-cohere)
+11. [Semantic reranking with a Hugging Face model](#11-semantic-reranking-hugging-face)
+12. [Semantic reranking with Elastic Rerank](#12-semantic-reranking-elastic-rerank)
 
 ## Notebooks
 
@@ -105,3 +107,19 @@ In the [`10-semantic-reranking-retriever-cohere.ipynb`](./10-semantic-reranking-
 
 - Use the inference API to create an inference endpoint for reranking
 - Use a `retriever` query to search and rerank the results
+
+### 11. Semantic reranking with a Hugging Face model
+
+In the [`11-semantic-reranking-hugging-face.ipynb`](./11-semantic-reranking-hugging-face.ipynb) notebook, you'll learn how to:
+
+- Load a Hugging Face model for semantic reranking into Elasticsearch
+- Use the inference API to create an inference endpoint for reranking
+- Use a `retriever` query to search and rerank the results
+
+### 12. Semantic reranking with Elastic Rerank
+
+In the [`12-semantic-reranking-elastic-rerank.ipynb`](./12-semantic-reranking-elastic-rerank.ipynb) notebook, you'll learn how to:
+
+- Deploy the [Elastic Rerank](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-rerank.html) model using the Inference API
+- Use a `retriever` query to search and rerank the results
+
