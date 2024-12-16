@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         es_stack:
-          - 8.16.0
+          - 8.16.1
           - 8.17.0
           - 8.18.0-SNAPSHOT
     runs-on: ubuntu-latest
