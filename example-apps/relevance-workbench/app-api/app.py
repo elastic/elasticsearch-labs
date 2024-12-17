@@ -5,6 +5,8 @@ from elasticsearch import Elasticsearch
 CLOUD_ID = os.environ["CLOUD_ID"]
 ES_USER = os.environ["ELASTICSEARCH_USERNAME"]
 ES_PASSWORD = os.environ["ELASTICSEARCH_PASSWORD"]
+ELSER_MODEL = os.getenv("ELSER_MODEL", ".elser_model_2")
+INDEX = os.getenv("ES_INDEX", "search-movies")
 
 datasets = {
     "movies": {
@@ -31,7 +33,8 @@ def route_api_search(index):
     """
     [query, rrf, type, k, datasetId] = [
         request.args.get("q"),
-        request.args.get("rrf", default=False, type=lambda v: v.lower() == "true"),
+        request.args.get("rrf", default=False,
+                         type=lambda v: v.lower() == "true"),
         request.args.get("type", default="bm25"),
         request.args.get("k", default=0),
         request.args.get("dataset", default="movies"),
@@ -41,7 +44,8 @@ def route_api_search(index):
             query, index, **{"rrf": rrf, "k": k, "dataset": datasetId}
         )
     elif type == "bm25":
-        search_result = run_full_text_search(query, index, **{"dataset": datasetId})
+        search_result = run_full_text_search(
+            query, index, **{"dataset": datasetId})
     transformed_search_result = transform_search_response(
         search_result, datasets[datasetId]["mapping_fields"]
     )
@@ -82,7 +86,7 @@ def get_text_expansion_request_body(query, size=10, **options):
         te = {"text_expansion": {}}
         te["text_expansion"][field] = {
             "model_text": query,
-            "model_id": ".elser_model_1",
+            "model_id": ELSER_MODEL,
             "boost": boost,
         }
         text_expansions.append(te)
@@ -112,7 +116,7 @@ def get_text_expansion_request_body(query, size=10, **options):
         te = {"text_expansion": {}}
         te["text_expansion"][field] = {
             "model_text": query,
-            "model_id": ".elser_model_1",
+            "model_id": ELSER_MODEL,
             "boost": boost,
         }
         text_expansions.append(te)
@@ -157,7 +161,7 @@ def get_hybrid_search_rrf_request_body(query, size=10, **options):
         te = {"text_expansion": {}}
         te["text_expansion"][field] = {
             "model_text": query,
-            "model_id": ".elser_model_1",
+            "model_id": ELSER_MODEL,
             "boost": boost,
         }
         text_expansions.append(te)
@@ -165,7 +169,7 @@ def get_hybrid_search_rrf_request_body(query, size=10, **options):
         "_source": False,
         "fields": result_fields,
         "size": size,
-        "rank": {"rrf": {"window_size": 10, "rank_constant": 2}},
+        "rank": {"rrf": {"rank_window_size": 10, "rank_constant": 2}},
         "sub_searches": [
             {"query": {"bool": {"should": text_expansions}}},
             {"query": {"multi_match": {"query": query, "fields": search_fields}}},
@@ -198,7 +202,8 @@ def execute_search_request_using_raw_dsl(index, body):
     response = es.perform_request(
         "POST",
         f"/{index}/_search",
-        headers={"content-type": "application/json", "accept": "application/json"},
+        headers={"content-type": "application/json",
+                 "accept": "application/json"},
         body=body,
     )
 
