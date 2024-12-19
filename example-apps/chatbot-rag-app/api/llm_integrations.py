@@ -7,7 +7,6 @@ from langchain_aws import ChatBedrock
 
 import os
 import vertexai
-import boto3
 
 LLM_TYPE = os.getenv("LLM_TYPE", "openai")
 
@@ -26,17 +25,8 @@ def init_vertex_chat(temperature):
 
 
 def init_azure_chat(temperature):
-    OPENAI_VERSION = os.getenv("OPENAI_VERSION", "2023-05-15")
-    BASE_URL = os.getenv("OPENAI_BASE_URL")
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    OPENAI_ENGINE = os.getenv("OPENAI_ENGINE")
     return AzureChatOpenAI(
-        deployment_name=OPENAI_ENGINE,
-        openai_api_base=BASE_URL,
-        openai_api_version=OPENAI_VERSION,
-        openai_api_key=OPENAI_API_KEY,
-        streaming=True,
-        temperature=temperature,
+        model=os.getenv("CHAT_DEPLOYMENT"), streaming=True, temperature=temperature
     )
 
 

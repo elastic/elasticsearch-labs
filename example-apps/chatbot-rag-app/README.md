@@ -24,8 +24,7 @@ Copy [env.example](env.example) to `.env` and fill in values noted inside.
 There are a number of ways to install Elasticsearch. Cloud is best for most
 use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/tutorials/install-elasticsearch) for more information.
 
-Once you decided your approach, edit your `.env` file corresponding to your
-Elastic Cloud or self-hosted Elasticsearch instance.
+Once you decided your approach, edit your `.env` file accordingly.
 
 ### Elasticsearch index and chat_history index
 
