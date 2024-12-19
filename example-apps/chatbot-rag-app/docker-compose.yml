@@ -1,0 +1,23 @@
+services:
+  ingest-data:
+    build:
+      context: .
+    container_name: ingest-data
+    restart: 'no'
+    env_file:
+      - .env
+      - .flaskenv
+    command: flask create-index
+
+  api-frontend:
+    depends_on:
+      ingest-data:
+        condition: service_completed_successfully
+    container_name: api-frontend
+    build:
+      context: .
+    env_file:
+      - .env
+      - .flaskenv
+    ports:
+      - "4000:4000"

@@ -15,216 +15,128 @@ curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/example-apps/chatbot-rag-app
 ```
 
+## Make your .env file
+
+Copy [env.example](env.example) to `.env` and fill in values noted inside.
+
 ## Installing and connecting to Elasticsearch
 
-### Install Elasticsearch
+There are a number of ways to install Elasticsearch. Cloud is best for most
+use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/tutorials/install-elasticsearch) for more information.
 
-There are a number of ways to install Elasticsearch. Cloud is best for most use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/tutorials/install-elasticsearch) for more information.
+Once you decided your approach, edit your `.env` file accordingly.
 
-### Connect to Elasticsearch
+### Elasticsearch index and chat_history index
 
-This app requires the following environment variables to be set to connect to Elasticsearch hosted on Elastic Cloud:
-
-```sh
-export ELASTIC_CLOUD_ID=...
-export ELASTIC_API_KEY=...
-```
-
-You can add these to a `.env` file for convenience. See the `env.example` file for a .env file template.
-
-#### Self-Hosted Elasticsearch
-
-You can also connect to a self-hosted Elasticsearch instance. To do so, you will need to set the following environment variables:
-
-```sh
-export ELASTICSEARCH_URL=...
-```
-
-### Change the Elasticsearch index and chat_history index
-
-By default, the app will use the `workplace-app-docs` index and the chat history index will be `workplace-app-docs-chat-history`. If you want to change these, you can set the following environment variables:
-
-```sh
-ES_INDEX=workplace-app-docs
-ES_INDEX_CHAT_HISTORY=workplace-app-docs-chat-history
-```
+By default, the app will use the `workplace-app-docs` index and the chat
+history index will be `workplace-app-docs-chat-history`. If you want to change
+these, edit `ES_INDEX` and `ES_INDEX_CHAT_HISTORY` entries in your `.env` file.
 
 ## Connecting to LLM
 
-We support several LLM providers. To use one of them, you need to set the `LLM_TYPE` environment variable. For example:
+We support several LLM providers, but only one is used at runtime, and selected
+by the `LLM_TYPE` entry in your `.env` file. Edit that file to choose an LLM,
+and configure its templated connection settings:
 
-```sh
-export LLM_TYPE=azure
-```
-
-The following sub-sections define the configuration requirements of each supported LLM.
-
-### OpenAI
-
-To use OpenAI LLM, you will need to provide the OpenAI key via `OPENAI_API_KEY` environment variable:
-
-```sh
-export LLM_TYPE=openai
-export OPENAI_API_KEY=...
-```
-
-You can get your OpenAI key from the [OpenAI dashboard](https://platform.openai.com/account/api-keys).
-
-### Azure OpenAI
-
-If you want to use Azure LLM, you will need to set the following environment variables:
-
-```sh
-export LLM_TYPE=azure
-export OPENAI_VERSION=... # e.g. 2023-05-15
-export OPENAI_BASE_URL=...
-export OPENAI_API_KEY=...
-export OPENAI_ENGINE=... # deployment name in Azure
-```
-
-### Bedrock LLM
-
-To use Bedrock LLM you need to set the following environment variables in order to authenticate to AWS.
-
-```sh
-export LLM_TYPE=bedrock
-export AWS_ACCESS_KEY=...
-export AWS_SECRET_KEY=...
-export AWS_REGION=... # e.g. us-east-1
-export AWS_MODEL_ID=... # Default is anthropic.claude-v2
-```
-
-#### AWS Config
-
-Optionally, you can connect to AWS via the config file in `~/.aws/config` described here:
-https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#configuring-credentials
-
-```
-[default]
-aws_access_key_id=...
-aws_secret_access_key=...
-region=...
-```
-
-### Vertex AI
-
-To use Vertex AI you need to set the following environment variables. More information [here](https://python.langchain.com/docs/integrations/llms/google_vertex_ai_palm).
-
-```sh
-export LLM_TYPE=vertex
-export VERTEX_PROJECT_ID=<gcp-project-id>
-export VERTEX_REGION=<gcp-region> # Default is us-central1
-export GOOGLE_APPLICATION_CREDENTIALS=<path-json-service-account>
-```
-
-### Mistral AI
-
-To use Mistral AI you need to set the following environment variables. The app has been tested with Mistral Large Model deployed through Microsoft Azure. More information [here](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-mistral).
-
-```
-export LLM_TYPE=mistral
-export MISTRAL_API_KEY=...
-export MISTRAL_API_ENDPOINT=...  # should be of the form https://<endpoint>.<region>.inference.ai.azure.com
-export MISTRAL_MODEL=...  # optional
-```
-
-### Cohere
-
-To use Cohere you need to set the following environment variables:
-
-```
-export LLM_TYPE=cohere
-export COHERE_API_KEY=...
-export COHERE_MODEL=...  # optional
-```
+* azure: [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/)
+* bedrock: [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/)
+* openai: [OpenAI Platform](https://platform.openai.com/docs/overview) and
+  services compatible with its API.
+* vertex: [Google Vertex AI](https://cloud.google.com/vertex-ai/docs)
+* mistral: [Mistral AI](https://docs.mistral.ai/)
+* cohere: [Cohere](https://docs.cohere.com/)
 
 ## Running the App
 
-Once you have indexed data into the Elasticsearch index, there are two ways to run the app: via Docker or locally. Docker is advised for testing & production use. Locally is advised for development.
+There are two ways to run the app: via Docker or locally. Docker is advised for
+ease while locally is advised if you are making changes to the application.
 
-### Through Docker
+### Run with docker
 
-Build the Docker image and run it with the following environment variables.
+Docker compose is the easiest way, as you get one-step to:
+* build the [frontend](frontend)
+* ingest data into elasticsearch
+* run the app, which listens on http://localhost:4000
 
-```sh
-docker build -f Dockerfile -t chatbot-rag-app .
+**Double-check you have a `.env` file with all your variables set first!**
+
+```bash
+docker compose up --build --force-recreate
 ```
 
-#### Ingest data
+*Note*: First time creating the index can fail on timeout. Wait a few minutes
+and retry.
 
-Make sure you have a `.env` file with all your variables, then run:
+### Run locally
 
-```sh
-docker run --rm --env-file .env chatbot-rag-app flask create-index
+If you want to run this example with Python and Node.js, you need to do a few
+things listed in the [Dockerfile](Dockerfile). The below uses the same
+production mode as used in Docker to avoid problems in debug mode.
+
+**Double-check you have a `.env` file with all your variables set first!**
+
+#### Build the frontend
+
+The web assets are in the [frontend](frontend) directory, and built with yarn.
+
+```bash
+# Install and use a recent node, if you don't have one.
+nvm install --lts
+nvm use --lts
+# Build the frontend web assets
+(cd frontend; yarn install; REACT_APP_API_HOST=/api yarn build)
 ```
 
-See "Ingest data" section under Running Locally for more details about the `flask create-index` command.
+#### Configure your python environment
 
-#### Run API and frontend
+Before we can run the app, we need a working Python environment with the
+correct packages installed:
 
-You will need to set the appropriate environment variables in your `.env` file. See the `env.example` file for instructions.
-
-```sh
-docker run --rm -p 4000:4000 --env-file .env -d chatbot-rag-app
-```
-
-Note that if you are using an LLM that requires an external credentials file (such as Vertex AI), you will need to make this file accessible to the container in the `run` command above. For this you can use a bind mount, or you can also edit the Dockerfile to copy the credentials file to the container image at build time.
-
-### Locally (for development)
-
-With the environment variables set, you can run the following commands to start the server and frontend.
-
-#### Pre-requisites
-
-- Python 3.8+
-- Node 14+
-
-#### Install the dependencies
-
-For Python we recommend using a virtual environment.
-
-_ℹ️ Here's a good [primer](https://realpython.com/python-virtual-environments-a-primer) on virtual environments from Real Python._
-
-```sh
-# Create a virtual environment
-python -m venv .venv
-
-# Activate the virtual environment
+```bash
+python3 -m venv .venv
 source .venv/bin/activate
-
-# Install Python dependencies
+# install dev requirements for pip-compile and dotenv
+pip install pip-tools "python-dotenv[cli]"
+pip-compile
 pip install -r requirements.txt
-
-# Install Node dependencies
-cd frontend && yarn && cd ..
 ```
 
-#### Ingest data
+#### Run the ingest command
 
-You can index the sample data from the provided .json files in the `data` folder:
-
-```sh
-flask create-index
+First, ingest the data into elasticsearch:
+```bash
+$ dotenv run -- flask create-index
+".elser_model_2" model not available, downloading it now
+Model downloaded, starting deployment
+Loading data from ./data/data.json
+Loaded 15 documents
+Split 15 documents into 26 chunks
+Creating Elasticsearch sparse vector store in http://localhost:9200
 ```
 
-By default, this will index the data into the `workplace-app-docs` index. You can change this by setting the `ES_INDEX` environment variable.
+*Note*: First time creating the index can fail on timeout. Wait a few minutes
+and retry.
 
-##### Indexing your own data
+#### Run the app
 
-The ingesting logic is stored in `data/index-data.py`. This is a simple script that uses Langchain to index data into Elasticsearch, using the `JSONLoader` and `CharacterTextSplitter` to split the large documents into passages. Modify this script to index your own data.
-
-Langchain offers many different ways to index data, if you cant just load it via JSONLoader. See the [Langchain documentation](https://python.langchain.com/docs/modules/data_connection/document_loaders)
-
-Remember to keep the `ES_INDEX` environment variable set to the index you want to index into and to query from.
-
-#### Run API and frontend
-
-```sh
-# Launch API app
-flask run
-
-# In a separate terminal launch frontend app
-cd frontend && yarn start
+Now, run the app, which listens on http://localhost:4000
+```bash
+$ dotenv run -- flask run
+ * Serving Flask app 'api/app.py'
+ * Debug mode: off
 ```
 
-You can now access the frontend at http://localhost:3000. Changes are automatically reloaded.
+## Customizing the app
+
+### Indexing your own data
+
+The ingesting logic is stored in [data/index_data.py](data/index_data.py). This
+is a simple script that uses Langchain to index data into Elasticsearch, using
+`RecursiveCharacterTextSplitter` to split the large JSON documents into
+passages. Modify this script to index your own data.
+
+See [Langchain documentation][loader-docs] for more ways to load documents.
+
+
+---
+[loader-docs]: https://python.langchain.com/docs/how_to/#document-loaders

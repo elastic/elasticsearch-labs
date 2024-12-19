@@ -1,22 +1,19 @@
-from langchain_community.chat_models import (
-    ChatOpenAI,
-    ChatVertexAI,
-    AzureChatOpenAI,
-    BedrockChat,
-    ChatCohere,
-)
-from langchain_mistralai.chat_models import ChatMistralAI
+from langchain_openai import AzureChatOpenAI
+from langchain_openai import ChatOpenAI
+from langchain_google_vertexai import ChatVertexAI
+from langchain_cohere import ChatCohere
+from langchain_mistralai import ChatMistralAI
+from langchain_aws import ChatBedrock
+
 import os
 import vertexai
-import boto3
 
 LLM_TYPE = os.getenv("LLM_TYPE", "openai")
 
 
 def init_openai_chat(temperature):
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     return ChatOpenAI(
-        openai_api_key=OPENAI_API_KEY, streaming=True, temperature=temperature
+        model=os.getenv("CHAT_MODEL"), streaming=True, temperature=temperature
     )
 
 
@@ -28,17 +25,8 @@ def init_vertex_chat(temperature):
 
 
 def init_azure_chat(temperature):
-    OPENAI_VERSION = os.getenv("OPENAI_VERSION", "2023-05-15")
-    BASE_URL = os.getenv("OPENAI_BASE_URL")
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    OPENAI_ENGINE = os.getenv("OPENAI_ENGINE")
     return AzureChatOpenAI(
-        deployment_name=OPENAI_ENGINE,
-        openai_api_base=BASE_URL,
-        openai_api_version=OPENAI_VERSION,
-        openai_api_key=OPENAI_API_KEY,
-        streaming=True,
-        temperature=temperature,
+        model=os.getenv("CHAT_DEPLOYMENT"), streaming=True, temperature=temperature
     )
 
 
@@ -47,14 +35,10 @@ def init_bedrock(temperature):
     AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
     AWS_REGION = os.getenv("AWS_REGION")
     AWS_MODEL_ID = os.getenv("AWS_MODEL_ID", "anthropic.claude-v2")
-    BEDROCK_CLIENT = boto3.client(
-        service_name="bedrock-runtime",
+    return ChatBedrock(
         region_name=AWS_REGION,
         aws_access_key_id=AWS_ACCESS_KEY,
         aws_secret_access_key=AWS_SECRET_KEY,
-    )
-    return BedrockChat(
-        client=BEDROCK_CLIENT,
         model_id=AWS_MODEL_ID,
         streaming=True,
         model_kwargs={"temperature": temperature},
