@@ -21,7 +21,7 @@ ELSER_MODEL = os.getenv("ELSER_MODEL", ".elser_model_2")
 if ELASTICSEARCH_URL:
     elasticsearch_client = Elasticsearch(
         hosts=[ELASTICSEARCH_URL],
-        basic_auth=(ELASTICSEARCH_USER, ELASTICSEARCH_PASSWORD)
+        basic_auth=(ELASTICSEARCH_USER, ELASTICSEARCH_PASSWORD),
     )
 elif ELASTIC_CLOUD_ID:
     elasticsearch_client = Elasticsearch(
@@ -39,16 +39,22 @@ def install_elser():
         print(f'"{ELSER_MODEL}" model is available')
     except NotFoundError:
         print(f'"{ELSER_MODEL}" model not available, downloading it now')
-        elasticsearch_client.ml.put_trained_model(model_id=ELSER_MODEL, input={"field_names": ["text_field"]})
+        elasticsearch_client.ml.put_trained_model(
+            model_id=ELSER_MODEL, input={"field_names": ["text_field"]}
+        )
         while True:
-            status = elasticsearch_client.ml.get_trained_models(model_id=ELSER_MODEL, include="definition_status")
+            status = elasticsearch_client.ml.get_trained_models(
+                model_id=ELSER_MODEL, include="definition_status"
+            )
             if status["trained_model_configs"][0]["fully_defined"]:
                 # model is ready
                 break
             time.sleep(1)
 
         print("Model downloaded, starting deployment")
-        elasticsearch_client.ml.start_trained_model_deployment(model_id=ELSER_MODEL, wait_for="fully_allocated")
+        elasticsearch_client.ml.start_trained_model_deployment(
+            model_id=ELSER_MODEL, wait_for="fully_allocated"
+        )
 
 
 def main():
@@ -69,7 +75,9 @@ def main():
 
     print(f"Loaded {len(workplace_docs)} documents")
 
-    text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=512, chunk_overlap=256)
+    text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        chunk_size=512, chunk_overlap=256
+    )
 
     docs = text_splitter.transform_documents(workplace_docs)
 
