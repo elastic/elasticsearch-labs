@@ -59,6 +59,8 @@ Docker compose is the easiest way, as you get one-step to:
 * ingest data into elasticsearch
 * run the app, which listens on http://localhost:4000
 
+**Double-check you have a `.env` file with all your variables set first!**
+
 ```bash
 docker compose up --build --force-recreate
 ```
@@ -69,9 +71,10 @@ and retry.
 ### Run locally
 
 If you want to run this example with Python and Node.js, you need to do a few
-things listed in the [Dockerfile](Dockerfile).
+things listed in the [Dockerfile](Dockerfile). The below uses the same
+production mode as used in Docker to avoid problems in debug mode.
 
-**Make sure you have a `.env` file with all your variables**
+**Double-check you have a `.env` file with all your variables set first!**
 
 #### Build the frontend
 
@@ -123,3 +126,18 @@ $ dotenv run -- flask run
  * Serving Flask app 'api/app.py'
  * Debug mode: off
 ```
+
+## Customizing the app
+
+### Indexing your own data
+
+The ingesting logic is stored in [data/index_data.py](data/index_data.py). This
+is a simple script that uses Langchain to index data into Elasticsearch, using
+`RecursiveCharacterTextSplitter` to split the large JSON documents into
+passages. Modify this script to index your own data.
+
+See [Langchain documentation][loader-docs] for more ways to load documents.
+
+
+---
+[loader-docs]: https://python.langchain.com/docs/how_to/#document-loaders
