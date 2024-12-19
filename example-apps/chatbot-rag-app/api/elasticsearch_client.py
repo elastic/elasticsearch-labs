@@ -3,13 +3,16 @@ from langchain_elasticsearch import ElasticsearchChatMessageHistory
 
 import os
 
-ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
 ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
+ELASTICSEARCH_USER = os.getenv("ELASTICSEARCH_USER")
+ELASTICSEARCH_PASSWORD = os.getenv("ELASTICSEARCH_PASSWORD")
+ELASTIC_CLOUD_ID = os.getenv("ELASTIC_CLOUD_ID")
 ELASTIC_API_KEY = os.getenv("ELASTIC_API_KEY")
 
 if ELASTICSEARCH_URL:
     elasticsearch_client = Elasticsearch(
         hosts=[ELASTICSEARCH_URL],
+        basic_auth=(ELASTICSEARCH_USER, ELASTICSEARCH_PASSWORD)
     )
 elif ELASTIC_CLOUD_ID:
     elasticsearch_client = Elasticsearch(
