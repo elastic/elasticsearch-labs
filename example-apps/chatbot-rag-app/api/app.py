@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, Response
-from flask_cors import CORS
-from uuid import uuid4
-from chat import ask_question
 import os
 import sys
+from uuid import uuid4
+
+from chat import ask_question
+from flask import Flask, Response, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
 CORS(app)
