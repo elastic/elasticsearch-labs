@@ -1,7 +1,7 @@
+import os
+
 from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchChatMessageHistory
-
-import os
 
 ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
 ELASTICSEARCH_USER = os.getenv("ELASTICSEARCH_USER")

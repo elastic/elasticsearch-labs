@@ -1,12 +1,11 @@
-from langchain_openai import AzureChatOpenAI
-from langchain_openai import ChatOpenAI
-from langchain_google_vertexai import ChatVertexAI
-from langchain_cohere import ChatCohere
-from langchain_mistralai import ChatMistralAI
-from langchain_aws import ChatBedrock
-
 import os
+
 import vertexai
+from langchain_aws import ChatBedrock
+from langchain_cohere import ChatCohere
+from langchain_google_vertexai import ChatVertexAI
+from langchain_mistralai import ChatMistralAI
+from langchain_openai import AzureChatOpenAI, ChatOpenAI
 
 LLM_TYPE = os.getenv("LLM_TYPE", "openai")
 
@@ -79,7 +78,7 @@ MAP_LLM_TYPE_TO_CHAT_MODEL = {
 
 
 def get_llm(temperature=0):
-    if not LLM_TYPE in MAP_LLM_TYPE_TO_CHAT_MODEL:
+    if LLM_TYPE not in MAP_LLM_TYPE_TO_CHAT_MODEL:
         raise Exception(
             "LLM type not found. Please set LLM_TYPE to one of: "
             + ", ".join(MAP_LLM_TYPE_TO_CHAT_MODEL.keys())

@@ -1,19 +1,16 @@
 import json
 import os
 
-from elasticsearch import Elasticsearch
-from flask import current_app, render_template, stream_with_context
-from langchain_elasticsearch import (
-    ElasticsearchChatMessageHistory,
-    ElasticsearchStore,
-    SparseVectorStrategy,
-)
-from langchain_openai import ChatOpenAI
-from llm_integrations import get_llm
 from elasticsearch_client import (
     elasticsearch_client,
     get_elasticsearch_chat_message_history,
 )
+from flask import current_app, render_template, stream_with_context
+from langchain_elasticsearch import (
+    ElasticsearchStore,
+    SparseVectorStrategy,
+)
+from llm_integrations import get_llm
 
 INDEX = os.getenv("ES_INDEX", "workplace-app-docs")
 INDEX_CHAT_HISTORY = os.getenv(
