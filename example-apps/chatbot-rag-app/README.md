@@ -95,9 +95,8 @@ correct packages installed:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-# install dev requirements for pip-compile and dotenv
-pip install pip-tools "python-dotenv[cli]"
-pip-compile
+# Install dotenv which is a portable way to load environment variables.
+pip install "python-dotenv[cli]"
 pip install -r requirements.txt
 ```
 
@@ -105,7 +104,7 @@ pip install -r requirements.txt
 
 First, ingest the data into elasticsearch:
 ```bash
-$ dotenv run -- flask create-index
+$ dotenv run -- flask --app api/app.py create-index
 ".elser_model_2" model not available, downloading it now
 Model downloaded, starting deployment
 Loading data from ./data/data.json
@@ -121,12 +120,29 @@ and retry.
 
 Now, run the app, which listens on http://localhost:4000
 ```bash
-$ dotenv run -- flask run
- * Serving Flask app 'api/app.py'
+$ dotenv run -- python api/app.py
+ * Serving Flask app 'app'
  * Debug mode: off
 ```
 
 ## Customizing the app
+
+### Updating package versions
+
+To update package versions, recreate [requirements.txt](requirements.txt) and
+reinstall like this. Once checked in, any commands above will use updates.
+
+```bash
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+# Install dev requirements for pip-compile
+pip install pip-tools
+# Recreate requirements.txt
+pip-compile
+# Install main dependencies
+pip install -r requirements.txt
+```
 
 ### Indexing your own data
 

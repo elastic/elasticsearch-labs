@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build-step
+FROM node:22-alpine AS build-step
 WORKDIR /app
 ENV PATH=/node_modules/.bin:$PATH
 COPY frontend ./frontend
@@ -28,7 +28,4 @@ COPY api ./api
 COPY data ./data
 
 EXPOSE 4000
-# The only thing different from running local is that in docker we need to
-# listen on all IPs, not just localhost.
-ENV FLASK_RUN_HOST=0.0.0.0
-CMD [ "flask", "run"]
+CMD [ "python", "api/app.py"]
