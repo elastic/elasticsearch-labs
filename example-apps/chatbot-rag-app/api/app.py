@@ -37,6 +37,5 @@ def create_index():
     index_data.main()
 
 
-# Unless we run through flask, we can miss critical settings or telemetry signals.
 if __name__ == "__main__":
-    raise RuntimeError("Run via the parent directory: 'flask run'")
+    app.run(host="0.0.0.0", port=4000, debug=False)

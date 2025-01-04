@@ -1,13 +1,20 @@
+name: chatbot-rag-app
+
 services:
   ingest-data:
     build:
       context: .
     container_name: ingest-data
     restart: 'no'
+    environment:
+      # host.docker.internal means connect to the host machine, e.g. your laptop
+      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
+      FLASK_APP: api/app.py
     env_file:
       - .env
-      - .flaskenv
     command: flask create-index
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
 
   api-frontend:
     depends_on:
@@ -16,8 +23,12 @@ services:
     container_name: api-frontend
     build:
       context: .
+    environment:
+      # host.docker.internal means connect to the host machine, e.g. your laptop
+      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
     env_file:
       - .env
-      - .flaskenv
     ports:
       - "4000:4000"
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
