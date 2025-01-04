@@ -26,11 +26,27 @@ use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/
 
 Once you decided your approach, edit your `.env` file accordingly.
 
-### Elasticsearch index and chat_history index
+### Running your own Elastic Stack with Docker
 
-By default, the app will use the `workplace-app-docs` index and the chat
-history index will be `workplace-app-docs-chat-history`. If you want to change
-these, edit `ES_INDEX` and `ES_INDEX_CHAT_HISTORY` entries in your `.env` file.
+If you'd like to start Elastic locally, you can use the provided
+[docker-compose-elastic.yml](docker-compose-elastic.yml) file. This starts
+Elasticsearch, Kibana, and APM Server and only requires Docker installed.
+
+Use docker compose to run Elastic stack in the background:
+
+```bash
+docker compose -f docker-compose-elastic.yml up --force-recreate -d
+```
+
+Then, you can view Kibana at http://localhost:5601/app/home#/
+
+If asked for a username and password, use username: elastic and password: elastic.
+
+Clean up when finished, like this:
+
+```bash
+docker compose -f docker-compose-elastic.yml down
+```
 
 ## Connecting to LLM
 
@@ -110,13 +126,7 @@ pip install -r requirements.txt
 
 First, ingest the data into elasticsearch:
 ```bash
-$ dotenv run -- flask --app api/app.py create-index
-".elser_model_2" model not available, downloading it now
-Model downloaded, starting deployment
-Loading data from ./data/data.json
-Loaded 15 documents
-Split 15 documents into 26 chunks
-Creating Elasticsearch sparse vector store in http://localhost:9200
+FLASK_APP=api/app.py dotenv run -- flask create-index
 ```
 
 *Note*: First time creating the index can fail on timeout. Wait a few minutes
@@ -126,12 +136,10 @@ and retry.
 
 Now, run the app, which listens on http://localhost:4000
 ```bash
-$ dotenv run -- python api/app.py
- * Serving Flask app 'app'
- * Debug mode: off
+dotenv run -- python api/app.py
 ```
 
-## Customizing the app
+## Advanced
 
 ### Updating package versions
 
@@ -149,6 +157,12 @@ pip-compile
 # Install main dependencies
 pip install -r requirements.txt
 ```
+
+### Elasticsearch index and chat_history index
+
+By default, the app will use the `workplace-app-docs` index and the chat
+history index will be `workplace-app-docs-chat-history`. If you want to change
+these, edit `ES_INDEX` and `ES_INDEX_CHAT_HISTORY` entries in your `.env` file.
 
 ### Indexing your own data
 
