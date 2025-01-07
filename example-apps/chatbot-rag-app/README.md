@@ -26,11 +26,27 @@ use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/
 
 Once you decided your approach, edit your `.env` file accordingly.
 
-### Elasticsearch index and chat_history index
+### Running your own Elastic Stack with Docker
 
-By default, the app will use the `workplace-app-docs` index and the chat
-history index will be `workplace-app-docs-chat-history`. If you want to change
-these, edit `ES_INDEX` and `ES_INDEX_CHAT_HISTORY` entries in your `.env` file.
+If you'd like to start Elastic locally, you can use the provided
+[docker-compose-elastic.yml](docker-compose-elastic.yml) file. This starts
+Elasticsearch, Kibana, and APM Server and only requires Docker installed.
+
+Use docker compose to run Elastic stack in the background:
+
+```bash
+docker compose -f docker-compose-elastic.yml up --force-recreate -d
+```
+
+Then, you can view Kibana at http://localhost:5601/app/home#/
+
+If asked for a username and password, use username: elastic and password: elastic.
+
+Clean up when finished, like this:
+
+```bash
+docker compose -f docker-compose-elastic.yml down
+```
 
 ## Connecting to LLM
 
@@ -67,6 +83,12 @@ docker compose up --build --force-recreate
 *Note*: First time creating the index can fail on timeout. Wait a few minutes
 and retry.
 
+Clean up when finished, like this:
+
+```bash
+docker compose down
+```
+
 ### Run locally
 
 If you want to run this example with Python and Node.js, you need to do a few
@@ -95,9 +117,8 @@ correct packages installed:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-# install dev requirements for pip-compile and dotenv
-pip install pip-tools "python-dotenv[cli]"
-pip-compile
+# Install dotenv which is a portable way to load environment variables.
+pip install "python-dotenv[cli]"
 pip install -r requirements.txt
 ```
 
@@ -105,13 +126,7 @@ pip install -r requirements.txt
 
 First, ingest the data into elasticsearch:
 ```bash
-$ dotenv run -- flask create-index
-".elser_model_2" model not available, downloading it now
-Model downloaded, starting deployment
-Loading data from ./data/data.json
-Loaded 15 documents
-Split 15 documents into 26 chunks
-Creating Elasticsearch sparse vector store in http://localhost:9200
+FLASK_APP=api/app.py dotenv run -- flask create-index
 ```
 
 *Note*: First time creating the index can fail on timeout. Wait a few minutes
@@ -121,12 +136,33 @@ and retry.
 
 Now, run the app, which listens on http://localhost:4000
 ```bash
-$ dotenv run -- flask run
- * Serving Flask app 'api/app.py'
- * Debug mode: off
+dotenv run -- python api/app.py
 ```
 
-## Customizing the app
+## Advanced
+
+### Updating package versions
+
+To update package versions, recreate [requirements.txt](requirements.txt) and
+reinstall like this. Once checked in, any commands above will use updates.
+
+```bash
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+# Install dev requirements for pip-compile
+pip install pip-tools
+# Recreate requirements.txt
+pip-compile
+# Install main dependencies
+pip install -r requirements.txt
+```
+
+### Elasticsearch index and chat_history index
+
+By default, the app will use the `workplace-app-docs` index and the chat
+history index will be `workplace-app-docs-chat-history`. If you want to change
+these, edit `ES_INDEX` and `ES_INDEX_CHAT_HISTORY` entries in your `.env` file.
 
 ### Indexing your own data
 
