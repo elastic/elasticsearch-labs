@@ -1,33 +1,14 @@
-# package management
-pip-tools
-
 # core dependencies
 elasticsearch
 langchain
-langchain-community
 langchain-elasticsearch
 tiktoken
 flask
 flask-cors
-python-dotenv
 
-# OpenAI dependencies
-openai
-
-# Vertex AI dependencies
-google-cloud-aiplatform
-grpcio-status
-
-# BedRock dependencies
-boto3
-
-# Mistral dependencies
+# LLM dependencies
+langchain-openai
+langchain-cohere
+langchain-google-vertexai
+langchain-aws
 langchain-mistralai
-
-# Cohere dependencies
-cohere
-
-# TBD if these are still needed
-exceptiongroup
-importlib-metadata
-numexpr
