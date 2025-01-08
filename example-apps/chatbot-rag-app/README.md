@@ -141,6 +141,23 @@ dotenv run -- python api/app.py
 
 ## Advanced
 
+### OpenTelemetry
+
+If you set `OTEL_SDK_DISABLED=false` in your `.env` file, the app will send
+logs, metrics and traces to an OpenTelemetry compatible endpoint.
+
+[env.example](env.example) defaults to use Elastic APM server, started by
+[docker-compose-elastic.yml](docker-compose-elastic.yml). If you start your
+Elastic stack this way, you can access Kibana like this, authenticating with
+the username "elastic" and password "elastic":
+
+http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
+
+Under the scenes, chatbot-rag-app is automatically instrumented by the Elastic
+Distribution of OpenTelemetry (EDOT) Python. While this supports OpenAI, it may
+not yet support all LLM providers. You can see more details about EDOT Python
+[here](https://github.com/elastic/elastic-otel-python).
+
 ### Updating package versions
 
 To update package versions, recreate [requirements.txt](requirements.txt) and
@@ -150,11 +167,15 @@ reinstall like this. Once checked in, any commands above will use updates.
 rm -rf .venv
 python3 -m venv .venv
 source .venv/bin/activate
-# Install dev requirements for pip-compile
-pip install pip-tools
+# Install dev requirements for pip-compile and edot-bootstrap
+pip install pip-tools elastic-opentelemetry
 # Recreate requirements.txt
 pip-compile
 # Install main dependencies
+pip install -r requirements.txt
+# Add opentelemetry instrumentation for these dependencies
+edot-bootstrap >> requirements.txt
+# Install opentelemetry dependencies
 pip install -r requirements.txt
 ```
 

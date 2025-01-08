@@ -1,6 +1,5 @@
 import os
 
-import vertexai
 from langchain_aws import ChatBedrock
 from langchain_cohere import ChatCohere
 from langchain_google_vertexai import ChatVertexAI

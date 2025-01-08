@@ -12,3 +12,6 @@ langchain-cohere
 langchain-google-vertexai
 langchain-aws
 langchain-mistralai
+
+# otel dependencies
+elastic-opentelemetry
