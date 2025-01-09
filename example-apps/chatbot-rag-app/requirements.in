@@ -13,5 +13,7 @@ langchain-google-vertexai
 langchain-aws
 langchain-mistralai
 
-# otel dependencies
+# EDOT dependencies
 elastic-opentelemetry
+# Additional LLM support not in EDOT
+langtrace-python-sdk

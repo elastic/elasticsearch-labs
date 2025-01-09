@@ -154,9 +154,11 @@ the username "elastic" and password "elastic":
 http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
 
 Under the scenes, chatbot-rag-app is automatically instrumented by the Elastic
-Distribution of OpenTelemetry (EDOT) Python. While this supports OpenAI, it may
-not yet support all LLM providers. You can see more details about EDOT Python
-[here](https://github.com/elastic/elastic-otel-python).
+Distribution of OpenTelemetry (EDOT) Python. You can see more details about
+EDOT Python [here](https://github.com/elastic/elastic-otel-python).
+
+OpenTelemetry support for LLM providers not included in EDOT Python are provided
+by the [Langtrace Python SDK](https://docs.langtrace.ai/sdk/python_sdk).
 
 ### Updating package versions
 
@@ -175,6 +177,8 @@ pip-compile
 pip install -r requirements.txt
 # Add opentelemetry instrumentation for these dependencies
 edot-bootstrap >> requirements.txt
+# Missing dependency for langtrace vertexai instrumentation
+echo "setuptools" >> requirements.txt
 # Install opentelemetry dependencies
 pip install -r requirements.txt
 ```
