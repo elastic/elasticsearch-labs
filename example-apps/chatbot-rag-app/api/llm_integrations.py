@@ -50,6 +50,10 @@ def init_mistral_chat(temperature):
 
 
 def init_cohere_chat(temperature):
+    # Cohere is not yet in EDOT. Use the Langtrace Python SDK instead
+    from langtrace_python_sdk.instrumentation import CohereInstrumentation
+
+    CohereInstrumentation().instrument()
     return ChatCohere(model=os.getenv("CHAT_MODEL"), temperature=temperature)
 
 
