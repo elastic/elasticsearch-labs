@@ -147,7 +147,7 @@ To update package versions, recreate [requirements.txt](requirements.txt) and
 reinstall like this. Once checked in, any commands above will use updates.
 
 ```bash
-rm -rf .venv
+rm -rf .venv requirements.txt
 python3 -m venv .venv
 source .venv/bin/activate
 # Install dev requirements for pip-compile and edot-bootstrap
