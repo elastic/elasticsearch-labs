@@ -1,0 +1,33 @@
+name: chatbot-rag-app
+
+services:
+  generate:
+    build:
+      context: .
+    container_name: generate
+    restart: 'no'
+    environment:
+      # host.docker.internal means connect to the host machine, e.g. your laptop
+      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
+    env_file:
+      - .env
+    command: generate
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
+
+  app:
+    depends_on:
+      generate:
+        condition: service_completed_successfully
+    container_name: api-frontend
+    build:
+      context: .
+    environment:
+      # host.docker.internal means connect to the host machine, e.g. your laptop
+      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    extra_hosts:
+        - "host.docker.internal:host-gateway"

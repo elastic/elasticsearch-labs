@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Elastic OpenAI integration - Node.js/Express.js example</title>
+    <title>Elastic OpenAI integration - Node.js/Express example</title>
      <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,7 +68,7 @@
     <table>
         <tr>
             <td>
-                <input id="query" type="text" {{#if query}} value="{{query}}" {{/if}} style="font-size: 18px; padding: 10px; border-radius: 5px; border: none; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); margin: 10px 0;"/>
+                <input id="query" type="text" {{#if query}} value="{{query}}" {{/if}} style="font-size: 18px; padding: 10px; border-radius: 5px; border: none; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); margin: 10px 0;" onkeydown="if(event.key === 'Enter') search()"/>
                 <input type="button" onclick="search()" value="Search"/>
             </td>
         </tr>

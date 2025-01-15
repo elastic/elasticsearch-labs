@@ -1,0 +1,91 @@
+name: elastic-stack
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=elastic
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.license.self_generated.type=trial
+      - ES_JAVA_OPTS=-Xmx8g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=500ms"]
+      retries: 300
+      interval: 1s
+
+  elasticsearch_settings:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    container_name: elasticsearch_settings
+    restart: 'no'
+    command: >
+      bash -c '        
+        # gen-ai assistants in kibana save state in a way that requires security to be enabled, so we need to create
+        # a kibana system user before starting it.
+        echo "Setup the kibana_system password";
+        until curl -s -u "elastic:elastic" -X POST http://elasticsearch:9200/_security/user/kibana_system/_password -d "{\"password\":\"elastic\"}" -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
+      '
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.0
+    container_name: kibana
+    depends_on:
+      elasticsearch_settings:
+        condition: service_completed_successfully
+    ports:
+      - 5601:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=elastic
+      # Non-default settings from here:
+      # https://github.com/elastic/apm-server/blob/main/testing/docker/kibana/kibana.yml
+      - MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED=true
+      - XPACK_SECURITY_ENCRYPTIONKEY=fhjskloppd678ehkdfdlliverpoolfcr
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=fhjskloppd678ehkdfdlliverpoolfcr
+      - SERVER_PUBLICBASEURL=http://127.0.0.1:5601
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:5601/api/status | grep -q 'All services are available'"]
+      retries: 300
+      interval: 1s
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:8.17.0
+    container_name: apm-server
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    command: >
+      apm-server
+        -E apm-server.kibana.enabled=true
+        -E apm-server.kibana.host=http://kibana:5601
+        -E apm-server.kibana.username=elastic
+        -E apm-server.kibana.password=elastic
+        -E output.elasticsearch.hosts=["http://elasticsearch:9200"]
+        -E output.elasticsearch.username=elastic
+        -E output.elasticsearch.password=elastic
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+      - 8200:8200
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo -n > /dev/tcp/127.0.0.1/8200'"]
+      retries: 300
+      interval: 1s
+

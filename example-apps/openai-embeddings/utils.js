@@ -1,22 +1,17 @@
 const { Client } = require('@elastic/elasticsearch')
-const { Configuration, OpenAIApi } = require("openai");
+const { OpenAI } = require("openai");
 
-console.log(`Connecting to Elastic Cloud: ${process.env.ELASTIC_CLOUD_ID}`);
+console.log(`Connecting to Elastic URL: ${process.env.ELASTICSEARCH_URL}`);
 
 const elasticsearchClient = new Client({
-  cloud: {
-    id: process.env.ELASTIC_CLOUD_ID,
-  },
+  node: process.env.ELASTICSEARCH_URL,
   auth: {
-    username: process.env.ELASTIC_USERNAME,
-    password: process.env.ELASTIC_PASSWORD,
+    username: process.env.ELASTICSEARCH_USER,
+    password: process.env.ELASTICSEARCH_PASSWORD,
   },
 });
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI();
 
 module.exports = {
   getElasticsearchClient: () => elasticsearchClient,
@@ -25,5 +20,5 @@ module.exports = {
   // Modify these if you want to use a different file, index or model
   FILE: "sample_data/medicare.json",
   INDEX: "openai-integration",
-  MODEL: "text-embedding-ada-002",
+  EMBEDDINGS_MODEL: process.env.EMBEDDINGS_MODEL || "text-embedding-ada-002",
 };
