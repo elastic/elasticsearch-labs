@@ -1,6 +1,6 @@
 # OpenAI embeddings example application
 
-This is a small example Node.js/Express.js application that demonstrates how to
+This is a small example Node.js/Express application that demonstrates how to
 integrate Elastic and OpenAI.
 
 The application has two components:
