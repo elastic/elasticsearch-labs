@@ -1,5 +1,6 @@
 import os
 
+import boto3
 from langchain_aws import ChatBedrock
 from langchain_cohere import ChatCohere
 from langchain_google_vertexai import ChatVertexAI
@@ -41,6 +42,7 @@ def init_bedrock(temperature):
 
     AWSBedrockInstrumentation().instrument()
     return ChatBedrock(
+        client=boto3.client("bedrock-runtime"),
         model_id=os.getenv("CHAT_MODEL"),
         streaming=True,
         model_kwargs={"temperature": temperature},
