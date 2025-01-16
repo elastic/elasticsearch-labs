@@ -7,11 +7,13 @@
     "node": ">=20"
   },
   "scripts": {
-    "app": "node --env-file .env search_app.js",
-    "generate": "node --env-file .env generate_embeddings.js"
+    "app": "node --env-file .env -r @elastic/opentelemetry-node search_app.js",
+    "generate": "node --env-file .env -r @elastic/opentelemetry-node generate_embeddings.js"
   },
   "dependencies": {
+    "@elastic/opentelemetry-node": "*",
     "@elastic/elasticsearch": "^8.17.0",
+    "@opentelemetry/api": "^1.9.0",
     "express": "^4.21.2",
     "hbs": "^4.2.0",
     "openai": "^4.78.1"

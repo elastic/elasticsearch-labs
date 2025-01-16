@@ -5,17 +5,14 @@ services:
     build:
       context: .
     container_name: ingest-data
-    restart: 'no'
+    restart: 'no'  # no need to re-ingest on successive runs
     environment:
-      # host.docker.internal means connect to the host machine, e.g. your laptop
-      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://host.docker.internal:8200"
       FLASK_APP: api/app.py
     env_file:
       - .env
     command: flask create-index
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+        - "localhost:host-gateway"
 
   api-frontend:
     depends_on:
@@ -24,13 +21,9 @@ services:
     container_name: api-frontend
     build:
       context: .
-    environment:
-      # host.docker.internal means connect to the host machine, e.g. your laptop
-      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://host.docker.internal:8200"
     env_file:
       - .env
     ports:
       - "4000:4000"
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+        - "localhost:host-gateway"

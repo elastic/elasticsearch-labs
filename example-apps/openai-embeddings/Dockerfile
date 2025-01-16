@@ -8,5 +8,9 @@ RUN --mount=type=cache,target=/root/.npm \
 USER node
 EXPOSE 3000
 
+# Default to disabling instrumentation, can be overridden to false in
+# docker invocations to reenable.
+ENV OTEL_SDK_DISABLED=true
+
 ENTRYPOINT ["npm", "run"]
 CMD ["app"]

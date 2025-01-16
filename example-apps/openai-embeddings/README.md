@@ -109,6 +109,22 @@ npm run app
 Here are some tips for modifying the code for your use case. For example, you
 might want to use your own sample data.
 
+### OpenTelemetry
+
+If you set `OTEL_SDK_DISABLED=false` in your `.env` file, the app will send
+logs, metrics and traces to an OpenTelemetry compatible endpoint.
+
+[env.example](env.example) defaults to use Elastic APM server, started by
+[docker-compose-elastic.yml](docker-compose-elastic.yml). If you start your
+Elastic stack this way, you can access Kibana like this, authenticating with
+the username "elastic" and password "elastic":
+
+http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
+
+Under the scenes, openai-embeddings is automatically instrumented by the Elastic
+Distribution of OpenTelemetry (EDOT) Node.js. You can see more details about
+EDOT Node.js [here](https://github.com/elastic/elastic-otel-node).
+
 ### Using a different source file or document mapping
 
 - Ensure your file contains the documents in JSON format

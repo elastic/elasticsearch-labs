@@ -5,15 +5,12 @@ services:
     build:
       context: .
     container_name: generate
-    restart: 'no'
-    environment:
-      # host.docker.internal means connect to the host machine, e.g. your laptop
-      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
+    restart: 'no'  # no need to re-ingest on successive runs
     env_file:
       - .env
     command: generate
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+      - "localhost:host-gateway"
 
   app:
     depends_on:
@@ -22,12 +19,9 @@ services:
     container_name: api-frontend
     build:
       context: .
-    environment:
-      # host.docker.internal means connect to the host machine, e.g. your laptop
-      ELASTICSEARCH_URL: "http://host.docker.internal:9200"
     env_file:
       - .env
     ports:
       - "3000:3000"
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+      - "localhost:host-gateway"
