@@ -4,6 +4,11 @@ If you'd like to start Elastic locally, you can use the provided
 [docker-compose-elastic.yml](docker-compose-elastic.yml) file. This starts
 Elasticsearch, Kibana, and APM Server and only requires Docker installed.
 
+Note: If you haven't checked out this repository, all you need is one file:
+```bash
+wget https://raw.githubusercontent.com/elastic/elasticsearch-labs/refs/heads/main/docker/docker-compose-elastic.yml
+```
+
 Use docker compose to run Elastic stack in the background:
 
 ```bash
