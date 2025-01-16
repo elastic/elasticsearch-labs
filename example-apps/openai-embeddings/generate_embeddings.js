@@ -1,3 +1,4 @@
+const { trace } = require("@opentelemetry/api");
 const fs = require("fs");
 const {
   getElasticsearchClient,
@@ -10,6 +11,8 @@ const {
 // Initialize clients
 const elasticsearchClient = getElasticsearchClient();
 const openaiClient = getOpenAIClient();
+
+const tracer = trace.getTracer("openai-embeddings");
 
 async function maybeCreateIndex() {
   // Check if index exists, if not create it
@@ -119,8 +122,14 @@ async function processFile() {
 }
 
 async function run() {
-  await maybeCreateIndex();
-  await processFile();
+  return tracer.startActiveSpan("generate", async (span) => {
+    try {
+      await maybeCreateIndex();
+      await processFile();
+    } finally {
+      span.end();
+    }
+  });
 }
 
 run().catch(console.error);
