@@ -22,31 +22,12 @@ Copy [env.example](env.example) to `.env` and fill in values noted inside.
 ## Installing and connecting to Elasticsearch
 
 There are a number of ways to install Elasticsearch. Cloud is best for most
-use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/tutorials/install-elasticsearch) for more information.
+use-cases. We also have [docker-compose-elastic.yml](../../docker), that starts
+Elasticsearch, Kibana, and APM Server on your laptop with one command.
 
 Once you decided your approach, edit your `.env` file accordingly.
 
-### Running your own Elastic Stack with Docker
-
-If you'd like to start Elastic locally, you can use the provided
-[docker-compose-elastic.yml](docker-compose-elastic.yml) file. This starts
-Elasticsearch, Kibana, and APM Server and only requires Docker installed.
-
-Use docker compose to run Elastic stack in the background:
-
-```bash
-docker compose -f docker-compose-elastic.yml up --force-recreate -d
-```
-
-Then, you can view Kibana at http://localhost:5601/app/home#/
-
-If asked for a username and password, use username: elastic and password: elastic.
-
-Clean up when finished, like this:
-
-```bash
-docker compose -f docker-compose-elastic.yml down
-```
+For more information, visit our [Install Elasticsearch][install-es] tutorial.
 
 ## Connecting to LLM
 
@@ -147,9 +128,9 @@ If you set `OTEL_SDK_DISABLED=false` in your `.env` file, the app will send
 logs, metrics and traces to an OpenTelemetry compatible endpoint.
 
 [env.example](env.example) defaults to use Elastic APM server, started by
-[docker-compose-elastic.yml](docker-compose-elastic.yml). If you start your
-Elastic stack this way, you can access Kibana like this, authenticating with
-the username "elastic" and password "elastic":
+[docker-compose-elastic.yml](../../docker). If you start your Elastic stack
+this way, you can access Kibana like this, authenticating with the username
+"elastic" and password "elastic":
 
 http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
 
@@ -201,3 +182,4 @@ See [Langchain documentation][loader-docs] for more ways to load documents.
 
 ---
 [loader-docs]: https://python.langchain.com/docs/how_to/#document-loaders
+[install-es]: https://www.elastic.co/search-labs/tutorials/install-elasticsearch
