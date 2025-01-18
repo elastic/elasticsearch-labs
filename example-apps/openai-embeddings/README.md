@@ -30,9 +30,12 @@ Copy [env.example](env.example) to `.env` and fill in values noted inside.
 ## Installing and connecting to Elasticsearch
 
 There are a number of ways to install Elasticsearch. Cloud is best for most
-use-cases. Visit the [Install Elasticsearch](https://www.elastic.co/search-labs/tutorials/install-elasticsearch) for more information.
+use-cases. We also have [docker-compose-elastic.yml](../../docker), that starts
+Elasticsearch, Kibana, and APM Server on your laptop with one command.
 
 Once you decided your approach, edit your `.env` file accordingly.
+
+For more information, visit our [Install Elasticsearch][install-es] tutorial.
 
 ### Running your own Elastic Stack with Docker
 
@@ -115,9 +118,9 @@ If you set `OTEL_SDK_DISABLED=false` in your `.env` file, the app will send
 logs, metrics and traces to an OpenTelemetry compatible endpoint.
 
 [env.example](env.example) defaults to use Elastic APM server, started by
-[docker-compose-elastic.yml](docker-compose-elastic.yml). If you start your
-Elastic stack this way, you can access Kibana like this, authenticating with
-the username "elastic" and password "elastic":
+[docker-compose-elastic.yml](../../docker). If you start your Elastic stack
+this way, you can access Kibana like this, authenticating with the username
+"elastic" and password "elastic":
 
 http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
 
@@ -144,3 +147,6 @@ EDOT Node.js [here](https://github.com/elastic/elastic-otel-node).
 
 - Modify the initialization of `elasticsearchClient` in [utils.js](utils.js)
 - Refer to [this document](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html)
+
+---
+[install-es]: https://www.elastic.co/search-labs/tutorials/install-elasticsearch
