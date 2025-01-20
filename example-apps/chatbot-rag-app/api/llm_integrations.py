@@ -1,6 +1,5 @@
 import os
 
-import boto3
 from langchain_aws import ChatBedrock
 from langchain_cohere import ChatCohere
 from langchain_google_vertexai import ChatVertexAI
@@ -41,8 +40,25 @@ def init_bedrock(temperature):
     from langtrace_python_sdk.instrumentation import AWSBedrockInstrumentation
 
     AWSBedrockInstrumentation().instrument()
+
+    # TODO: Remove after https://github.com/Scale3-Labs/langtrace-python-sdk/issues/458
+    from langtrace_python_sdk.instrumentation.aws_bedrock.patch import patch_aws_bedrock
+    from opentelemetry.trace import get_tracer
+    import importlib.metadata
+    from wrapt import wrap_function_wrapper as _W
+
+    tracer = get_tracer(
+        __name__,
+    )
+    version = importlib.metadata.version("boto3")
+
+    _W(
+        module="boto3.session",
+        name="Session.client",
+        wrapper=patch_aws_bedrock(tracer, version),
+    )
+
     return ChatBedrock(
-        client=boto3.client("bedrock-runtime"),
         model_id=os.getenv("CHAT_MODEL"),
         streaming=True,
         model_kwargs={"temperature": temperature},
