@@ -36,6 +36,10 @@ def init_azure_chat(temperature):
 
 
 def init_bedrock(temperature):
+    # Bedrock is not yet in EDOT. Use the Langtrace Python SDK instead
+    from langtrace_python_sdk.instrumentation import AWSBedrockInstrumentation
+
+    AWSBedrockInstrumentation().instrument()
     return ChatBedrock(
         model_id=os.getenv("CHAT_MODEL"),
         streaming=True,

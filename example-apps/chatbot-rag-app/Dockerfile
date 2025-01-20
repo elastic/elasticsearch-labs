@@ -2,7 +2,6 @@ FROM node:22-alpine AS build-step
 WORKDIR /app
 ENV PATH=/node_modules/.bin:$PATH
 COPY frontend ./frontend
-RUN rm -rf /app/frontend/node_modules
 RUN cd frontend && yarn install
 RUN cd frontend && REACT_APP_API_HOST=/api yarn build
 

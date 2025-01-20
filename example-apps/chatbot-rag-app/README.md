@@ -127,6 +127,13 @@ dotenv run -- python api/app.py
 If you set `OTEL_SDK_DISABLED=false` in your `.env` file, the app will send
 logs, metrics and traces to an OpenTelemetry compatible endpoint.
 
+This happens automatically, when using docker. If running with python directly,
+prefix `python` with `opentelemetry-instrument` to enable OpenTelemetry.
+
+```bash
+dotenv run -- opentelemetry-instrument python api/app.py
+```
+
 [env.example](env.example) defaults to use Elastic APM server, started by
 [docker-compose-elastic.yml](../../docker). If you start your Elastic stack
 this way, you can access Kibana like this, authenticating with the username
@@ -147,7 +154,7 @@ To update package versions, recreate [requirements.txt](requirements.txt) and
 reinstall like this. Once checked in, any commands above will use updates.
 
 ```bash
-rm -rf .venv
+rm -rf .venv requirements.txt
 python3 -m venv .venv
 source .venv/bin/activate
 # Install dev requirements for pip-compile and edot-bootstrap
