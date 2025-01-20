@@ -22,9 +22,9 @@ attrs==24.3.0
     # via aiohttp
 blinker==1.9.0
     # via flask
-boto3==1.35.99
+boto3==1.36.2
     # via langchain-aws
-botocore==1.35.99
+botocore==1.36.2
     # via
     #   boto3
     #   s3transfer
@@ -100,7 +100,7 @@ google-auth==2.37.0
     #   google-cloud-core
     #   google-cloud-resource-manager
     #   google-cloud-storage
-google-cloud-aiplatform==1.76.0
+google-cloud-aiplatform==1.77.0
     # via langchain-google-vertexai
 google-cloud-bigquery==3.27.0
     # via google-cloud-aiplatform
@@ -187,13 +187,13 @@ langchain==0.3.14
     # via
     #   -r requirements.in
     #   langchain-community
-langchain-aws==0.2.10
+langchain-aws==0.2.11
     # via -r requirements.in
 langchain-cohere==0.3.4
     # via -r requirements.in
 langchain-community==0.3.14
     # via langchain-experimental
-langchain-core==0.3.29
+langchain-core==0.3.30
     # via
     #   langchain
     #   langchain-aws
@@ -205,7 +205,7 @@ langchain-core==0.3.29
     #   langchain-mistralai
     #   langchain-openai
     #   langchain-text-splitters
-langchain-elasticsearch==0.3.0
+langchain-elasticsearch==0.3.2
     # via -r requirements.in
 langchain-experimental==0.3.4
     # via langchain-cohere
@@ -213,16 +213,16 @@ langchain-google-vertexai==2.0.11
     # via -r requirements.in
 langchain-mistralai==0.2.4
     # via -r requirements.in
-langchain-openai==0.3.0
+langchain-openai==0.3.1
     # via -r requirements.in
 langchain-text-splitters==0.3.5
     # via langchain
-langsmith==0.2.10
+langsmith==0.2.11
     # via
     #   langchain
     #   langchain-community
     #   langchain-core
-langtrace-python-sdk==3.3.24
+langtrace-python-sdk==3.3.26
     # via -r requirements.in
 markupsafe==3.0.2
     # via
@@ -236,7 +236,7 @@ multidict==6.1.0
     #   yarl
 mypy-extensions==1.0.0
     # via typing-inspect
-numpy==2.2.1
+numpy==2.2.2
     # via
     #   elasticsearch
     #   langchain
@@ -245,7 +245,7 @@ numpy==2.2.1
     #   pandas
     #   shapely
     #   transformers
-openai==1.59.7
+openai==1.59.9
     # via langchain-openai
 opentelemetry-api==1.29.0
     # via
@@ -309,7 +309,7 @@ opentelemetry-semantic-conventions==0.50b0
     #   opentelemetry-instrumentation
     #   opentelemetry-instrumentation-sqlalchemy
     #   opentelemetry-sdk
-orjson==3.10.14
+orjson==3.10.15
     # via langsmith
 packaging==24.2
     # via
@@ -412,7 +412,7 @@ requests-toolbelt==1.0.0
     # via langsmith
 rsa==4.9
     # via google-auth
-s3transfer==0.10.4
+s3transfer==0.11.1
     # via boto3
 safetensors==0.5.2
     # via transformers
