@@ -1,0 +1,44 @@
+#knn template
+PUT _scripts/google-template-knn
+{
+  "script": {
+    "lang": "mustache",
+    "source": {
+      "_source": false,
+        "size": "{{num_hits}}",
+        "query": {
+          "nested": {
+            "path": "document_text.inference.chunks",
+            "query":{
+              "knn": {
+                "field": "document_text.inference.chunks.embeddings",
+                "query_vector_builder": {
+                  "text_embedding": {
+                  "model_id": ".multilingual-e5-small_linux-x86_64",
+	                "model_text": "{{query}}"
+            }
+          }
+        }
+            },
+          "inner_hits": {
+            "size": 1,
+            "name": "{{index_name}}.document_text",
+            "_source": "*.text"
+          }
+        }
+      }
+    }  
+  }
+}
+
+#Run the knn templated search.
+GET nqdataset-simplified-clean-semantictext-e5/_search/template
+{
+  "id": "google-template-knn",
+  "params": {
+    "query": "italian food",
+    "index_name": "nqdataset-simplified-clean-semantictext-e5",
+    "num_hits": 1
+  }
+}
+
