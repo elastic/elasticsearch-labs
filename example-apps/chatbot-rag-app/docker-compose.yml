@@ -11,6 +11,9 @@ services:
     env_file:
       - .env
     command: flask create-index
+    volumes:
+      # VertexAI uses a file for GOOGLE_APPLICATION_CREDENTIALS, not an API key
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
     extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
         - "localhost:host-gateway"
 
@@ -23,6 +26,9 @@ services:
       context: .
     env_file:
       - .env
+    volumes:
+      # VertexAI uses a file for GOOGLE_APPLICATION_CREDENTIALS, not an API key
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
     ports:
       - "4000:4000"
     extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
