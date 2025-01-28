@@ -22,11 +22,11 @@ attrs==25.1.0
     # via aiohttp
 blinker==1.9.0
     # via flask
-boto3==1.36.6
+boto3==1.36.7
     # via
     #   langchain-aws
     #   langtrace-python-sdk
-botocore==1.36.6
+botocore==1.36.7
     # via
     #   boto3
     #   s3transfer
@@ -49,7 +49,7 @@ colorama==0.4.6
     # via langtrace-python-sdk
 dataclasses-json==0.6.7
     # via langchain-community
-deprecated==1.2.17
+deprecated==1.2.18
     # via
     #   opentelemetry-api
     #   opentelemetry-exporter-otlp-proto-grpc
@@ -87,7 +87,7 @@ fsspec==2024.12.0
     # via
     #   huggingface-hub
     #   langtrace-python-sdk
-google-api-core[grpc]==2.24.0
+google-api-core[grpc]==2.24.1
     # via
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
@@ -216,12 +216,12 @@ langchain-openai==0.3.2
     # via -r requirements.in
 langchain-text-splitters==0.3.5
     # via langchain
-langsmith==0.3.1
+langsmith==0.3.2
     # via
     #   langchain
     #   langchain-community
     #   langchain-core
-langtrace-python-sdk==3.3.31
+langtrace-python-sdk==3.5.0
     # via -r requirements.in
 markupsafe==3.0.2
     # via
@@ -243,7 +243,7 @@ numpy==2.2.2
     #   langchain-community
     #   shapely
     #   transformers
-openai==1.60.1
+openai==1.60.2
     # via langchain-openai
 opentelemetry-api==1.29.0
     # via
@@ -324,7 +324,7 @@ propcache==0.2.1
     # via
     #   aiohttp
     #   yarl
-proto-plus==1.25.0
+proto-plus==1.26.0
     # via
     #   google-api-core
     #   google-cloud-aiplatform
