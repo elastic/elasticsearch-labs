@@ -39,6 +39,7 @@ pip install elasticsearch
 ```bash
 pip install langchain-core langchain-community
 ```
+
 ```bash
 pip install lark
 ```
