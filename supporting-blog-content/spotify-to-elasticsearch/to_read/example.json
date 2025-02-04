@@ -1,0 +1,27 @@
+[
+    {
+        "ts": "2010-06-16T16:33:36Z",
+        "platform": "iPhone 11",
+        "ms_played": 284289,
+        "conn_country": "AT",
+        "ip_addr": "11.144.233.10",
+        "master_metadata_track_name": "Kiss me twice",
+        "master_metadata_album_artist_name": "Parov Stelar",
+        "master_metadata_album_album_name": "Hôtel Costes 9",
+        "spotify_track_uri": "spotify:track:3NVWHqOWoYQyewSBO3g8Mt",
+        "episode_name": null,
+        "episode_show_name": null,
+        "spotify_episode_uri": null,
+        "audiobook_title": null,
+        "audiobook_uri": null,
+        "audiobook_chapter_uri": null,
+        "audiobook_chapter_title": null,
+        "reason_start": "trackdone",
+        "reason_end": "trackdone",
+        "shuffle": false,
+        "skipped": false,
+        "offline": false,
+        "offline_timestamp": null,
+        "incognito_mode": false
+      }
+]
