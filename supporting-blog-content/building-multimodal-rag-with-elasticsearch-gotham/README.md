@@ -13,7 +13,7 @@ The pipeline demonstrates how to:
 
 - Python 3.10+
 - Elasticsearch cluster (cloud or local)
-- OpenAI API key
+- OpenAI API key - Setup an OpenAI account and create a [secret key](https://platform.openai.com/docs/quickstart)
 - 8GB+ RAM
 - GPU (optional but recommended)
 
