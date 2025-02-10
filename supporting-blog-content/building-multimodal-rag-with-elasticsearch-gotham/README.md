@@ -91,6 +91,3 @@ The repository includes sample evidence files:
 4. **Similarity Search**: New evidence is compared against the database using k-NN search
 5. **Analysis**: GPT-4 analyzes the connections between evidence to identify suspects
 
-## License
-
-This project is licensed under the Elastic License 2.0.
