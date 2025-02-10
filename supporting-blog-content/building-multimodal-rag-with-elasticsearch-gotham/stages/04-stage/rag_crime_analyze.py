@@ -72,22 +72,3 @@ try:
 except Exception as e:
     logger.error(f"❌ Error in analysis : {str(e)}")
 
-
-    # # Test cross-modal analysis
-    # if 'audio' in evidence_data and 'vision' in evidence_data:
-    #     logger.info("\n🔄 Testing cross-modal analysis...")
-    #     cross_modal = llm.analyze_cross_modal_connections(
-    #         evidence_data['audio'],
-    #         'audio',
-    #         evidence_data['vision'],
-    #         'vision'
-    #     )
-        
-    #     if cross_modal:
-    #         logger.info("✅ Cross-modal analysis generated successfully")
-    #         logger.info("\n🔍 Cross-modal Analysis Preview:")
-    #         logger.info("=" * 50)
-    #         logger.info(cross_modal[:500] + "..." if len(cross_modal) > 500 else cross_modal)
-    #         logger.info("=" * 50)
-    #     else:
-    #         raise ValueError("Failed to generate cross-modal analysis")
