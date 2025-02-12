@@ -51,18 +51,15 @@ def create_ess_project(project_name: str) -> str:
     api_key = os.environ.get("API_KEY")
     region_id = os.environ.get("REGION", "aws-eu-west-1")
 
-
     if not env_url:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
         return "Error: API_KEY is not set in the environment."
 
-
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch"
 
     headers = {"Authorization": f"ApiKey {api_key}", "Content-Type": "application/json"}
     payload = {"name": project_name, "region_id": region_id}
-
 
     try:
         response = requests.post(url, headers=headers, json=payload)
@@ -70,12 +67,12 @@ def create_ess_project(project_name: str) -> str:
     except requests.exceptions.RequestException as e:
         return f"Error during project creation: {e}"
 
-
     data = response.json()
     project_id = data.get("id")
     if not project_id:
         return "Error: No project ID returned from the API."
-    
+
+
     if not re.fullmatch(r"^[a-z0-9]{32}$", project_id):
         return (
             f"Error: Received project ID '{project_id}' does not match expected format."
@@ -83,7 +80,6 @@ def create_ess_project(project_name: str) -> str:
 
     credentials = data.get("credentials")
     endpoints = data.get("endpoints")
-
 
     PROJECT_MAP[project_name] = {
         "id": project_id,
@@ -119,6 +115,7 @@ def delete_ess_project(project_name: str) -> str:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
         return "Error: API_KEY is not set in the environment."
+
 
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}"
     headers = {"Authorization": f"ApiKey {api_key}", "Content-Type": "application/json"}
@@ -164,7 +161,6 @@ def get_ess_project_status(project_name: str) -> str:
     except requests.exceptions.RequestException as e:
         return f"Error retrieving project status: {e}"
 
-
     status_data = response.json()
     return json.dumps(status_data, indent=4)
 
@@ -189,7 +185,8 @@ def get_ess_project_details(project_name: str) -> str:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
         return "Error: API_KEY is not set in the environment."
-    
+
+
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}"
     headers = {"Authorization": f"ApiKey {api_key}"}
 
@@ -205,6 +202,7 @@ def get_ess_project_details(project_name: str) -> str:
     if not details_data.get("endpoints"):
         details_data["endpoints"] = project_info.get("endpoints")
     return json.dumps(details_data, indent=4)
+
 
 create_project_tool = FunctionTool.from_defaults(
     create_ess_project,
@@ -269,14 +267,15 @@ def main():
     print(" - 'Get the status of the serverless project named my_project'")
     print(" - 'Get the details of the serverless project named my_project'")
 
-
     while True:
         user_input = input("\nUser: ")
         if user_input.strip().lower() in {"exit", "quit"}:
             break
+
         
         response = agent.chat(user_input)
         print("\nAgent:", response)
+
 
 if __name__ == "__main__":
     main()
