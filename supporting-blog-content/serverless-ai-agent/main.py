@@ -7,8 +7,9 @@ from llama_index.core.tools import FunctionTool
 from llama_index.agent.openai import OpenAIAgent
 from llama_index.llms.openai import OpenAI
 
-load_dotenv('.env')
+load_dotenv(".env")
 PROJECTS_FILE = "projects.json"
+
 
 def load_projects():
     """Load the project mapping from the JSON file."""
@@ -17,13 +18,16 @@ def load_projects():
             return json.load(f)
     return {}
 
+
 def save_projects(project_map):
     """Save the project mapping to the JSON file."""
     with open(PROJECTS_FILE, "w") as f:
         json.dump(project_map, f)
 
+
 # Store project name -> project info mapping.
 PROJECT_MAP = load_projects()
+
 
 def normalize_project_info(project_info):
     """
@@ -33,6 +37,7 @@ def normalize_project_info(project_info):
     if isinstance(project_info, str):
         return {"id": project_info}
     return project_info
+
 
 def create_ess_project(project_name: str) -> str:
     """
@@ -52,15 +57,11 @@ def create_ess_project(project_name: str) -> str:
         return "Error: API_KEY is not set in the environment."
     
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch"
-    headers = {
-        "Authorization": f"ApiKey {api_key}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "name": project_name,
-        "region_id": region_id
-    }
-    
+
+    headers = {"Authorization": f"ApiKey {api_key}", "Content-Type": "application/json"}
+    payload = {"name": project_name,"region_id": region_id}
+
+
     try:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
@@ -73,24 +74,30 @@ def create_ess_project(project_name: str) -> str:
         return "Error: No project ID returned from the API."
     
     if not re.fullmatch(r"^[a-z0-9]{32}$", project_id):
-        return f"Error: Received project ID '{project_id}' does not match expected format."
-    
+        return (
+            f"Error: Received project ID '{project_id}' does not match expected format."
+        )
+
+
     credentials = data.get("credentials")
     endpoints = data.get("endpoints")
     
     PROJECT_MAP[project_name] = {
         "id": project_id,
         "credentials": credentials,  
-        "endpoints": endpoints
+        "endpoints": endpoints,
     }
     save_projects(PROJECT_MAP)
-    
+
+
     summary = (
         f"Project '{project_name}' created successfully.\n"
         f"Project ID: {project_id}\n"
         f"Endpoints: {endpoints}"
     )
     return summary
+
+
 
 def delete_ess_project(project_name: str) -> str:
     """
@@ -102,31 +109,35 @@ def delete_ess_project(project_name: str) -> str:
     if not project_info:
         return f"Error: No project found with name '{project_name}'. Ensure the project was created previously."
     project_info = normalize_project_info(project_info)
-    
+
+
     project_id = project_info.get("id")
     env_url = os.environ.get("ES_URL")
     api_key = os.environ.get("API_KEY")
-    
+
+
     if not env_url:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
         return "Error: API_KEY is not set in the environment."
-    
+
+
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}"
-    headers = {
-        "Authorization": f"ApiKey {api_key}",
-        "Content-Type": "application/json"
-    }
+    headers = {"Authorization": f"ApiKey {api_key}","Content-Type": "application/json"}
     
+
     try:
         response = requests.delete(url, headers=headers)
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         return f"Error during project deletion: {e}"
-    
+
+
     del PROJECT_MAP[project_name]
     save_projects(PROJECT_MAP)
     return f"Project '{project_name}' (ID: {project_id}) deleted successfully."
+
+
 
 def get_ess_project_status(project_name: str) -> str:
     """
@@ -138,11 +149,13 @@ def get_ess_project_status(project_name: str) -> str:
     if not project_info:
         return f"Error: No project found with name '{project_name}'."
     project_info = normalize_project_info(project_info)
-    
+
+
     project_id = project_info.get("id")
     env_url = os.environ.get("ES_URL")
     api_key = os.environ.get("API_KEY")
-    
+
+
     if not env_url:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
@@ -150,7 +163,8 @@ def get_ess_project_status(project_name: str) -> str:
     
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}/status"
     headers = {"Authorization": f"ApiKey {api_key}"}
-    
+
+
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -159,6 +173,7 @@ def get_ess_project_status(project_name: str) -> str:
     
     status_data = response.json()
     return json.dumps(status_data, indent=4)
+
 
 def get_ess_project_details(project_name: str) -> str:
     """
@@ -171,11 +186,13 @@ def get_ess_project_details(project_name: str) -> str:
     if not project_info:
         return f"Error: No project found with name '{project_name}'."
     project_info = normalize_project_info(project_info)
-    
+
+
     project_id = project_info.get("id")
     env_url = os.environ.get("ES_URL")
     api_key = os.environ.get("API_KEY")
-    
+
+
     if not env_url:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
@@ -183,19 +200,22 @@ def get_ess_project_details(project_name: str) -> str:
     
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}"
     headers = {"Authorization": f"ApiKey {api_key}"}
-    
+
+
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         return f"Error retrieving project details: {e}"
-    
+
+
     details_data = response.json()
     if not details_data.get("credentials"):
         details_data["credentials"] = project_info.get("credentials")
     if not details_data.get("endpoints"):
         details_data["endpoints"] = project_info.get("endpoints")
     return json.dumps(details_data, indent=4)
+
 
 
 def get_index_status_in_project(project_name: str, index_name: str) -> str:
@@ -213,13 +233,15 @@ def get_index_status_in_project(project_name: str, index_name: str) -> str:
     if not project_info:
         return f"Error: No project found with name '{project_name}'. Ensure the project was created previously."
     project_info = normalize_project_info(project_info)
-    
+
+
     project_id = project_info.get("id")
     env_url = os.environ.get("ES_URL")
     api_key = os.environ.get("API_KEY")
     if not env_url or not api_key:
         return "Error: ES_URL or API_KEY is not set in the environment."
-    
+
+
     details_url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}"
     headers = {"Authorization": f"ApiKey {api_key}"}
     try:
@@ -227,23 +249,33 @@ def get_index_status_in_project(project_name: str, index_name: str) -> str:
         resp.raise_for_status()
     except requests.exceptions.RequestException as e:
         return f"Error retrieving project details: {e}"
-    
+
+
     details_data = resp.json()
     credentials = details_data.get("credentials") or project_info.get("credentials")
     endpoints = details_data.get("endpoints") or project_info.get("endpoints")
-    
-    if not credentials or not credentials.get("username") or not credentials.get("password"):
-        return ("Error: Credentials not available. The project may still be initializing. "
-                "Please wait a few minutes and try again.")
+
+
+    if (
+        not credentials
+        or not credentials.get("username")
+        or not credentials.get("password")
+    ):
+        return (
+            "Error: Credentials not available. The project may still be initializing. "
+            "Please wait a few minutes and try again."
+        )
     
     if not endpoints or not endpoints.get("elasticsearch"):
         return "Error: Elasticsearch endpoint not found in project details."
-    
+
+
     username = credentials.get("username")
     password = credentials.get("password")
     es_endpoint = endpoints.get("elasticsearch")
     index_url = f"{es_endpoint}/{index_name}"
-    
+
+
     try:
         index_resp = requests.get(index_url, auth=(username, password))
         index_resp.raise_for_status()
@@ -251,6 +283,7 @@ def get_index_status_in_project(project_name: str, index_name: str) -> str:
         return f"Error retrieving index status: {e}"
     
     return json.dumps(index_resp.json(), indent=4)
+
 
 create_project_tool = FunctionTool.from_defaults(
     create_ess_project,
@@ -260,7 +293,7 @@ create_project_tool = FunctionTool.from_defaults(
         "It requires a single parameter: project_name. "
         "The API environment URL (ES_URL), API key (API_KEY), and region (REGION) are read from the environment (.env file). "
         "The function stores the project details (ID, credentials, endpoints) for later use and persists them to a file."
-    )
+    ),
 )
 
 delete_project_tool = FunctionTool.from_defaults(
@@ -270,7 +303,7 @@ delete_project_tool = FunctionTool.from_defaults(
         "Deletes a Serverless Elasticsearch project using its project name. "
         "It automatically looks up the project ID (stored during project creation and persisted in a file) and deletes the project. "
         "It returns a confirmation message or an error message."
-    )
+    ),
 )
 
 get_status_tool = FunctionTool.from_defaults(
@@ -280,7 +313,7 @@ get_status_tool = FunctionTool.from_defaults(
         "Retrieves the status of a Serverless Elasticsearch project by using its project name. "
         "It looks up the project ID (from a persisted mapping) and calls the /status endpoint. "
         "It returns the status information as a JSON string."
-    )
+    ),
 )
 
 get_details_tool = FunctionTool.from_defaults(
@@ -290,19 +323,22 @@ get_details_tool = FunctionTool.from_defaults(
         "Retrieves the full details of a Serverless Elasticsearch project by using its project name. "
         "It looks up the project ID (from a persisted mapping) and calls the GET project endpoint. "
         "It returns the project details as a JSON string."
-    )
+    ),
 )
 
 openai_api_key = os.environ.get("OPENAI_API_KEY")
 if not openai_api_key:
-    raise ValueError("Please set the OPENAI_API_KEY environment variable with your OpenAI API key.")
+    raise ValueError(
+        "Please set the OPENAI_API_KEY environment variable with your OpenAI API key."
+    )
 
 llm = OpenAI(model="gpt-4o", api_key=openai_api_key)
 agent = OpenAIAgent.from_tools(
     [create_project_tool, delete_project_tool, get_status_tool, get_details_tool],
     llm=llm,
-    verbose=True
+    verbose=True,
 )
+
 
 def main():
     print("\nWelcome to the Serverless Project AI Agent Tool!\n")
@@ -311,7 +347,8 @@ def main():
     print(" - 'Delete the serverless project named my_project'")
     print(" - 'Get the status of the serverless project named my_project'")
     print(" - 'Get the details of the serverless project named my_project'")
-    
+
+
     while True:
         user_input = input("\nUser: ")
         if user_input.strip().lower() in {"exit", "quit"}:
