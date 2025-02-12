@@ -117,7 +117,7 @@ def delete_ess_project(project_name: str) -> str:
 
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}"
     headers = {"Authorization": f"ApiKey {api_key}", "Content-Type": "application/json"}
-    
+
     try:
         response = requests.delete(url, headers=headers)
         response.raise_for_status()
@@ -148,7 +148,7 @@ def get_ess_project_status(project_name: str) -> str:
         return "Error: ES_URL is not set in the environment."
     if not api_key:
         return "Error: API_KEY is not set in the environment."
-    
+
     url = f"{env_url}/api/v1/serverless/projects/elasticsearch/{project_id}/status"
     headers = {"Authorization": f"ApiKey {api_key}"}
 
@@ -267,7 +267,7 @@ def main():
         user_input = input("\nUser: ")
         if user_input.strip().lower() in {"exit", "quit"}:
             break
-        
+
         response = agent.chat(user_input)
         print("\nAgent:", response)
 
