@@ -2,6 +2,7 @@ name: chatbot-rag-app
 
 services:
   ingest-data:
+    image: ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app
     build:
       context: .
     container_name: ingest-data
@@ -22,6 +23,7 @@ services:
       ingest-data:
         condition: service_completed_successfully
     container_name: api-frontend
+    image: ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app
     build:
       context: .
     env_file:
