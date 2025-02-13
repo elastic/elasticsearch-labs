@@ -57,7 +57,7 @@ Docker compose is the easiest way, as you get one-step to:
 **Double-check you have a `.env` file with all your variables set first!**
 
 ```bash
-docker compose up --force-recreate
+docker compose up --pull always --force-recreate
 ```
 
 *Note*: First time creating the index can fail on timeout. Wait a few minutes
