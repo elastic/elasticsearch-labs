@@ -188,7 +188,7 @@ See [Langchain documentation][loader-docs] for more ways to load documents.
 ### Building from source with docker
 
 To build the app from source instead of using published images, pass the `--build`
-flag to Compose.
+flag to Docker Compose.
 
 ```bash
 docker compose up --build --force-recreate
