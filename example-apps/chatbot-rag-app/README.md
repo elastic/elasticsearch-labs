@@ -51,14 +51,13 @@ ease while locally is advised if you are making changes to the application.
 ### Run with docker
 
 Docker compose is the easiest way, as you get one-step to:
-* build the [frontend](frontend)
 * ingest data into elasticsearch
 * run the app, which listens on http://localhost:4000
 
 **Double-check you have a `.env` file with all your variables set first!**
 
 ```bash
-docker compose up --build --force-recreate
+docker compose up --force-recreate
 ```
 
 *Note*: First time creating the index can fail on timeout. Wait a few minutes
@@ -186,6 +185,14 @@ passages. Modify this script to index your own data.
 
 See [Langchain documentation][loader-docs] for more ways to load documents.
 
+### Building from source with docker
+
+To build the app with Docker instead of using published images, pass the `--build`
+flag to Compose.
+
+```bash
+docker compose up --build --force-recreate
+```
 
 ---
 [loader-docs]: https://python.langchain.com/docs/how_to/#document-loaders
