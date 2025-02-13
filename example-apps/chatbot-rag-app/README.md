@@ -187,7 +187,7 @@ See [Langchain documentation][loader-docs] for more ways to load documents.
 
 ### Building from source with docker
 
-To build the app with Docker instead of using published images, pass the `--build`
+To build the app from source instead of using published images, pass the `--build`
 flag to Compose.
 
 ```bash
