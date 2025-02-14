@@ -21,6 +21,10 @@ The pipeline demonstrates how to:
 
 1. **Setup Environment**
 ```bash
+
+# Make sure you have pytorch installed and Python 3.10+
+pip install torch torchvision torchaudio
+
 # Create and activate virtual environment
 python -m venv env_mmrag
 source env_mmrag/bin/activate  # Unix/MacOS

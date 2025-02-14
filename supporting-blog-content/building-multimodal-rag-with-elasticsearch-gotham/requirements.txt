@@ -1,8 +1,8 @@
 elasticsearch>=8.11.0
-torch>=2.0.0
-torchvision>=0.15.0
-torchaudio>=2.0.0
-imagebind @ git+https://github.com/facebookresearch/ImageBind.git
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+imagebind @ git+https://github.com/hkchengrex/ImageBind.git
 openai>=1.0.0
 python-dotenv>=1.0.0
 numpy>=1.24.0
@@ -10,3 +10,4 @@ pillow>=10.0.0
 opencv-python>=4.8.0
 librosa>=0.10.0
 matplotlib>=3.7.0
+xformers>=0.0.23  # Adicione esta linha
