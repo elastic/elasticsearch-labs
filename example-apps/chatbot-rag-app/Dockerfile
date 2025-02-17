@@ -5,9 +5,7 @@ COPY frontend ./frontend
 RUN cd frontend && yarn install
 RUN cd frontend && REACT_APP_API_HOST=/api yarn build
 
-# langchain and vertexai depend on a large number of system packages including
-# linux-headers, g++, geos, geos-dev, rust and cargo. These are already present
-# on -slim and adding them to -alpine results in a larger image than -slim.
+# Use glibc-based image to get pre-compiled wheels for grpcio and tiktoken
 FROM python:3.12-slim
 
 WORKDIR /app

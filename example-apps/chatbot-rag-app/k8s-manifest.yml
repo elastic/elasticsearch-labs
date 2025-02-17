@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-rag-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatbot-rag-app
+  template:
+    metadata:
+      labels:
+        app: chatbot-rag-app
+    spec:
+      # The below will recreate your secret based on the gcloud credentials file
+      # kubectl create secret generic gcloud-credentials \
+      #  --from-file=application_default_credentials.json=$HOME/.config/gcloud/application_default_credentials.json
+      volumes:
+        - name: gcloud-credentials
+          secret:
+            secretName: gcloud-credentials
+      initContainers:
+      - name: create-index
+        image: &image ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app:latest
+        args: ["flask", "create-index"]
+        env:
+          - name: FLASK_APP
+            value: api/app.py
+        # This recreates your configmap based on your .env file:
+        # kubectl create configmap chatbot-rag-app-env --from-env-file=.env
+        envFrom: &envFrom
+          - configMapRef:
+              name: chatbot-rag-app-env
+        volumeMounts: &volumeMounts
+          - name: gcloud-credentials
+            mountPath: /root/.config/application_default_credentials.json
+            readOnly: true
+      containers:
+      - name: api-frontend
+        image: *image
+        ports:
+          - containerPort: 4000
+        envFrom: *envFrom
+        volumeMounts: *volumeMounts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: chatbot-rag-app
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
