@@ -2,7 +2,7 @@ name: elastic-stack
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
     container_name: elasticsearch
     ports:
       - 9200:9200
@@ -30,7 +30,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
     container_name: elasticsearch_settings
     restart: 'no'
     command: >
@@ -42,7 +42,7 @@ services:
       '
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.0
+    image: docker.elastic.co/kibana/kibana:8.17.2
     container_name: kibana
     depends_on:
       elasticsearch_settings:
@@ -66,7 +66,7 @@ services:
       interval: 1s
 
   apm-server:
-    image: docker.elastic.co/apm/apm-server:8.17.0
+    image: docker.elastic.co/apm/apm-server:8.17.2
     container_name: apm-server
     depends_on:
       elasticsearch:
