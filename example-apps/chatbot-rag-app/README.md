@@ -69,6 +69,49 @@ Clean up when finished, like this:
 docker compose down
 ```
 
+### Run with Kubernetes
+
+Our Kubernetes manifest will run similar to Docker, using host networking by
+default to eliminate the need to forward ports or use special hostnames to
+access localhost. Unless you change [k8s-manifest.yml](k8s-manifest.yml), the
+app chatbot-rag-app will do the following:
+* The init-container named "ingest-data" ingests data into elasticsearch
+* The container named "api-frontend", listens on http://localhost:4000
+
+**Double-check you have a `.env` file with all your variables set first!**
+
+Then, import your .env file as a configmap like this:
+```bash
+kubectl create configmap chatbot-rag-app-env --from-env-file=.env
+```
+
+If you are using Vertex AI, make a secret for authentication:
+```bash
+kubectl create secret generic gcloud-credentials \
+  --from-file=application_default_credentials.json=$HOME/.config/gcloud/application_default_credentials.json
+```
+
+Now, apply the manifest:
+```bash
+kubectl apply -f k8s-manifest.yml
+```
+
+*Note*: First time creating the index can fail on timeout. You can verify that
+like this:
+```bash
+kubectl logs -l app=chatbot-rag-app -c ingest-data
+```
+
+If you need to retry, do a rolling restart like this:
+```bash
+kubectl rollout restart deployment/chatbot-rag-app
+```
+
+Clean up when finished, like this:
+```bash
+kubectl delete -f k8s-manifest.yml
+```
+
 ### Run locally
 
 If you want to run this example with Python and Node.js, you need to do a few
