@@ -64,7 +64,7 @@ Try out Playground in Kibana with the following notebooks:
 - [`06-synonyms-api.ipynb`](./notebooks/search/06-synonyms-api.ipynb)
 - [`07-inference.ipynb`](./notebooks/search/07-inference.ipynb)
 - [`08-learning-to-rank.ipynb`](./notebooks/search/08-learning-to-rank.ipynb)
-- [`09-semantic-text.ipynb`](./notebooks/search/09-semantic-text.ipynb)
+- [`09-semantic-text.ipynb`](./notebooks/search/09-semantic-text.ipynb 
 
 #### Semantic reranking
 
@@ -105,4 +105,4 @@ You can also find us in the [#search-esre-relevance-engine](https://elasticstack
 
 # License ⚖️
 
-This software is licensed under the [Apache License, version 2 ("ALv2")](https://github.com/elastic/elasticsearch-labs/blob/main/LICENSE).
+This software is licensed under the [Apache License, version 2.1 ("ALv2.1")](https://github.com/elastic/elasticsearch-labs/blob/main/LICENSE).
