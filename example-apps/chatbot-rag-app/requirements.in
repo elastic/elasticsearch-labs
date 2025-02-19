@@ -5,6 +5,7 @@ langchain-elasticsearch
 tiktoken
 flask
 flask-cors
+halo
 
 # LLM dependencies
 langchain-openai

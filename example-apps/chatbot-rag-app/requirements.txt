@@ -4,9 +4,9 @@
 #
 #    pip-compile
 #
-aiohappyeyeballs==2.4.4
+aiohappyeyeballs==2.4.6
     # via aiohttp
-aiohttp==3.11.11
+aiohttp==3.11.12
     # via
     #   langchain
     #   langchain-community
@@ -22,17 +22,17 @@ attrs==25.1.0
     # via aiohttp
 blinker==1.9.0
     # via flask
-boto3==1.36.7
+boto3==1.36.24
     # via
     #   langchain-aws
     #   langtrace-python-sdk
-botocore==1.36.7
+botocore==1.36.24
     # via
     #   boto3
     #   s3transfer
 cachetools==5.5.1
     # via google-auth
-certifi==2024.12.14
+certifi==2025.1.31
     # via
     #   elastic-transport
     #   httpcore
@@ -43,10 +43,13 @@ charset-normalizer==3.4.1
     # via requests
 click==8.1.8
     # via flask
-cohere==5.13.11
+cohere==5.13.12
     # via langchain-cohere
 colorama==0.4.6
-    # via langtrace-python-sdk
+    # via
+    #   halo
+    #   langtrace-python-sdk
+    #   log-symbols
 dataclasses-json==0.6.7
     # via langchain-community
 deprecated==1.2.18
@@ -59,7 +62,7 @@ distro==1.9.0
     # via openai
 docstring-parser==0.16
     # via google-cloud-aiplatform
-elastic-opentelemetry==0.6.1
+elastic-opentelemetry==0.7.0
     # via -r requirements.in
 elastic-transport==8.17.0
     # via elasticsearch
@@ -83,7 +86,7 @@ frozenlist==1.5.0
     # via
     #   aiohttp
     #   aiosignal
-fsspec==2024.12.0
+fsspec==2025.2.0
     # via
     #   huggingface-hub
     #   langtrace-python-sdk
@@ -102,7 +105,7 @@ google-auth==2.38.0
     #   google-cloud-core
     #   google-cloud-resource-manager
     #   google-cloud-storage
-google-cloud-aiplatform==1.78.0
+google-cloud-aiplatform==1.81.0
     # via langchain-google-vertexai
 google-cloud-bigquery==3.29.0
     # via google-cloud-aiplatform
@@ -124,7 +127,7 @@ google-resumable-media==2.7.2
     # via
     #   google-cloud-bigquery
     #   google-cloud-storage
-googleapis-common-protos[grpc]==1.66.0
+googleapis-common-protos[grpc]==1.67.0
     # via
     #   google-api-core
     #   grpc-google-iam-v1
@@ -144,6 +147,8 @@ grpcio-status==1.70.0
     # via google-api-core
 h11==0.14.0
     # via httpcore
+halo==0.0.31
+    # via -r requirements.in
 httpcore==1.0.7
     # via httpx
 httpx==0.28.1
@@ -159,7 +164,7 @@ httpx-sse==0.4.0
     #   langchain-community
     #   langchain-google-vertexai
     #   langchain-mistralai
-huggingface-hub==0.27.1
+huggingface-hub==0.29.0
     # via
     #   tokenizers
     #   transformers
@@ -185,17 +190,17 @@ jsonpatch==1.33
     # via langchain-core
 jsonpointer==3.0.0
     # via jsonpatch
-langchain==0.3.15
+langchain==0.3.19
     # via
     #   -r requirements.in
     #   langchain-community
-langchain-aws==0.2.11
+langchain-aws==0.2.13
     # via -r requirements.in
 langchain-cohere==0.4.2
     # via -r requirements.in
-langchain-community==0.3.15
+langchain-community==0.3.18
     # via langchain-cohere
-langchain-core==0.3.31
+langchain-core==0.3.37
     # via
     #   langchain
     #   langchain-aws
@@ -208,26 +213,28 @@ langchain-core==0.3.31
     #   langchain-text-splitters
 langchain-elasticsearch==0.3.2
     # via -r requirements.in
-langchain-google-vertexai==2.0.12
+langchain-google-vertexai==2.0.13
     # via -r requirements.in
-langchain-mistralai==0.2.4
+langchain-mistralai==0.2.6
     # via -r requirements.in
-langchain-openai==0.3.2
+langchain-openai==0.3.6
     # via -r requirements.in
-langchain-text-splitters==0.3.5
+langchain-text-splitters==0.3.6
     # via langchain
-langsmith==0.3.2
+langsmith==0.3.8
     # via
     #   langchain
     #   langchain-community
     #   langchain-core
-langtrace-python-sdk==3.5.0
+langtrace-python-sdk==3.6.2
     # via -r requirements.in
+log-symbols==0.0.14
+    # via halo
 markupsafe==3.0.2
     # via
     #   jinja2
     #   werkzeug
-marshmallow==3.26.0
+marshmallow==3.26.1
     # via dataclasses-json
 multidict==6.1.0
     # via
@@ -235,7 +242,7 @@ multidict==6.1.0
     #   yarl
 mypy-extensions==1.0.0
     # via typing-inspect
-numpy==2.2.2
+numpy==2.2.3
     # via
     #   elasticsearch
     #   langchain
@@ -243,9 +250,9 @@ numpy==2.2.2
     #   langchain-community
     #   shapely
     #   transformers
-openai==1.60.2
+openai==1.63.2
     # via langchain-openai
-opentelemetry-api==1.29.0
+opentelemetry-api==1.30.0
     # via
     #   elastic-opentelemetry
     #   langtrace-python-sdk
@@ -257,31 +264,31 @@ opentelemetry-api==1.29.0
     #   opentelemetry-resourcedetector-gcp
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
-opentelemetry-exporter-otlp==1.29.0
+opentelemetry-exporter-otlp==1.30.0
     # via elastic-opentelemetry
-opentelemetry-exporter-otlp-proto-common==1.29.0
+opentelemetry-exporter-otlp-proto-common==1.30.0
     # via
     #   opentelemetry-exporter-otlp-proto-grpc
     #   opentelemetry-exporter-otlp-proto-http
-opentelemetry-exporter-otlp-proto-grpc==1.29.0
+opentelemetry-exporter-otlp-proto-grpc==1.30.0
     # via
     #   langtrace-python-sdk
     #   opentelemetry-exporter-otlp
-opentelemetry-exporter-otlp-proto-http==1.29.0
+opentelemetry-exporter-otlp-proto-http==1.30.0
     # via
     #   langtrace-python-sdk
     #   opentelemetry-exporter-otlp
-opentelemetry-instrumentation==0.50b0
+opentelemetry-instrumentation==0.51b0
     # via
     #   elastic-opentelemetry
     #   langtrace-python-sdk
     #   opentelemetry-instrumentation-sqlalchemy
     #   opentelemetry-instrumentation-system-metrics
-opentelemetry-instrumentation-sqlalchemy==0.50b0
+opentelemetry-instrumentation-sqlalchemy==0.51b0
     # via langtrace-python-sdk
-opentelemetry-instrumentation-system-metrics==0.50b0
+opentelemetry-instrumentation-system-metrics==0.51b0
     # via elastic-opentelemetry
-opentelemetry-proto==1.29.0
+opentelemetry-proto==1.30.0
     # via
     #   opentelemetry-exporter-otlp-proto-common
     #   opentelemetry-exporter-otlp-proto-grpc
@@ -290,7 +297,7 @@ opentelemetry-resource-detector-azure==0.1.5
     # via elastic-opentelemetry
 opentelemetry-resourcedetector-gcp==1.8.0a0
     # via elastic-opentelemetry
-opentelemetry-sdk==1.29.0
+opentelemetry-sdk==1.30.0
     # via
     #   elastic-opentelemetry
     #   langtrace-python-sdk
@@ -301,7 +308,7 @@ opentelemetry-sdk==1.29.0
     #   opentelemetry-sdk-extension-aws
 opentelemetry-sdk-extension-aws==2.1.0
     # via elastic-opentelemetry
-opentelemetry-semantic-conventions==0.50b0
+opentelemetry-semantic-conventions==0.51b0
     # via
     #   elastic-opentelemetry
     #   opentelemetry-instrumentation
@@ -407,19 +414,23 @@ s3transfer==0.11.2
     # via boto3
 safetensors==0.5.2
     # via transformers
-sentry-sdk==2.20.0
+sentry-sdk==2.22.0
     # via langtrace-python-sdk
-shapely==2.0.6
+shapely==2.0.7
     # via google-cloud-aiplatform
 simsimd==6.2.1
     # via elasticsearch
 six==1.17.0
-    # via python-dateutil
+    # via
+    #   halo
+    #   python-dateutil
 sniffio==1.3.1
     # via
     #   anyio
     #   openai
-sqlalchemy==2.0.37
+spinners==0.0.24
+    # via halo
+sqlalchemy==2.0.38
     # via
     #   langchain
     #   langchain-community
@@ -429,7 +440,9 @@ tenacity==9.0.0
     #   langchain
     #   langchain-community
     #   langchain-core
-tiktoken==0.8.0
+termcolor==2.5.0
+    # via halo
+tiktoken==0.9.0
     # via
     #   -r requirements.in
     #   langchain-openai
@@ -444,9 +457,9 @@ tqdm==4.67.1
     #   huggingface-hub
     #   openai
     #   transformers
-trace-attributes==7.1.1
+trace-attributes==7.2.0
     # via langtrace-python-sdk
-transformers==4.48.1
+transformers==4.49.0
     # via langtrace-python-sdk
 types-pyyaml==6.0.12.20241230
     # via langchain-cohere
@@ -493,27 +506,27 @@ zstandard==0.23.0
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
-opentelemetry-instrumentation-asyncio==0.50b0
-opentelemetry-instrumentation-dbapi==0.50b0
-opentelemetry-instrumentation-logging==0.50b0
-opentelemetry-instrumentation-sqlite3==0.50b0
-opentelemetry-instrumentation-threading==0.50b0
-opentelemetry-instrumentation-urllib==0.50b0
-opentelemetry-instrumentation-wsgi==0.50b0
-opentelemetry-instrumentation-aiohttp-client==0.50b0
-opentelemetry-instrumentation-aiohttp-server==0.50b0
-opentelemetry-instrumentation-boto3sqs==0.50b0
-opentelemetry-instrumentation-botocore==0.50b0
-opentelemetry-instrumentation-click==0.50b0
-opentelemetry-instrumentation-elasticsearch==0.50b0
-opentelemetry-instrumentation-flask==0.50b0
-opentelemetry-instrumentation-grpc==0.50b0
-opentelemetry-instrumentation-httpx==0.50b0
-opentelemetry-instrumentation-jinja2==0.50b0
-opentelemetry-instrumentation-requests==0.50b0
-opentelemetry-instrumentation-sqlalchemy==0.50b0
-opentelemetry-instrumentation-system-metrics==0.50b0
-opentelemetry-instrumentation-tortoiseorm==0.50b0
-opentelemetry-instrumentation-urllib3==0.50b0
+opentelemetry-instrumentation-asyncio==0.51b0
+opentelemetry-instrumentation-dbapi==0.51b0
+opentelemetry-instrumentation-logging==0.51b0
+opentelemetry-instrumentation-sqlite3==0.51b0
+opentelemetry-instrumentation-threading==0.51b0
+opentelemetry-instrumentation-urllib==0.51b0
+opentelemetry-instrumentation-wsgi==0.51b0
+opentelemetry-instrumentation-aiohttp-client==0.51b0
+opentelemetry-instrumentation-aiohttp-server==0.51b0
+opentelemetry-instrumentation-boto3sqs==0.51b0
+opentelemetry-instrumentation-botocore==0.51b0
+opentelemetry-instrumentation-click==0.51b0
+opentelemetry-instrumentation-elasticsearch==0.51b0
+opentelemetry-instrumentation-flask==0.51b0
+opentelemetry-instrumentation-grpc==0.51b0
+opentelemetry-instrumentation-httpx==0.51b0
+opentelemetry-instrumentation-jinja2==0.51b0
+opentelemetry-instrumentation-requests==0.51b0
+opentelemetry-instrumentation-sqlalchemy==0.51b0
+opentelemetry-instrumentation-system-metrics==0.51b0
+opentelemetry-instrumentation-tortoiseorm==0.51b0
+opentelemetry-instrumentation-urllib3==0.51b0
 elastic-opentelemetry-instrumentation-openai==0.6.0
 setuptools

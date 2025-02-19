@@ -12,7 +12,9 @@ on:
     branches:
       - main
     paths:
-      # Verify changes to the Dockerfile on PRs
+      # Verify changes to the Dockerfile on PRs, tainted when we update ES.
+      - docker/docker-compose-elastic.yml
+      - example-apps/chatbot-rag-app/docker-compose.yml
       - example-apps/chatbot-rag-app/Dockerfile
       - .github/workflows/docker-chatbot-rag-app.yml
       - '!**/*.md'
@@ -42,13 +44,27 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # This builds the image and pushes its digest if a multi-architecture
+      # image will be made later (event_name == 'push'). If PR, the image is
+      # loaded into docker for testing.
       - uses: docker/build-push-action@v6
         id: build
         with:
           context: example-apps/chatbot-rag-app
-          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=${{ github.event_name == 'push' && 'true' || 'false' }}
+          outputs: type=${{ github.event_name == 'pull_request' && 'docker' || 'image' }},name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=${{ github.event_name == 'push' && 'true' || 'false' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: start elasticsearch
+        if: github.event_name == 'pull_request'
+        run: docker compose -f docker/docker-compose-elastic.yml up --quiet-pull -d --wait --wait-timeout 120 elasticsearch
+      - name: test image
+        if: github.event_name == 'pull_request'
+        working-directory: example-apps/chatbot-rag-app
+        run: |  # This tests ELSER is working, which doesn't require an LLM.
+          cp env.example .env
+          # same as `docker compose run --rm -T create-index`, except pull never
+          docker run --rm --name create-index --env-file .env --pull never \
+            --add-host "localhost:host-gateway" ${{ env.IMAGE }} flask create-index
       - name: export digest
         if: github.event_name == 'push'
         run: |

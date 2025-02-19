@@ -12,7 +12,7 @@ wget https://raw.githubusercontent.com/elastic/elasticsearch-labs/refs/heads/mai
 Use docker compose to run Elastic stack in the background:
 
 ```bash
-docker compose -f docker-compose-elastic.yml up --force-recreate -d
+docker compose -f docker-compose-elastic.yml up --force-recreate --wait -d
 ```
 
 Then, you can view Kibana at http://localhost:5601/app/home#/

@@ -6,6 +6,7 @@ from elasticsearch_client import (
     get_elasticsearch_chat_message_history,
 )
 from flask import current_app, render_template, stream_with_context
+from functools import cache
 from langchain_elasticsearch import (
     ElasticsearchStore,
     SparseVectorStrategy,
@@ -27,11 +28,16 @@ store = ElasticsearchStore(
     strategy=SparseVectorStrategy(model_id=ELSER_MODEL),
 )
 
-llm = get_llm()
+
+@cache
+def get_lazy_llm():
+    return get_llm()
 
 
 @stream_with_context
 def ask_question(question, session_id):
+    llm = get_lazy_llm()
+
     yield f"data: {SESSION_ID_TAG} {session_id}\n\n"
     current_app.logger.debug("Chat session ID: %s", session_id)
 

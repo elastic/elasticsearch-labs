@@ -45,14 +45,17 @@ and configure its templated connection settings:
 
 ## Running the App
 
+This application contains two services:
+* create-index: Installs ELSER and ingests data into elasticsearch
+* api-frontend: Hosts the chatbot-rag-app application on http://localhost:4000
+
 There are two ways to run the app: via Docker or locally. Docker is advised for
 ease while locally is advised if you are making changes to the application.
 
 ### Run with docker
 
-Docker compose is the easiest way, as you get one-step to:
-* ingest data into elasticsearch
-* run the app, which listens on http://localhost:4000
+Docker compose is the easiest way to get started, as you don't need to have a
+working Python environment.
 
 **Double-check you have a `.env` file with all your variables set first!**
 
@@ -60,8 +63,7 @@ Docker compose is the easiest way, as you get one-step to:
 docker compose up --pull always --force-recreate
 ```
 
-*Note*: First time creating the index can fail on timeout. Wait a few minutes
-and retry.
+*Note*: The first run may take several minutes to become available.
 
 Clean up when finished, like this:
 
@@ -69,10 +71,10 @@ Clean up when finished, like this:
 docker compose down
 ```
 
-### Run locally
+### Run with Python
 
-If you want to run this example with Python and Node.js, you need to do a few
-things listed in the [Dockerfile](Dockerfile). The below uses the same
+If you want to run this example with Python, you need to do a few things listed
+in the [Dockerfile](Dockerfile) to build it first. The below uses the same
 production mode as used in Docker to avoid problems in debug mode.
 
 **Double-check you have a `.env` file with all your variables set first!**
@@ -89,7 +91,7 @@ nvm use --lts
 (cd frontend; yarn install; REACT_APP_API_HOST=/api yarn build)
 ```
 
-#### Configure your python environment
+#### Configure your Python environment
 
 Before we can run the app, we need a working Python environment with the
 correct packages installed:
@@ -102,17 +104,16 @@ pip install "python-dotenv[cli]"
 pip install -r requirements.txt
 ```
 
-#### Run the ingest command
+#### Create your Elasticsearch index
 
 First, ingest the data into elasticsearch:
 ```bash
-FLASK_APP=api/app.py dotenv run -- flask create-index
+dotenv run -- flask create-index
 ```
 
-*Note*: First time creating the index can fail on timeout. Wait a few minutes
-and retry.
+*Note*: This may take several minutes to complete
 
-#### Run the app
+#### Run the application
 
 Now, run the app, which listens on http://localhost:4000
 ```bash
@@ -185,10 +186,10 @@ passages. Modify this script to index your own data.
 
 See [Langchain documentation][loader-docs] for more ways to load documents.
 
-### Building from source with docker
+### Running from source with Docker
 
-To build the app from source instead of using published images, pass the `--build`
-flag to Docker Compose.
+To build the app from source instead of using published images, pass the
+`--build` flag to Docker Compose instead of `--pull always`
 
 ```bash
 docker compose up --build --force-recreate
