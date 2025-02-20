@@ -11,6 +11,12 @@ The following notebooks are available:
 4. [Multilingual semantic search](#4-multilingual-semantic-search)
 5. [Query rules](#5-query-rules)
 6. [Synonyms API quick start](#6-synonyms-api-quick-start)
+7. [Inferencee](#7-inference)
+8. [Learning to rank](#8-learning-to-rank)
+9. [Semantic text](#9-semantic-text)
+10. [Semantic reranking with Cohere reranker](#10-semantic-reranking-retriever-cohere)
+11. [Semantic reranking with a Hugging Face model](#11-semantic-reranking-hugging-face)
+12. [Semantic reranking with Elastic Rerank](#12-semantic-reranking-elastic-rerank)
 
 ## Notebooks
 
@@ -82,3 +88,38 @@ In the [`06-synonyms-api.ipynb`](./06-synonyms-api.ipynb) notebook, you'll learn
 - Configure an index to use search-time synonyms
 - Update synonyms in real time
 - Run queries that are enhanced by synonyms
+
+### 7. Inference
+
+### 8. Learning to rank
+
+### 9. Semantic text
+
+In the [`09-semantic-text.ipynb`](./09-semantic-text.ipynb) notebook, you'll learn how to:
+
+- Quickly get started with semantic search with the `semantic_text` field type
+- Use the `semantic` query
+- Implement hybrid search
+
+### 10. Semantic reranking with Cohere reranker
+
+In the [`10-semantic-reranking-retriever-cohere.ipynb`](./10-semantic-reranking-retriever-cohere.ipynb) notebook, you'll learn how to:
+
+- Use the inference API to create an inference endpoint for reranking
+- Use a `retriever` query to search and rerank the results
+
+### 11. Semantic reranking with a Hugging Face model
+
+In the [`11-semantic-reranking-hugging-face.ipynb`](./11-semantic-reranking-hugging-face.ipynb) notebook, you'll learn how to:
+
+- Load a Hugging Face model for semantic reranking into Elasticsearch
+- Use the inference API to create an inference endpoint for reranking
+- Use a `retriever` query to search and rerank the results
+
+### 12. Semantic reranking with Elastic Rerank
+
+In the [`12-semantic-reranking-elastic-rerank.ipynb`](./12-semantic-reranking-elastic-rerank.ipynb) notebook, you'll learn how to:
+
+- Deploy the [Elastic Rerank](https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-rerank.html) model using the Inference API
+- Use a `retriever` query to search and rerank the results
+

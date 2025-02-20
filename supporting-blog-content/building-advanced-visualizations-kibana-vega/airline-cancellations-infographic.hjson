@@ -1,0 +1,149 @@
+{
+  $schema: https://vega.github.io/schema/vega-lite/v5.json
+  description: A sample showing statistics with image marks
+
+  // Define the data source
+  data: {
+    url: {
+      // Which index to search
+      index: kibana_sample_data_flights
+      // Aggregate data by the time field into time buckets, counting the number of documents in each bucket.
+      body: {
+        // You cannot use query and the %context% and %timefield% combination in the same data source
+        query: {
+          bool: {
+            must: [
+              // See https://www.elastic.co/guide/en/kibana/current/vega.html#vega-queries
+              %dashboard_context-must_clause%
+              {
+                range: {
+              // apply timefilter (upper right corner)
+              // to the @timestamp variable
+                  timestamp: {
+                // "%timefilter%" will be replaced with
+                // the current values of the time filter
+                // (from the upper right corner)
+                    %timefilter%: true
+                  }
+                }
+              }
+              {
+                match: {
+                  Cancelled: "true"
+                }
+              }
+            ]
+          }
+        }
+        // Simple bucket aggregation to get document count by carrier
+        aggs: {
+          carriers: {
+            terms: {
+              field: Carrier
+            }
+          }
+        }
+        // Speed up the response by only including aggregation results
+        size: 0
+      }
+    }
+
+/*
+For our graph, we only need the list of bucket values.  Use the format.property to discard everything else.
+*/
+    format: {
+      property: aggregations.carriers.buckets
+    }
+  }
+
+// Setting to auto-fit contents based on panel size
+  autosize: {
+    type: fit
+    contains: content
+    resize: true
+  }
+
+// Remove grey box surrounding the chart
+  config: {
+    view: {
+      stroke: transparent
+    }
+  }
+  
+  // Add new field "img" to add an image url based on the value of field "key"
+  transform: [
+    {
+      calculate: "{'ES-Air': 'https://images.unsplash.com/photo-1483304528321-0674f0040030?q=80&w=320&auto=format&fit=crop', 'JetBeats': 'https://images.unsplash.com/photo-1525396524423-64f7b55f5b33?q=80&w=320&auto=format&fit=crop', 'Kibana Airlines': 'https://images.unsplash.com/photo-1529905270444-b5e32acc3bdd?q=80&w=320&auto=format&fit=crop', 'Logstash Airways': 'https://images.unsplash.com/photo-1551748629-08d916ed6682?q=80&w=320&auto=format&fit=crop'}[datum.key]"
+      as: img
+    }
+  ]
+
+/* "mark" is the graphics element used to show our data.  
+  Other mark values are: area, bar, circle, line, point, rect, rule, square, text, and tick
+  See https://vega.github.io/vega-lite/docs/mark.html
+  In this example we have multiple layers instead of a single mark*/
+  layer: [
+    {
+      // Carrier
+      mark: {
+        type: text
+        y: 140
+        align: center
+        fontSize: 35
+      }
+      encoding: {
+        text: {
+          field: key
+        }
+      }
+    }
+    // Number of cancellations
+    {
+      mark: {
+        type: text
+        y: 90
+        align: center
+        fontSize: 60
+        fontWeight: bold
+      }
+      encoding: {
+        text: {
+          field: doc_count
+        }
+      }
+    } // Image
+    {
+      mark: {
+        type: image
+        aspect: true
+        width: 200
+        height: 100
+      }
+      encoding: {
+        url: {
+          field: img
+        }
+      }
+    }
+  ]
+
+  /* "encoding" tells the "mark" what data to use and in what way.  
+  See https://vega.github.io/vega-lite/docs/encoding.html */
+  encoding: {
+    x: {
+      // The "key" value is the timestamp in milliseconds.  Use it for the x-axis.
+      field: key
+      type: nominal
+      // Hide x-axis
+      axis: {
+        title: false
+        labels: false
+      }
+    }
+    color: {
+      field: key
+      type: nominal
+      legend: null
+    }
+  }
+}

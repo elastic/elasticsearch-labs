@@ -29,6 +29,13 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)
 - [`chatbot.ipynb`](./notebooks/generative-ai/chatbot.ipynb)
 
+### Playground RAG Notebooks
+
+Try out Playground in Kibana with the following notebooks:
+
+- [`OpenAI Example`](./notebooks/playground-examples/openai-elasticsearch-client.ipynb)
+- [`Anthropic Claude 3 Example`](./notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb)
+
 ### LangChain
 
 - [`question-answering.ipynb`](./notebooks/generative-ai/question-answering.ipynb)
@@ -55,6 +62,14 @@ The [`notebooks`](notebooks/README.md) folder contains a range of executable Pyt
 - [`04-multilingual.ipynb`](./notebooks/search/04-multilingual.ipynb)
 - [`05-query-rules.ipynb`](./notebooks/search/05-query-rules.ipynb)
 - [`06-synonyms-api.ipynb`](./notebooks/search/06-synonyms-api.ipynb)
+- [`07-inference.ipynb`](./notebooks/search/07-inference.ipynb)
+- [`08-learning-to-rank.ipynb`](./notebooks/search/08-learning-to-rank.ipynb)
+- [`09-semantic-text.ipynb`](./notebooks/search/09-semantic-text.ipynb)
+
+#### Semantic reranking
+
+- [`10-semantic-reranking-retriever-cohere.ipynb`](./notebooks/search/10-semantic-reranking-retriever-cohere.ipynb)
+- [`11-semantic-reranking-hugging-face.ipynb`](./notebooks/search/11-semantic-reranking-hugging-face.ipynb)
 
 ### Integrations
 

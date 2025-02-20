@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, Response
-from flask_cors import CORS
-from uuid import uuid4
-from chat import ask_question
 import os
 import sys
+from uuid import uuid4
+
+from chat import ask_question
+from flask import Flask, Response, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
 CORS(app)
@@ -37,4 +38,4 @@ def create_index():
 
 
 if __name__ == "__main__":
-    app.run(port=3001, debug=True)
+    app.run(host="0.0.0.0", port=4000, debug=False)

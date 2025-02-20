@@ -1,0 +1,37 @@
+name: chatbot-rag-app
+
+services:
+  ingest-data:
+    image: ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app
+    build:
+      context: .
+    container_name: ingest-data
+    restart: 'no'  # no need to re-ingest on successive runs
+    environment:
+      FLASK_APP: api/app.py
+    env_file:
+      - .env
+    command: flask create-index
+    volumes:
+      # VertexAI uses a file for GOOGLE_APPLICATION_CREDENTIALS, not an API key
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+        - "localhost:host-gateway"
+
+  api-frontend:
+    depends_on:
+      ingest-data:
+        condition: service_completed_successfully
+    container_name: api-frontend
+    image: ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      # VertexAI uses a file for GOOGLE_APPLICATION_CREDENTIALS, not an API key
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
+    ports:
+      - "4000:4000"
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+        - "localhost:host-gateway"

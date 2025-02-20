@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.product-page {
+  display: flex;
+  padding: 20px;
+}
+
+.search-and-facets {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.product-section {
+  flex: 3;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.facets {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.facet-item {
+  margin-bottom: 10px;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  display: flex;
+}
+
+.product-image img {
+  max-width: 100px;
+  max-height: 100px;
+  margin-right: 10px;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-price {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  height: 100%;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}
+
+
+.product-tags {
+  margin-top: 10px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border-radius: 15px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.tag-0 { background-color: #ff5733; }  /* orange */
+.tag-1 { background-color: #33ff57; }  /* green */
+.tag-2 { background-color: #3357ff; }  /* blue */
+.tag-3 { background-color: #ff33a1; }  /* pink */
+.tag-4 { background-color: #ff9933; }  /* yellow */
