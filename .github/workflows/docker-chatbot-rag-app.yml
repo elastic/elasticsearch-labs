@@ -1,0 +1,101 @@
+name: build chatbot-rag-app image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - example-apps/chatbot-rag-app/**
+      - .github/workflows/docker-chatbot-rag-app.yml
+      - '!**/*.md'
+  pull_request:
+    branches:
+      - main
+    paths:
+      # Verify changes to the Dockerfile on PRs
+      - example-apps/chatbot-rag-app/Dockerfile
+      - .github/workflows/docker-chatbot-rag-app.yml
+      - '!**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}/chatbot-rag-app
+
+jobs:
+  build-image:
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: github.event_name == 'push'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        id: build
+        with:
+          context: example-apps/chatbot-rag-app
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=${{ github.event_name == 'push' && 'true' || 'false' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: export digest
+        if: github.event_name == 'push'
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+      - name: upload digest
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.runner }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  push-manifest:
+    runs-on: ubuntu-24.04
+    needs: build-image
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=raw,latest
+            type=sha,format=long
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+            path: /tmp/digests
+            pattern: digests-*
+            merge-multiple: true
+      - run: ls /tmp/digests
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.IMAGE }}@sha256:%s ' *)
+      - name: Inspect image to verify
+        run: |
+          docker buildx imagetools inspect ${{ env.IMAGE }}:${{ steps.meta.outputs.version }}

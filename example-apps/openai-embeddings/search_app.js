@@ -3,7 +3,7 @@ const {
   getElasticsearchClient,
   getOpenAIClient,
   INDEX,
-  MODEL,
+  EMBEDDINGS_MODEL,
 } = require("./utils");
 
 // Initialize clients and web app
@@ -14,15 +14,15 @@ const app = express();
 async function generateEmbeddingsWithOpenAI(text) {
   // Generate OpenAI embedding for input text
   console.log(
-    `Calling OpenAI API to apply embedding on text "${text}" with model ${MODEL}`
+    `Calling OpenAI API to apply embedding on text "${text}" with model ${EMBEDDINGS_MODEL}`
   );
 
-  const result = await openaiClient.createEmbedding({
-    model: MODEL,
+  const result = await openaiClient.embeddings.create({
+    model: EMBEDDINGS_MODEL,
     input: text,
   });
 
-  return result.data.data[0].embedding;
+  return result.data[0].embedding;
 }
 
 async function runSemanticSearch(query) {

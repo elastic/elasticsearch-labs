@@ -1,0 +1,4 @@
+spotipy
+elasticsearch
+rich
+typer

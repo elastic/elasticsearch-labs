@@ -5,6 +5,9 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/esql/esql-getting-started.ipynb"
     "notebooks/search/07-inference.ipynb"
     "notebooks/search/08-learning-to-rank.ipynb"
+    "notebooks/search/10-semantic-reranking-retriever-cohere.ipynb"
+    "notebooks/search/11-semantic-reranking-hugging-face.ipynb"
+    "notebooks/search/12-semantic-reranking-elastic-rerank.ipynb"
     "notebooks/images/image-similarity.ipynb"
     "notebooks/langchain/langchain-vector-store.ipynb"
     "notebooks/langchain/self-query-retriever-examples/chatbot-example.ipynb"
@@ -26,7 +29,13 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/llama3/rag-elastic-llama3-elser.ipynb"
     "notebooks/integrations/llama3/rag-elastic-llama3.ipynb"
     "notebooks/integrations/azure-openai/vector-search-azure-openai-elastic.ipynb"
-    "notebooks/enterprise-search/app-search-engine-exporter.ipynb"
+    "notebooks/enterprise-search/app-search-engine-exporter.ipynb",
+    "notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb",
+    "notebooks/playground-examples/openai-elasticsearch-client.ipynb",
+    "notebooks/integrations/hugging-face/huggingface-integration-millions-of-documents-with-cohere-reranking.ipynb",
+    "notebooks/integrations/cohere/updated-cohere-elasticsearch-inference-api.ipynb",
+    "notebooks/integrations/alibabacloud-ai-search/inference-alibabacloud-ai-search.ipynb",
+    "notebooks/integrations/jinaai/inference-jinaai.ipynb"
 )
 
 # Per-version testing exceptions
@@ -34,7 +43,7 @@ EXEMPT_NOTEBOOKS=(
 # cannot run on that stack version or older
 # Examples:
 # EXEMPT_NOTEBOOKS__8 for notebooks that must be skipped on all versions 8.x and older
-# EXEMPT_NOTEBOOKS__8_12 for notebooks that must skipped on versions 8.12 and older
+# EXEMPT_NOTEBOOKS__8_12 for notebooks that must be skipped on versions 8.12 and older
 
 EXEMPT_NOTEBOOKS__8_12=(
     # Add any notebooks that must be skipped on versions 8.12 or older here
@@ -42,6 +51,14 @@ EXEMPT_NOTEBOOKS__8_12=(
     "notebooks/document-chunking/with-langchain-splitters.ipynb"
     "notebooks/integrations/hugging-face/loading-model-from-hugging-face.ipynb"
     "notebooks/langchain/langchain-using-own-model.ipynb"
+)
+
+EXEMPT_NOTEBOOKS__8_14=(
+    # Add any notebooks that must be skipped on versions 8.14 or older here
+    "notebooks/search/09-semantic-text.ipynb",
+    # This notebook has the text_expansion deprecation notice for 8.15. 
+    # Only running on 8.15 so includes the deprecation notice and newer so the local output is the same as CI
+    "notebooks/langchain/langchain-vector-store-using-elser.ipynb",
 )
 
 # this function parses a version given as M[.N[.P]] or M[_N[_P]] into a numeric form

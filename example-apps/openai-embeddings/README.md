@@ -1,26 +1,20 @@
 # OpenAI embeddings example application
 
-## Overview
+This is a small example Node.js/Express application that demonstrates how to
+integrate Elastic and OpenAI.
 
-Small example Node.js/Express.js application to demonstrate how to integrate Elastic and OpenAI.
+The application has two components:
+* [generate](generate_embeddings.js)
+  * Generates embeddings for [sample_data](sample_data/medicare.json) into
+    Elasticsearch.
+* [app](search_app.js)
+  * Runs the web service which hosts the [web frontend](views) and the
+    search API.
+* Both scripts use the [Elasticsearch](https://github.com/elastic/elasticsearch-js) and [OpenAI](https://github.com/openai/openai-node) JavaScript clients.
 
-This folder includes two files:
+![Screenshot of the sample app](./app-demo.png)
 
-- `generate_embeddings.js`: Processes a JSON file, generates text embeddings for each document in the file using OpenAI's API, and then stores the documents and their corresponding embeddings in an Elasticsearch index.
-- `search_app.js`: A tiny Express.js web app that renders a search bar, generates embeddings for search queries, and performs semantic search using Elasticsearch's [kNN search](https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html). It retrieves the search results and returns a list of hits, ranked by relevance.
-
-Both scripts use the [Elasticsearch](https://github.com/elastic/elasticsearch-js) and [OpenAI](https://github.com/openai/openai-node) JavaScript clients.
-
-## Requirements
-
-- Node.js 16+
-
-## Setup
-
-This section will walk you through the steps for setting up and using the application from scratch.
-(Skip the first steps if you already have an Elastic deployment and OpenAI account/API key.)
-
-### 1. Download the Project
+## Download the Project
 
 Download the project from Github and extract the `openai-embeddings` folder.
 
@@ -29,102 +23,130 @@ curl https://codeload.github.com/elastic/elasticsearch-labs/tar.gz/main | \
 tar -xz --strip=2 elasticsearch-labs-main/example-apps/openai-embeddings
 ```
 
-### 2. Create OpenAI account and API key
+## Make your .env file
 
-- Go to https://platform.openai.com/ and sign up
-- Generate an API key and make note of it
+Copy [env.example](env.example) to `.env` and fill in values noted inside.
 
-![OpenAI API key](images/openai_api_key.png)
+## Installing and connecting to Elasticsearch
 
-### 3. Create Elastic Cloud account and credentials
+There are a number of ways to install Elasticsearch. Cloud is best for most
+use-cases. We also have [docker-compose-elastic.yml](../../docker), that starts
+Elasticsearch, Kibana, and APM Server on your laptop with one command.
 
-- [Sign up](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-samples) for a Elastic cloud account
-- Make note of the master username/password shown to you during creation of the deployment
-- Make note of the Elastic Cloud ID after the deployment
+Once you decided your approach, edit your `.env` file accordingly.
 
-![Elastic Cloud credentials](images/elastic_credentials.png)
+For more information, visit our [Install Elasticsearch][install-es] tutorial.
 
-![Elastic Cloud ID](images/elastic_cloud_id.png)
+### Running your own Elastic Stack with Docker
 
-### 4. Install Node dependencies
+If you'd like to start Elastic locally, you can use the provided
+[docker-compose-elastic.yml](docker-compose-elastic.yml) file. This starts
+Elasticsearch, Kibana, and APM Server and only requires Docker installed.
 
-```sh
+Use docker compose to run Elastic stack in the background:
+
+```bash
+docker compose -f docker-compose-elastic.yml up --force-recreate -d
+```
+
+Then, you can view Kibana at http://localhost:5601/app/home#/
+
+If asked for a username and password, use username: elastic and password: elastic.
+
+Clean up when finished, like this:
+
+```bash
+docker compose -f docker-compose-elastic.yml down
+```
+
+## Running the App
+
+There are two ways to run the app: via Docker or locally. Docker is advised for
+ease while locally is advised if you are making changes to the application.
+
+### Run with docker
+
+Docker compose is the easiest way, as you get one-step to:
+* generate embeddings and store them into Elasticsearch
+* run the app, which listens on http://localhost:3000
+
+**Double-check you have a `.env` file with all your variables set first!**
+
+```bash
+docker compose up --build --force-recreate
+```
+
+Clean up when finished, like this:
+
+```bash
+docker compose down
+```
+
+### Run locally
+
+First, set up a Node.js environment for the example like this:
+
+```bash
+nvm use --lts  # or similar to setup Node.js v20 or later
 npm install
 ```
 
-### 5. Set environment variables
+**Double-check you have a `.env` file with all your variables set first!**
 
-```sh
-export ELASTIC_CLOUD_ID=<your Elastic cloud ID>
-export ELASTIC_USERNAME=<your Elastic username>
-export ELASTIC_PASSWORD=<your Elastic password>
-export OPENAI_API_KEY=<your OpenAI API key>
-```
+#### Run the generate command
 
-### 6. Generate embeddings and index documents
-
-```sh
+First, ingest the data into elasticsearch:
+```bash
 npm run generate
-
-Connecting to Elastic Cloud: my-openai-integration-test:dXMt(...)
-(node:95956) ExperimentalWarning: stream/web is an experimental feature. This feature could change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
-Reading from file sample_data/medicare.json
-Processing 12 documents...
-Processing batch of 10 documents...
-Calling OpenAI API for 10 embeddings with model text-embedding-ada-002
-Indexing 10 documents to index openai-integration...
-Processing batch of 2 documents...
-Calling OpenAI API for 2 embeddings with model text-embedding-ada-002
-Indexing 2 documents to index openai-integration...
-Processing complete
 ```
 
-_**Note**: the example application uses the `text-embedding-ada-002` OpenAI model for generating the embeddings, which provides a 1536-dimensional vector output. See [this section](#using-a-different-openai-model) if you want to use a different model._
+#### Run the app
 
-### 7. Launch web app
-
-```sh
+Now, run the app, which listens on http://localhost:3000
+```bash
 npm run app
-
-Connecting to Elastic Cloud: my-openai-integration-test:dXMt(...)
-(node:96017) ExperimentalWarning: stream/web is an experimental feature. This feature could change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
-Express app listening on port 3000
 ```
 
-### 8. Run semantic search in the web app
+## Advanced
 
-- Open http://localhost:3000 in your browser
-- Enter a search query and press Search
+Here are some tips for modifying the code for your use case. For example, you
+might want to use your own sample data.
 
-![Search example](images/search.png)
+### OpenTelemetry
 
-## Customize configuration
+If you set `OTEL_SDK_DISABLED=false` in your `.env` file, the app will send
+logs, metrics and traces to an OpenTelemetry compatible endpoint.
 
-Here are some tips for modifying the code for your use case. For example, you might want to use your own sample data.
+[env.example](env.example) defaults to use Elastic APM server, started by
+[docker-compose-elastic.yml](../../docker). If you start your Elastic stack
+this way, you can access Kibana like this, authenticating with the username
+"elastic" and password "elastic":
+
+http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
+
+Under the scenes, openai-embeddings is automatically instrumented by the Elastic
+Distribution of OpenTelemetry (EDOT) Node.js. You can see more details about
+EDOT Node.js [here](https://github.com/elastic/elastic-otel-node).
 
 ### Using a different source file or document mapping
 
 - Ensure your file contains the documents in JSON format
-- Modify the document mappings and fields in the `.js` files and in `views/search.hbs`
-- Modify the initialization of `FILE` in `utils.js`
+- Modify the document mappings and fields in the `.js` files and in [views/search.hbs](views/search.hbs)
+- Modify the initialization of `FILE` in [utils.js](utils.js)
 
 ### Using a different OpenAI model
 
-- Modify the initialization of `MODEL` in `utils.js`
-- Ensure that `embedding.dims` in your index mapping is the same number as the dimensions of the model's output
+- Modify `EMBEDDINGS_MODEL` in `.env`
+- Ensure that `embedding.dims` in your index mapping is the same number as the dimensions of the model's output.
 
 ### Using a different Elastic index
 
-- Modify the initialization of `INDEX` in `utils.js`
+- Modify the initialization of `INDEX` in [utils.js](utils.js)
 
-### Using a different method for authenticating with Elastic
+### Using a different method to connect to Elastic
 
-- Modify the initialization of `elasticsearchClient` in `utils.js`
-- Refer to [this document](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html#authentication) about authentication schemes
+- Modify the initialization of `elasticsearchClient` in [utils.js](utils.js)
+- Refer to [this document](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html)
 
-### Running on self-managed Elastic cluster
-
-- Modify the initialization of `elasticsearchClient` in `utils.js`
-- Refer to [this document](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html#connect-self-managed-new) about connecting to a self-managed cluster
+---
+[install-es]: https://www.elastic.co/search-labs/tutorials/install-elasticsearch

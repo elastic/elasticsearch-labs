@@ -1,18 +1,27 @@
 {
-  "name": "openai-integration-example-javascript",
+  "name": "openai-embeddings",
   "version": "1.0.0",
-  "description": "OpenAI integration example",
-  "main": "search_app.js",
-  "scripts": {
-    "app": "node search_app.js",
-    "generate": "node generate_embeddings.js"
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
   },
-  "author": "Elastic",
-  "license": "MIT",
+  "scripts": {
+    "app": "node --env-file .env -r @elastic/opentelemetry-node search_app.js",
+    "generate": "node --env-file .env -r @elastic/opentelemetry-node generate_embeddings.js"
+  },
   "dependencies": {
-    "@elastic/elasticsearch": "^8.8.0",
-    "express": "^4.18.2",
+    "@elastic/opentelemetry-node": "*",
+    "@elastic/elasticsearch": "^8.17.0",
+    "@opentelemetry/api": "^1.9.0",
+    "express": "^4.21.2",
     "hbs": "^4.2.0",
-    "openai": "^3.2.1"
+    "openai": "^4.78.1"
+  },
+  "// overrides comment": "Override to avoid punycode warnings in recent versions of Node.JS",
+  "overrides": {
+    "node-fetch@2.x": {
+      "whatwg-url": "14.x"
+    }
   }
 }

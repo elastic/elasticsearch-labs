@@ -1,17 +1,18 @@
+const { trace } = require("@opentelemetry/api");
 const fs = require("fs");
 const {
   getElasticsearchClient,
   getOpenAIClient,
   FILE,
   INDEX,
-  MODEL,
+  EMBEDDINGS_MODEL,
 } = require("./utils");
 
 // Initialize clients
 const elasticsearchClient = getElasticsearchClient();
 const openaiClient = getOpenAIClient();
 
-const timer = (ms) => new Promise((res) => setTimeout(res, ms));
+const tracer = trace.getTracer("openai-embeddings");
 
 async function maybeCreateIndex() {
   // Check if index exists, if not create it
@@ -45,7 +46,7 @@ async function maybeCreateIndex() {
           },
           embedding: {
             type: "dense_vector",
-            dims: 1536,
+            dims: 1536, // must match query vector size
             index: true,
             similarity: "cosine",
           },
@@ -78,15 +79,15 @@ async function generateEmbeddingsWithOpenAI(docs) {
   const input = docs.map((doc) => doc["content"]);
 
   console.log(
-    `Calling OpenAI API for ${input.length} embeddings with model ${MODEL}`
+    `Calling OpenAI API for ${input.length} embeddings with model ${EMBEDDINGS_MODEL}`
   );
 
-  result = await openaiClient.createEmbedding({
-    model: MODEL,
+  const result = await openaiClient.embeddings.create({
+    model: EMBEDDINGS_MODEL,
     input,
   });
 
-  return result.data.data.map((data) => data["embedding"]);
+  return result.data.map((data) => data.embedding);
 }
 
 async function processFile() {
@@ -121,8 +122,14 @@ async function processFile() {
 }
 
 async function run() {
-  await maybeCreateIndex();
-  await processFile();
+  return tracer.startActiveSpan("generate", async (span) => {
+    try {
+      await maybeCreateIndex();
+      await processFile();
+    } finally {
+      span.end();
+    }
+  });
 }
 
 run().catch(console.error);

@@ -1,0 +1,38 @@
+PUT _scripts/google-template-knn-multioutput
+{
+  "script": {
+    "lang": "mustache",
+    "source": {
+      "_source": {
+        "excludes": [ "title_embedding", "description_embedding", "images"]
+      },
+        "size": "{{num_hits}}",
+          "knn" : [
+          { 
+            "field": "description_embedding",
+            "k": 5,
+            "num_candidates": 10,
+            "query_vector_builder": {
+              "text_embedding": {
+                "model_id": "googlevertexai_embeddings_004",
+                "model_text": "{{query}}"
+              }
+            },
+            "boost": 0.4
+          },
+          {
+            "field": "title_embedding",
+            "k": 5,
+            "num_candidates": 10,
+            "query_vector_builder": {
+              "text_embedding": {
+                "model_id": "googlevertexai_embeddings_004",
+                "model_text": "{{query}}"
+            }
+          },
+          "boost": 0.6
+          }
+          ]
+    }  
+  }
+}

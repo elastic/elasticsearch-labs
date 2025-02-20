@@ -1,0 +1,27 @@
+name: chatbot-rag-app
+
+services:
+  generate:
+    build:
+      context: .
+    container_name: generate
+    restart: 'no'  # no need to re-ingest on successive runs
+    env_file:
+      - .env
+    command: generate
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+      - "localhost:host-gateway"
+
+  app:
+    depends_on:
+      generate:
+        condition: service_completed_successfully
+    container_name: api-frontend
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
+      - "localhost:host-gateway"

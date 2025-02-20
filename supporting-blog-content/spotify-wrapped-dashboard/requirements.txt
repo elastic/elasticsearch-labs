@@ -1,0 +1,4 @@
+elasticsearch
+pandas
+requests
+getpass
