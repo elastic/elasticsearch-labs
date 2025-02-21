@@ -1,14 +1,12 @@
 name: chatbot-rag-app
 
 services:
-  ingest-data:
+  create-index:
     image: ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app
     build:
       context: .
-    container_name: ingest-data
+    container_name: create-index
     restart: 'no'  # no need to re-ingest on successive runs
-    environment:
-      FLASK_APP: api/app.py
     env_file:
       - .env
     command: flask create-index
@@ -20,7 +18,7 @@ services:
 
   api-frontend:
     depends_on:
-      ingest-data:
+      create-index:
         condition: service_completed_successfully
     container_name: api-frontend
     image: ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app

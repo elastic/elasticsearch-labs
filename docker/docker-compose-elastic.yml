@@ -2,7 +2,7 @@ name: elastic-stack
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
     container_name: elasticsearch
     ports:
       - 9200:9200
@@ -16,21 +16,29 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
       - xpack.license.self_generated.type=trial
-      - ES_JAVA_OPTS=-Xmx8g
+      # Note that ELSER is recommended to have 2GB, but it is JNI (PyTorch).
+      # So, ELSER's memory is in addition to the heap and other overhead.
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
     ulimits:
       memlock:
         soft: -1
         hard: -1
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=500ms"]
-      retries: 300
+      test:  # readiness probe taken from kbn-health-gateway-server script
+        [
+          "CMD-SHELL",
+          "curl -s http://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      start_period: 10s
       interval: 1s
+      timeout: 10s
+      retries: 120
 
   elasticsearch_settings:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
     container_name: elasticsearch_settings
     restart: 'no'
     command: >
@@ -42,7 +50,7 @@ services:
       '
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.0
+    image: docker.elastic.co/kibana/kibana:8.17.2
     container_name: kibana
     depends_on:
       elasticsearch_settings:
@@ -66,7 +74,7 @@ services:
       interval: 1s
 
   apm-server:
-    image: docker.elastic.co/apm/apm-server:8.17.0
+    image: docker.elastic.co/apm/apm-server:8.17.2
     container_name: apm-server
     depends_on:
       elasticsearch:
