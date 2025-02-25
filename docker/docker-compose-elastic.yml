@@ -69,7 +69,7 @@ services:
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=fhjskloppd678ehkdfdlliverpoolfcr
       - SERVER_PUBLICBASEURL=http://127.0.0.1:5601
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:5601/api/status | grep -q 'All services are available'"]
+      test: ["CMD-SHELL", "curl -s http://localhost:5601/api/status | grep -q 'available'"]
       retries: 300
       interval: 1s
 

@@ -165,8 +165,6 @@ pip-compile
 pip install -r requirements.txt
 # Add opentelemetry instrumentation for these dependencies
 edot-bootstrap >> requirements.txt
-# Missing dependency for langtrace vertexai instrumentation
-echo "setuptools" >> requirements.txt
 # Install opentelemetry dependencies
 pip install -r requirements.txt
 ```
