@@ -5,24 +5,19 @@ COPY frontend ./frontend
 RUN cd frontend && yarn install
 RUN cd frontend && REACT_APP_API_HOST=/api yarn build
 
+# langchain and vertexai depend on a large number of system packages including
+# linux-headers, g++, geos, geos-dev, rust and cargo. These are already present
+# on -slim and adding them to -alpine results in a larger image than -slim.
 FROM python:3.12-slim
 
 WORKDIR /app
 RUN mkdir -p ./frontend/build
 COPY --from=build-step ./app/frontend/build ./frontend/build
-RUN mkdir ./api
-RUN mkdir ./data
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    software-properties-common \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
 
 COPY requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
+
+RUN mkdir -p ./api ./data
 COPY api ./api
 COPY data ./data
 

@@ -16,5 +16,5 @@ langchain-mistralai
 
 # EDOT dependencies
 elastic-opentelemetry
-# Additional LLM support not in EDOT
+# Additional LLM support not yet in EDOT
 langtrace-python-sdk
