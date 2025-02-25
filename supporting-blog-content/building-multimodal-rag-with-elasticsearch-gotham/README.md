@@ -21,6 +21,22 @@ The pipeline demonstrates how to:
 
 1. **Setup Environment**
 ```bash
+rm -rf .venv requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pip-tools
+# Recreate requirements.txt
+pip-compile
+# Install main dependencies
+pip install -r requirements.txt
+
+
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install "python-dotenv[cli]"
+pip install -r requirements-torch.txt
+pip install -r requirements.txt
 
 # Make sure you have pytorch installed and Python 3.10+
 pip install torch torchvision torchaudio

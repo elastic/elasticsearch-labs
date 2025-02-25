@@ -1,0 +1,15 @@
+elasticsearch
+torch
+torchvision
+torchaudio
+imagebind @ git+https://github.com/hkchengrex/ImageBind.git
+openai
+python-dotenv
+numpy
+pillow
+opencv-python
+librosa
+matplotlib
+wheel
+setuptools
+xformers
