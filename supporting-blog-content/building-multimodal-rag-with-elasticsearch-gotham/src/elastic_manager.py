@@ -15,10 +15,24 @@ class ElasticsearchManager:
     
     def _connect_elastic(self):
         """Connects to Elasticsearch"""
-        return Elasticsearch(
-            os.getenv("ELASTICSEARCH_ENDPOINT"),  # Elasticsearch endpoint
-            api_key=os.getenv("ELASTIC_API_KEY")
-        )
+        ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
+        ELASTICSEARCH_USER = os.getenv("ELASTICSEARCH_USER")
+        ELASTICSEARCH_PASSWORD = os.getenv("ELASTICSEARCH_PASSWORD")
+        ELASTICSEARCH_API_KEY = os.getenv("ELASTICSEARCH_API_KEY")
+
+        if ELASTICSEARCH_USER:
+            return Elasticsearch(
+                hosts=[ELASTICSEARCH_URL],
+                basic_auth=(ELASTICSEARCH_USER, ELASTICSEARCH_PASSWORD),
+            )
+        elif ELASTICSEARCH_API_KEY:
+            return Elasticsearch(
+                hosts=[ELASTICSEARCH_URL], api_key=ELASTICSEARCH_API_KEY
+            )
+        else:
+            raise ValueError(
+                "Please provide either ELASTICSEARCH_USER or ELASTICSEARCH_API_KEY"
+            )
     
     def _setup_index(self):
         """Sets up the index if it doesn't exist"""
