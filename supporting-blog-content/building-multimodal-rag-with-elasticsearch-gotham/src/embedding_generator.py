@@ -30,7 +30,6 @@ class EmbeddingGenerator:
         checkpoint_path = os.path.expanduser(
             "~/.cache/torch/checkpoints/imagebind_huge.pth"
         )
-        logger.info(f"Using cache {checkpoint_path}")
         os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
 
         if not os.path.exists(checkpoint_path):
