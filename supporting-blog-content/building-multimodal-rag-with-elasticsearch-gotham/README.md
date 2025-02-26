@@ -11,67 +11,34 @@ The pipeline demonstrates how to:
 
 ## Prerequisites
 
-- Python 3.10+
+- A Docker runtime with 8GB+ free ram
+  - GPU is optional, but recommended
 - Elasticsearch cluster (cloud or local)
 - OpenAI API key - Setup an OpenAI account and create a [secret key](https://platform.openai.com/docs/quickstart)
-- 8GB+ RAM
-- GPU (optional but recommended)
 
 ## Quick Start
 
-1. **Setup Environment**
-```bash
-rm -rf .venv requirements.txt
-python3 -m venv .venv
-source .venv/bin/activate
-pip install pip-tools
-# Recreate requirements.txt
-pip-compile
-# Install main dependencies
-pip install -r requirements.txt
+This example runs four stages as docker compose services:
 
-
-
-python3 -m venv .venv
-source .venv/bin/activate
-pip install "python-dotenv[cli]"
-pip install -r requirements-torch.txt
-pip install -r requirements.txt
-
-# Make sure you have pytorch installed and Python 3.10+
-pip install torch torchvision torchaudio
-
-# Create and activate virtual environment
-python -m venv env_mmrag
-source env_mmrag/bin/activate  # Unix/MacOS
-# or
-.\env_mmrag\Scripts\activate   # Windows
-
-# Install dependencies
-pip install -r requirements.txt
+```mermaid
+graph TD
+    verify-file-structure --> generate-embeddings
+    generate-embeddings --> index-content
+    index-content --> search-and-analyze
 ```
 
-2. **Configure Credentials**
-Create a `.env` file:
-```env
-ELASTICSEARCH_ENDPOINT="your-elasticsearch-endpoint"
-ELASTIC_API_KEY="your-elastic-api-key"
-OPENAI_API_KEY="your-openai-api-key"
+First, copy [env.example](env.example) to `.env` and fill in values noted inside.
+
+Now, enter below to run the pipeline:
+```bash
+docker compose run --build --rm search-and-analyze
 ```
 
-3. **Run the Demo**
+The first time takes a while to build the image and download ImageBind weights.
+
+If you want to re-run just one stage, add `--no-deps` like this:
 ```bash
-# Verify file structure
-python stages/01-stage/files_check.py
-
-# Generate embeddings
-python stages/02-stage/test_embedding_generation.py
-
-# Index content
-python stages/03-stage/index_all_modalities.py
-
-# Search and analyze
-python stages/04-stage/rag_crime_analyze.py
+docker compose run --no-deps --build --rm search-and-analyze
 ```
 
 ## Project Structure

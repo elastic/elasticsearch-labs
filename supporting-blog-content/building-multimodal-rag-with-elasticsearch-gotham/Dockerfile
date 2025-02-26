@@ -1,20 +1,36 @@
-FROM ubuntu:24.04
+# Use non-slim image due to OS dependencies of python packages. This gives us
+# git, build-essential, libglib2 (opencv) and gomp (torchaudio).
+FROM python:3.12
 
-# Install necessary packages
-RUN apt update && apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-venv \
-    g++ \
-    gcc \
-    python3.12-dev
+COPY /requirements.txt .
 
-# Create and activate a virtual environment
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Our python requirements have some OS dependencies beyond the base layer:
+#
+# * imagebind pulls in cartopy which has OS dependencies on geos and proj
+# * opencv has a runtime OS dependency on libgl1-mesa-glx
+#
+# The dev dependencies are installed temporarily to compile the wheels.
+# We leave the only the runtime dependencies, to keep the image smaller.
+RUN apt-get update && \
+    # install build and runtime dependencies
+    apt-get install -y --no-install-recommends \
+        libgeos-dev \
+        libproj-dev \
+        libgeos-c1v5 \
+        libproj25 \
+        libgl1-mesa-glx && \
+    # Install everything except xformers first
+    grep -v "\bxformers\b" requirements.txt > /tmp/r.txt && pip install -r /tmp/r.txt && \
+    # Now, install xformers, as it should be able to see torch now
+    grep "\bxformers\b" requirements.txt > /tmp/r.txt && pip install -r /tmp/r.txt && \
+    # remove build dependencies
+    apt-get purge -y libgeos-dev libproj-dev && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Python packages in the virtual environment
-RUN pip install --upgrade pip
-RUN pip install torch
-RUN pip install wheel setuptools
-RUN pip install transformers xformers
+WORKDIR /app
+RUN mkdir -p ./data ./src ./stages
+COPY ./data ./data
+COPY ./src ./src
+COPY ./stages ./stages
+

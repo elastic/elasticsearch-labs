@@ -6,17 +6,18 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class LLMAnalyzer:
     """Evidence analyzer using GPT-4"""
-    
+
     def __init__(self):
         load_dotenv()
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    
+
     def analyze_evidence(self, evidence_results):
         """
         Analyzes multimodal search results and generates a report
-        
+
         Args:
             evidence_results: Dict with results by modality
             {
@@ -63,40 +64,42 @@ This report must be **direct and definitive**—avoid speculation and provide a 
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a forensic detective specialized in multimodal evidence analysis."
+                        "content": "You are a forensic detective specialized in multimodal evidence analysis.",
                     },
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": prompt},
                 ],
                 temperature=0.2,
-                max_tokens=1000
+                max_tokens=1000,
             )
-            
+
             report = response.choices[0].message.content
             logger.info("\n📋 Forensic Report Generated:")
             logger.info("=" * 50)
             logger.info(report)
             logger.info("=" * 50)
-            
+
             return report
-            
+
         except Exception as e:
             logger.error(f"Error generating report: {str(e)}")
             return None
-    
+
     def _format_evidence(self, evidence_results):
         """Formats evidence for the prompt"""
         formatted = []
-        
+
         for modality, results in evidence_results.items():
             formatted.append(f"\n{modality.upper()}:")
             for i, result in enumerate(results, 1):
-                description = result.get('description', 'No description')
-                similarity = result.get('score', 0)
+                description = result.get("description", "No description")
+                similarity = result.get("score", 0)
                 formatted.append(f"{i}. {description} (Similarity: {similarity:.2f})")
-        
+
         return "\n".join(formatted)
 
-    def analyze_cross_modal_connections(self, results_a, modality_a, results_b, modality_b):
+    def analyze_cross_modal_connections(
+        self, results_a, modality_a, results_b, modality_b
+    ):
         """Analyzes specific connections between two different modalities"""
         prompt = f"""Analyze the relationship between the following evidence from different modalities:
 
@@ -120,20 +123,20 @@ Please identify:
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are an expert in forensic analysis of multimodal evidence."
+                        "content": "You are an expert in forensic analysis of multimodal evidence.",
                     },
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": prompt},
                 ],
                 temperature=0.7,
-                max_tokens=500
+                max_tokens=500,
             )
-            
+
             analysis = response.choices[0].message.content
             logger.info(f"\n🔍 Cross-Modal Analysis ({modality_a} x {modality_b}):")
             logger.info(analysis)
-            
+
             return analysis
-            
+
         except Exception as e:
             logger.error(f"Error: in cross-modal analysis: {str(e)}")
             return None

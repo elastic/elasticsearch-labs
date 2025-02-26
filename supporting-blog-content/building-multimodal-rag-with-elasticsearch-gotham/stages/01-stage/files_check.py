@@ -5,10 +5,10 @@ data_dir = "data"
 
 # List of expected files
 evidences = {
-    "images": ["crime_scene1.jpg","crime_scene1.jpg", "joker_alley.jpg"],
+    "images": ["crime_scene1.jpg", "crime_scene1.jpg", "joker_alley.jpg"],
     "audios": ["joker_laugh.wav"],
     "texts": ["riddle.txt", "note2.txt"],
-    "depths": ["depth_suspect.png"]
+    "depths": ["depth_suspect.png"],
 }
 
 # Create directories if they don't exist
