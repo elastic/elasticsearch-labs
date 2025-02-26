@@ -27,15 +27,5 @@ EXPOSE 4000
 # docker invocations to reenable.
 ENV OTEL_SDK_DISABLED=true
 
-# https://github.com/elastic/genai-instrumentation/issues/255
-# Currently Python SDK has a bug that spams logs when opentelemetry-instrument is used
-# with SDK being disabled. Until it is fixed, we handle it in our own entrypoint by
-# avoiding opentelemetry-instrument when SDK is disabled.
-RUN echo 'if [ "${OTEL_SDK_DISABLED:-true}" == "false" ]; \
-  then \
-    opentelemetry-instrument $@; \
-  else \
-    exec $@; \
-  fi' > entrypoint.sh
-ENTRYPOINT [ "bash", "-eu", "./entrypoint.sh" ]
+ENTRYPOINT [ "opentelemetry-instrument" ]
 CMD [ "python", "api/app.py"]
