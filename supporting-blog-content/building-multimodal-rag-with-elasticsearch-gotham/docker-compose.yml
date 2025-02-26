@@ -26,7 +26,7 @@ services:
     extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
         - "localhost:host-gateway"
     volumes:
-      - torch-checkpoints:/root/cache/torch/checkpoints/
+      - torch-checkpoints:/root/.cache/torch/checkpoints/
 
   index-content:
     depends_on:
