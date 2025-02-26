@@ -163,6 +163,15 @@ spec:
       labels:
         app: apm-server
     spec:
+      initContainers:
+        - name: await-kibana
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          command:
+            - bash
+            - -xc
+            - |
+              echo "Waiting for kibana to be available";
+              until curl -s http://kibana:5601/api/status | grep -q 'available'; do sleep 5; done;
       containers:
         - name: apm-server
           image: docker.elastic.co/apm/apm-server:8.17.2

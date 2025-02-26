@@ -116,9 +116,9 @@ to follow logs on this stage:
 kubectl logs deployment.apps/chatbot-rag-app -c create-index -f
 ```
 
-Next, forward the kibana port:
+Next, forward the web UI port:
 ```bash
-kubectl port-forward service/kibana 5601:5601 &
+kubectl port-forward deployment.apps/chatbot-rag-app 4000:4000 &
 ```
 
 Clean up when finished, like this:

@@ -6,7 +6,7 @@ Elasticsearch, Kibana, and APM Server in an existing Kubernetes cluster.
 
 Note: If you haven't checked out this repository, all you need is one file:
 ```bash
-wget https://raw.githubusercontent.com/elastic/elasticsearch-labs/refs/heads/main/docker/docker-compose-elastic.yml
+wget https://raw.githubusercontent.com/elastic/elasticsearch-labs/refs/heads/main/k8s/k8s-manifest-elastic.yml
 ```
 
 Before you begin, ensure you have free CPU and memory in your cluster. If you
