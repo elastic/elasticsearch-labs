@@ -11,41 +11,39 @@ The pipeline demonstrates how to:
 
 ## Prerequisites
 
-- A Docker runtime with 8GB+ free ram
-  - GPU is optional, but recommended
+- Python 3.x
 - Elasticsearch cluster (cloud or local)
 - OpenAI API key - Setup an OpenAI account and create a [secret key](https://platform.openai.com/docs/quickstart)
+- 8GB+ RAM
+- GPU (optional but recommended)
 
-## Quick Start
+## Execution Options
 
-This example runs four stages as docker compose services:
+This project can be run in two different ways:
 
-```mermaid
-graph TD
-    verify-file-structure --> generate-embeddings
-    generate-embeddings --> index-content
-    index-content --> search-and-analyze
-```
+### 1. Jupyter Notebook
 
-First, copy [env.example](env.example) to `.env` and fill in values noted inside.
+We provide a Google Colab notebook that allows you to explore the entire pipeline interactively:
+- [Open the Multimodal RAG Pipeline Notebook](notebook/01-mmrag-blog-quick-start.ipynb)
+- This notebook includes step-by-step instructions and explanations for each stage of the pipeline
 
-Now, enter below to run the pipeline:
-```bash
-docker compose run --build --rm search-and-analyze
-```
+### 2. Docker 
 
-The first time takes a while to build the image and download ImageBind weights.
+For containerized execution that ensures consistent environment:
+- Follow the [Docker Setup Guide](docker-setup.md) for instructions on running the pipeline using Docker Compose
+- This option handles all dependencies and environment setup automatically
+- Ideal for reproducible runs
 
-If you want to re-run just one stage, add `--no-deps` like this:
-```bash
-docker compose run --no-deps --build --rm search-and-analyze
-```
 
 ## Project Structure
 
 ```
 ├── README.md
 ├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── notebook/
+│   ├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
 ├── src/
 │   ├── embedding_generator.py   # ImageBind wrapper
 │   ├── elastic_manager.py       # Elasticsearch operations
@@ -60,6 +58,7 @@ docker compose run --no-deps --build --rm search-and-analyze
     ├── audios/
     ├── texts/
     └── depths/
+
 ```
 
 ## Sample Data
