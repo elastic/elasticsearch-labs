@@ -17,22 +17,11 @@ The pipeline demonstrates how to:
 - 8GB+ RAM
 - GPU (optional but recommended)
 
-## Execution Options
-
-This project can be run in two different ways:
-
-### 1. Jupyter Notebook
+## Code execution 
 
 We provide a Google Colab notebook that allows you to explore the entire pipeline interactively:
 - [Open the Multimodal RAG Pipeline Notebook](notebook/01-mmrag-blog-quick-start.ipynb)
 - This notebook includes step-by-step instructions and explanations for each stage of the pipeline
-
-### 2. Docker 
-
-For containerized execution that ensures consistent environment:
-- Follow the [Docker Setup Guide](docker-setup.md) for instructions on running the pipeline using Docker Compose
-- This option handles all dependencies and environment setup automatically
-- Ideal for reproducible runs
 
 
 ## Project Structure
@@ -40,8 +29,6 @@ For containerized execution that ensures consistent environment:
 ```
 ├── README.md
 ├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
 ├── notebook/
 │   ├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
 ├── src/
