@@ -1,8 +1,0 @@
-# Ignore everything
-**
-
-# Allow specific files and directories
-!requirements.txt
-!data/
-!src/
-!stages/
