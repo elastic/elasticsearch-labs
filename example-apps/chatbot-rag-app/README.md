@@ -93,19 +93,26 @@ Then, import your `.env` file as a configmap like this:
 kubectl create configmap chatbot-rag-app-env --from-env-file=.env
 ```
 
-If you are using Vertex AI, make a secret for authentication:
+<details>
+<summary>To use Vertex AI, set `LLM_TYPE=vertex` in your `.env` and follow these steps</summary>
+The `api-frontend container` needs access to your Google Cloud credentials.
+Share your `application_default_credentials.json` as a Kubernetes secret:
 ```bash
+# Logs you into Google Cloud and creates application_default_credentials.json
+gcloud auth application-default login
+# Adds your credentials to a Kubernetes secret named gcloud-credentials
 kubectl create secret generic gcloud-credentials \
   --from-file=application_default_credentials.json=$HOME/.config/gcloud/application_default_credentials.json
 ```
+</details>
 
-Now that your configuration is applied, create the chatbot-rag-app deployment
+Now that your configuration is applied, create the `chatbot-rag-app` deployment
 and service by applying this manifest:
 ```bash
 kubectl apply -f k8s-manifest.yml
 ```
 
-Next, block until chatbot-rag-app is available.
+Next, block until `chatbot-rag-app` is available.
 ```bash
 kubectl wait --for=condition=available --timeout=20m  deployment/chatbot-rag-app
 ```

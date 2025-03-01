@@ -34,7 +34,8 @@ spec:
               name: chatbot-rag-app-env
         volumeMounts: &volumeMounts
           - name: gcloud-credentials
-            mountPath: /root/.config/application_default_credentials.json
+            mountPath: /root/.config/
+            subPath: application_default_credentials.json
             readOnly: true
       containers:
       - name: api-frontend
