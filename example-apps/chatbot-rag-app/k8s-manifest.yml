@@ -1,4 +1,6 @@
 ---
+# chatbot-rag-app deploys "create-index" to install ELSER and load values.
+# Then, it starts "api-frontend" to serve the application.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,29 +20,30 @@ spec:
         - name: gcloud-credentials
           secret:
             secretName: gcloud-credentials
+            optional: true  # only read when `LLM_TYPE=vertex`
       initContainers:
-      - name: create-index
-        image: &image ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app:latest
-        command: &command [ "bash", "-eu", "./entrypoint.sh" ] # match image
-        args: ["flask", "create-index"]
-        # This recreates your configmap based on your .env file:
-        # kubectl create configmap chatbot-rag-app-env --from-env-file=.env
-        envFrom: &envFrom
-          - configMapRef:
-              name: chatbot-rag-app-env
+        - name: create-index
+          image: &image ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app:latest
+          command: &command [ "bash", "-eu", "./entrypoint.sh" ] # match image
+          args: [ "flask", "create-index" ]
+          # This recreates your configmap based on your .env file:
+          # kubectl create configmap chatbot-rag-app-env --from-env-file=.env
+          envFrom: &envFrom
+            - configMapRef:
+                name: chatbot-rag-app-env
       containers:
-      - name: api-frontend
-        image: *image
-        command: *command
-        args: [ "python", "api/app.py" ]
-        ports:
-          - containerPort: 4000
-        envFrom: *envFrom
-        # For `LLM_TYPE=vertex`: mount credentials to the path read by the google-cloud-sdk
-        volumeMounts:
-          - name: gcloud-credentials
-            mountPath: /root/.config/gcloud
-            readOnly: true
+        - name: api-frontend
+          image: *image
+          command: *command
+          args: [ "python", "api/app.py" ]
+          ports:
+            - containerPort: 4000
+          envFrom: *envFrom
+          # For `LLM_TYPE=vertex`: mount credentials to the path read by the google-cloud-sdk
+          volumeMounts:
+            - name: gcloud-credentials
+              mountPath: /root/.config/gcloud
+              readOnly: true
 ---
 apiVersion: v1
 kind: Service
