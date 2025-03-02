@@ -65,7 +65,7 @@ spec:
               drop: ["ALL"]
           readinessProbe:
             exec:
-              command: ["sh", "-c", "curl -s http://localhost:9200 | grep -q 'missing authentication credentials'"]
+              command: ["sh", "-c", "curl --max-time 1 -s http://localhost:9200 | grep -q 'missing authentication credentials'"]
             initialDelaySeconds: 5
             periodSeconds: 1
             timeoutSeconds: 10
@@ -99,14 +99,19 @@ spec:
         app: kibana
     spec:
       initContainers:
+        # gen-ai assistants in kibana save state in a way that requires system
+        # access, so set kibana_system's password to a known value.
         - name: setup-kibana-system-user
           image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
           command:
             - bash
-            - -xc
+            - -c
             - |
               echo "Setup the kibana_system password";
-              until curl -s -u "elastic:elastic" -X POST http://elasticsearch.default.svc:9200/_security/user/kibana_system/_password -d "{\"password\":\"elastic\"}" -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
+              until curl --max-time 1 -s -u "elastic:elastic" \
+                -X POST http://elasticsearch.default.svc:9200/_security/user/kibana_system/_password \
+                -d "{\"password\":\"elastic\"}" \
+                -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
       containers:
         - name: kibana
           image: docker.elastic.co/kibana/kibana:8.17.2
@@ -118,7 +123,7 @@ spec:
             - name: ELASTICSEARCH_HOSTS
               value: http://elasticsearch.default.svc:9200
             - name: ELASTICSEARCH_USERNAME
-              value: elastic
+              value: kibana_system
             - name: ELASTICSEARCH_PASSWORD
               value: elastic
             - name: MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
@@ -133,7 +138,7 @@ spec:
               value: http://127.0.0.1:5601
           readinessProbe:
             exec:
-              command: ["sh", "-c", "curl -s http://localhost:5601/api/status | grep -q 'available'"]
+              command: ["sh", "-c", "curl --max-time 1 -s http://localhost:5601/api/status | grep -q 'available'"]
             initialDelaySeconds: 1
             periodSeconds: 1
             failureThreshold: 300
@@ -173,7 +178,7 @@ spec:
             - -xc
             - |
               echo "Waiting for kibana to be available";
-              until curl -s http://kibana.default.svc:5601/api/status | grep -q 'available'; do sleep 5; done;
+              until curl --max-time 1 -s http://kibana.default.svc:5601/api/status | grep -q 'available'; do sleep 1; done;
       containers:
         - name: apm-server
           image: docker.elastic.co/apm/apm-server:8.17.2
@@ -184,7 +189,7 @@ spec:
             - -E
             - apm-server.kibana.host=http://kibana.default.svc:5601
             - -E
-            - apm-server.kibana.username=kibana_system
+            - apm-server.kibana.username=elastic
             - -E
             - apm-server.kibana.password=elastic
             - -E
