@@ -13,9 +13,7 @@ spec:
       labels:
         app: chatbot-rag-app
     spec:
-      # The below will recreate your secret based on the gcloud credentials file
-      # kubectl create secret generic gcloud-credentials \
-      #  --from-file=application_default_credentials.json=$HOME/.config/gcloud/application_default_credentials.json
+      # For `LLM_TYPE=vertex`: create a volume for application_default_credentials.json
       volumes:
         - name: gcloud-credentials
           secret:
@@ -23,27 +21,26 @@ spec:
       initContainers:
       - name: create-index
         image: &image ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app:latest
+        command: &command [ "bash", "-eu", "./entrypoint.sh" ] # match image
         args: ["flask", "create-index"]
-        env:
-          - name: FLASK_APP
-            value: api/app.py
         # This recreates your configmap based on your .env file:
         # kubectl create configmap chatbot-rag-app-env --from-env-file=.env
         envFrom: &envFrom
           - configMapRef:
               name: chatbot-rag-app-env
-        volumeMounts: &volumeMounts
-          - name: gcloud-credentials
-            mountPath: /root/.config/
-            subPath: application_default_credentials.json
-            readOnly: true
       containers:
       - name: api-frontend
         image: *image
+        command: *command
+        args: [ "python", "api/app.py" ]
         ports:
           - containerPort: 4000
         envFrom: *envFrom
-        volumeMounts: *volumeMounts
+        # For `LLM_TYPE=vertex`: mount credentials to the path read by the google-cloud-sdk
+        volumeMounts:
+          - name: gcloud-credentials
+            mountPath: /root/.config/gcloud
+            readOnly: true
 ---
 apiVersion: v1
 kind: Service

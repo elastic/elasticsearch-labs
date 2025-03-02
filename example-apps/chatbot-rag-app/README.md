@@ -129,7 +129,6 @@ kubectl port-forward deployment.apps/chatbot-rag-app 4000:4000 &
 ```
 
 Clean up when finished, like this:
-
 ```bash
 kubectl delete -f k8s-manifest.yml
 ```
