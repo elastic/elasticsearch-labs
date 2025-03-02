@@ -40,7 +40,7 @@ spec:
             - name: node.name
               value: elasticsearch
             - name: cluster.name
-              value: docker-cluster
+              value: k8s-cluster
             - name: discovery.type
               value: single-node
             - name: ELASTIC_PASSWORD
@@ -106,7 +106,7 @@ spec:
             - -xc
             - |
               echo "Setup the kibana_system password";
-              until curl -s -u "elastic:elastic" -X POST http://elasticsearch:9200/_security/user/kibana_system/_password -d "{\"password\":\"elastic\"}" -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
+              until curl -s -u "elastic:elastic" -X POST http://elasticsearch.default.svc:9200/_security/user/kibana_system/_password -d "{\"password\":\"elastic\"}" -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
       containers:
         - name: kibana
           image: docker.elastic.co/kibana/kibana:8.17.2
@@ -116,9 +116,9 @@ spec:
             - name: SERVERNAME
               value: kibana
             - name: ELASTICSEARCH_HOSTS
-              value: http://elasticsearch:9200
+              value: http://elasticsearch.default.svc:9200
             - name: ELASTICSEARCH_USERNAME
-              value: kibana_system
+              value: elastic
             - name: ELASTICSEARCH_PASSWORD
               value: elastic
             - name: MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
@@ -127,6 +127,8 @@ spec:
               value: fhjskloppd678ehkdfdlliverpoolfcr
             - name: XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY
               value: fhjskloppd678ehkdfdlliverpoolfcr
+            - name: SERVER_HOST
+              value: 0.0.0.0
             - name: SERVER_PUBLICBASEURL
               value: http://127.0.0.1:5601
           readinessProbe:
@@ -171,30 +173,35 @@ spec:
             - -xc
             - |
               echo "Waiting for kibana to be available";
-              until curl -s http://kibana:5601/api/status | grep -q 'available'; do sleep 5; done;
+              until curl -s http://kibana.default.svc:5601/api/status | grep -q 'available'; do sleep 5; done;
       containers:
         - name: apm-server
           image: docker.elastic.co/apm/apm-server:8.17.2
+          command:
+            - apm-server
+            - -E
+            - apm-server.kibana.enabled=true
+            - -E
+            - apm-server.kibana.host=http://kibana.default.svc:5601
+            - -E
+            - apm-server.kibana.username=kibana_system
+            - -E
+            - apm-server.kibana.password=elastic
+            - -E
+            - output.elasticsearch.hosts=["http://elasticsearch.default.svc:9200"]
+            - -E
+            - output.elasticsearch.username=elastic
+            - -E
+            - output.elasticsearch.password=elastic
           ports:
             - containerPort: 8200
-          env:
-            - name: apm-server.kibana.enabled
-              value: "true"
-            - name: apm-server.kibana.host
-              value: http://kibana:5601
-            - name: apm-server.kibana.username
-              value: elastic
-            - name: apm-server.kibana.password
-              value: elastic
-            - name: output.elasticsearch.hosts
-              value: http://elasticsearch:9200
-            - name: output.elasticsearch.username
-              value: elastic
-            - name: output.elasticsearch.password
-              value: elastic
           readinessProbe:
             tcpSocket:
               port: 8200
             initialDelaySeconds: 1
             periodSeconds: 1
             failureThreshold: 300
+          securityContext:
+            capabilities:
+              add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+              drop: ["ALL"]
