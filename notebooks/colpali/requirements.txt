@@ -1,0 +1,7 @@
+git+https://github.com/illuin-tech/colpali.git
+elasticsearch
+numpy
+datasets
+python-dotenv
+jupyterlab
+ipywidgets
