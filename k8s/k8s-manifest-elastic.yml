@@ -1,0 +1,212 @@
+# This is a simple k8s manifest to start Elasticsearch, Kibana and APM server
+# with the same configuration as ../docker/docker-compose-elastic.yml
+#
+# For this reason, if trying to understand why a setting exists, look at the
+# docker variant first. Similarly, updates to the docker variant should happen
+# here as well.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  ports:
+    - port: 9200
+      targetPort: 9200
+  selector:
+    app: elasticsearch
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          ports:
+            - containerPort: 9200
+          env:
+            - name: node.name
+              value: elasticsearch
+            - name: cluster.name
+              value: k8s-cluster
+            - name: discovery.type
+              value: single-node
+            - name: ELASTIC_PASSWORD
+              value: elastic
+            - name: bootstrap.memory_lock
+              value: "true"
+            - name: xpack.security.enabled
+              value: "true"
+            - name: xpack.security.http.ssl.enabled
+              value: "false"
+            - name: xpack.security.transport.ssl.enabled
+              value: "false"
+            - name: xpack.license.self_generated.type
+              value: trial
+            # Note that ELSER is recommended to have 2GB, but it is JNI (PyTorch).
+            # ELSER's memory is in addition to the heap and other overhead.
+            - name: ES_JAVA_OPTS
+              value: "-Xms2g -Xmx2g"
+          securityContext:
+            capabilities:
+              add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+              drop: ["ALL"]
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "curl --max-time 1 -s http://localhost:9200 | grep -q 'missing authentication credentials'"]
+            initialDelaySeconds: 5
+            periodSeconds: 1
+            timeoutSeconds: 10
+            failureThreshold: 120
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
+  ports:
+    - port: 5601
+      targetPort: 5601
+  selector:
+    app: kibana
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      initContainers:
+        # gen-ai assistants in kibana save state in a way that requires system
+        # access, so set kibana_system's password to a known value.
+        - name: setup-kibana-system-user
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          command:
+            - bash
+            - -c
+            - |
+              echo "Setup the kibana_system password";
+              until curl --max-time 1 -s -u "elastic:elastic" \
+                -X POST http://elasticsearch.default.svc:9200/_security/user/kibana_system/_password \
+                -d "{\"password\":\"elastic\"}" \
+                -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:8.17.2
+          ports:
+            - containerPort: 5601
+          env:
+            - name: SERVERNAME
+              value: kibana
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch.default.svc:9200
+            - name: ELASTICSEARCH_USERNAME
+              value: kibana_system
+            - name: ELASTICSEARCH_PASSWORD
+              value: elastic
+            - name: MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
+              value: "true"
+            - name: XPACK_SECURITY_ENCRYPTIONKEY
+              value: fhjskloppd678ehkdfdlliverpoolfcr
+            - name: XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY
+              value: fhjskloppd678ehkdfdlliverpoolfcr
+            - name: SERVER_HOST
+              value: 0.0.0.0
+            - name: SERVER_PUBLICBASEURL
+              value: http://127.0.0.1:5601
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "curl --max-time 1 -s http://localhost:5601/api/status | grep -q 'available'"]
+            initialDelaySeconds: 1
+            periodSeconds: 1
+            failureThreshold: 300
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apm-server
+spec:
+  ports:
+    - port: 8200
+      targetPort: 8200
+  selector:
+    app: apm-server
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apm-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apm-server
+  template:
+    metadata:
+      labels:
+        app: apm-server
+    spec:
+      initContainers:
+        - name: await-kibana
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          command:
+            - bash
+            - -xc
+            - |
+              echo "Waiting for kibana to be available";
+              until curl --max-time 1 -s http://kibana.default.svc:5601/api/status | grep -q 'available'; do sleep 1; done;
+      containers:
+        - name: apm-server
+          image: docker.elastic.co/apm/apm-server:8.17.2
+          command:
+            - apm-server
+            - -E
+            - apm-server.kibana.enabled=true
+            - -E
+            - apm-server.kibana.host=http://kibana.default.svc:5601
+            - -E
+            - apm-server.kibana.username=elastic
+            - -E
+            - apm-server.kibana.password=elastic
+            - -E
+            - output.elasticsearch.hosts=["http://elasticsearch.default.svc:9200"]
+            - -E
+            - output.elasticsearch.username=elastic
+            - -E
+            - output.elasticsearch.password=elastic
+          ports:
+            - containerPort: 8200
+          readinessProbe:
+            tcpSocket:
+              port: 8200
+            initialDelaySeconds: 1
+            periodSeconds: 1
+            failureThreshold: 300
+          securityContext:
+            capabilities:
+              add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+              drop: ["ALL"]
