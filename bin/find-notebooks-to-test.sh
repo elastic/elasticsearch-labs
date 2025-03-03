@@ -31,7 +31,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/azure-openai/vector-search-azure-openai-elastic.ipynb"
     "notebooks/enterprise-search/app-search-engine-exporter.ipynb",
     "notebooks/enterprise-search/elastic-crawler-to-open-crawler-migration.ipynb",
-    "notebooks/enterprise-search/appsearch-crawler-to-open-crawler-migration.ipynb",
+    "notebooks/enterprise-search/app-search-crawler-to-open-crawler-migration.ipynb",
     "notebooks/playground-examples/bedrock-anthropic-elasticsearch-client.ipynb",
     "notebooks/playground-examples/openai-elasticsearch-client.ipynb",
     "notebooks/integrations/hugging-face/huggingface-integration-millions-of-documents-with-cohere-reranking.ipynb",
