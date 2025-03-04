@@ -24,7 +24,7 @@ spec:
       initContainers:
         - name: create-index
           image: &image ghcr.io/elastic/elasticsearch-labs/chatbot-rag-app:latest
-          command: &command [ "bash", "-eu", "./entrypoint.sh" ] # match image
+          command: &command [ "opentelemetry-instrument" ] # match image
           args: [ "flask", "create-index" ]
           # This recreates your configmap based on your .env file:
           # kubectl create configmap chatbot-rag-app-env --from-env-file=.env
