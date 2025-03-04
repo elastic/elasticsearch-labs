@@ -24,13 +24,6 @@ EXPOSE 4000
 # Default to disabling instrumentation, can be overridden to false in
 # docker invocations to reenable.
 ENV OTEL_SDK_DISABLED=true
+ENTRYPOINT [ "opentelemetry-instrument" ]
 
-# TODO remove custom entrypoint when EDOT Python >0.7.0 is released.
-RUN echo 'if [ "${OTEL_SDK_DISABLED:-true}" == "false" ]; \
-  then \
-    opentelemetry-instrument $@; \
-  else \
-    exec $@; \
-  fi' > entrypoint.sh
-ENTRYPOINT [ "bash", "-eu", "./entrypoint.sh" ]
 CMD [ "python", "api/app.py" ]
