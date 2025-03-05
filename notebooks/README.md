@@ -23,6 +23,3 @@ Notebooks are organized into the following folders:
   - [Alibaba Cloud](./integrations/alibabacloud-ai-search)
 
 - [`enterprise-search`](./enterprise-search/): Notebooks that demonstrate use cases for working with and exporting from Elastic Enterprise Search, App Search, or Workplace Search.
-
-- [`colpali`](./colpali/): Notebooks that showcase the useage of colpali.
-
