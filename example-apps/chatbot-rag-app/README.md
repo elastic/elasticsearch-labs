@@ -95,6 +95,7 @@ kubectl create configmap chatbot-rag-app-env --from-env-file=.env
 
 <details>
 <summary>To use Vertex AI, set `LLM_TYPE=vertex` in your `.env` and follow these steps</summary>
+
 The `api-frontend container` needs access to your Google Cloud credentials.
 Share your `application_default_credentials.json` as a Kubernetes secret:
 ```bash
