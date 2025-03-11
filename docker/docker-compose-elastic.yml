@@ -27,7 +27,7 @@ services:
       test:  # readiness probe taken from kbn-health-gateway-server script
         [
           "CMD-SHELL",
-          "curl -s http://localhost:9200 | grep -q 'missing authentication credentials'",
+          "curl --max-time 1 -s http://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       start_period: 10s
       interval: 1s
@@ -41,12 +41,15 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
     container_name: elasticsearch_settings
     restart: 'no'
+    # gen-ai assistants in kibana save state in a way that requires system
+    # access, so set kibana_system's password to a known value.
     command: >
-      bash -c '        
-        # gen-ai assistants in kibana save state in a way that requires security to be enabled, so we need to create
-        # a kibana system user before starting it.
+      bash -c '
         echo "Setup the kibana_system password";
-        until curl -s -u "elastic:elastic" -X POST http://elasticsearch:9200/_security/user/kibana_system/_password -d "{\"password\":\"elastic\"}" -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
+        until curl --max-time 1 -s -u "elastic:elastic" \
+          -X POST http://elasticsearch:9200/_security/user/kibana_system/_password \
+          -d "{\"password\":\"elastic\"}" \
+          -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
       '
 
   kibana:
@@ -69,7 +72,7 @@ services:
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=fhjskloppd678ehkdfdlliverpoolfcr
       - SERVER_PUBLICBASEURL=http://127.0.0.1:5601
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:5601/api/status | grep -q 'All services are available'"]
+      test: ["CMD-SHELL", "curl --max-time 1 -s http://localhost:5601/api/status | grep -q 'available'"]
       retries: 300
       interval: 1s
 
