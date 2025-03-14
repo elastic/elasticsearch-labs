@@ -125,3 +125,19 @@ Any notebooks that are added in subdirectories under `notebooks` are automatical
 * **Never leave any secrets in the code** (API keys, passwords etc). Also avoid hardcoding URLs and IDs that may change from user to user. Instead use environment variables that need to be set by the user while they are running the app.
 * Test your app end to end before submitting a pull request.
 * Example of a well-formed app: [OpenAI-JS](../example-apps/OpenAI-embeddings/OpenAI-JS/README.md).
+
+## Examples for the Elastic Search Labs Blog
+
+If you are contributing an example corresponding to a blog post, use the folder `supporting-blog-content`. 
+
+### Troubleshooting
+
+- If the pre-commit checks are failing. You may want to try running the checks this way:
+
+  ```
+  python -m venv .venv
+  .venv/bin/pip install -qqq -r requirements-dev.txt
+  .venv/bin/pre-commit install
+  ```
+
+- If you are still having issues, you may want to double-check that your code is in the folder `supporting-blog-content`. 
