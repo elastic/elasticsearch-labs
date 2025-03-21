@@ -1,0 +1,35 @@
+PUT bbq-my-byte-quantized-index/_doc/1?pipeline=my_inference_pipeline
+{
+    "my_field": "my awesome text field"
+}
+
+PUT bbq-my-byte-quantized-index/_doc/2?pipeline=my_inference_pipeline
+{
+    "my_field": "some other sentence"
+}
+
+GET bbq-my-byte-quantized-index/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "knn": {
+            "field": "my_vector",
+            "query_vector_builder": {
+              "text_embedding": {
+                "model_id": "my_e5_model",
+                "model_text": "my awesome search field"
+              }
+            },
+            "k": 10,
+            "num_candidates": 100
+          }
+        }
+      ]
+    }
+  },
+  "_source": [
+    "my_field"
+  ]
+}
