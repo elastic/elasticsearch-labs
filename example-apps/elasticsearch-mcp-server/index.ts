@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Client, estypes } from "@elastic/elasticsearch";
@@ -36,7 +38,7 @@ export async function createElasticsearchMcpServer(
 
   const server = new McpServer({
     name: "elasticsearch-mcp-server",
-    version: "0.1.0",
+    version: "0.1.3",
   });
 
   // Tool 1: List indices
