@@ -1,0 +1,11 @@
+PUT _inference/text_embedding/my_e5_model
+{
+  "service": "elasticsearch",
+  "service_settings": {
+    "num_threads": 1,
+    "model_id": ".multilingual-e5-small",
+    "adaptive_allocations": {
+      "enabled": false
+    }
+  }
+}
