@@ -101,12 +101,12 @@ npm run inspector
 
 ## Security Best Practices
 
-You can create a dedicated Elasticsearch API key with minimal permissions for Claude's access to your data:
+You can create a dedicated Elasticsearch API key with minimal permissions to control access to your data:
 
 ```
 POST /_security/api_key
 {
-  "name": "claude-mcp-access",
+  "name": "es-mcp-server-access",
   "role_descriptors": {
     "claude_role": {
       "cluster": ["monitor"],
