@@ -20,11 +20,11 @@ attrs==25.3.0
     # via aiohttp
 blinker==1.9.0
     # via flask
-boto3==1.37.13
+boto3==1.37.15
     # via
     #   langchain-aws
     #   langtrace-python-sdk
-botocore==1.37.13
+botocore==1.37.15
     # via
     #   boto3
     #   s3transfer
@@ -103,7 +103,7 @@ google-auth==2.38.0
     #   google-cloud-core
     #   google-cloud-resource-manager
     #   google-cloud-storage
-google-cloud-aiplatform==1.84.0
+google-cloud-aiplatform==1.85.0
     # via langchain-google-vertexai
 google-cloud-bigquery==3.30.0
     # via google-cloud-aiplatform
@@ -117,7 +117,7 @@ google-cloud-storage==2.19.0
     # via
     #   google-cloud-aiplatform
     #   langchain-google-vertexai
-google-crc32c==1.6.0
+google-crc32c==1.7.0
     # via
     #   google-cloud-storage
     #   google-resumable-media
@@ -132,8 +132,6 @@ googleapis-common-protos[grpc]==1.69.2
     #   grpcio-status
     #   opentelemetry-exporter-otlp-proto-grpc
     #   opentelemetry-exporter-otlp-proto-http
-greenlet==3.1.1
-    # via sqlalchemy
 grpc-google-iam-v1==0.14.2
     # via google-cloud-resource-manager
 grpcio==1.71.0
@@ -190,15 +188,15 @@ jsonpatch==1.33
     # via langchain-core
 jsonpointer==3.0.0
     # via jsonpatch
-langchain==0.3.20
+langchain==0.3.21
     # via
     #   -r requirements.in
     #   langchain-community
-langchain-aws==0.2.15
+langchain-aws==0.2.16
     # via -r requirements.in
 langchain-cohere==0.4.3
     # via -r requirements.in
-langchain-community==0.3.19
+langchain-community==0.3.20
     # via langchain-cohere
 langchain-core==0.3.45
     # via
@@ -217,16 +215,16 @@ langchain-google-vertexai==2.0.15
     # via -r requirements.in
 langchain-mistralai==0.2.8
     # via -r requirements.in
-langchain-openai==0.3.8
+langchain-openai==0.3.9
     # via -r requirements.in
-langchain-text-splitters==0.3.6
+langchain-text-splitters==0.3.7
     # via langchain
-langsmith==0.3.15
+langsmith==0.3.17
     # via
     #   langchain
     #   langchain-community
     #   langchain-core
-langtrace-python-sdk==3.8.6
+langtrace-python-sdk==3.8.7
     # via -r requirements.in
 log-symbols==0.0.14
     # via halo
@@ -236,7 +234,7 @@ markupsafe==3.0.2
     #   werkzeug
 marshmallow==3.26.1
     # via dataclasses-json
-multidict==6.1.0
+multidict==6.2.0
     # via
     #   aiohttp
     #   yarl
@@ -249,7 +247,7 @@ numpy==2.2.4
     #   langchain-community
     #   shapely
     #   transformers
-openai==1.66.3
+openai==1.66.5
     # via langchain-openai
 opentelemetry-api==1.31.0
     # via
@@ -529,4 +527,4 @@ opentelemetry-instrumentation-sqlalchemy==0.52b0
 opentelemetry-instrumentation-system-metrics==0.52b0
 opentelemetry-instrumentation-tortoiseorm==0.52b0
 opentelemetry-instrumentation-urllib3==0.52b0
-elastic-opentelemetry-instrumentation-openai==0.6.1
+elastic-opentelemetry-instrumentation-openai
