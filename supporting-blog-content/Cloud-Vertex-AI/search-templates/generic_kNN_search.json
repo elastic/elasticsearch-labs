@@ -1,3 +1,4 @@
+kNN search with VertexAI's embeddings models configured via Elastic's Inference API
 PUT _scripts/google-template-knn-multioutput
 {
   "script": {

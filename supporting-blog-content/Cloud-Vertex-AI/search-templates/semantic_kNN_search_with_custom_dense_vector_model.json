@@ -1,4 +1,4 @@
-#knn template
+#knn template with custom multilingual dense model (chunked)
 PUT _scripts/google-template-knn
 {
   "script": {
@@ -36,8 +36,8 @@ GET nqdataset-simplified-clean-semantictext-e5/_search/template
 {
   "id": "google-template-knn",
   "params": {
-    "query": "italian food",
-    "index_name": "nqdataset-simplified-clean-semantictext-e5",
+    "query": "What's the most famous food in Italian cousine?",
+    "index_name": "<your-index-name-here>",
     "num_hits": 1
   }
 }
