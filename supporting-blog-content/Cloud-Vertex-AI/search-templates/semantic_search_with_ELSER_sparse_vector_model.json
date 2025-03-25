@@ -33,7 +33,7 @@ GET nqdataset-simplified-clean-semantictext/_search/template
   "id": "google-template-elser",
   "params": {
     "query": "What's the most famous food in Italian cousine?",
-    "index_name": "nqdataset-simplified-clean-semantictext",
+    "index_name": "<your-index-name-here>",
     "num_hits": 10
   }
 }
