@@ -220,6 +220,7 @@ reinstall like this. Once checked in, any commands above will use updates.
 rm -rf .venv requirements.txt
 python3 -m venv .venv
 source .venv/bin/activate
+pip install --upgrade pip
 # Install dev requirements for pip-compile and edot-bootstrap
 pip install pip-tools elastic-opentelemetry
 # Recreate requirements.txt
