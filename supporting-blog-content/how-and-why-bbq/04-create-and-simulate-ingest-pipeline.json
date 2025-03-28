@@ -1,0 +1,27 @@
+PUT _ingest/pipeline/my_inference_pipeline
+{
+  "processors": [
+    {
+      "inference": {
+        "model_id": "my_e5_model",
+        "input_output": [
+          {
+            "input_field": "my_field",
+            "output_field": "my_vector"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+POST _ingest/pipeline/my_inference_pipeline/_simulate
+{
+  "docs": [
+    {
+      "_source": {
+        "my_field": "my awesome text field"
+      }
+    }
+  ]
+}
