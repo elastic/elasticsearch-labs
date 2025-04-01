@@ -2,4 +2,4 @@
     "acknowledged": true,
     "shards_acknowledged": true,
     "index": "bbq-my-byte-quantized-index"
-  }
+}
