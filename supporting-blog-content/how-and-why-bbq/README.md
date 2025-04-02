@@ -5,7 +5,7 @@ This repository contains all the queries corresponding to the article "How to im
 
 ## Prerequisites
 
-- Elasticsearch version 8.18 or higher (BBQ was introduced in 8.16, but vector_rescore in 8.18)
+- Elasticsearch version 8.18 or higher (BBQ was introduced in 8.16, but `rescore_vector` is available from 8.18)
 - A machine learning node in your cluster
 - For Elastic Cloud serverless, select an instance optimized for vectors
 
