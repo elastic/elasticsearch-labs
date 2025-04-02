@@ -40,9 +40,6 @@ GET my-raw-vector-index/_search
                 "model_text": "my awesome search field"
               }
             },
-            "rescore_vector": {
-              "oversample": 3
-            },
             "k": 10,
             "num_candidates": 100
           }

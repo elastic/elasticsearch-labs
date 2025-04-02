@@ -33,7 +33,7 @@
 }
 
 {
-  "took": 12,
+  "took": 11,
   "timed_out": false,
   "_shards": {
     "total": 1,

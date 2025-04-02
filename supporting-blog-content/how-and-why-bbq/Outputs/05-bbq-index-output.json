@@ -27,7 +27,7 @@
 }
 
 {
-  "took": 35,
+  "took": 154,
   "timed_out": false,
   "_shards": {
     "total": 1,
@@ -37,10 +37,27 @@
   },
   "hits": {
     "total": {
-      "value": 0,
+      "value": 2,
       "relation": "eq"
     },
-    "max_score": null,
-    "hits": []
+    "max_score": 0.9601393,
+    "hits": [
+      {
+        "_index": "bbq-my-byte-quantized-index",
+        "_id": "1",
+        "_score": 0.9601393,
+        "_source": {
+          "my_field": "my awesome text field"
+        }
+      },
+      {
+        "_index": "bbq-my-byte-quantized-index",
+        "_id": "2",
+        "_score": 0.8988675,
+        "_source": {
+          "my_field": "some other sentence"
+        }
+      }
+    ]
   }
 }
