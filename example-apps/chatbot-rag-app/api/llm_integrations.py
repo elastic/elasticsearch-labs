@@ -20,7 +20,8 @@ def init_openai_chat(temperature):
 
 
 def init_vertex_chat(temperature):
-    # VertexAI is not yet in EDOT. Use the Langtrace Python SDK instead
+    # opentelemetry-instrumentation-vertexai is included by EDOT, but does not
+    # yet not support streaming. Use the Langtrace Python SDK instead.
     from langtrace_python_sdk.instrumentation import VertexAIInstrumentation
 
     VertexAIInstrumentation().instrument()
