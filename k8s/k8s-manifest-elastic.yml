@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
           ports:
             - containerPort: 9200
           env:
@@ -102,7 +102,7 @@ spec:
         # gen-ai assistants in kibana save state in a way that requires system
         # access, so set kibana_system's password to a known value.
         - name: setup-kibana-system-user
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
           command:
             - bash
             - -c
@@ -114,7 +114,7 @@ spec:
                 -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
       containers:
         - name: kibana
-          image: docker.elastic.co/kibana/kibana:8.17.2
+          image: docker.elastic.co/kibana/kibana:8.17.4
           ports:
             - containerPort: 5601
           env:
@@ -172,7 +172,7 @@ spec:
     spec:
       initContainers:
         - name: await-kibana
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
           command:
             - bash
             - -xc
@@ -181,7 +181,7 @@ spec:
               until curl --max-time 1 -s http://kibana.default.svc:5601/api/status | grep -q 'available'; do sleep 1; done;
       containers:
         - name: apm-server
-          image: docker.elastic.co/apm/apm-server:8.17.2
+          image: docker.elastic.co/apm/apm-server:8.17.4
           command:
             - apm-server
             - -E
