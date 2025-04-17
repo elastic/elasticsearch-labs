@@ -1,0 +1,28 @@
+GET bbq-my-byte-quantized-index/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "knn": {
+            "field": "my_vector",
+            "query_vector_builder": {
+              "text_embedding": {
+                "model_id": "my_e5_model",
+                "model_text": "my awesome search field"
+              }
+            },
+            "rescore_vector": {
+              "oversample": 3
+            },
+            "k": 10,
+            "num_candidates": 100
+          }
+        }
+      ]
+    }
+  },
+  "_source": [
+    "my_field"
+  ]
+}

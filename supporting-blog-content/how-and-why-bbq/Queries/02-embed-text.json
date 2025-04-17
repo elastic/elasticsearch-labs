@@ -1,0 +1,4 @@
+POST _inference/text_embedding/my_e5_model
+{
+  "input": "my awesome piece of text"
+}

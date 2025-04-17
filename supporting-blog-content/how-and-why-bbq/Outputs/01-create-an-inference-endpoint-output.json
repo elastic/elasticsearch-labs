@@ -1,0 +1,18 @@
+{
+  "inference_id": "my_e5_model",
+  "task_type": "text_embedding",
+  "service": "elasticsearch",
+  "service_settings": {
+    "num_threads": 1,
+    "model_id": ".multilingual-e5-small",
+    "adaptive_allocations": {
+      "enabled": true,
+      "min_number_of_allocations": 1
+    }
+  },
+  "chunking_settings": {
+    "strategy": "sentence",
+    "max_chunk_size": 250,
+    "sentence_overlap": 1
+  }
+}

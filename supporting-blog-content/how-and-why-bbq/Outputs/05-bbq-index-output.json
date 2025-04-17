@@ -1,0 +1,63 @@
+{
+  "_index": "bbq-my-byte-quantized-index",
+  "_id": "1",
+  "_version": 1,
+  "result": "created",
+  "_shards": {
+    "total": 2,
+    "successful": 2,
+    "failed": 0
+  },
+  "_seq_no": 0,
+  "_primary_term": 1
+}
+
+{
+  "_index": "bbq-my-byte-quantized-index",
+  "_id": "2",
+  "_version": 1,
+  "result": "created",
+  "_shards": {
+    "total": 2,
+    "successful": 2,
+    "failed": 0
+  },
+  "_seq_no": 1,
+  "_primary_term": 1
+}
+
+{
+  "took": 154,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 2,
+      "relation": "eq"
+    },
+    "max_score": 0.9601393,
+    "hits": [
+      {
+        "_index": "bbq-my-byte-quantized-index",
+        "_id": "1",
+        "_score": 0.9601393,
+        "_source": {
+          "my_field": "my awesome text field"
+        }
+      },
+      {
+        "_index": "bbq-my-byte-quantized-index",
+        "_id": "2",
+        "_score": 0.8988675,
+        "_source": {
+          "my_field": "some other sentence"
+        }
+      }
+    ]
+  }
+}
