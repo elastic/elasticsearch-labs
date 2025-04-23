@@ -139,6 +139,7 @@ def main():
         if isinstance(e, ApiError) and e.status_code != 408:
             raise
         warn(f"Error occurred, will retry after ML jobs complete: {e}")
+        time.sleep(2)  # Checking too fast could return no tasks and fail again
         await_ml_tasks()
         es.indices.delete(index=INDEX, ignore_unavailable=True)
         store.add_documents(list(docs))
