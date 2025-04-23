@@ -29,7 +29,9 @@ env:
 
 jobs:
   build-image:
+    timeout-minutes: 90  # instead of 360 by default
     strategy:
+      fail-fast: false  # don't fail fast as sometimes failures are arch specific
       matrix:
         runner:
           - ubuntu-24.04
