@@ -1,8 +1,69 @@
+# This is a Docker Compose file that runs a local Elastic Stack comprised of
+# Elasticsearch, Kibana and Elastic Distribution of OpenTelemetry (EDOT)
+# Collector.
 name: elastic-stack
+
+configs:
+  # This is the minimal yaml configuration needed to listen on all interfaces
+  # for OTLP logs, metrics and traces, exporting to Elasticsearch.
+  edot-collector-config:
+    content: |
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      
+      connectors:
+        elasticapm:
+      
+      processors:
+        elastictrace:
+      
+      exporters:
+        elasticsearch:
+          endpoint: http://elasticsearch:9200
+          user: elastic
+          password: elastic
+          mapping:
+            mode: otel
+          logs_dynamic_index:
+            enabled: true
+          metrics_dynamic_index:
+            enabled: true
+          traces_dynamic_index:
+            enabled: true
+          flush:
+              bytes: 1048576  # apm-server default instead of 5000000
+              interval: 1s  # apm-server default instead of 30s
+      
+      service:
+        pipelines:
+          traces:
+            receivers: [otlp]
+            processors: [elastictrace]
+            exporters: [elasticapm, elasticsearch]
+      
+          metrics:
+            receivers: [otlp]
+            processors: []
+            exporters: [elasticsearch]
+      
+          metrics/aggregated:
+            receivers: [elasticapm]
+            processors: []
+            exporters: [elasticsearch]
+      
+          logs:
+            receivers: [otlp]
+            processors: []
+            exporters: [elasticapm, elasticsearch]
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
     container_name: elasticsearch
     ports:
       - 9200:9200
@@ -38,7 +99,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
     container_name: elasticsearch_settings
     restart: 'no'
     # gen-ai assistants in kibana save state in a way that requires system
@@ -53,7 +114,7 @@ services:
       '
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.2
+    image: docker.elastic.co/kibana/kibana:9.0.0
     container_name: kibana
     depends_on:
       elasticsearch_settings:
@@ -76,27 +137,22 @@ services:
       retries: 300
       interval: 1s
 
-  apm-server:
-    image: docker.elastic.co/apm/apm-server:8.17.2
-    container_name: apm-server
+  otel-collector:
+    image: docker.elastic.co/elastic-agent/elastic-otel-collector:9.0.0
+    container_name: otel-collector
     depends_on:
       elasticsearch:
         condition: service_healthy
-    command: >
-      apm-server
-        -E apm-server.kibana.enabled=true
-        -E apm-server.kibana.host=http://kibana:5601
-        -E apm-server.kibana.username=elastic
-        -E apm-server.kibana.password=elastic
-        -E output.elasticsearch.hosts=["http://elasticsearch:9200"]
-        -E output.elasticsearch.username=elastic
-        -E output.elasticsearch.password=elastic
-    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
-    cap_drop: ["ALL"]
+    command: [
+      "--config=/etc/otelcol-contrib/config.yaml",
+    ]
+    configs:
+      - source: edot-collector-config
+        target: /etc/otelcol-contrib/config.yaml
     ports:
-      - 8200:8200
+      - "4317:4317"  # grpc
+      - "4318:4318"  # http
     healthcheck:
-      test: ["CMD-SHELL", "bash -c 'echo -n > /dev/tcp/127.0.0.1/8200'"]
+      test: ["CMD-SHELL", "bash -c 'echo -n > /dev/tcp/127.0.0.1/4317'"]
       retries: 300
       interval: 1s
-

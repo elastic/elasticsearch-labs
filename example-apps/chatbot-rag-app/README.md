@@ -22,8 +22,9 @@ Copy [env.example](env.example) to `.env` and fill in values noted inside.
 ## Installing and connecting to Elasticsearch
 
 There are a number of ways to install Elasticsearch. Cloud is best for most
-use-cases. We also have [docker-compose-elastic.yml][docker-compose-elastic],
-that starts Elasticsearch, Kibana, and APM Server on your laptop in one step.
+use-cases. We also have [docker-compose-elastic.yml][docker-compose],
+that starts Elasticsearch, Kibana, and Elastic Distribution of OpenTelemetry
+(EDOT) Collector on your laptop in one step.
 
 Once you decided your approach, edit your `.env` file accordingly.
 
@@ -84,8 +85,8 @@ copied to a file name `.env` and updated with `ELASTICSEARCH_URL` and
 For example, if you started your Elastic Stack with [k8s-manifest-elastic.yml][k8s-manifest-elastic],
 you would update these values:
 ```
-ELASTICSEARCH_URL=http://elasticsearch:9200
-OTEL_EXPORTER_OTLP_ENDPOINT=http://apm-server:8200
+ELASTICSEARCH_URL=http://elasticsearch.default.svc:9200
+OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.default.svc:4318
 ```
 
 Then, import your `.env` file as a configmap like this:
@@ -132,6 +133,7 @@ kubectl port-forward deployment.apps/chatbot-rag-app 4000:4000 &
 Clean up when finished, like this:
 ```bash
 kubectl delete -f k8s-manifest.yml
+kubectl delete configmap chatbot-rag-app-env
 ```
 
 ### Run with Python
@@ -197,16 +199,16 @@ prefix `python` with `opentelemetry-instrument` to enable OpenTelemetry.
 dotenv run -- opentelemetry-instrument python api/app.py
 ```
 
-[env.example](env.example) defaults to use Elastic APM server, started by
-[docker-compose-elastic.yml](../../docker). If you start your Elastic stack
-this way, you can access Kibana like this, authenticating with the username
+[env.example](env.example) defaults to use an OpenTelemetry Collector,
+specifically Elastic Distribution of OpenTelemetry (EDOT) Collector, if you
+started your Elastic Stack with [docker-compose-elastic.yml][docker-compose].
+If you did, you can access Kibana like this, authenticating with the username
 "elastic" and password "elastic":
 
 http://localhost:5601/app/apm/traces?rangeFrom=now-15m&rangeTo=now
 
-Under the scenes, chatbot-rag-app is automatically instrumented by the Elastic
-Distribution of OpenTelemetry (EDOT) Python. You can see more details about
-EDOT Python [here](https://github.com/elastic/elastic-otel-python).
+Under the scenes, chatbot-rag-app is automatically instrumented by EDOT Python.
+You can see more details about EDOT Python [here][edot-python].
 
 OpenTelemetry support for LLM providers not included in EDOT Python are provided
 by the [Langtrace Python SDK](https://docs.langtrace.ai/sdk/python_sdk).
@@ -260,5 +262,6 @@ docker compose up --build --force-recreate
 ---
 [loader-docs]: https://python.langchain.com/docs/how_to/#document-loaders
 [install-es]: https://www.elastic.co/search-labs/tutorials/install-elasticsearch
-[docker-compose-elastic]: ../../docker/docker-compose-elastic.yml
+[docker-compose]: ../../docker/docker-compose-elastic.yml
+[edot-python]: https://github.com/elastic/elastic-otel-python
 [k8s-manifest-elastic]: ../../k8s/k8s-manifest-elastic.yml
