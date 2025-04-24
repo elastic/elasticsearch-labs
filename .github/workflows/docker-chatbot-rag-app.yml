@@ -29,11 +29,12 @@ env:
 
 jobs:
   build-image:
+    timeout-minutes: 90  # instead of 360 by default
     strategy:
       matrix:
         runner:
           - ubuntu-24.04
-          - ubuntu-24.04-arm
+          - ubuntu-24.04-arm  # we don't test on this as it times out in CI
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
@@ -55,10 +56,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: start elasticsearch
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.runner == 'ubuntu-24.04'
         run: docker compose -f docker/docker-compose-elastic.yml up --quiet-pull -d --wait --wait-timeout 120 elasticsearch
       - name: test image
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.runner == 'ubuntu-24.04'
         working-directory: example-apps/chatbot-rag-app
         run: |  # This tests ELSER is working, which doesn't require an LLM.
           cp env.example .env

@@ -1,8 +1,10 @@
 # Running your own Elastic Stack with Docker
 
-If you'd like to start Elastic locally, you can use the provided
-[docker-compose-elastic.yml](docker-compose-elastic.yml) file. This starts
-Elasticsearch, Kibana, and APM Server and only requires Docker installed.
+If you would like to start a local Elastic Stack with Docker, use
+[docker-compose-elastic.yml](docker-compose-elastic.yml).
+
+This starts Elasticsearch, Kibana and Elastic Distribution of OpenTelemetry
+(EDOT) Collector.
 
 Note: If you haven't checked out this repository, all you need is one file:
 ```bash
@@ -26,3 +28,21 @@ Clean up when finished, like this:
 ```bash
 docker compose -f docker-compose-elastic.yml down
 ```
+
+## OpenTelemetry
+
+### Metrics
+
+If your application only sends logs or traces, you can skip this section.
+
+EDOT Collector supports delta, not cumulative metrics. Applications that send
+OpenTelemetry metrics using the official OTEL SDK need to export this variable:
+```bash
+OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=delta
+```
+
+Alternatively, you can use [EDOT language SDKs][edot-sdks] which set this by
+default.
+
+---
+[edot-sdks]: https://github.com/elastic/opentelemetry?tab=readme-ov-file#edot-sdks--agents

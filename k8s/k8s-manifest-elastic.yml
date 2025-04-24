@@ -1,10 +1,14 @@
-# This is a simple k8s manifest to start Elasticsearch, Kibana and APM server
-# with the same configuration as ../docker/docker-compose-elastic.yml
+# This is a Kubernetes manifest that runs a local Elastic Stack comprised of
+# Elasticsearch, Kibana and Elastic Distribution of OpenTelemetry (EDOT)
+# Collector.
+#
+# This has the same configuration as ../docker/docker-compose-elastic.yml
 #
 # For this reason, if trying to understand why a setting exists, look at the
 # docker variant first. Similarly, updates to the docker variant should happen
 # here as well.
 
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -33,7 +37,7 @@ spec:
     spec:
       containers:
         - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
           ports:
             - containerPort: 9200
           env:
@@ -56,7 +60,7 @@ spec:
             - name: xpack.license.self_generated.type
               value: trial
             # Note that ELSER is recommended to have 2GB, but it is JNI (PyTorch).
-            # ELSER's memory is in addition to the heap and other overhead.
+            # So, ELSER's memory is in addition to the heap and other overhead.
             - name: ES_JAVA_OPTS
               value: "-Xms2g -Xmx2g"
           securityContext:
@@ -65,8 +69,9 @@ spec:
               drop: ["ALL"]
           readinessProbe:
             exec:
+              # Readiness probe adapted from the Docker healthcheck script.
               command: ["sh", "-c", "curl --max-time 1 -s http://localhost:9200 | grep -q 'missing authentication credentials'"]
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 1
             timeoutSeconds: 10
             failureThreshold: 120
@@ -102,7 +107,7 @@ spec:
         # gen-ai assistants in kibana save state in a way that requires system
         # access, so set kibana_system's password to a known value.
         - name: setup-kibana-system-user
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+          image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
           command:
             - bash
             - -c
@@ -114,7 +119,7 @@ spec:
                 -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
       containers:
         - name: kibana
-          image: docker.elastic.co/kibana/kibana:8.17.2
+          image: docker.elastic.co/kibana/kibana:9.0.0
           ports:
             - containerPort: 5601
           env:
@@ -126,6 +131,8 @@ spec:
               value: kibana_system
             - name: ELASTICSEARCH_PASSWORD
               value: elastic
+            # Non-default settings from here:
+            # https://github.com/elastic/apm-server/blob/main/testing/docker/kibana/kibana.yml
             - name: MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
               value: "true"
             - name: XPACK_SECURITY_ENCRYPTIONKEY
@@ -144,69 +151,114 @@ spec:
             failureThreshold: 300
 
 ---
+# This is the minimal yaml configuration needed to listen on all interfaces for
+# OTLP logs, metrics and traces, exporting to Elasticsearch.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: edot-collector-config
+data:
+  config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    connectors:
+      elasticapm:
+    processors:
+      elastictrace:
+    exporters:
+      elasticsearch:
+        endpoint: http://elasticsearch.default.svc:9200
+        user: elastic
+        password: elastic
+        mapping:
+          mode: otel
+        logs_dynamic_index:
+          enabled: true
+        metrics_dynamic_index:
+          enabled: true
+        traces_dynamic_index:
+          enabled: true
+        flush:
+          bytes: 1048576  # apm-server default instead of 5000000
+          interval: 1s    # apm-server default instead of 30s
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [elastictrace]
+          exporters: [elasticapm, elasticsearch]
+        metrics:
+          receivers: [otlp]
+          processors: []
+          exporters: [elasticsearch]
+        metrics/aggregated:
+          receivers: [elasticapm]
+          processors: []
+          exporters: [elasticsearch]
+        logs:
+          receivers: [otlp]
+          processors: []
+          exporters: [elasticapm, elasticsearch]
+
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: apm-server
+  name: otel-collector
 spec:
   ports:
-    - port: 8200
-      targetPort: 8200
+    - name: grpc
+      port: 4317
+      targetPort: 4317
+    - name: http
+      port: 4318
+      targetPort: 4318
   selector:
-    app: apm-server
+    app: otel-collector
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apm-server
+  name: otel-collector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: apm-server
+      app: otel-collector
   template:
     metadata:
       labels:
-        app: apm-server
+        app: otel-collector
     spec:
-      initContainers:
-        - name: await-kibana
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
-          command:
-            - bash
-            - -xc
-            - |
-              echo "Waiting for kibana to be available";
-              until curl --max-time 1 -s http://kibana.default.svc:5601/api/status | grep -q 'available'; do sleep 1; done;
       containers:
-        - name: apm-server
-          image: docker.elastic.co/apm/apm-server:8.17.2
-          command:
-            - apm-server
-            - -E
-            - apm-server.kibana.enabled=true
-            - -E
-            - apm-server.kibana.host=http://kibana.default.svc:5601
-            - -E
-            - apm-server.kibana.username=elastic
-            - -E
-            - apm-server.kibana.password=elastic
-            - -E
-            - output.elasticsearch.hosts=["http://elasticsearch.default.svc:9200"]
-            - -E
-            - output.elasticsearch.username=elastic
-            - -E
-            - output.elasticsearch.password=elastic
+        - name: otel-collector
+          image: docker.elastic.co/elastic-agent/elastic-otel-collector:9.0.0
+          command: ["/usr/bin/tini", "--"]
+          args: ["/usr/local/bin/docker-entrypoint", "--config=/usr/share/elastic-agent/config.yaml"]
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/elastic-agent/config.yaml
+              subPath: config.yaml
           ports:
-            - containerPort: 8200
+            - containerPort: 4317
+            - containerPort: 4318
           readinessProbe:
             tcpSocket:
-              port: 8200
+              port: 4317
             initialDelaySeconds: 1
             periodSeconds: 1
             failureThreshold: 300
           securityContext:
             capabilities:
-              add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
-              drop: ["ALL"]
+              add: [ "CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID" ]
+              drop: [ "ALL" ]
+      volumes:
+        - name: config
+          configMap:
+            name: edot-collector-config
