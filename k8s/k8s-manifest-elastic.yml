@@ -184,8 +184,7 @@ data:
         traces_dynamic_index:
           enabled: true
         flush:
-          bytes: 1048576  # apm-server default instead of 5000000
-          interval: 1s    # apm-server default instead of 30s
+          interval: 1s  # improve responsiveness in example apps (default 30s)
     service:
       pipelines:
         traces:
