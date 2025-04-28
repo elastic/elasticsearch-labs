@@ -31,7 +31,7 @@ def patch_elasticsearch():
             assert kwargs["cloud_id"] == "foo"
         if "api_key" in kwargs:
             assert kwargs["api_key"] == "bar"
-        return orig_es_init(self, "http://localhost:9200", timeout=60)
+        return orig_es_init(self, "http://localhost:9200", request_timeout=60)
 
     # patch Elasticsearch.__init__
     elasticsearch.Elasticsearch.__init__ = patched_es_init
