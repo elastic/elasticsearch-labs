@@ -20,6 +20,8 @@ jobs:
           - 8.17.5
           - 8.18.0
           - 8.19.0-SNAPSHOT
+          - 9.0.0
+          - 9.1.0-SNAPSHOT
     runs-on: ubuntu-latest
     services:
       elasticsearch:
