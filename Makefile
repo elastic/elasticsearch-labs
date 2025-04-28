@@ -21,4 +21,4 @@ install-pre-commit:
 
 install-nbtest:
 	python3 -m venv $(VENV)
-	$(VENV)/bin/pip install -qqq elastic-nbtest sentence-transformers==2.7.0 elasticsearch==8.18.0
+	$(VENV)/bin/pip install -qqq elastic-nbtest sentence-transformers==2.7.0
