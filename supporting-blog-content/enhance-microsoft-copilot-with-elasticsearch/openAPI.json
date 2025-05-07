@@ -1,0 +1,150 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Invoice Search API",
+    "description": "API for semantic search and date-based search of invoices using Elasticsearch",
+    "version": "1.0.0"
+  },
+  "host": "your-ngrok-host.ngrok.app",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "parameters": {
+    "NgrokSkipWarningHeader": {
+      "name": "ngrok-skip-browser-warning",
+      "in": "header",
+      "description": "Set and send an `ngrok-skip-browser-warning` request header with any value",
+      "required": true,
+      "type": "string",
+      "default": "true"
+    }
+  },
+  "paths": {
+    "/search/semantic": {
+      "get": {
+        "summary": "Semantic invoice search",
+        "description": "Performs a semantic search on invoices based on the provided query using Elasticsearch's semantic capabilities",
+        "operationId": "searchSemantic",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/NgrokSkipWarningHeader"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search query for semantic matching against invoice data",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "score": {
+                    "type": "number",
+                    "description": "Relevance score of the search result from Elasticsearch"
+                  }
+                },
+                "additionalProperties": true,
+                "description": "Invoice data with relevance score"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/search/by-date": {
+      "get": {
+        "summary": "Search invoices by date range",
+        "description": "Performs a search on invoices based on a specified date range using Elasticsearch",
+        "operationId": "searchByDate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/NgrokSkipWarningHeader"
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "description": "Start date in format MM/dd/yyyy hh:mm:ss aa (e.g., 01/15/2023 09:30:00 AM)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "description": "End date in format MM/dd/yyyy hh:mm:ss aa (e.g., 01/20/2023 05:00:00 PM)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Invoice data within the specified date range"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "detail": {
+          "type": "string",
+          "description": "Error message providing details about what went wrong",
+          "example": "Error: Invalid date format"
+        }
+      }
+    }
+  }
+}
