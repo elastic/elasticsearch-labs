@@ -7,15 +7,9 @@
   },
   "host": "your-ngrok-host.ngrok.app",
   "basePath": "/",
-  "schemes": [
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "parameters": {
     "NgrokSkipWarningHeader": {
       "name": "ngrok-skip-browser-warning",
@@ -32,9 +26,7 @@
         "summary": "Semantic invoice search",
         "description": "Performs a semantic search on invoices based on the provided query using Elasticsearch's semantic capabilities",
         "operationId": "searchSemantic",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "$ref": "#/parameters/NgrokSkipWarningHeader"
@@ -85,9 +77,7 @@
         "summary": "Search invoices by date range",
         "description": "Performs a search on invoices based on a specified date range using Elasticsearch",
         "operationId": "searchByDate",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "$ref": "#/parameters/NgrokSkipWarningHeader"
