@@ -15,14 +15,6 @@ spec:
 ---
 type: DataStore
 spec:
-  id: current
-  name: elasticapm
-  type: elasticapm
+  name: Opentelemetry Collector pipeline
+  type: otlp
   default: true
-  elasticapm:
-    addresses:
-      - http://host.docker.internal:9200
-    username: elastic
-    password: elastic
-    index: traces-apm-default
-    insecureSkipVerify: true

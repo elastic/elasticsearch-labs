@@ -12,8 +12,6 @@ services:
             interval: 1s
             retries: 60
         image: postgres:14
-        networks:
-            default: null
     tracetest:
         command: --provisioning-file /app/provision.yaml
         depends_on:
@@ -34,8 +32,6 @@ services:
             interval: 1s
             retries: 60
         image: kubeshop/tracetest:v1.7.1
-        networks:
-            default: null
         ports:
             - mode: ingress
               target: 11633
@@ -48,20 +44,4 @@ services:
             - type: bind
               source: ./resources/tracetest-provision.yaml
               target: /app/provision.yaml
-
-    tracetest-run:
-        build:
-            dockerfile: Dockerfile.tracetest
-        volumes:
-            - ./resources:/resources
-        entrypoint:
-            - bash
-            - /resources/run.sh
-        networks:
-            default: null
-        depends_on:
-            tracetest:
-                condition: service_healthy
-networks:
-    default:
-        name: tracetest_default
+        
