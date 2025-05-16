@@ -1,0 +1,47 @@
+name: tracetest
+services:
+    postgres:
+        environment:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_USER: postgres
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+            timeout: 5s
+            interval: 1s
+            retries: 60
+        image: postgres:14
+    tracetest:
+        command: --provisioning-file /app/provision.yaml
+        depends_on:
+            postgres:
+                condition: service_healthy
+                required: true
+        environment:
+            TRACETEST_DEV: ${TRACETEST_DEV}
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        healthcheck:
+            test:
+                - CMD
+                - wget
+                - --spider
+                - localhost:11633
+            timeout: 3s
+            interval: 1s
+            retries: 60
+        image: kubeshop/tracetest:v1.7.1
+        ports:
+            - mode: ingress
+              target: 11633
+              published: 11633
+              protocol: tcp
+        volumes:
+            - type: bind
+              source: ./resources/tracetest.yaml
+              target: /app/tracetest.yaml
+            - type: bind
+              source: ./resources/tracetest-provision.yaml
+              target: /app/provision.yaml
+        

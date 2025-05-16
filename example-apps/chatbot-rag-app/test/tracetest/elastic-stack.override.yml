@@ -1,0 +1,79 @@
+networks:
+  shared-test-network:
+    external: true # Reference the network created above
+
+services:
+  elasticsearch:
+    networks:
+      - shared-test-network
+  elasticsearch_settings: 
+    networks:
+      - shared-test-network
+  kibana:
+    networks:
+      - shared-test-network
+  otel-collector:
+    networks:
+      - shared-test-network
+configs:
+  # This is the minimal yaml configuration needed to listen on all interfaces
+  # for OTLP logs, metrics and traces, exporting to Elasticsearch.
+  # Overriding for test purposes in order to add tracetest exporter
+  edot-collector-config:
+    content: |
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      
+      connectors:
+        elasticapm:
+      
+      processors:
+        elastictrace:
+      
+      exporters:
+
+        elasticsearch:
+          endpoint: http://elasticsearch:9200
+          user: elastic
+          password: elastic
+          mapping:
+            mode: otel
+          logs_dynamic_index:
+            enabled: true
+          metrics_dynamic_index:
+            enabled: true
+          traces_dynamic_index:
+            enabled: true
+          flush:
+            interval: 1s  # improve responsiveness in example apps (default 30s)
+        otlp/tracetest:
+          endpoint: http://tracetest:4317
+          tls:
+            insecure: true
+      
+      service:
+        pipelines:
+          traces:
+            receivers: [otlp]
+            processors: [elastictrace]
+            exporters: [elasticapm, elasticsearch, otlp/tracetest]
+      
+          metrics:
+            receivers: [otlp]
+            processors: []
+            exporters: [elasticsearch]
+      
+          metrics/aggregated:
+            receivers: [elasticapm]
+            processors: []
+            exporters: [elasticsearch]
+      
+          logs:
+            receivers: [otlp]
+            processors: []
+            exporters: [elasticapm, elasticsearch]

@@ -1,0 +1,29 @@
+type: Test
+spec:
+  id: chatbot-e2e-test
+  name: Chatbot Trace Test
+  description: Test to verify the chatbot's response to the work from home policy question.
+  trigger:
+    type: http
+    httpRequest:
+      method: POST
+      url: http://api-frontend:4000/api/chat
+      body: "{\"question\": \"What is the work from home policy?\"}"
+      headers:
+      - key: Content-Type
+        value: application/json
+  specs:
+  - selector: span[span.type="genai" name="chat gpt-4o-mini"]
+    name: Calls OpenAI API
+    assertions:
+    - attr:gen_ai.usage.output_tokens > 0
+    - attr:event.outcome = "success"
+  - selector: span[span.type="db" name="search" db.system="elasticsearch" db.operation="search" db.elasticsearch.path_parts.index = "workplace-app-docs"]
+    name: Searches docs index for RAG
+    assertions:
+    - attr:event.outcome  =  "success"
+    - attr:db.elasticsearch.path_parts.index  =  "workplace-app-docs"
+  - selector: span[span.type="db" name="index" db.system="elasticsearch" db.operation="index" db.elasticsearch.path_parts.index = "workplace-app-docs-chat-history"]
+    name: Updates chat history
+    assertions:
+    - attr:event.outcome = "success"
