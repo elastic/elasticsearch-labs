@@ -1,0 +1,20 @@
+
+---
+type: Config
+spec:
+  analyticsEnabled: true
+---
+type: PollingProfile
+spec:
+  name: Custom Profile
+  strategy: periodic
+  default: true
+  periodic:
+    timeout: 2m
+    retryDelay: 3s
+---
+type: DataStore
+spec:
+  name: Opentelemetry Collector pipeline
+  type: otlp
+  default: true

@@ -33,3 +33,9 @@ services:
       - "4000:4000"
     extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
         - "localhost:host-gateway"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 6<>/dev/tcp/localhost/4000"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
