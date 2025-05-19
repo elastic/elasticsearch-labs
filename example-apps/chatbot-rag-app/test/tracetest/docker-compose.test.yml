@@ -21,7 +21,7 @@ services:
         environment:
             TRACETEST_DEV: ${TRACETEST_DEV}
         extra_hosts:
-            - host.docker.internal:host-gateway
+            - localhost:host-gateway
         healthcheck:
             test:
                 - CMD
@@ -36,6 +36,11 @@ services:
             - mode: ingress
               target: 11633
               published: 11633
+              protocol: tcp
+            # Exposing the port for the tracetest otlp receiver that won't overlap with otel-collector.
+            - mode: ingress
+              target: 4317
+              published: 11634
               protocol: tcp
         volumes:
             - type: bind

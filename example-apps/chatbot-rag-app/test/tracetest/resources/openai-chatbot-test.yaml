@@ -7,7 +7,7 @@ spec:
     type: http
     httpRequest:
       method: POST
-      url: http://api-frontend:4000/api/chat
+      url: http://localhost:4000/api/chat
       body: "{\"question\": \"What is the work from home policy?\"}"
       headers:
       - key: Content-Type

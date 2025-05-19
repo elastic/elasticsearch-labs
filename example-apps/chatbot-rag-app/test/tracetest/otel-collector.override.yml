@@ -1,24 +1,5 @@
-networks:
-  shared-test-network:
-    external: true # Reference the network created above
-
-services:
-  elasticsearch:
-    networks:
-      - shared-test-network
-  elasticsearch_settings: 
-    networks:
-      - shared-test-network
-  kibana:
-    networks:
-      - shared-test-network
-  otel-collector:
-    networks:
-      - shared-test-network
 configs:
-  # This is the minimal yaml configuration needed to listen on all interfaces
-  # for OTLP logs, metrics and traces, exporting to Elasticsearch.
-  # Overriding for test purposes in order to add tracetest exporter
+  # Overriding the config from docker/docker-compose-elastic.yml for test purposes in order to add tracetest exporter
   edot-collector-config:
     content: |
       receivers:
@@ -52,7 +33,7 @@ configs:
           flush:
             interval: 1s  # improve responsiveness in example apps (default 30s)
         otlp/tracetest:
-          endpoint: http://tracetest:4317
+          endpoint: http://localhost:11634
           tls:
             insecure: true
       
@@ -77,3 +58,8 @@ configs:
             receivers: [otlp]
             processors: []
             exporters: [elasticapm, elasticsearch]
+
+services:
+  otel-collector:
+    extra_hosts:
+      - localhost:host-gateway
