@@ -33,3 +33,22 @@ services:
       - "4000:4000"
     extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
         - "localhost:host-gateway"
+
+  recreate-requirements:
+    image: python:3.13-slim
+    volumes:
+      - .:/app
+    working_dir: /app
+    profiles:
+      - util  # don't start this as a service
+    command: >  # use `uv` as `pip compile` hangs due to large requirements
+      bash -c "
+        rm -f requirements.txt &&
+        pip install uv &&
+        uv venv /tmp/.venv &&
+        source /tmp/.venv/bin/activate &&
+        uv pip install elastic-opentelemetry &&
+        uv pip compile requirements.in -o requirements.txt &&
+        uv pip sync requirements.txt &&
+        edot-bootstrap >> requirements.txt
+      "

@@ -159,21 +159,18 @@ nvm use --lts
 #### Configure your Python environment
 
 Before we can run the app, we need a working Python environment with the
-correct packages installed:
+correct packages installed. This uses [uv][uv] for efficiency.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-# Install dotenv which is a portable way to load environment variables.
-pip install "python-dotenv[cli]"
-pip install -r requirements.txt
+uv venv --python 3.13
+uv pip install -r requirements.txt
 ```
 
 #### Create your Elasticsearch index
 
 First, ingest the data into elasticsearch:
 ```bash
-dotenv run -- flask create-index
+uv run -q --env-file .env flask create-index
 ```
 
 *Note*: This may take several minutes to complete
@@ -182,7 +179,7 @@ dotenv run -- flask create-index
 
 Now, run the app, which listens on http://localhost:4000
 ```bash
-dotenv run -- python api/app.py
+uv run -q --env-file .env python api/app.py
 ```
 
 ## Advanced
@@ -219,20 +216,7 @@ To update package versions, recreate [requirements.txt](requirements.txt) and
 reinstall like this. Once checked in, any commands above will use updates.
 
 ```bash
-rm -rf .venv requirements.txt
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-# Install dev requirements for pip-compile and edot-bootstrap
-pip install pip-tools elastic-opentelemetry
-# Recreate requirements.txt
-pip-compile
-# Install main dependencies
-pip install -r requirements.txt
-# Add opentelemetry instrumentation for these dependencies
-edot-bootstrap >> requirements.txt
-# Install opentelemetry dependencies
-pip install -r requirements.txt
+docker compose run --rm recreate-requirements
 ```
 
 ### Elasticsearch index and chat_history index
@@ -265,3 +249,4 @@ docker compose up --build --force-recreate
 [docker-compose]: ../../docker/docker-compose-elastic.yml
 [edot-python]: https://github.com/elastic/elastic-otel-python
 [k8s-manifest-elastic]: ../../k8s/k8s-manifest-elastic.yml
+[uv]: https://docs.astral.sh/uv/getting-started/installation/
