@@ -193,7 +193,7 @@ This happens automatically, when using docker. If running with python directly,
 prefix `python` with `opentelemetry-instrument` to enable OpenTelemetry.
 
 ```bash
-dotenv run -- opentelemetry-instrument python api/app.py
+uv run -q --env-file .env opentelemetry-instrument python api/app.py
 ```
 
 [env.example](env.example) defaults to use an OpenTelemetry Collector,
