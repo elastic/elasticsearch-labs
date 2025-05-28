@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build-step
+FROM node:24-alpine AS build-step
 WORKDIR /app
 ENV PATH=/node_modules/.bin:$PATH
 COPY frontend ./frontend
@@ -6,7 +6,7 @@ RUN cd frontend && yarn install
 RUN cd frontend && REACT_APP_API_HOST=/api yarn build
 
 # Use glibc-based image to get pre-compiled wheels for grpcio and tiktoken
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 WORKDIR /app
 RUN mkdir -p ./frontend/build

@@ -33,3 +33,26 @@ services:
       - "4000:4000"
     extra_hosts:  # send localhost traffic to the docker host, e.g. your laptop
         - "localhost:host-gateway"
+
+  recreate-requirements:
+    image: python:3.13-slim
+    volumes:
+      - .:/src
+    working_dir: /build
+    profiles:
+      - util  # don't start this as a service
+    command: >
+      bash -c "
+        pip install uv &&
+        uv venv &&
+        cp /src/requirements.in . &&
+        # First, install the application requirements into the venv
+        uv pip compile requirements.in -o requirements.txt &&
+        uv pip sync requirements.txt &&
+        # Next, detect and add instrumentation requirements
+        uv pip install elastic-opentelemetry &&
+        uv run edot-bootstrap >> requirements.in &&
+        # Finally, recreate a new pinned requirements.txt
+        uv pip compile requirements.in -o requirements.txt
+        cp requirements.txt /src/requirements.txt
+      "
