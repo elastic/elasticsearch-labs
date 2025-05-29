@@ -1,0 +1,11 @@
+{
+  "query": {
+    "range": {
+      "issue_date": {
+        "gte": "20/04/2025",
+        "lte": "22/04/2025",
+        "format": "dd/MM/yyyy"
+      }
+    }
+  }
+}
