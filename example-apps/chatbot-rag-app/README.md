@@ -89,6 +89,11 @@ ELASTICSEARCH_URL=http://elasticsearch.default.svc:9200
 OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.default.svc:4318
 ```
 
+*Note*: Do not add quotes to your `.env` file, as they are loaded raw in
+Kubernetes.
+Do this: `OTEL_EXPORTER_OTLP_HEADERS=Authorization=Bearer xyz`
+Not this: `OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer xyz"`
+
 Then, import your `.env` file as a configmap like this:
 ```bash
 kubectl create configmap chatbot-rag-app-env --from-env-file=.env
