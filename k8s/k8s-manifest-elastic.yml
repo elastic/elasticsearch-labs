@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch:9.0.1
+          image: docker.elastic.co/elasticsearch/elasticsearch:9.0.2
           ports:
             - containerPort: 9200
           env:
@@ -107,7 +107,7 @@ spec:
         # gen-ai assistants in kibana save state in a way that requires system
         # access, so set kibana_system's password to a known value.
         - name: setup-kibana-system-user
-          image: docker.elastic.co/elasticsearch/elasticsearch:9.0.1
+          image: docker.elastic.co/elasticsearch/elasticsearch:9.0.2
           command:
             - bash
             - -c
@@ -119,7 +119,7 @@ spec:
                 -H "Content-Type: application/json" | grep -q "^{}"; do sleep 5; done;
       containers:
         - name: kibana
-          image: docker.elastic.co/kibana/kibana:9.0.1
+          image: docker.elastic.co/kibana/kibana:9.0.2
           ports:
             - containerPort: 5601
           env:
@@ -237,7 +237,7 @@ spec:
     spec:
       containers:
         - name: otel-collector
-          image: docker.elastic.co/elastic-agent/elastic-otel-collector:9.0.1
+          image: docker.elastic.co/elastic-agent/elastic-otel-collector:9.0.2
           command: ["/usr/bin/tini", "--"]
           args: ["/usr/local/bin/docker-entrypoint", "--config=/usr/share/elastic-agent/config.yaml"]
           volumeMounts:
