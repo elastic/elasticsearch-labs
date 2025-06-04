@@ -46,7 +46,7 @@ If you now include the changed files in your commit, it should succeed.
 
 ### Where
 
-* Select a folder under [notebooks](../notebooks/README.md) that matches the category of your notebook. If none of them match, create a new folder.
+* Select a folder under [notebooks](notebooks/README.md) that matches the category of your notebook. If none of them match, create a new folder.
 
 ### What
 
@@ -64,7 +64,7 @@ If you now include the changed files in your commit, it should succeed.
 * We recommend building the notebook in an interactive environment, such as [Google Colab](https://colab.google/). This way you can test all the steps and capture the output.
 * **Never leave any secrets in the code** (API keys, passwords etc). Also avoid hardcoding URLs and IDs that may change from user to user. Instead use environment variables that need to be set by the user while they are running the notebook.
 * Test your notebook end to end before submitting a pull request.
-* Example of a well-formed notebook: [question-answering.ipynb](../notebooks/generative-ai/question-answering.ipynb).
+* Example of a well-formed notebook: [question-answering.ipynb](notebooks/generative-ai/question-answering.ipynb).
 
 ### Automated testing
 
@@ -105,7 +105,7 @@ Any notebooks that are added in subdirectories under `notebooks` are automatical
 
 ### Where
 
-* Select a folder under [example-apps](../example-apps/README.md) that matches the category of your applications. If none of them match, create a new folder.
+* Select a folder under [example-apps](example-apps/README.md) that matches the category of your applications. If none of them match, create a new folder.
 * Create a folder under the category for your applications.
 
 ### What
@@ -116,7 +116,7 @@ Any notebooks that are added in subdirectories under `notebooks` are automatical
 * Add a `README.md` file in the root folder of the app:
   * Summarize what the app will demonstrate. Feel free to use images - sometimes a picture is worth a thousand words.
   * List language requirements in the readme file, e.g. "Python 3.6+".
-  * List clear instructions for installing and runing the example app in the readme file. This includes
+  * List clear instructions for installing and running the example app in the readme file. This includes
   * Upload sample data files as necessary, or instructions for downloading them from an external source. Consider the license for any datasets.
   * Mention the version of the Elastic Stack that the example was tested with.
 
@@ -124,7 +124,7 @@ Any notebooks that are added in subdirectories under `notebooks` are automatical
 
 * **Never leave any secrets in the code** (API keys, passwords etc). Also avoid hardcoding URLs and IDs that may change from user to user. Instead use environment variables that need to be set by the user while they are running the app.
 * Test your app end to end before submitting a pull request.
-* Example of a well-formed app: [OpenAI-JS](../example-apps/OpenAI-embeddings/OpenAI-JS/README.md).
+* Example of a well-formed app: [OpenAI-JS](example-apps/openai-embeddings/README.md).
 
 ## Examples for the Elastic Search Labs Blog
 
