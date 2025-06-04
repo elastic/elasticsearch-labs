@@ -1,0 +1,140 @@
+[
+  {
+    "id": "INV-0001",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0001.pdf",
+    "issue_date": "2025-04-01",
+    "description": "Invoice for technical consulting services",
+    "services": [
+      { "name": "Technical consulting", "price": 1500.0 },
+      { "name": "Remote support", "price": 300.0 }
+    ],
+    "total_amount": 1800.0
+  },
+  {
+    "id": "INV-0002",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0002.pdf",
+    "issue_date": "2025-04-03",
+    "description": "Enterprise software license sale",
+    "services": [{ "name": "ERP software license", "price": 5000.0 }],
+    "total_amount": 5000.0
+  },
+  {
+    "id": "INV-0003",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0003.pdf",
+    "issue_date": "2025-04-05",
+    "description": "UX/UI design services",
+    "services": [
+      { "name": "UX design", "price": 1200.0 },
+      { "name": "UI design", "price": 1000.0 }
+    ],
+    "total_amount": 2200.0
+  },
+  {
+    "id": "INV-0004",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0004.pdf",
+    "issue_date": "2025-04-07",
+    "description": "CRM system implementation",
+    "services": [
+      { "name": "CRM setup", "price": 2500.0 },
+      { "name": "User training", "price": 700.0 }
+    ],
+    "total_amount": 3200.0
+  },
+  {
+    "id": "INV-0005",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0005.pdf",
+    "issue_date": "2025-04-09",
+    "description": "Monthly technical support",
+    "services": [
+      { "name": "Preventive maintenance", "price": 400.0 },
+      { "name": "Phone support", "price": 200.0 }
+    ],
+    "total_amount": 600.0
+  },
+  {
+    "id": "INV-0006",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0006.pdf",
+    "issue_date": "2025-04-11",
+    "description": "IT audit services",
+    "services": [{ "name": "Security audit", "price": 1800.0 }],
+    "total_amount": 1800.0
+  },
+  {
+    "id": "INV-0007",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0007.pdf",
+    "issue_date": "2025-04-13",
+    "description": "Mobile app development",
+    "services": [
+      { "name": "Android development", "price": 3000.0 },
+      { "name": "iOS development", "price": 3000.0 }
+    ],
+    "total_amount": 6000.0
+  },
+  {
+    "id": "INV-0008",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0008.pdf",
+    "issue_date": "2025-04-15",
+    "description": "Network equipment sales",
+    "services": [
+      { "name": "Business router", "price": 800.0 },
+      { "name": "Managed switch", "price": 600.0 }
+    ],
+    "total_amount": 1400.0
+  },
+  {
+    "id": "INV-0009",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0009.pdf",
+    "issue_date": "2025-04-17",
+    "description": "Annual subscription renewal",
+    "services": [{ "name": "SaaS platform subscription", "price": 1200.0 }],
+    "total_amount": 1200.0
+  },
+  {
+    "id": "INV-0010",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0010.pdf",
+    "issue_date": "2025-04-19",
+    "description": "Specialized technical support hours",
+    "services": [{ "name": "Specialized support (10h)", "price": 1000.0 }],
+    "total_amount": 1000.0
+  },
+  {
+    "id": "INV-0011",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0011.pdf",
+    "issue_date": "2025-04-20",
+    "description": "Business lunch with client",
+    "services": [{ "name": "Lunch at La Terraza Bistro", "price": 85.0 }],
+    "total_amount": 85.0
+  },
+  {
+    "id": "INV-0012",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0012.pdf",
+    "issue_date": "2025-04-21",
+    "description": "Hotel accommodation during client visit",
+    "services": [{ "name": "3-night stay at Hotel Central", "price": 450.0 }],
+    "total_amount": 450.0
+  },
+  {
+    "id": "INV-0013",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0013.pdf",
+    "issue_date": "2025-04-22",
+    "description": "Team-building activity",
+    "services": [{ "name": "Escape room experience for team", "price": 200.0 }],
+    "total_amount": 200.0
+  },
+  {
+    "id": "INV-0014",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0014.pdf",
+    "issue_date": "2025-04-23",
+    "description": "Local transportation for conference",
+    "services": [{ "name": "Taxi and metro rides", "price": 60.0 }],
+    "total_amount": 60.0
+  },
+  {
+    "id": "INV-0015",
+    "file_url": "https://fake-invoices.example.com/fake/INV-0015.pdf",
+    "issue_date": "2025-04-24",
+    "description": "Client entertainment dinner",
+    "services": [{ "name": "Dinner at El Gourmet", "price": 130.0 }],
+    "total_amount": 130.0
+  }
+]

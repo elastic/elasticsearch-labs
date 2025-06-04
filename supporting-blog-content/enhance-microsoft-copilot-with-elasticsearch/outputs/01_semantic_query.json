@@ -1,0 +1,8 @@
+{
+  "query": {
+    "semantic": {
+      "field": "semantic_field",
+      "query": "food consumption"
+    }
+  }
+}

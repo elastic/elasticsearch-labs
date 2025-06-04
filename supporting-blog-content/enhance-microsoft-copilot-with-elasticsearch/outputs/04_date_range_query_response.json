@@ -1,0 +1,41 @@
+[
+  {
+    "file_url": "https://fake-invoices.example.com/fake/INV-0011.pdf",
+    "issue_date": "2025-04-20",
+    "total_amount": 85.0,
+    "description": "Business lunch with client",
+    "id": "INV-0011",
+    "services": [
+      {
+        "price": 85.0,
+        "name": "Lunch at La Terraza Bistro"
+      }
+    ]
+  },
+  {
+    "file_url": "https://fake-invoices.example.com/fake/INV-0012.pdf",
+    "issue_date": "2025-04-21",
+    "total_amount": 450.0,
+    "description": "Hotel accommodation during client visit",
+    "id": "INV-0012",
+    "services": [
+      {
+        "price": 450.0,
+        "name": "3-night stay at Hotel Central"
+      }
+    ]
+  },
+  {
+    "file_url": "https://fake-invoices.example.com/fake/INV-0013.pdf",
+    "issue_date": "2025-04-22",
+    "total_amount": 200.0,
+    "description": "Team-building activity",
+    "id": "INV-0013",
+    "services": [
+      {
+        "price": 200.0,
+        "name": "Escape room experience for team"
+      }
+    ]
+  }
+]
