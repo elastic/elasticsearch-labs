@@ -5,9 +5,9 @@
     "y": "{y}",
     "w": 12,
     "h": 12,
-    "i": "xy_panel_id"
+    "i": "{visualization_id}"
   },
-  "panelIndex": "xy_panel_id",
+  "panelIndex": "{visualization_id}",
   "panelConfig": {
     "attributes": {
       "title": "{title}",
