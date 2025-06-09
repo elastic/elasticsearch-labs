@@ -1,0 +1,73 @@
+{
+  "type": "lens",
+  "gridData": {
+    "x": "{x}",
+    "y": "{y}",
+    "w": 12,
+    "h": 12,
+    "i": "metric_panel_id"
+  },
+  "panelIndex": "metric_panel_id",
+  "panelConfig": {
+    "attributes": {
+      "title": "{title}",
+      "visualizationType": "lnsMetric",
+      "type": "lens",
+      "references": [
+        {
+          "type": "index-pattern",
+          "id": "90943e30-9a47-11e8-b64d-95841ca0b247",
+          "name": "indexpattern-datasource-layer-metric_layer_id"
+        }
+      ],
+      "state": {
+        "visualization": {
+          "layerId": "metric_layer_id",
+          "layerType": "data",
+          "metricAccessor": "column_1"
+        },
+        "query": {
+          "query": "",
+          "language": "kuery"
+        },
+        "filters": [],
+        "datasourceStates": {
+          "formBased": {
+            "layers": {
+              "metric_layer_id": {
+                "columns": {
+                  "column_1": {
+                    "label": "Unique count of {field}",
+                    "dataType": "number",
+                    "operationType": "unique_count",
+                    "isBucketed": false,
+                    "scale": "ratio",
+                    "sourceField": "{field}",
+                    "params": {
+                      "emptyAsNull": true
+                    },
+                    "customLabel": true
+                  }
+                },
+                "columnOrder": ["column_1"],
+                "incompleteColumns": {},
+                "sampling": 1,
+                "indexPatternId": "90943e30-9a47-11e8-b64d-95841ca0b247"
+              }
+            },
+            "currentIndexPatternId": "90943e30-9a47-11e8-b64d-95841ca0b247"
+          },
+          "indexpattern": {
+            "layers": {}
+          },
+          "textBased": {
+            "layers": {}
+          }
+        },
+        "internalReferences": [],
+        "adHocDataViews": {}
+      },
+      "enhancements": {}
+    }
+  }
+}

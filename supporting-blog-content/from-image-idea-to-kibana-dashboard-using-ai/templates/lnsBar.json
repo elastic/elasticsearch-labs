@@ -1,0 +1,150 @@
+{
+  "type": "lens",
+  "gridData": {
+    "x": "{x}",
+    "y": "{y}",
+    "w": 12,
+    "h": 12,
+    "i": "xy_panel_id"
+  },
+  "panelIndex": "xy_panel_id",
+  "panelConfig": {
+    "attributes": {
+      "title": "{title}",
+      "visualizationType": "lnsXY",
+      "type": "lens",
+      "references": [
+        {
+          "type": "index-pattern",
+          "id": "90943e30-9a47-11e8-b64d-95841ca0b247",
+          "name": "indexpattern-datasource-layer-xy_layer_id"
+        }
+      ],
+      "state": {
+        "visualization": {
+          "legend": {
+            "isVisible": true,
+            "position": "right"
+          },
+          "valueLabels": "hide",
+          "fittingFunction": "None",
+          "axisTitlesVisibilitySettings": {
+            "x": true,
+            "yLeft": true,
+            "yRight": true
+          },
+          "tickLabelsVisibilitySettings": {
+            "x": true,
+            "yLeft": true,
+            "yRight": true
+          },
+          "labelsOrientation": {
+            "x": 0,
+            "yLeft": 0,
+            "yRight": 0
+          },
+          "gridlinesVisibilitySettings": {
+            "x": true,
+            "yLeft": true,
+            "yRight": true
+          },
+          "preferredSeriesType": "bar_stacked",
+          "layers": [
+            {
+              "layerId": "xy_layer_id",
+              "accessors": ["y_1"],
+              "position": "top",
+              "seriesType": "bar_stacked",
+              "showGridlines": false,
+              "layerType": "data",
+              "colorMapping": {
+                "assignments": [],
+                "specialAssignments": [
+                  {
+                    "rule": {
+                      "type": "other"
+                    },
+                    "color": {
+                      "type": "loop"
+                    },
+                    "touched": false
+                  }
+                ],
+                "paletteId": "eui_amsterdam_color_blind",
+                "colorMode": {
+                  "type": "categorical"
+                }
+              },
+              "xAccessor": "x_1"
+            }
+          ]
+        },
+        "query": {
+          "query": "",
+          "language": "kuery"
+        },
+        "filters": [],
+        "datasourceStates": {
+          "formBased": {
+            "layers": {
+              "xy_layer_id": {
+                "columns": {
+                  "x_1": {
+                    "label": "X axis",
+                    "dataType": "string",
+                    "operationType": "terms",
+                    "scale": "ordinal",
+                    "sourceField": "{field}",
+                    "isBucketed": true,
+                    "params": {
+                      "size": 5,
+                      "orderDirection": "desc",
+                      "orderBy": {
+                        "type": "column",
+                        "columnId": "y_1"
+                      },
+                      "otherBucket": false,
+                      "missingBucket": false,
+                      "parentFormat": {
+                        "id": "terms"
+                      },
+                      "include": [],
+                      "exclude": [],
+                      "includeIsRegex": false,
+                      "excludeIsRegex": false
+                    }
+                  },
+                  "y_1": {
+                    "label": "Y axis",
+                    "dataType": "number",
+                    "operationType": "count",
+                    "isBucketed": false,
+                    "scale": "ratio",
+                    "sourceField": "___records___",
+                    "params": {
+                      "emptyAsNull": true
+                    }
+                  }
+                },
+                "columnOrder": ["x_1", "y_1"],
+                "incompleteColumns": {},
+                "sampling": 1,
+                "indexPatternId": "90943e30-9a47-11e8-b64d-95841ca0b247"
+              }
+            },
+            "currentIndexPatternId": "90943e30-9a47-11e8-b64d-95841ca0b247"
+          },
+          "indexpattern": {
+            "layers": {}
+          },
+          "textBased": {
+            "layers": {}
+          }
+        },
+        "internalReferences": [],
+        "adHocDataViews": {}
+      },
+      "enhancements": {}
+    }
+  }
+}
