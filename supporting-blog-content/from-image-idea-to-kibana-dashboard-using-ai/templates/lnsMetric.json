@@ -37,9 +37,9 @@
               "metric_layer_id": {
                 "columns": {
                   "column_1": {
-                    "label": "Unique count of {field}",
+                    "label": "Count of {field}",
                     "dataType": "number",
-                    "operationType": "unique_count",
+                    "operationType": "count",
                     "isBucketed": false,
                     "scale": "ratio",
                     "sourceField": "{field}",
