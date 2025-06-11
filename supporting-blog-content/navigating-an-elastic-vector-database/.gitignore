@@ -1,0 +1,7 @@
+env/
+.env
+.DS_Store
+*/.ipynb_checkpoints/
+.python-version
+small_books_embedded.json
+books_embedded.json
