@@ -1,0 +1,125 @@
+{
+  "type": "lens",
+  "gridData": {
+    "x": "{x}",
+    "y": "{y}",
+    "w": 12,
+    "h": 12,
+    "i": "{visualization_id}"
+  },
+  "panelIndex": "{visualization_id}",
+  "panelConfig": {
+    "attributes": {
+      "title": "{title}",
+      "visualizationType": "lnsPie",
+      "type": "lens",
+      "references": [
+        {
+          "type": "index-pattern",
+          "id": "90943e30-9a47-11e8-b64d-95841ca0b247",
+          "name": "indexpattern-datasource-layer-pie_layer_id"
+        }
+      ],
+      "state": {
+        "visualization": {
+          "shape": "pie",
+          "layers": [
+            {
+              "layerId": "pie_layer_id",
+              "primaryGroups": ["group_1"],
+              "metrics": ["metric_1"],
+              "numberDisplay": "percent",
+              "categoryDisplay": "default",
+              "legendDisplay": "default",
+              "nestedLegend": false,
+              "layerType": "data",
+              "colorMapping": {
+                "assignments": [],
+                "specialAssignments": [
+                  {
+                    "rule": {
+                      "type": "other"
+                    },
+                    "color": {
+                      "type": "loop"
+                    },
+                    "touched": false
+                  }
+                ],
+                "paletteId": "eui_amsterdam_color_blind",
+                "colorMode": {
+                  "type": "categorical"
+                }
+              }
+            }
+          ]
+        },
+        "query": {
+          "query": "",
+          "language": "kuery"
+        },
+        "filters": [],
+        "datasourceStates": {
+          "formBased": {
+            "layers": {
+              "pie_layer_id": {
+                "columns": {
+                  "group_1": {
+                    "label": "Top 5 values of {field}",
+                    "dataType": "string",
+                    "operationType": "terms",
+                    "scale": "ordinal",
+                    "sourceField": "{field}",
+                    "isBucketed": true,
+                    "params": {
+                      "size": "5",
+                      "orderBy": {
+                        "type": "column",
+                        "columnId": "metric_1"
+                      },
+                      "orderDirection": "desc",
+                      "otherBucket": true,
+                      "missingBucket": false,
+                      "parentFormat": {
+                        "id": "terms"
+                      },
+                      "include": [],
+                      "exclude": [],
+                      "includeIsRegex": false,
+                      "excludeIsRegex": false
+                    }
+                  },
+                  "metric_1": {
+                    "label": "Count of records",
+                    "dataType": "number",
+                    "operationType": "count",
+                    "isBucketed": false,
+                    "scale": "ratio",
+                    "sourceField": "___records___",
+                    "params": {
+                      "emptyAsNull": true
+                    }
+                  }
+                },
+                "columnOrder": ["group_1", "metric_1"],
+                "incompleteColumns": {},
+                "sampling": 1,
+                "indexPatternId": "90943e30-9a47-11e8-b64d-95841ca0b247"
+              }
+            },
+            "currentIndexPatternId": "90943e30-9a47-11e8-b64d-95841ca0b247"
+          },
+          "indexpattern": {
+            "layers": {}
+          },
+          "textBased": {
+            "layers": {}
+          }
+        },
+        "internalReferences": [],
+        "adHocDataViews": {}
+      },
+      "enhancements": {}
+    }
+  }
+}
