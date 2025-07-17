@@ -102,10 +102,7 @@
         const dialog = document.getElementById("notificationDialog");
         const messageElement = document.getElementById("notificationMessage");
 
-        messageElement.innerHTML = `
-                <p><strong>Someone is searching for:</strong> <em>"${notification.query}"</em></p>
-                <p>Found <strong>${notification.results_count}</strong> products</p>
-            `;
+        messageElement.innerHTML = `<p><strong>Hot search alert!</strong> Other users are looking for <em>"${notification.query}"</em> right now.</p>`;
 
         dialog.showModal();
       }

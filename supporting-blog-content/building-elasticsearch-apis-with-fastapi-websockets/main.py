@@ -35,7 +35,6 @@ class Product(BaseModel):
 class SearchNotification(BaseModel):
     session_id: str
     query: str
-    results_count: int
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
@@ -66,11 +65,11 @@ async def websocket_endpoint(websocket: WebSocket):
 
 @app.get("/search")
 async def search_products(q: str, session_id: str = "unknown"):
-    # List of product names that should trigger a notification
-    NOTIFY_PRODUCTS = ["iPhone 15 Pro", "Kindle Paperwhite"]
+    # List of search terms that should trigger a notification
+    WATCH_LIST = ["iphone", "kindle"]
 
     try:
-        query = {
+        query_body = {
             "query": {
                 "bool": {
                     "should": [
@@ -83,23 +82,18 @@ async def search_products(q: str, session_id: str = "unknown"):
             "size": 20,
         }
 
-        response = es_client.search(index=PRODUCTS_INDEX, body=query)
+        response = es_client.search(index=PRODUCTS_INDEX, body=query_body)
 
         results = []
-        notify_found = False
-
         for hit in response["hits"]["hits"]:
             product = hit["_source"]
             product["score"] = hit["_score"]
             results.append(product)
 
-            # Check if this product should trigger a notification
-            if product.get("product_name") in NOTIFY_PRODUCTS:
-                notify_found = True
-
         results_count = response["hits"]["total"]["value"]
 
-        if notify_found:
+        # Only send notification if the search term matches
+        if q.lower() in WATCH_LIST:
             notification = SearchNotification(
                 session_id=session_id, query=q, results_count=results_count
             )
@@ -112,7 +106,6 @@ async def search_products(q: str, session_id: str = "unknown"):
                                 "type": "search",
                                 "session_id": session_id,
                                 "query": q,
-                                "results_count": results_count,
                                 "timestamp": notification.timestamp.isoformat(),
                             }
                         )
@@ -129,7 +122,7 @@ async def search_products(q: str, session_id: str = "unknown"):
 
 @app.get("/")
 async def get_main_page():
-    return FileResponse("index.html")
+    return FileResponse("test.html")
 
 
 if __name__ == "__main__":
