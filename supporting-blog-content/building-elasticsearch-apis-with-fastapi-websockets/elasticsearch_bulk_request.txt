@@ -1,0 +1,52 @@
+
+POST products/_bulk
+{"index":{}}
+{"product_name": "iPhone 15 Pro", "price": 999.99, "description": "Latest flagship smartphone with titanium design, A17 Pro chip, and advanced camera system"}
+{"index":{}}
+{"product_name": "MacBook Pro 14-inch", "price": 1999.99, "description": "Professional laptop with M3 chip, Liquid Retina XDR display, and up to 22-hour battery life"}
+{"index":{}}
+{"product_name": "AirPods Pro 2nd Gen", "price": 249.99, "description": "Wireless earbuds with active noise cancellation, spatial audio, and USB-C charging case"}
+{"index":{}}
+{"product_name": "iPad Air", "price": 599.99, "description": "Versatile tablet with M1 chip, 10.9-inch Liquid Retina display, and Apple Pencil support"}
+{"index":{}}
+{"product_name": "Apple Watch Series 9", "price": 399.99, "description": "Advanced smartwatch with health monitoring, fitness tracking, and always-on Retina display"}
+{"index":{}}
+{"product_name": "Samsung Galaxy S24 Ultra", "price": 1199.99, "description": "Premium Android smartphone with S Pen, 200MP camera, and AI-powered features"}
+{"index":{}}
+{"product_name": "Dell XPS 13", "price": 1299.99, "description": "Ultra-portable laptop with Intel Core i7, 13.4-inch InfinityEdge display, and premium build"}
+{"index":{}}
+{"product_name": "Sony WH-1000XM5", "price": 399.99, "description": "Premium noise-canceling headphones with 30-hour battery and exceptional audio quality"}
+{"index":{}}
+{"product_name": "Nintendo Switch OLED", "price": 349.99, "description": "Hybrid gaming console with vibrant OLED screen, enhanced audio, and portable design"}
+{"index":{}}
+{"product_name": "Kindle Paperwhite", "price": 139.99, "description": "E-reader with 6.8-inch glare-free display, waterproof design, and weeks of battery life"}
+{"index":{}}
+{"product_name": "Google Pixel 8 Pro", "price": 999.99, "description": "AI-powered smartphone with advanced computational photography and 7 years of updates"}
+{"index":{}}
+{"product_name": "Microsoft Surface Pro 9", "price": 1099.99, "description": "2-in-1 laptop tablet with Intel Core processors, detachable keyboard, and Surface Pen support"}
+{"index":{}}
+{"product_name": "Dyson V15 Detect", "price": 749.99, "description": "Powerful cordless vacuum with laser dust detection and intelligent suction adjustment"}
+{"index":{}}
+{"product_name": "Fitbit Versa 4", "price": 199.99, "description": "Health and fitness smartwatch with GPS, heart rate monitoring, and 6+ day battery"}
+{"index":{}}
+{"product_name": "Bose QuietComfort 45", "price": 329.99, "description": "Wireless noise-canceling headphones with balanced sound and 24-hour battery life"}
+{"index":{}}
+{"product_name": "Tesla Model Y", "price": 47190.00, "description": "Electric SUV with autopilot, 330-mile range, and minimalist interior design"}
+{"index":{}}
+{"product_name": "Instant Pot Duo 7-in-1", "price": 99.99, "description": "Multi-use pressure cooker that replaces 7 kitchen appliances with smart programming"}
+{"index":{}}
+{"product_name": "LG OLED C3 55-inch TV", "price": 1499.99, "description": "4K OLED smart TV with perfect blacks, vibrant colors, and gaming-optimized features"}
+{"index":{}}
+{"product_name": "Vitamix A3500", "price": 549.99, "description": "Professional-grade blender with preset programs, self-cleaning, and 10-year warranty"}
+{"index":{}}
+{"product_name": "Herman Miller Aeron Chair", "price": 1395.00, "description": "Ergonomic office chair with breathable mesh, lumbar support, and 12-year warranty"}
+{"index":{}}
+{"product_name": "Canon EOS R5", "price": 3899.99, "description": "Professional mirrorless camera with 45MP sensor, 8K video, and advanced autofocus"}
+{"index":{}}
+{"product_name": "Sonos Arc Soundbar", "price": 899.99, "description": "Premium soundbar with Dolby Atmos, voice control, and seamless music streaming"}
+{"index":{}}
+{"product_name": "Peloton Bike+", "price": 2495.00, "description": "Interactive exercise bike with rotating HD touchscreen and live fitness classes"}
+{"index":{}}
+{"product_name": "Roomba j7+", "price": 849.99, "description": "Smart robot vacuum with object avoidance, self-emptying base, and app control"}
+{"index":{}}
+{"product_name": "KitchenAid Stand Mixer", "price": 379.99, "description": "Iconic stand mixer with 10-speed control, tilt-head design, and multiple attachments"}

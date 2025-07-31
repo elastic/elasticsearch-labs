@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechStore - Product Search</title>
+  </head>
+  <body>
+    <header>
+      <h1>🛍️ TechStore - Find Your Perfect Product</h1>
+    </header>
+
+    <main>
+      <form onsubmit="event.preventDefault(); searchProducts();">
+        <fieldset>
+          <legend>Product Search</legend>
+          <p>
+            <label for="searchQuery">Search Products:</label><br />
+            <input
+              type="text"
+              id="searchQuery"
+              placeholder="Search for phones, laptops, headphones..."
+              size="50"
+              required />
+            <button type="submit">🔍 Search</button>
+          </p>
+        </fieldset>
+      </form>
+
+      <fieldset>
+        <legend>Live Notifications</legend>
+        <p id="status">🟡 Connecting to live notifications...</p>
+      </fieldset>
+
+      <section id="searchResults">
+        <h2>Search Results</h2>
+        <blockquote>
+          <em>🔍 Enter a search term above to find products</em>
+        </blockquote>
+      </section>
+    </main>
+
+    <!-- HTML Dialog for notifications -->
+    <dialog id="notificationDialog">
+      <fieldset>
+        <legend>🔔 Live Search Activity</legend>
+        <p id="notificationMessage"></p>
+        <p>
+          <button onclick="closeNotification()" autofocus>OK</button>
+        </p>
+      </fieldset>
+    </dialog>
+
+    <script>
+      let ws = null;
+      let sessionId = null;
+
+      window.onload = function () {
+        sessionId = "session_" + Date.now();
+        connectWebSocket();
+      };
+
+      function connectWebSocket() {
+        const statusDiv = document.getElementById("status");
+
+        ws = new WebSocket("ws://localhost:8000/ws");
+
+        ws.onopen = function () {
+          statusDiv.innerHTML =
+            "🟢 Connected - You will see when others search for products";
+          console.log("Connected to WebSocket");
+        };
+
+        ws.onmessage = function (event) {
+          try {
+            const notification = JSON.parse(event.data);
+            if (notification.type === "search") {
+              showSearchNotification(notification);
+            }
+          } catch (error) {
+            console.error("Error parsing notification:", error);
+          }
+        };
+
+        ws.onclose = function () {
+          statusDiv.innerHTML = "🔴 Disconnected from live notifications";
+          console.log("Disconnected from WebSocket");
+        };
+
+        ws.onerror = function (error) {
+          statusDiv.innerHTML = "❌ Connection error";
+          console.error("WebSocket error:", error);
+        };
+      }
+
+      function showSearchNotification(notification) {
+        // Skip notifications from the same session (same browser window)
+        if (notification.session_id === sessionId) {
+          return;
+        }
+
+        const dialog = document.getElementById("notificationDialog");
+        const messageElement = document.getElementById("notificationMessage");
+
+        messageElement.innerHTML = `<p><strong>Hot search alert!</strong> Other users are looking for <em>"${notification.query}"</em> right now.</p>`;
+
+        dialog.showModal();
+      }
+
+      function closeNotification() {
+        const dialog = document.getElementById("notificationDialog");
+        dialog.close();
+      }
+
+      async function searchProducts() {
+        const query = document.getElementById("searchQuery").value.trim();
+        const resultsDiv = document.getElementById("searchResults");
+
+        if (!query) {
+          resultsDiv.innerHTML = `
+            <h2>Search Results</h2>
+            <blockquote>
+              <strong>⚠️ Please enter a search term</strong>
+            </blockquote>
+          `;
+          return;
+        }
+
+        resultsDiv.innerHTML = `
+          <h2>Search Results</h2>
+          <blockquote>
+            <em>🔍 Searching TechStore inventory...</em>
+          </blockquote>
+        `;
+
+        try {
+          const response = await fetch(
+            `/search?q=${encodeURIComponent(
+              query
+            )}&session_id=${encodeURIComponent(sessionId)}`
+          );
+          const data = await response.json();
+
+          if (response.ok) {
+            displaySearchResults(data);
+          } else {
+            throw new Error(data.error || "Search failed");
+          }
+        } catch (error) {
+          resultsDiv.innerHTML = `
+                    <h2>Search Results</h2>
+                    <fieldset>
+                        <legend>❌ Search Error</legend>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </fieldset>
+                `;
+        }
+      }
+
+      function displaySearchResults(data) {
+        const resultsDiv = document.getElementById("searchResults");
+
+        if (data.results.length === 0) {
+          resultsDiv.innerHTML = `
+                    <h2>Search Results</h2>
+                    <fieldset>
+                        <legend>❌ No products found</legend>
+                        <p>No products match "<strong>${data.query}</strong>"</p>
+                        <p><em>Try searching for: iPhone, laptop, headphones, watch, etc.</em></p>
+                    </fieldset>
+                `;
+          return;
+        }
+
+        let html = `<h2>✅ Found ${data.total} products for "${data.query}"</h2>`;
+
+        data.results.forEach((product) => {
+          html += `
+                    <fieldset>
+                        <legend><strong>${
+                          product.product_name
+                        }</strong></legend>
+                        <p><big>💰 $${product.price.toFixed(2)}</big></p>
+                        <p>${product.description}</p>
+                    </fieldset>
+                `;
+        });
+
+        resultsDiv.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>
