@@ -4,51 +4,88 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TechStore - Product Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <header>
-      <h1>🛍️ TechStore - Find Your Perfect Product</h1>
+  <body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <h1 class="text-3xl font-bold text-gray-900">
+          🛍️ TechStore - Find Your Perfect Product
+        </h1>
+      </div>
     </header>
 
-    <main>
-      <form onsubmit="event.preventDefault(); searchProducts();">
-        <fieldset>
-          <legend>Product Search</legend>
-          <p>
-            <label for="searchQuery">Search Products:</label><br />
-            <input
-              type="text"
-              id="searchQuery"
-              placeholder="Search for phones, laptops, headphones..."
-              size="50"
-              required />
-            <button type="submit">🔍 Search</button>
-          </p>
-        </fieldset>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <form onsubmit="event.preventDefault(); searchProducts();" class="mb-8">
+        <div class="bg-white rounded-lg shadow-sm border p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">
+            Product Search
+          </h2>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex-1">
+              <label
+                for="searchQuery"
+                class="block text-sm font-medium text-gray-700 mb-2"
+                >Search Products:</label
+              >
+              <input
+                type="text"
+                id="searchQuery"
+                placeholder="Search for phones, laptops, headphones..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required />
+            </div>
+            <div class="flex items-end">
+              <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
+                🔍 Search
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
 
-      <fieldset>
-        <legend>Live Notifications</legend>
-        <p id="status">🟡 Connecting to live notifications...</p>
-      </fieldset>
+      <div class="bg-white rounded-lg shadow-sm border p-4 mb-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-medium text-gray-900">
+              Live Notifications
+            </h3>
+            <p id="status" class="text-xs text-gray-500 mt-1">
+              🟡 Connecting to live notifications...
+            </p>
+          </div>
+          <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+        </div>
+      </div>
 
       <section id="searchResults">
-        <h2>Search Results</h2>
-        <blockquote>
-          <em>🔍 Enter a search term above to find products</em>
-        </blockquote>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Results</h2>
+        <div class="bg-white rounded-lg shadow-sm border p-6">
+          <p class="text-gray-600 italic">
+            🔍 Enter a search term above to find products
+          </p>
+        </div>
       </section>
     </main>
 
     <!-- HTML Dialog for notifications -->
-    <dialog id="notificationDialog">
-      <fieldset>
-        <legend>🔔 Live Search Activity</legend>
-        <p id="notificationMessage"></p>
-        <p>
-          <button onclick="closeNotification()" autofocus>OK</button>
-        </p>
-      </fieldset>
+    <dialog id="notificationDialog" class="rounded-lg shadow-xl border">
+      <div class="bg-white p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+          🔔 Live Search Activity
+        </h3>
+        <p id="notificationMessage" class="text-gray-700 mb-6"></p>
+        <div class="flex justify-end">
+          <button
+            onclick="closeNotification()"
+            autofocus
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors">
+            OK
+          </button>
+        </div>
+      </div>
     </dialog>
 
     <script>
@@ -68,6 +105,7 @@
         ws.onopen = function () {
           statusDiv.innerHTML =
             "🟢 Connected - You will see when others search for products";
+          statusDiv.className = "text-sm text-green-600";
           console.log("Connected to WebSocket");
         };
 
@@ -84,11 +122,13 @@
 
         ws.onclose = function () {
           statusDiv.innerHTML = "🔴 Disconnected from live notifications";
+          statusDiv.className = "text-sm text-red-600";
           console.log("Disconnected from WebSocket");
         };
 
         ws.onerror = function (error) {
           statusDiv.innerHTML = "❌ Connection error";
+          statusDiv.className = "text-sm text-red-600";
           console.error("WebSocket error:", error);
         };
       }
@@ -118,19 +158,19 @@
 
         if (!query) {
           resultsDiv.innerHTML = `
-            <h2>Search Results</h2>
-            <blockquote>
-              <strong>⚠️ Please enter a search term</strong>
-            </blockquote>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Results</h2>
+            <div class="bg-white rounded-lg shadow-sm border p-6">
+              <p class="text-red-600 font-medium">⚠️ Please enter a search term</p>
+            </div>
           `;
           return;
         }
 
         resultsDiv.innerHTML = `
-          <h2>Search Results</h2>
-          <blockquote>
-            <em>🔍 Searching TechStore inventory...</em>
-          </blockquote>
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Results</h2>
+          <div class="bg-white rounded-lg shadow-sm border p-6">
+            <p class="text-gray-600 italic">🔍 Searching TechStore inventory...</p>
+          </div>
         `;
 
         try {
@@ -148,12 +188,12 @@
           }
         } catch (error) {
           resultsDiv.innerHTML = `
-                    <h2>Search Results</h2>
-                    <fieldset>
-                        <legend>❌ Search Error</legend>
-                        <p><strong>Error:</strong> ${error.message}</p>
-                    </fieldset>
-                `;
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Results</h2>
+            <div class="bg-white rounded-lg shadow-sm border p-6">
+              <h3 class="text-lg font-semibold text-red-600 mb-2">❌ Search Error</h3>
+              <p class="text-gray-700"><strong>Error:</strong> ${error.message}</p>
+            </div>
+          `;
         }
       }
 
@@ -162,28 +202,30 @@
 
         if (data.results.length === 0) {
           resultsDiv.innerHTML = `
-                    <h2>Search Results</h2>
-                    <fieldset>
-                        <legend>❌ No products found</legend>
-                        <p>No products match "<strong>${data.query}</strong>"</p>
-                        <p><em>Try searching for: iPhone, laptop, headphones, watch, etc.</em></p>
-                    </fieldset>
-                `;
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Results</h2>
+            <div class="bg-white rounded-lg shadow-sm border p-6">
+              <h3 class="text-lg font-semibold text-red-600 mb-2">❌ No products found</h3>
+              <p class="text-gray-700 mb-2">No products match "<strong>${data.query}</strong>"</p>
+              <p class="text-gray-600 italic">Try searching for: iPhone, laptop, headphones, watch, etc.</p>
+            </div>
+          `;
           return;
         }
 
-        let html = `<h2>✅ Found ${data.total} products for "${data.query}"</h2>`;
+        let html = `<h2 class="text-2xl font-bold text-gray-900 mb-4">✅ Found ${data.total} products for "${data.query}"</h2>`;
 
         data.results.forEach((product) => {
           html += `
-                    <fieldset>
-                        <legend><strong>${
-                          product.product_name
-                        }</strong></legend>
-                        <p><big>💰 $${product.price.toFixed(2)}</big></p>
-                        <p>${product.description}</p>
-                    </fieldset>
-                `;
+            <div class="bg-white rounded-lg shadow-sm border p-6 mb-4">
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">${
+                product.product_name
+              }</h3>
+              <p class="text-2xl font-bold text-green-600 mb-3">💰 $${product.price.toFixed(
+                2
+              )}</p>
+              <p class="text-gray-700">${product.description}</p>
+            </div>
+          `;
         });
 
         resultsDiv.innerHTML = html;

@@ -16,9 +16,9 @@ def create_products_index():
         mapping = {
             "mappings": {
                 "properties": {
-                    "product_name": {"type": "text", "analyzer": "standard"},
+                    "product_name": {"type": "text"},
                     "price": {"type": "float"},
-                    "description": {"type": "text", "analyzer": "standard"},
+                    "description": {"type": "text"},
                 }
             }
         }
