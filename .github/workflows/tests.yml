@@ -17,11 +17,11 @@ jobs:
       fail-fast: false
       matrix:
         es_stack:
-          - 8.17.5
-          - 8.18.0
-          - 8.19.0-SNAPSHOT
-          - 9.0.0
-          - 9.1.0-SNAPSHOT
+          - 8.18.4
+          - 8.19.0
+          - 9.0.4
+          - 9.1.1
+          - 9.2.0-SNAPSHOT
     runs-on: ubuntu-latest
     services:
       elasticsearch:
