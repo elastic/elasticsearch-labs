@@ -105,7 +105,9 @@
         ws.onopen = function () {
           statusDiv.innerHTML =
             "🟢 Connected - You will see when others search for products";
+
           statusDiv.className = "text-sm text-green-600";
+
           console.log("Connected to WebSocket");
         };
 
@@ -122,13 +124,16 @@
 
         ws.onclose = function () {
           statusDiv.innerHTML = "🔴 Disconnected from live notifications";
+
           statusDiv.className = "text-sm text-red-600";
+
           console.log("Disconnected from WebSocket");
         };
 
         ws.onerror = function (error) {
           statusDiv.innerHTML = "❌ Connection error";
           statusDiv.className = "text-sm text-red-600";
+
           console.error("WebSocket error:", error);
         };
       }
