@@ -1,0 +1,21 @@
+CONTRACT AGREEMENT
+This Contract Agreement ("Agreement") is made and entered into on February 18, 2025, by and between:
+* Contractor: SecureNet Cybersecurity Ltd.
+
+* Contractee: Jennifer Adams
+
+Purpose: Network security audit and implementation of security protocols for small business.
+Terms and Conditions:
+   1. The Contractor agrees to pay the Contractee the amount of $6,900 for completion of the project.
+
+   2. The Contractee agrees to deliver the security implementation within 45 days of this Agreement.
+
+   3. This Agreement expires on April 5, 2025.
+
+   4. This Agreement shall be governed by the laws of Illinois.
+
+   5. Both parties acknowledge and agree to these terms.
+
+Signed:
+SecureNet Cybersecurity Ltd.
+Jennifer Adams

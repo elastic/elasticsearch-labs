@@ -1,0 +1,21 @@
+CONTRACT AGREEMENT
+This Contract Agreement ("Agreement") is made and entered into on March 10, 2025, by and between:
+* Contractor: DataFlow Analytics Inc.
+
+* Contractee: Maria Rodriguez
+
+Purpose: Database optimization and data migration services for retail management system.
+Terms and Conditions:
+   1. The Contractor agrees to pay the Contractee the amount of $8,750 for completion of the project.
+
+   2. The Contractee agrees to deliver the optimized database within 60 days of this Agreement.
+
+   3. This Agreement expires on May 10, 2025.
+
+   4. This Agreement shall be governed by the laws of Texas.
+
+   5. Both parties acknowledge and agree to these terms.
+
+Signed:
+DataFlow Analytics Inc.
+Maria Rodriguez
