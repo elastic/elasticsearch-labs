@@ -1,0 +1,21 @@
+CONTRACT AGREEMENT
+This Contract Agreement ("Agreement") is made and entered into on January 8, 2025, by and between:
+* Contractor: MobileDev Innovations
+
+* Contractee: Christopher Lee
+
+Purpose: Mobile application development for fitness tracking and personal training.
+Terms and Conditions:
+   1. The Contractor agrees to pay the Contractee the amount of $18,200 for completion of the project.
+
+   2. The Contractee agrees to deliver the mobile application within 100 days of this Agreement.
+
+   3. This Agreement expires on April 18, 2025.
+
+   4. This Agreement shall be governed by the laws of Colorado.
+
+   5. Both parties acknowledge and agree to these terms.
+
+Signed:
+MobileDev Innovations
+Christopher Lee
