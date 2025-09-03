@@ -62,7 +62,7 @@ configs:
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.3
     container_name: elasticsearch
     ports:
       - 9200:9200
@@ -98,7 +98,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.3
     container_name: elasticsearch_settings
     restart: 'no'
     # gen-ai assistants in kibana save state in a way that requires system
@@ -113,7 +113,7 @@ services:
       '
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:9.0.2
+    image: docker.elastic.co/kibana/kibana:9.1.3
     container_name: kibana
     depends_on:
       elasticsearch_settings:
@@ -137,7 +137,7 @@ services:
       interval: 1s
 
   otel-collector:
-    image: docker.elastic.co/elastic-agent/elastic-otel-collector:9.0.2
+    image: docker.elastic.co/elastic-agent/elastic-otel-collector:9.1.3
     container_name: otel-collector
     depends_on:
       elasticsearch:
