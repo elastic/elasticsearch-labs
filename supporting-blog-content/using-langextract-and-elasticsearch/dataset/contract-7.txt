@@ -1,0 +1,21 @@
+CONTRACT AGREEMENT
+This Contract Agreement ("Agreement") is made and entered into on February 28, 2025, by and between:
+* Contractor: CloudTech Solutions Inc.
+
+* Contractee: Amanda Foster
+
+Purpose: Cloud infrastructure migration and setup for e-commerce platform.
+Terms and Conditions:
+   1. The Contractor agrees to pay the Contractee the amount of $22,400 for completion of the project.
+
+   2. The Contractee agrees to deliver the cloud migration within 75 days of this Agreement.
+
+   3. This Agreement expires on May 15, 2025.
+
+   4. This Agreement shall be governed by the laws of Washington.
+
+   5. Both parties acknowledge and agree to these terms.
+
+Signed:
+CloudTech Solutions Inc.
+Amanda Foster
