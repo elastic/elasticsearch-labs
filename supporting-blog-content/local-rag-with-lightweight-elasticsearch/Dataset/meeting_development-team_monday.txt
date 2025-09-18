@@ -1,0 +1,3 @@
+•	Alice: “The API is working, but response times are too slow with more than 1,000 queries.”
+•	John: “We may need to add caching or optimize indexes.”
+•	Alice: “Let’s prioritize this for the next sprint.”

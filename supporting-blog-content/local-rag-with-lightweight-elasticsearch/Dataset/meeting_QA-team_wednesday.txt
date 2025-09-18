@@ -1,0 +1,3 @@
+•	Maria: “Data imports are failing when addresses contain special characters.”
+•	Tom: “That matches what we saw last week. We need a parser fix.”
+•	Maria: “Agreed, let’s log this as a blocker.”

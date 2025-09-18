@@ -1,0 +1,4 @@
+•	Manager: “Are we on track for the migration deadline next month?”
+•	Alice: “Development is slightly behind due to performance issues.”
+•	Maria: “QA also found blockers with data imports.”
+•	Manager: “Okay, let’s adjust the timeline by two weeks to ensure quality.”

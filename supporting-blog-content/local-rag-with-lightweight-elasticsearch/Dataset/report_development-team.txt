@@ -1,0 +1,1 @@
+The migration to the new CRM is progressing. We finished setting up the database schema and implemented the first batch of API integrations. The main issue is performance under heavy load, especially with customer search. We estimate two more sprints to stabilize.
