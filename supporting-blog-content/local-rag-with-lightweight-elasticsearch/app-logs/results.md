@@ -1,24 +1,9 @@
-## 📥 Indexing documents...
+📥 Indexing documents...
 
-✓ meeting_management-sync_friday.txt | Latency: 64ms
-
-✓ report_development-team.txt | Latency: 17ms
-
-✓ meeting_development-team_monday.txt | Latency: 10ms
-
-✓ report_QA-team.txt | Latency: 9ms
-
-✓ meeting_QA-team_wednesday.txt | Latency: 9ms
-
-🔍 Search: 'performance issues in the API'
-
-🔍 Búsqueda completada en 5ms
-
+🔍 Search: 'Can you summarize the  performance issues in the API?'
 🤖 Asking to model...
 
-🤖 Ollama answered in 29432ms
-
-## 💡 Question: performance issues in the API
+## 💡 Question: Can you summarize the  performance issues in the API?
 
 ### 📝 Answer: 
 
@@ -77,6 +62,7 @@ Common causes include slow database queries (e.g., missing indexes, N+1 queries)
 
 ## App performance metrics:
 
-🔍 Search Latency: 5ms
-🤖 Ollama Latency: 29432ms
-📄 Documents Indexed: 5
+📄 Documents Indexed: 5 | Bulk Latency: 37ms
+
+🔍 Search Latency: 32ms
+🤖 Ollama Latency: 29411ms | 29.5 tokens/s
