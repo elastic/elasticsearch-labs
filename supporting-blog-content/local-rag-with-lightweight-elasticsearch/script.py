@@ -2,7 +2,7 @@ import os
 import time
 
 import requests
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 
 ES_URL = "http://localhost:9200"
 ES_API_KEY = "your-api-key-here"
@@ -10,31 +10,38 @@ INDEX_NAME = "team-data"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DATASET_FOLDER = "./Dataset"
 
+
 es_client = Elasticsearch(ES_URL, api_key=ES_API_KEY)
 
 
-def index_documents():
-    docs = []
-
-    for filename in os.listdir(DATASET_FOLDER):
+def build_documents(dataset_folder, index_name):
+    for filename in os.listdir(dataset_folder):
         if filename.endswith(".txt"):
-            filepath = os.path.join(DATASET_FOLDER, filename)
+            filepath = os.path.join(dataset_folder, filename)
 
             with open(filepath, "r", encoding="utf-8") as file:
                 content = file.read()
 
-            docs.append({"index": {"_index": INDEX_NAME}})
-            docs.append({"file_title": filename, "file_content": content})
+            yield {
+                "_index": index_name,
+                "_source": {"file_title": filename, "file_content": content},
+            }
 
-    indexed_docs_count = 0
 
-    if docs:
+def index_documents():
+    try:
         start_time = time.time()
-        response = es_client.bulk(body=docs)
-        bulk_latency = (time.time() - start_time) * 1000  # ms
-        indexed_docs_count = len(response["items"])
 
-    return indexed_docs_count, bulk_latency
+        success, _ = helpers.bulk(
+            es_client, build_documents(DATASET_FOLDER, INDEX_NAME)
+        )
+
+        end_time = time.time()
+        bulk_latency = (end_time - start_time) * 1000  # ms
+
+        return success, bulk_latency
+    except Exception as e:
+        print(f"❌ Error: {str(e)}")
 
 
 def semantic_search(query, size=3):
@@ -45,15 +52,14 @@ def semantic_search(query, size=3):
     }
 
     response = es_client.search(index=INDEX_NAME, body=search_body)
-
     search_latency = (time.time() - start_time) * 1000  # ms
 
     return response["hits"]["hits"], search_latency
 
 
-def query_ollama(prompt, model="qwen3:4b"):
+def query_ollama(prompt, model):
     start_time = time.time()
-    data = {"model": model, "prompt": prompt, "stream": False}
+    data = {"model": model, "prompt": prompt, "stream": False, "think": False}
 
     response = requests.post(OLLAMA_URL, json=data)
 
@@ -78,11 +84,13 @@ def query_ollama(prompt, model="qwen3:4b"):
 
 if __name__ == "__main__":
     print("📥 Indexing documents...")
-    docs_count, bulk_latency = index_documents()
+    success, bulk_latency = index_documents()
 
-    query = "Can you summarize the  performance issues in the API?"
+    time.sleep(2)  # Wait for indexing to complete
 
-    print(f"\n🔍 Search: '{query}'")
+    query = "Can you summarize the performance issues in the API?"
+
+    print(f"🔍 Search: '{query}'")
     search_results, search_latency = semantic_search(query)
 
     context = "Information found:\n"
@@ -93,13 +101,14 @@ if __name__ == "__main__":
 
     prompt = f"{context}\nQuestion: {query}\nAnswer:"
 
-    print("🤖 Asking to model...")
-    response, ollama_latency, tokens_per_second = query_ollama(prompt)
+    ollama_model = "llama3.2"
+    print(f"🤖 Asking to model: {ollama_model}")
+    response, ollama_latency, tokens_per_second = query_ollama(prompt, ollama_model)
 
     print(f"\n💡 Question: {query}\n📝 Answer: {response}")
 
-    print(f"📄 Documents Indexed: {docs_count} | Bulk Latency: {bulk_latency:.0f}ms")
-    print(f"\n🔍 Search Latency: {search_latency:.0f}ms")
+    print(f"✅ Indexed {success} documents in {bulk_latency:.0f}ms")
+    print(f"🔍 Search Latency: {search_latency:.0f}ms")
     print(
         f"🤖 Ollama Latency: {ollama_latency:.0f}ms | {tokens_per_second:.1f} tokens/s"
     )
