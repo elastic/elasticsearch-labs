@@ -5,6 +5,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/esql/esql-getting-started.ipynb"
     "notebooks/search/07-inference.ipynb"
     "notebooks/search/08-learning-to-rank.ipynb"
+    "notebooks/search/09-semantic-text.ipynb"
     "notebooks/search/10-semantic-reranking-retriever-cohere.ipynb"
     "notebooks/search/11-semantic-reranking-hugging-face.ipynb"
     "notebooks/search/12-semantic-reranking-elastic-rerank.ipynb"
