@@ -5,6 +5,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/esql/esql-getting-started.ipynb"
     "notebooks/search/07-inference.ipynb"
     "notebooks/search/08-learning-to-rank.ipynb"
+    "notebooks/search/09-semantic-text.ipynb"
     "notebooks/search/10-semantic-reranking-retriever-cohere.ipynb"
     "notebooks/search/11-semantic-reranking-hugging-face.ipynb"
     "notebooks/search/12-semantic-reranking-elastic-rerank.ipynb"
@@ -57,7 +58,6 @@ EXEMPT_NOTEBOOKS__8_12=(
 
 EXEMPT_NOTEBOOKS__8_14=(
     # Add any notebooks that must be skipped on versions 8.14 or older here
-    "notebooks/search/09-semantic-text.ipynb",
     # This notebook has the text_expansion deprecation notice for 8.15. 
     # Only running on 8.15 so includes the deprecation notice and newer so the local output is the same as CI
     "notebooks/langchain/langchain-vector-store-using-elser.ipynb",
