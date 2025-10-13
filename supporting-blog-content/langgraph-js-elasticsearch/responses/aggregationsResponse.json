@@ -1,0 +1,263 @@
+{
+  "industries": {
+    "doc_count_error_upper_bound": 0,
+    "sum_other_doc_count": 0,
+    "buckets": [
+      {
+        "key": "logistics",
+        "doc_count": 5
+      },
+      {
+        "key": "fintech",
+        "doc_count": 2
+      },
+      {
+        "key": "healthcare",
+        "doc_count": 2
+      },
+      {
+        "key": "aerospace",
+        "doc_count": 1
+      },
+      {
+        "key": "agtech",
+        "doc_count": 1
+      },
+      {
+        "key": "cleantech",
+        "doc_count": 1
+      },
+      {
+        "key": "cybersecurity",
+        "doc_count": 1
+      },
+      {
+        "key": "developer tools",
+        "doc_count": 1
+      },
+      {
+        "key": "edtech",
+        "doc_count": 1
+      },
+      {
+        "key": "enterprise software",
+        "doc_count": 1
+      },
+      {
+        "key": "fitness tech",
+        "doc_count": 1
+      },
+      {
+        "key": "gaming",
+        "doc_count": 1
+      },
+      {
+        "key": "proptech",
+        "doc_count": 1
+      },
+      {
+        "key": "retail tech",
+        "doc_count": 1
+      }
+    ]
+  },
+  "locations": {
+    "doc_count_error_upper_bound": 0,
+    "sum_other_doc_count": 0,
+    "buckets": [
+      {
+        "key": "San Francisco, CA",
+        "doc_count": 4
+      },
+      {
+        "key": "New York, NY",
+        "doc_count": 3
+      },
+      {
+        "key": "Atlanta, GA",
+        "doc_count": 1
+      },
+      {
+        "key": "Austin, TX",
+        "doc_count": 1
+      },
+      {
+        "key": "Boston, MA",
+        "doc_count": 1
+      },
+      {
+        "key": "Chicago, IL",
+        "doc_count": 1
+      },
+      {
+        "key": "Denver, CO",
+        "doc_count": 1
+      },
+      {
+        "key": "Houston, TX",
+        "doc_count": 1
+      },
+      {
+        "key": "Las Vegas, NV",
+        "doc_count": 1
+      },
+      {
+        "key": "Los Angeles, CA",
+        "doc_count": 1
+      },
+      {
+        "key": "Miami, FL",
+        "doc_count": 1
+      },
+      {
+        "key": "Phoenix, AZ",
+        "doc_count": 1
+      },
+      {
+        "key": "Portland, OR",
+        "doc_count": 1
+      },
+      {
+        "key": "San Diego, CA",
+        "doc_count": 1
+      },
+      {
+        "key": "Seattle, WA",
+        "doc_count": 1
+      }
+    ]
+  },
+  "funding_stages": {
+    "doc_count_error_upper_bound": 0,
+    "sum_other_doc_count": 0,
+    "buckets": [
+      {
+        "key": "Series A",
+        "doc_count": 8
+      },
+      {
+        "key": "Series B",
+        "doc_count": 6
+      },
+      {
+        "key": "Seed",
+        "doc_count": 4
+      },
+      {
+        "key": "Series C",
+        "doc_count": 2
+      }
+    ]
+  },
+  "business_models": {
+    "doc_count_error_upper_bound": 0,
+    "sum_other_doc_count": 0,
+    "buckets": [
+      {
+        "key": "B2B",
+        "doc_count": 13
+      },
+      {
+        "key": "B2C",
+        "doc_count": 4
+      },
+      {
+        "key": "B2B2C",
+        "doc_count": 3
+      }
+    ]
+  },
+  "lead_investors": {
+    "doc_count_error_upper_bound": 0,
+    "sum_other_doc_count": 0,
+    "buckets": [
+      {
+        "key": "Battery Ventures",
+        "doc_count": 1
+      },
+      {
+        "key": "Benchmark Capital",
+        "doc_count": 1
+      },
+      {
+        "key": "Bitkraft Ventures",
+        "doc_count": 1
+      },
+      {
+        "key": "Bullpen Capital",
+        "doc_count": 1
+      },
+      {
+        "key": "Coinbase Ventures",
+        "doc_count": 1
+      },
+      {
+        "key": "Energy Impact Partners",
+        "doc_count": 1
+      },
+      {
+        "key": "Fifth Wall",
+        "doc_count": 1
+      },
+      {
+        "key": "Founders Fund",
+        "doc_count": 1
+      },
+      {
+        "key": "GV (Google Ventures)",
+        "doc_count": 1
+      },
+      {
+        "key": "General Catalyst",
+        "doc_count": 1
+      },
+      {
+        "key": "Insight Partners",
+        "doc_count": 1
+      },
+      {
+        "key": "Kleiner Perkins",
+        "doc_count": 1
+      },
+      {
+        "key": "Madrona Venture Group",
+        "doc_count": 1
+      },
+      {
+        "key": "NEA (New Enterprise Associates)",
+        "doc_count": 1
+      },
+      {
+        "key": "Norwest Venture Partners",
+        "doc_count": 1
+      },
+      {
+        "key": "Reach Capital",
+        "doc_count": 1
+      },
+      {
+        "key": "S2G Ventures",
+        "doc_count": 1
+      },
+      {
+        "key": "Sequoia Capital",
+        "doc_count": 1
+      },
+      {
+        "key": "Space Capital",
+        "doc_count": 1
+      },
+      {
+        "key": "Tiger Global Management",
+        "doc_count": 1
+      }
+    ]
+  },
+  "funding_amount_stats": {
+    "count": 20,
+    "min": 4500000,
+    "max": 35000000,
+    "avg": 14075000,
+    "sum": 281500000
+  }
+}
