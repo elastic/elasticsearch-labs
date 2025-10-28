@@ -1,0 +1,222 @@
+[
+  {
+    "description": "TechFlow optimizes supply chain operations using AI-powered route optimization and real-time tracking. Founded in 2023, shows remarkable growth with $500K monthly revenue.",
+    "company_name": "TechFlow",
+    "industry": "logistics",
+    "location": "San Francisco, CA",
+    "funding_stage": "Series A",
+    "funding_amount": 8000000,
+    "lead_investor": "Sequoia Capital",
+    "monthly_revenue": 500000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "UrbanMobility revolutionizes urban transportation through autonomous delivery drones and smart logistics hubs. Partners with major retailers for same-day delivery across Manhattan and Brooklyn.",
+    "company_name": "UrbanMobility",
+    "industry": "logistics",
+    "location": "New York, NY",
+    "funding_stage": "Series B",
+    "funding_amount": 15000000,
+    "lead_investor": "Kleiner Perkins",
+    "monthly_revenue": 750000,
+    "business_model": "B2B2C"
+  },
+  {
+    "description": "FinanceAI provides AI-powered investment advisory services to retail investors. Uses machine learning to analyze market trends with over 100,000 active users.",
+    "company_name": "FinanceAI",
+    "industry": "fintech",
+    "location": "San Francisco, CA",
+    "funding_stage": "Series C",
+    "funding_amount": 25000000,
+    "lead_investor": "Tiger Global Management",
+    "monthly_revenue": 1200000,
+    "business_model": "B2C"
+  },
+  {
+    "description": "HealthTech Solutions develops medical devices and software for remote patient monitoring. Comprehensive telehealth platform reducing hospital readmissions by 30%.",
+    "company_name": "HealthTech Solutions",
+    "industry": "healthcare",
+    "location": "Boston, MA",
+    "funding_stage": "Series B",
+    "funding_amount": 18000000,
+    "lead_investor": "General Catalyst",
+    "monthly_revenue": 900000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "SmartWarehouse transforms traditional warehouses into automated facilities using robotics and AI. Robotic systems pick, pack, and sort 5x faster than human workers.",
+    "company_name": "SmartWarehouse",
+    "industry": "logistics",
+    "location": "New York, NY",
+    "funding_stage": "Seed",
+    "funding_amount": 5000000,
+    "lead_investor": "Founders Fund",
+    "monthly_revenue": 300000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "EcoTransport provides carbon-neutral delivery services using electric vehicles and optimized routing algorithms. Popular with environmentally conscious brands.",
+    "company_name": "EcoTransport",
+    "industry": "logistics",
+    "location": "San Francisco, CA",
+    "funding_stage": "Series A",
+    "funding_amount": 12000000,
+    "lead_investor": "NEA (New Enterprise Associates)",
+    "monthly_revenue": 650000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "CyberSecure develops AI-powered threat detection and response systems for enterprise clients. Platform identifies and neutralizes cyber threats 10x faster than traditional systems.",
+    "company_name": "CyberSecure",
+    "industry": "cybersecurity",
+    "location": "Austin, TX",
+    "funding_stage": "Series B",
+    "funding_amount": 20000000,
+    "lead_investor": "Insight Partners",
+    "monthly_revenue": 1100000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "DataViz creates intuitive data visualization tools for enterprise customers. No-code platform allows business users to create dashboards without technical expertise.",
+    "company_name": "DataViz",
+    "industry": "enterprise software",
+    "location": "New York, NY",
+    "funding_stage": "Series A",
+    "funding_amount": 10000000,
+    "lead_investor": "Battery Ventures",
+    "monthly_revenue": 450000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "CloudNative builds kubernetes-native development tools for cloud deployment and management. Platform reduces deployment time by 80% for developers.",
+    "company_name": "CloudNative",
+    "industry": "developer tools",
+    "location": "Seattle, WA",
+    "funding_stage": "Seed",
+    "funding_amount": 6000000,
+    "lead_investor": "Madrona Venture Group",
+    "monthly_revenue": 250000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "LastMile Logistics revolutionizes final-mile delivery through micro-fulfillment centers and crowdsourced drivers. Uses predictive analytics for under 30-minute delivery times.",
+    "company_name": "LastMile Logistics",
+    "industry": "logistics",
+    "location": "San Francisco, CA",
+    "funding_stage": "Series A",
+    "funding_amount": 14000000,
+    "lead_investor": "Benchmark Capital",
+    "monthly_revenue": 580000,
+    "business_model": "B2B2C"
+  },
+  {
+    "description": "TechMed develops AI-powered diagnostic tools for hospitals and clinics. Platform improves diagnostic accuracy by 45% using computer vision and machine learning.",
+    "company_name": "TechMed",
+    "industry": "healthcare",
+    "location": "Los Angeles, CA",
+    "funding_stage": "Series A",
+    "funding_amount": 9000000,
+    "lead_investor": "GV (Google Ventures)",
+    "monthly_revenue": 380000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "CryptoWallet provides secure digital wallet solutions for cryptocurrency trading and storage. Multi-chain support with enterprise-grade security features.",
+    "company_name": "CryptoWallet",
+    "industry": "fintech",
+    "location": "Miami, FL",
+    "funding_stage": "Series B",
+    "funding_amount": 16000000,
+    "lead_investor": "Coinbase Ventures",
+    "monthly_revenue": 820000,
+    "business_model": "B2C"
+  },
+  {
+    "description": "GreenEnergy develops solar panel optimization software for residential and commercial installations. AI algorithms increase energy efficiency by 35%.",
+    "company_name": "GreenEnergy",
+    "industry": "cleantech",
+    "location": "Denver, CO",
+    "funding_stage": "Series B",
+    "funding_amount": 22000000,
+    "lead_investor": "Energy Impact Partners",
+    "monthly_revenue": 95000,
+    "business_model": "B2C"
+  },
+  {
+    "description": "EduTech creates interactive learning platforms for K-12 education. Gamified learning experiences improve student engagement by 60% across 500+ schools.",
+    "company_name": "EduTech",
+    "industry": "edtech",
+    "location": "Chicago, IL",
+    "funding_stage": "Series A",
+    "funding_amount": 11000000,
+    "lead_investor": "Reach Capital",
+    "monthly_revenue": 420000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "RoboFarm develops autonomous farming robots for precision agriculture. Robots plant, monitor, and harvest crops with 90% less water usage than traditional farming.",
+    "company_name": "RoboFarm",
+    "industry": "agtech",
+    "location": "Portland, OR",
+    "funding_stage": "Seed",
+    "funding_amount": 7000000,
+    "lead_investor": "S2G Ventures",
+    "monthly_revenue": 290000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "VRFitness creates immersive virtual reality fitness experiences for home users. Platform offers 200+ workout programs with real-time coaching and social features.",
+    "company_name": "VRFitness",
+    "industry": "fitness tech",
+    "location": "San Diego, CA",
+    "funding_stage": "Seed",
+    "funding_amount": 4500000,
+    "lead_investor": "Bullpen Capital",
+    "monthly_revenue": 180000,
+    "business_model": "B2C"
+  },
+  {
+    "description": "SmartRetail provides AI-powered inventory management and customer analytics for retail chains. Platform reduces inventory costs by 25% while improving customer satisfaction.",
+    "company_name": "SmartRetail",
+    "industry": "retail tech",
+    "location": "Atlanta, GA",
+    "funding_stage": "Series B",
+    "funding_amount": 19000000,
+    "lead_investor": "Norwest Venture Partners",
+    "monthly_revenue": 780000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "PropTech Solutions develops smart building management systems for commercial real estate. IoT sensors and AI optimize energy usage and maintenance schedules.",
+    "company_name": "PropTech Solutions",
+    "industry": "proptech",
+    "location": "Phoenix, AZ",
+    "funding_stage": "Series A",
+    "funding_amount": 13000000,
+    "lead_investor": "Fifth Wall",
+    "monthly_revenue": 540000,
+    "business_model": "B2B"
+  },
+  {
+    "description": "GameStudio creates mobile gaming experiences with blockchain integration. Free-to-play games with NFT rewards have reached 2 million active users.",
+    "company_name": "GameStudio",
+    "industry": "gaming",
+    "location": "Las Vegas, NV",
+    "funding_stage": "Series A",
+    "funding_amount": 12000000,
+    "lead_investor": "Bitkraft Ventures",
+    "monthly_revenue": 680000,
+    "business_model": "B2C"
+  },
+  {
+    "description": "SpaceTech develops satellite communication systems for rural internet connectivity. Low-orbit satellites provide high-speed internet to underserved areas globally.",
+    "company_name": "SpaceTech",
+    "industry": "aerospace",
+    "location": "Houston, TX",
+    "funding_stage": "Series C",
+    "funding_amount": 35000000,
+    "lead_investor": "Space Capital",
+    "monthly_revenue": 1400000,
+    "business_model": "B2B2C"
+  }
+]
