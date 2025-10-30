@@ -283,7 +283,7 @@ POST /sales-data/_search
 
 **Use case**: Provide structured insights like "In EMEA, Electronics generated $2M with $450 avg order value, while in APAC, Clothing led with $1.8M."
 
-4\. Statistical Context for Anomaly Detection  
+## 4\. Statistical Context for Anomaly Detection  
 Use percentile and stats aggregations to help LLMs understand what's "normal":
 
 ```json
