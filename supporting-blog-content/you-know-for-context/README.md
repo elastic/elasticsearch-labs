@@ -144,7 +144,7 @@ This additive scoring model allows you to weigh different factors independently,
 
 \_\_\_\_\_
 
-## Aggregations {#aggregations}
+## Aggregations
 
 Elasticsearch aggregations are powerful tools for enriching LLM context in agentic AI systems. They are currently supported only in the Elasticsearch Query DSL, and they can be used either in conjunction with hybrid search queries, or perhaps from agentic tool calls that are used to influence the LLMs considerations of context received through other data calls. 
 
