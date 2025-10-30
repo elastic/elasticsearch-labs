@@ -168,7 +168,7 @@ User Query → Vector Search (semantic relevance)
 ```
 
 Here are practical examples of how you can use them:  
-\-----
+\_\_\_\_\_
 
 ## 1\. Summarizing Large Datasets for Context Compression
 
