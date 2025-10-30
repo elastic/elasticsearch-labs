@@ -243,7 +243,7 @@ POST /application-logs/_search
 
 **Use case**: Give the LLM context like "Error rate spiked 300% at 2pm, primarily 'timeout' errors, coinciding with 2x slower response times."
 
-3\. Categorical Breakdown for Multi-Dimensional Analysis  
+## 3\. Categorical Breakdown for Multi-Dimensional Analysis  
 Use nested aggregations to provide hierarchical context:
 
 ```json
