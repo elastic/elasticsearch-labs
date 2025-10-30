@@ -413,7 +413,7 @@ POST /security-logs/_search
 
 **Use case**: Tell the LLM "Failed logins show unusual pattern: 'invalid\_token' appears 15x more than normal, suggesting credential stuffing attack."
 
-8\. Composite Aggregations for Pagination  
+## 8\. Composite Aggregations for Pagination  
 Handle large cardinality data for iterative agent processing:
 
 ```json
