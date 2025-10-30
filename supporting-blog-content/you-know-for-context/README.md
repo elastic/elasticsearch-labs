@@ -2,6 +2,8 @@
 
 ## The power of Hybrid Search in Context Engineering
 
+_**NOTE**_: This gist is a companion to the Elastic Search Labs blog "You know, for Context! The power of Hybrid Search in Context Engineering". This page contains sample code that is for illustration purposes only, it does not include any supporting data sets and these examples may not work without a proper data set.
+
 There are a multitude of ways to query your content for providing context to generative and agentic AI operations. Here are a few examples to get you started and please check back later as we continue to update these techniques for supporting context engineering\!
 
 1. Non-content signals  
@@ -146,7 +148,7 @@ This additive scoring model allows you to weigh different factors independently,
 
 ## Aggregations
 
-Elasticsearch aggregations are powerful tools for enriching LLM context in agentic AI systems. They are currently supported only in the Elasticsearch Query DSL, and they can be used either in conjunction with hybrid search queries, or perhaps from agentic tool calls that are used to influence the LLMs considerations of context received through other data calls. 
+Elasticsearch aggregations are powerful tools for enriching LLM context in agentic AI systems. Aggregations are Elastic Query DSL syntax that can be used either in conjunction with hybrid search queries, or for example from agentic tool calls that are used to influence the LLMs considerations of context received through other data calls. 
 
 **Key Benefits for LLM/Agent Systems:**
 
@@ -167,7 +169,7 @@ User Query → Vector Search (semantic relevance)
            → Generate Response
 ```
 
-Here are practical examples of how you can use them:  
+Here are some practical examples of how you can use them:  
 \_\_\_\_\_
 
 ## 1\. Summarizing Large Datasets for Context Compression
