@@ -162,7 +162,7 @@ This approach gives your LLM both the "what" (relevant documents) and the "how m
 
 ```
 User Query → Vector Search (semantic relevance) 
-          → Aggregations (statistical context)
+           → Aggregations (statistical context)
           → Combine both → LLM Context Window
           → Generate Response
 ```
