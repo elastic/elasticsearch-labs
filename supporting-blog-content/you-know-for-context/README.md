@@ -11,7 +11,7 @@ There are a multitude of ways to query your content for providing context to gen
 
 # Non-content signals
 
-## ES|QL biasing {#es|ql-biasing}
+## ES|QL biasing
 
 Combining \`FORK\`/\`FUSE\`, \`RERANK\`, and \`INLINE STATS\` in a single ES|QL query allows for some very powerful and nuanced search strategies. Here are a few scenarios that demonstrate how you can use these techniques together to leverage non-content signals.
 
