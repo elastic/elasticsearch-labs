@@ -325,7 +325,7 @@ POST /system-metrics/_search
 
 **Use case**: Tell the LLM "Normal CPU is 45% (p50) with p99 at 78%. Current 96% usage on host-prod-03 is anomalous."
 
-5\. Cardinality for Uniqueness Insights  
+## 5\. Cardinality for Uniqueness Insights  
 Understand the diversity of your data:
 
 ```json
