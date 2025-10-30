@@ -388,7 +388,7 @@ POST /support-tickets/_search
 
 **Use case**: Give the LLM both statistics AND concrete examples: "23 critical tickets (avg 2.1hr resolution). Example: 'Database connection pool exhausted'."
 
-7\. Significant Terms for Anomaly Context  
+## 7\. Significant Terms for Anomaly Context  
 Find what's unusual about a subset of data:
 
 ```json
