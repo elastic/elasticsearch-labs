@@ -354,7 +354,7 @@ POST /user-sessions/_search
 
 **Use case**: Provide context like "15,234 unique users visited 342 unique pages with avg session of 4.2 minutes."
 
-6\. Top Hits for Representative Examples  
+## 6\. Top Hits for Representative Examples  
 Combine aggregations with actual document samples:
 
 ```json
