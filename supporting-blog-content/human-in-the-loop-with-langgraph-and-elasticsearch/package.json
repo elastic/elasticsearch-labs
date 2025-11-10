@@ -1,0 +1,22 @@
+{
+  "name": "LangGraph Elasticsearch",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^9.2.0",
+    "@langchain/community": "^0.3.57",
+    "@langchain/core": "^0.3.79",
+    "@langchain/langgraph": "^0.4.9",
+    "@langchain/openai": "^0.6.16",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.6"
+  }
+}
