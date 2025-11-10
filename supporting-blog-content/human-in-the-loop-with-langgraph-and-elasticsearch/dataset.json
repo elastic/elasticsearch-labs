@@ -1,0 +1,152 @@
+[
+  {
+    "pageContent": "Ticket: Medellín (MDE) → Sao Paulo (GRU). 1 stop. Airline: AndeanSky.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "Sao Paulo",
+      "airport_code": "GRU",
+      "airport_name": "Guarulhos International",
+      "country": "Brazil",
+      "airline": "AndeanSky",
+      "date": "2025-10-10",
+      "price": 480,
+      "time_approx": "7h 30m",
+      "title": "MDE → GRU (AndeanSky)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → Sao Paulo (CGH). 1 stop. Airline: CoffeeAir.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "Sao Paulo",
+      "airport_code": "CGH",
+      "airport_name": "Congonhas",
+      "country": "Brazil",
+      "airline": "CoffeeAir",
+      "date": "2025-10-10",
+      "price": 455,
+      "time_approx": "8h 05m",
+      "title": "MDE → CGH (CoffeeAir)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → Tokyo (HND). 2 stops. Airline: CondorJet.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "Tokyo",
+      "airport_code": "HND",
+      "airport_name": "Haneda",
+      "country": "Japan",
+      "airline": "CondorJet",
+      "date": "2025-11-05",
+      "price": 1290,
+      "time_approx": "22h 10m",
+      "title": "MDE → HND (CondorJet)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → Tokyo (NRT). 1–2 stops. Airline: CaribeWings.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "Tokyo",
+      "airport_code": "NRT",
+      "airport_name": "Narita",
+      "country": "Japan",
+      "airline": "CaribeWings",
+      "date": "2025-11-05",
+      "price": 1215,
+      "time_approx": "23h 30m",
+      "title": "MDE → NRT (CaribeWings)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → New York (JFK). 1 stop. Airline: AndeanSky.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "New York",
+      "airport_code": "JFK",
+      "airport_name": "John F. Kennedy International",
+      "country": "USA",
+      "airline": "AndeanSky",
+      "date": "2025-12-01",
+      "price": 340,
+      "time_approx": "6h 40m",
+      "title": "MDE → JFK (AndeanSky)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → New York (LGA). 1 stop. Airline: CoffeeAir.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "New York",
+      "airport_code": "LGA",
+      "airport_name": "LaGuardia",
+      "country": "USA",
+      "airline": "CoffeeAir",
+      "date": "2025-12-01",
+      "price": 325,
+      "time_approx": "6h 55m",
+      "title": "MDE → LGA (CoffeeAir)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → London (LHR). 1 stop. Airline: CondorJet.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "London",
+      "airport_code": "LHR",
+      "airport_name": "Heathrow",
+      "country": "UK",
+      "airline": "CondorJet",
+      "date": "2026-01-15",
+      "price": 890,
+      "time_approx": "14h 30m",
+      "title": "MDE → LHR (CondorJet)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → London (LGW). 1–2 stops. Airline: CaribeWings.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "London",
+      "airport_code": "LGW",
+      "airport_name": "Gatwick",
+      "country": "UK",
+      "airline": "CaribeWings",
+      "date": "2026-01-15",
+      "price": 760,
+      "time_approx": "15h 10m",
+      "title": "MDE → LGW (CaribeWings)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → Paris (CDG). 1 stop. Airline: CoffeeAir.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "Paris",
+      "airport_code": "CDG",
+      "airport_name": "Charles de Gaulle",
+      "country": "France",
+      "airline": "CoffeeAir",
+      "date": "2025-10-22",
+      "price": 720,
+      "time_approx": "13h 50m",
+      "title": "MDE → CDG (CoffeeAir)"
+    }
+  },
+  {
+    "pageContent": "Ticket: Medellín (MDE) → Paris (ORY). 1 stop. Airline: AndeanSky.",
+    "metadata": {
+      "from_city": "Medellín",
+      "to_city": "Paris",
+      "airport_code": "ORY",
+      "airport_name": "Orly",
+      "country": "France",
+      "airline": "AndeanSky",
+      "date": "2025-10-22",
+      "price": 695,
+      "time_approx": "13h 20m",
+      "title": "MDE → ORY (AndeanSky)"
+    }
+  }
+]
