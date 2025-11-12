@@ -1,8 +1,8 @@
-# You know, for Context\! 
+# You Know, for Context\! 
 
-## The power of Hybrid Search in Context Engineering
+## The evolution of hybrid search and context engineering
 
-_**NOTE**_: This gist is a companion to the Elastic Search Labs blog "You know, for Context! The power of Hybrid Search in Context Engineering". This page contains sample code that is for illustration purposes only, it does not include any supporting data sets and these examples may not work without a proper data set.
+_**NOTE**_: This gist is a companion to the Elastic Search Labs blog "[You Know, for Context! The evolution of hybrid search and context engineering](https://www.elastic.co/search-labs/blog/context-engineering-hybrid-search-evolution-agentic-ai)". This page contains sample code that is for illustration purposes only, it does not include any supporting data sets and these examples may not work without a proper data set.
 
 There are a multitude of ways to query your content for providing context to generative and agentic AI operations. Here are a few examples to get you started and please check back later as we continue to update these techniques for supporting context engineering\!
 
