@@ -127,9 +127,9 @@ This is a example Python console app that demonstrates how to connect and utiliz
 
 1. Setup the environment variables.  
    1. Make a copy of the file `env.example` and name the new file `.env ` 
-   2. Edit the `.env` file to replace the placeholder text with actual values from your Elastic deployment. See instructions on where to get these values in the [Running the example app](#running-the-example-app) section of this `README.md` file.  
-        * Replace **YOUR-ELASTIC-AGENT-BUILDER-URL** 
-        * Replace **YOUR-ELASTIC-API-KEY**
+   2. Edit the `.env` file to set the values of the environment variables to use the values copied from your Elastic deployment. See instructions on where to get these values in the [Running the example app](#running-the-example-app) section of this `README.md` file.  
+        * Set the value of **ES_AGENT_URL** to be the value of **YOUR-ELASTIC-AGENT-BUILDER-URL** 
+        * Set the value of **ES_API_KEY** to be value of **YOUR-ELASTIC-API-KEY**
 2. Run the test directly with Python.
 
         python test_elastic_agent_builder_a2a.py
