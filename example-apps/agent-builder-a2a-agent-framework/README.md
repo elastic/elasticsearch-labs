@@ -6,7 +6,7 @@ This is a example Python console app that demonstrates how to connect and utiliz
 
 ## Prerequisites
 
-1. An Elasticsearch deployment running in [Elastic Cloud](https://cloud.elastic.co/registration). 
+1. An Elasticsearch deployment running in [Elastic Cloud](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-example-apps). 
    * Requires Elasticsearch Serverless (or for hosted deployments at least Elasticsearch version 9.2.0).
 2. An integrated development environment (IDE)  like [Visual Studio Code](https://code.visualstudio.com/download) running on your local computer.  
 3. [Python version 3.10 or greater](https://www.python.org/downloads/) installed on your local computer.
