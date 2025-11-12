@@ -2,22 +2,24 @@
 
 🔍 Search: 'Can you summarize the performance issues in the API?'
 
-## 🤖 Asking to model: llama3.2
+🤖 Asking to model: dolphin3.0-qwen2.5-0.5b
 
-### 💡 Question: 
+## 💡 Question: 
 Can you summarize the performance issues in the API?
-### 📝 Answer: 
-According to the transcript, the performance issues in the API are:
+## 📝 Answer: 
 
-1. Response times increase from 200ms to 3 seconds when handling 1,000+ queries per minute.
-2. Complex Elasticsearch queries are slow, with an average execution time of 1.2 seconds.
-3. Performance degrades during spikes.
+The performance issues in the Search API deployed on September 16, 2025, include:
 
-These issues are attributed to the lack of caching and a complex Elasticsearch query setup.
+- Degradation in performance at 1,000+ queries per minute, resulting in a 200ms to 3-second response time for complex queries.
+- High response times for queries that do not utilize caching, causing them to take significantly longer than 2 seconds.
+- Inability to scale to handle spikes in query traffic, leading to increased CPU limits.
 
-## App performance metrics:
-✅ Indexed 5 documents in 96ms
+These issues are primarily attributed to the complexity and inefficiency of the Elasticsearch queries, as well as the lack of caching layer. This indicates a need for optimization and addressing these specific performance bottlenecks to ensure the API's scalability and effectiveness for the development team.
 
-🔍 Search Latency: 20ms
+## Stats
 
-🤖 Ollama Latency: 36772ms | 24.7 tokens/s
+✅ Indexed 5 documents in 627ms
+
+🔍 Search Latency: 81ms
+
+🤖 AI Latency: 16044ms | 9.5 tokens/s
