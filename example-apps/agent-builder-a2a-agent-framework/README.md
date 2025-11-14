@@ -2,7 +2,7 @@
 
 **Getting started with Agent Builder and A2A using Microsoft Agent Framework**
 
-This is a example Python console app that demonstrates how to connect and utilize an [Elastic Agent Builder](https://www.elastic.co/elasticsearch/agent-builder) agent via the Agent2Agent (A2A) Protocol orchestrated with the [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview).
+This is an example Python console app that demonstrates how to connect and utilize an [Elastic Agent Builder](https://www.elastic.co/elasticsearch/agent-builder) agent via the Agent2Agent (A2A) Protocol orchestrated with the [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview).
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ This is a example Python console app that demonstrates how to connect and utiliz
 3. In Elastic Agent Builder, create a **tool** with the following values:  
 * **Type**: `ES|QL`  
 * **Tool ID**: `example.get_greetings` 
-* **Description**: `Get greetings doc from Elasticsearch my\docs index.`  
+* **Description**: `Get greetings doc from Elasticsearch my-docs index.`  
 * **ES|QL**:
 
         FROM my-docs | WHERE filename == "greetings.md"
@@ -88,23 +88,23 @@ This is a example Python console app that demonstrates how to connect and utiliz
    2. Replace <YOUR-ELASTIC-AGENT-BUILDER-URL\>  
       1. In your Elastic deployment, go to the Elastic Agent Builder - Tools page. Click the **MCP Server** dropdown at the top of the Tools page. Select **Copy MCP Server URL.**   
       2. In Visual Studio add the **MCP Server URL** value to the `elastic-agent-builder-a2a.py` file. 
-         * Find where the placeholder text “**\<YOUR-ELASTIC-AGENT-BUILDER-URL\>**” appears and paste in the copied **MCP Server URL** to replace the placeholder text. Now edit the pasted **MCP Server URL**. Delete the text “mcp” at the end of the URL and replace it with the text “a2a”.  The edited URL should look something like this
+         * Find where the placeholder text “**<YOUR-ELASTIC-AGENT-BUILDER-URL\>**” appears and paste in the copied **MCP Server URL** to replace the placeholder text. Now edit the pasted **MCP Server URL**. Delete the text “mcp” at the end of the URL and replace it with the text “a2a”.  The edited URL should look something like this
 
             `https://example-project-a123.kb.westus2.azure.elastic.cloud/api/agent_builder/a2a`
 
-   3. Replace \<YOUR-ELASTIC-API-KEY\>  
+   3. Replace <YOUR-ELASTIC-API-KEY\>  
       1. In your Elastic deployment, click **Elasticsearch** in the navigation menu to go to your deployment’s home page.  
       2. Click **Create API key** to create a new API key.   
       3. After the API key is created, copy the API Key value.  
-      4. In Visual Studio add the API Key value to the `elastic-agent-builder-a2a.pys` file.
-         * Find where the placeholder text “**\<YOUR-ELASTIC-API-KEY\>**” appears and paste in the copied API Key value to replace the placeholder text.
+      4. In Visual Studio add the API Key value to the `elastic-agent-builder-a2a.py` file.
+         * Find where the placeholder text “**<YOUR-ELASTIC-API-KEY\>**” appears and paste in the copied API Key value to replace the placeholder text.
 
    4. Confirm the **relative_card_path** is set correctly in the `elastic-agent-builder-a2a.py` file by finding the code line that starts with the text “agent_card”. Confirm that the **relative_card_path** matches the Agent ID you specified when you created the agent in Elastic Agent Builder. If your Agent ID is “helloworld_agent” then the **relative_card_path** should be set to `/helloworld_agent.json`   
    5. Save the `elastic_agent_builder_a2a.py` file in the Visual Studio editor.
 
 5.  Create a Python virtual environment by running the following code in the Visual Studio Code terminal.
 
-        python \-m venv .venv
+        python -m venv .venv
      
 6. Activate the Python virtual environment.  
     * If you’re running MacOS, the command to activate the virtual environment is:
