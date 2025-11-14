@@ -121,7 +121,7 @@ This is an example Python console app that demonstrates how to connect and utili
 
 8. Run the example code by entering the following command into the terminal:
 
-        python elastic-agent-builder-a2a.py
+        python elastic_agent_builder_a2a.py
    
 ## Running the example test
 
