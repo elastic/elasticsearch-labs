@@ -1,0 +1,4 @@
+fastmcp>=2.13.0
+elasticsearch>=8.0.0
+pyngrok>=7.0.0
+pandas>=2.0.0
