@@ -8,7 +8,7 @@ This is an example Python console app that demonstrates how to connect and utili
 
 1. An Elasticsearch deployment running in [Elastic Cloud](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-example-apps). 
    * Requires Elasticsearch Serverless (or for hosted deployments at least Elasticsearch version 9.2.0).
-2. An integrated development environment (IDE)  like [Visual Studio Code](https://code.visualstudio.com/download) running on your local computer.  
+2. A text editor or an integrated development environment (IDE) like [Visual Studio Code](https://code.visualstudio.com/download) running on your local computer.  
 3. [Python version 3.10 or greater](https://www.python.org/downloads/) installed on your local computer.
 
 ## Setup your Elasticsearch deployment
@@ -72,41 +72,44 @@ This is an example Python console app that demonstrates how to connect and utili
 
    
 
-## Running the example app
+## Clone the example app
 
-1. Open Visual Studio Code and open a new terminal within the Visual Studio Code editor. 
-2. In the open terminal, clone the Search Labs source code repository which contains the Elastic Agent Builder A2A App example.
+1. Open a terminal and clone the Search Labs source code repository which contains the Elastic Agent Builder A2A App example. Run the following command to clone the example app:
 
         git clone https://github.com/elastic/elasticsearch-labs
 
-3.  `cd` to change directory to the example code located in the `example-apps/agent-builder-a2a-agent-framework` subdirectory.
+3.  `cd` to change directory to the example code located in the `supporting-blog-content/agent-builder-a2a-agent-framework` subdirectory.
  
-        cd elasticsearch-labs/example-apps/agent-builder-a2a-agent-framework
+        cd elasticsearch-labs/supporting-blog-content/agent-builder-a2a-agent-framework
 
-4. Replace placeholder values in `elastic_agent_builder_a2a.py` with values copied from your Elastic deployment.   
-   1. Open the file `elastic_agent_builder_a2a.py` in the Visual Studio editor.  
-   2. Replace <YOUR-ELASTIC-AGENT-BUILDER-URL\>  
+## Setup up the environment variables
+
+1. Setup the environment variables with values copied from your Elastic deployment. 
+   1. Make a copy of the file `env.example` and name the new file `.env ` 
+   2. Edit the `.env` file to set the values of the environment variables to use the values copied from your Elastic deployment. 
+   * Replace <YOUR-ELASTIC-AGENT-BUILDER-URL\>  
       1. In your Elastic deployment, go to the Elastic Agent Builder - Tools page. Click the **MCP Server** dropdown at the top of the Tools page. Select **Copy MCP Server URL.**   
-      2. In Visual Studio add the **MCP Server URL** value to the `elastic-agent-builder-a2a.py` file. 
+      2. Add the **MCP Server URL** value to the `.env` file. 
          * Find where the placeholder text “**<YOUR-ELASTIC-AGENT-BUILDER-URL\>**” appears and paste in the copied **MCP Server URL** to replace the placeholder text. Now edit the pasted **MCP Server URL**. Delete the text “mcp” at the end of the URL and replace it with the text “a2a”.  The edited URL should look something like this
 
             `https://example-project-a123.kb.westus2.azure.elastic.cloud/api/agent_builder/a2a`
 
-   3. Replace <YOUR-ELASTIC-API-KEY\>  
+   * Replace <YOUR-ELASTIC-API-KEY\>  
       1. In your Elastic deployment, click **Elasticsearch** in the navigation menu to go to your deployment’s home page.  
       2. Click **Create API key** to create a new API key.   
       3. After the API key is created, copy the API Key value.  
-      4. In Visual Studio add the API Key value to the `elastic-agent-builder-a2a.py` file.
+      4. Add the API Key value to the `.env` file.
          * Find where the placeholder text “**<YOUR-ELASTIC-API-KEY\>**” appears and paste in the copied API Key value to replace the placeholder text.
+ 
+   3. Save the changes to the  `.env` file.
 
-   4. Confirm the **relative_card_path** is set correctly in the `elastic-agent-builder-a2a.py` file by finding the code line that starts with the text “agent_card”. Confirm that the **relative_card_path** matches the Agent ID you specified when you created the agent in Elastic Agent Builder. If your Agent ID is “helloworld_agent” then the **relative_card_path** should be set to `/helloworld_agent.json`   
-   5. Save the `elastic_agent_builder_a2a.py` file in the Visual Studio editor.
+## Running the example app with Python
 
-5.  Create a Python virtual environment by running the following code in the Visual Studio Code terminal.
+1.  Create a Python virtual environment by running the following code in the terminal.
 
         python -m venv .venv
      
-6. Activate the Python virtual environment.  
+2. Activate the Python virtual environment.  
     * If you’re running MacOS, the command to activate the virtual environment is:
 
             source .venv/bin/activate
@@ -115,25 +118,16 @@ This is an example Python console app that demonstrates how to connect and utili
  
             .venv\Scripts\activate
 
-7. Install the Microsoft Agent Framework with the following `pip` command:
+3. Install the Microsoft Agent Framework along with its necessary Python packages by running the following `pip` command:
 
-        pip install agent-framework
+        pip install -r requirements.txt
 
-8. Run the example code by entering the following command into the terminal:
+4. Run the example app by entering the following command into the terminal:
 
         python elastic_agent_builder_a2a.py
    
-## Running the example test
+## Running the example app with Docker
 
-1. Setup the environment variables.  
-   1. Make a copy of the file `env.example` and name the new file `.env ` 
-   2. Edit the `.env` file to set the values of the environment variables to use the values copied from your Elastic deployment. See instructions on where to get these values in the [Running the example app](#running-the-example-app) section of this `README.md` file.  
-        * Set the value of **ES_AGENT_URL** to be the value of **YOUR-ELASTIC-AGENT-BUILDER-URL** 
-        * Set the value of **ES_API_KEY** to be value of **YOUR-ELASTIC-API-KEY**
-2. Run the test directly with Python.
+1. Run the example app with Docker by entering the following command into the terminal:
 
-        python test_elastic_agent_builder_a2a.py
-
-3. Run the test with Docker.
-
-        docker compose up
+        docker compose run elastic-agent-builder-a2a
