@@ -6,14 +6,14 @@ This is an example Python console app that demonstrates how to connect and utili
 
 ## Prerequisites
 
-1. An Elasticsearch deployment running in [Elastic Cloud](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-example-apps). 
-   * Requires Elasticsearch Serverless (or for hosted deployments at least Elasticsearch version 9.2.0).
+1. An Elasticsearch project/deployment running in [Elastic Cloud](https://cloud.elastic.co/registration?utm_source=github&utm_content=elasticsearch-labs-example-apps). 
+   * Requires Elasticsearch serverless project (or for hosted deployments at least Elasticsearch version 9.2.0).
 2. A text editor or an integrated development environment (IDE) like [Visual Studio Code](https://code.visualstudio.com/download) running on your local computer.  
 3. [Python version 3.10 or greater](https://www.python.org/downloads/) installed on your local computer.
 
-## Setup your Elasticsearch deployment
+## Set up your Elasticsearch project
 
-1. Create an index named `my-docs` in your Elasticsearch deployment by running the following command in Elastic Developer Tools:
+1. Create an index named `my-docs` in your Elasticsearch project by running the following command in Elastic Developer Tools:
 
         PUT /my-docs
         {
@@ -82,20 +82,20 @@ This is an example Python console app that demonstrates how to connect and utili
  
         cd elasticsearch-labs/supporting-blog-content/agent-builder-a2a-agent-framework
 
-## Setup up the environment variables
+## Set up the environment variables
 
-1. Setup the environment variables with values copied from your Elastic deployment. 
+1. Set up the environment variables with values copied from your Elastic project. 
    1. Make a copy of the file `env.example` and name the new file `.env ` 
-   2. Edit the `.env` file to set the values of the environment variables to use the values copied from your Elastic deployment. 
+   2. Edit the `.env` file to set the values of the environment variables to use the values copied from your Elastic project. 
    * Replace <YOUR-ELASTIC-AGENT-BUILDER-URL\>  
-      1. In your Elastic deployment, go to the Elastic Agent Builder - Tools page. Click the **MCP Server** dropdown at the top of the Tools page. Select **Copy MCP Server URL.**   
+      1. In your Elastic project, go to the Elastic Agent Builder - Tools page. Click the **MCP Server** dropdown at the top of the Tools page. Select **Copy MCP Server URL.**   
       2. Add the **MCP Server URL** value to the `.env` file. 
          * Find where the placeholder text “**<YOUR-ELASTIC-AGENT-BUILDER-URL\>**” appears and paste in the copied **MCP Server URL** to replace the placeholder text. Now edit the pasted **MCP Server URL**. Delete the text “mcp” at the end of the URL and replace it with the text “a2a”.  The edited URL should look something like this
 
             `https://example-project-a123.kb.westus2.azure.elastic.cloud/api/agent_builder/a2a`
 
    * Replace <YOUR-ELASTIC-API-KEY\>  
-      1. In your Elastic deployment, click **Elasticsearch** in the navigation menu to go to your deployment’s home page.  
+      1. In your Elastic project, click **Elasticsearch** in the navigation menu to go to your project’s home page.  
       2. Click **Create API key** to create a new API key.   
       3. After the API key is created, copy the API Key value.  
       4. Add the API Key value to the `.env` file.
