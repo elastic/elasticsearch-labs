@@ -14,6 +14,6 @@ repos:
     - --additional-pattern
     - '_PASSWORD=[0-9a-zA-Z_-]{10}'
 - repo: https://github.com/ambv/black
-  rev: 24.1.1  # Use latest tag on GitHub
+  rev: 25.11.0  # Use latest tag on GitHub
   hooks:
   - id: black-jupyter
