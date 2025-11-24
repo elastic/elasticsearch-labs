@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch, helpers
 from openai import OpenAI
 
 ES_URL = "http://localhost:9200"
-ES_API_KEY = "your-api-key-here"
+ES_API_KEY = "NDdDQWM1b0JPSDBFTV9JQzA0WVo6eHFXcWFJQmFYNzBwS1RjUllpRUNHZw=="
 INDEX_NAME = "team-data"
 LOCAL_AI_URL = "http://localhost:8080/v1"  # Local AI server URL
 DATASET_FOLDER = "./Dataset"
@@ -13,6 +13,79 @@ DATASET_FOLDER = "./Dataset"
 
 es_client = Elasticsearch(ES_URL, api_key=ES_API_KEY)
 ai_client = OpenAI(base_url=LOCAL_AI_URL, api_key="sk-x")
+
+
+def setup_inference_endpoint():
+    inference_id = "e5-small-model"
+    try:
+        es_client.inference.put(
+            inference_id=inference_id,
+            task_type="text_embedding",
+            body={
+                "service": "elasticsearch",
+                "service_settings": {
+                    "num_allocations": 1,
+                    "num_threads": 1,
+                    "model_id": ".multilingual-e5-small",
+                },
+            },
+        )
+        print(f"✅ Inference endpoint '{inference_id}' created successfully")
+    except Exception as e:
+        print(f"❌ Error creating inference endpoint: {str(e)}")
+
+
+def setup_inference_endpoint():
+    inference_id = "e5-small-model"
+
+    try:
+        es_client.inference.get(inference_id=inference_id)
+        print(f"✅ Inference endpoint '{inference_id}' already exists")
+    except Exception:
+        print(f"📦 Creating inference endpoint '{inference_id}'...")
+
+        try:
+            es_client.inference.put(
+                inference_id=inference_id,
+                task_type="text_embedding",
+                body={
+                    "service": "elasticsearch",
+                    "service_settings": {
+                        "num_allocations": 1,
+                        "num_threads": 1,
+                        "model_id": ".multilingual-e5-small",
+                    },
+                },
+            )
+            print(f"✅ Inference endpoint '{inference_id}' created successfully")
+        except Exception as e:
+            print(f"❌ Error creating inference endpoint: {str(e)}")
+
+
+def setup_index():
+    try:
+        if es_client.indices.exists(index=INDEX_NAME):
+            print(f"✅ Index '{INDEX_NAME}' already exists")
+
+        print(f"📦 Creating index '{INDEX_NAME}'...")
+        es_client.indices.create(
+            index=INDEX_NAME,
+            body={
+                "mappings": {
+                    "properties": {
+                        "file_title": {"type": "text", "copy_to": "semantic_field"},
+                        "file_content": {"type": "text", "copy_to": "semantic_field"},
+                        "semantic_field": {
+                            "type": "semantic_text",
+                            "inference_id": "e5-small-model",
+                        },
+                    }
+                }
+            },
+        )
+        print(f"✅ Index '{INDEX_NAME}' created successfully")
+    except Exception as e:
+        print(f"❌ Error creating index: {str(e)}")
 
 
 def build_documents(dataset_folder, index_name):
@@ -88,7 +161,13 @@ def query_local_ai(prompt, model):
 
 
 if __name__ == "__main__":
-    print("📥 Indexing documents...")
+    print("🚀 Setting up infrastructure...")
+
+    # Setup inference endpoint and index
+    setup_inference_endpoint()
+    setup_index()
+
+    print("\n📥 Indexing documents...")
     success, bulk_latency = index_documents()
 
     time.sleep(2)  # Wait for indexing to complete
@@ -106,7 +185,10 @@ if __name__ == "__main__":
 
     prompt = f"{context}\nQuestion: {query}\nAnswer:"
 
-    ai_model = "dolphin3.0-qwen2.5-0.5b"
+    # ai_model = "llama-smoltalk-3.2-1b-instruct"
+    # ai_model = "dolphin3.0-qwen2.5-0.5b"
+    # ai_model = "fastllama-3.2-1b-instruct"
+    ai_model = "smollm2-1.7b-instruct"
 
     print(f"🤖 Asking to model: {ai_model}")
     response, ai_latency, tokens_per_second = query_local_ai(prompt, ai_model)
