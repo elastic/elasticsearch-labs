@@ -5,7 +5,7 @@ Participants: David (Project Manager), Alice (Tech Lead), Maria (QA Lead), Emma 
 
 [14:03] Emma: Good progress. Users report 40% search speed improvement, but support tickets show peak hour performance issues.
 
-[14:05] Alice: We've identified bottlenecks. Working on Redis caching and Elasticsearch query optimization.
+[14:05] Alice: We've identified bottlenecks. Working on cache layer implementation and search engine query optimization.
 
 [14:06] David: Can we resolve issues without impacting October migration date?
 
