@@ -1,14 +1,17 @@
 import os
 import time
 
+from dotenv import load_dotenv
 from elasticsearch import Elasticsearch, helpers
 from openai import OpenAI
 
-ES_URL = "http://localhost:9200"
-ES_API_KEY = "NDdDQWM1b0JPSDBFTV9JQzA0WVo6eHFXcWFJQmFYNzBwS1RjUllpRUNHZw=="
-INDEX_NAME = "team-data"
-LOCAL_AI_URL = "http://localhost:8080/v1"  # Local AI server URL
-DATASET_FOLDER = "./Dataset"
+load_dotenv()
+
+ES_URL = os.getenv("ES_URL", "http://localhost:9200")
+ES_API_KEY = os.getenv("ES_API_KEY")
+INDEX_NAME = os.getenv("INDEX_NAME", "team-data")
+LOCAL_AI_URL = os.getenv("LOCAL_AI_URL", "http://localhost:8080/v1")
+DATASET_FOLDER = os.getenv("DATASET_FOLDER", "./Dataset")
 
 
 es_client = Elasticsearch(ES_URL, api_key=ES_API_KEY)
@@ -177,23 +180,34 @@ if __name__ == "__main__":
     print(f"🔍 Search: '{query}'")
     search_results, search_latency = semantic_search(query)
 
-    context = "Information found:\n"
-    for hit in search_results:
+    context = ""
+    citations = []
+    for idx, hit in enumerate(search_results, 1):
         source = hit["_source"]
-        context += f"File: {source['file_title']}\n"
+        context += f"[{idx}] File: {source['file_title']}\n"
         context += f"Content: {source['file_content']}\n\n"
+        citations.append(f"[{idx}] {source['file_title']}")
 
-    prompt = f"{context}\nQuestion: {query}\nAnswer:"
+    prompt = f"""Based on the following documents, answer the user's question. 
+        You MUST cite your sources using the format [1], [2], etc. when referencing information from the documents.
 
-    # ai_model = "llama-smoltalk-3.2-1b-instruct"
-    # ai_model = "dolphin3.0-qwen2.5-0.5b"
-    # ai_model = "fastllama-3.2-1b-instruct"
+        Documents:
+        {context}
+
+        User Question: {query}
+
+        Answer (remember to include citations [1], [2], etc. when referencing specific information)
+    """
+
     ai_model = "smollm2-1.7b-instruct"
 
     print(f"🤖 Asking to model: {ai_model}")
     response, ai_latency, tokens_per_second = query_local_ai(prompt, ai_model)
 
     print(f"\n💡 Question: {query}\n📝 Answer: {response}")
+    print("\n📚 Citations:")
+    for citation in citations:
+        print(f"  {citation}")
 
     print(f"✅ Indexed {success} documents in {bulk_latency:.0f}ms")
     print(f"🔍 Search Latency: {search_latency:.0f}ms")
