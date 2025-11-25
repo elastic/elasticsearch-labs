@@ -19,26 +19,8 @@ ai_client = OpenAI(base_url=LOCAL_AI_URL, api_key="sk-x")
 
 
 def setup_inference_endpoint():
-    inference_id = "e5-small-model"
-    try:
-        es_client.inference.put(
-            inference_id=inference_id,
-            task_type="text_embedding",
-            body={
-                "service": "elasticsearch",
-                "service_settings": {
-                    "num_allocations": 1,
-                    "num_threads": 1,
-                    "model_id": ".multilingual-e5-small",
-                },
-            },
-        )
-        print(f"✅ Inference endpoint '{inference_id}' created successfully")
-    except Exception as e:
-        print(f"❌ Error creating inference endpoint: {str(e)}")
+    """Create the e5-small-model inference endpoint for text embeddings if it doesn't exist."""
 
-
-def setup_inference_endpoint():
     inference_id = "e5-small-model"
 
     try:
@@ -66,6 +48,8 @@ def setup_inference_endpoint():
 
 
 def setup_index():
+    """Create the Elasticsearch index with semantic_text field mappings if it doesn't exist."""
+
     try:
         if es_client.indices.exists(index=INDEX_NAME):
             print(f"✅ Index '{INDEX_NAME}' already exists")
@@ -92,11 +76,15 @@ def setup_index():
 
 
 def load_documents(dataset_folder, index_name):
+    """Generator that yields documents from .txt files in the dataset folder for bulk indexing."""
+
     for filename in os.listdir(dataset_folder):
         if filename.endswith(".txt"):
             filepath = os.path.join(dataset_folder, filename)
 
-            with open(filepath, "r", encoding="utf-8") as file:
+            with open(
+                filepath, "r", encoding="utf-8"
+            ) as file:  # UTF-8 encoding ensures proper handling of special characters and international text
                 content = file.read()
 
             yield {
@@ -106,8 +94,17 @@ def load_documents(dataset_folder, index_name):
 
 
 def index_documents():
+    """Bulk index all documents from the dataset folder into Elasticsearch and return success count and latency."""
+
     try:
         start_time = time.time()
+
+        if es_client.indices.exists(index=INDEX_NAME) is False:
+            print(
+                f"❌ Error: Index '{INDEX_NAME}' does not exist. Please set up the index first."
+            )
+
+            return 0, 0
 
         success, _ = helpers.bulk(es_client, load_documents(DATASET_FOLDER, INDEX_NAME))
 
@@ -121,6 +118,8 @@ def index_documents():
 
 
 def semantic_search(query, size=3):
+    """Perform semantic search and return top results with latency."""
+
     start_time = time.time()
     search_body = {
         "query": {"semantic": {"field": "semantic_field", "query": query}},
@@ -134,9 +133,12 @@ def semantic_search(query, size=3):
 
 
 def query_local_ai(prompt, model):
+    """Send a prompt to Local AI model and return the response, latency, and tokens per second."""
+
     start_time = time.time()
 
     try:
+        # Using simple completions without streaming.
         response = ai_client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
@@ -172,6 +174,9 @@ if __name__ == "__main__":
     success, bulk_latency = index_documents()
 
     time.sleep(2)  # Wait for indexing to complete
+
+    if success == 0:  # if the index documents failed, or index does not exist, exit
+        exit(1)
 
     query = "Can you summarize the performance issues in the API?"
 
