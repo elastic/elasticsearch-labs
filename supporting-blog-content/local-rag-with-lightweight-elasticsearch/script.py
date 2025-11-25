@@ -108,6 +108,7 @@ def index_documents():
 
         success, _ = helpers.bulk(es_client, load_documents(DATASET_FOLDER, INDEX_NAME))
 
+        print(f"✅ Indexed {success} documents successfully")
         return success
     except Exception as e:
         print(f"❌ Error indexing documents: {str(e)}")
@@ -197,11 +198,9 @@ if __name__ == "__main__":
         {context}
 
         User Question: {query}
-
-        Answer (remember to include citations [1], [2], etc. when referencing specific information)
     """
 
-    ai_model = "smollm2-1.7b-instruct"
+    ai_model = "dolphin3.0-qwen2.5-0.5b"
 
     print(f"🤖 Asking to model: {ai_model}")
     response, ai_latency, tokens_per_second = query_local_ai(prompt, ai_model)
