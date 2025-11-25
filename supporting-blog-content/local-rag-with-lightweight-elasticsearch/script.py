@@ -91,7 +91,7 @@ def setup_index():
         print(f"❌ Error creating index: {str(e)}")
 
 
-def build_documents(dataset_folder, index_name):
+def load_documents(dataset_folder, index_name):
     for filename in os.listdir(dataset_folder):
         if filename.endswith(".txt"):
             filepath = os.path.join(dataset_folder, filename)
@@ -109,9 +109,7 @@ def index_documents():
     try:
         start_time = time.time()
 
-        success, _ = helpers.bulk(
-            es_client, build_documents(DATASET_FOLDER, INDEX_NAME)
-        )
+        success, _ = helpers.bulk(es_client, load_documents(DATASET_FOLDER, INDEX_NAME))
 
         end_time = time.time()
         bulk_latency = (end_time - start_time) * 1000  # ms
