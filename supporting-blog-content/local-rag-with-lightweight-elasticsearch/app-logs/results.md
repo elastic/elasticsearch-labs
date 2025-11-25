@@ -1,4 +1,3 @@
-📥 Indexing documents...
 
 🔍 Search: 'Can you summarize the performance issues in the API?'
 
@@ -8,18 +7,21 @@
 Can you summarize the performance issues in the API?
 ## 📝 Answer: 
 
-The performance issues in the Search API deployed on September 16, 2025, include:
+The performance issues in the API can be summarized as follows:
 
-- Degradation in performance at 1,000+ queries per minute, resulting in a 200ms to 3-second response time for complex queries.
-- High response times for queries that do not utilize caching, causing them to take significantly longer than 2 seconds.
-- Inability to scale to handle spikes in query traffic, leading to increased CPU limits.
+1. **Search API degrades with 1,000+ queries per minute**: The search API has degraded, with performance degrades to a time of 3 seconds compared to the target of 200ms.
 
-These issues are primarily attributed to the complexity and inefficiency of the Elasticsearch queries, as well as the lack of caching layer. This indicates a need for optimization and addressing these specific performance bottlenecks to ensure the API's scalability and effectiveness for the development team.
+2. **Complex queries are slow and no caching layer**: Complex queries take longer to execute as expected.
+
+3. **CPU limits during spikes**: The CPU usage is at 100% at the peak hour and limits to 70% at the peak hour.
+
+📚 Citations:
+  [1] report_development-team.txt
+  [2] meeting_development-team_monday.txt
+  [3] meeting_management-sync_friday.txt
 
 ## Stats
 
-✅ Indexed 5 documents in 627ms
-
-🔍 Search Latency: 81ms
+🔍 Search Latency: 14ms
 
 🤖 AI Latency: 16044ms | 9.5 tokens/s

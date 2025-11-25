@@ -1,4 +1,4 @@
->>> Why Elastic is so cool?
+>>> Why is the sky blue?
 
 ## Raw Response
 
