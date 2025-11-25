@@ -15,7 +15,9 @@ DATASET_FOLDER = os.getenv("DATASET_FOLDER", "./Dataset")
 
 
 es_client = Elasticsearch(ES_URL, api_key=ES_API_KEY)
-ai_client = OpenAI(base_url=LOCAL_AI_URL, api_key="sk-x")
+ai_client = OpenAI(
+    base_url=LOCAL_AI_URL, api_key="sk-x"
+)  # You don't need a real OpenAI key for Local AI but we need to pass something, if you leave it blank it throws an error
 
 
 def setup_inference_endpoint():
@@ -53,6 +55,7 @@ def setup_index():
     try:
         if es_client.indices.exists(index=INDEX_NAME):
             print(f"✅ Index '{INDEX_NAME}' already exists")
+            return False
 
         print(f"📦 Creating index '{INDEX_NAME}'...")
         es_client.indices.create(
@@ -71,8 +74,10 @@ def setup_index():
             },
         )
         print(f"✅ Index '{INDEX_NAME}' created successfully")
+        return True
     except Exception as e:
         print(f"❌ Error creating index: {str(e)}")
+        exit(1)
 
 
 def load_documents(dataset_folder, index_name):
@@ -97,24 +102,16 @@ def index_documents():
     """Bulk index all documents from the dataset folder into Elasticsearch and return success count and latency."""
 
     try:
-        start_time = time.time()
-
         if es_client.indices.exists(index=INDEX_NAME) is False:
-            print(
-                f"❌ Error: Index '{INDEX_NAME}' does not exist. Please set up the index first."
-            )
-
-            return 0, 0
+            print(f"❌ Error: Index '{INDEX_NAME}' does not exist. ")
+            exit(1)
 
         success, _ = helpers.bulk(es_client, load_documents(DATASET_FOLDER, INDEX_NAME))
 
-        end_time = time.time()
-        bulk_latency = (end_time - start_time) * 1000  # ms
-
-        return success, bulk_latency
+        return success
     except Exception as e:
-        print(f"❌ Error: {str(e)}")
-        return 0, 0
+        print(f"❌ Error indexing documents: {str(e)}")
+        exit(1)
 
 
 def semantic_search(query, size=3):
@@ -168,15 +165,17 @@ if __name__ == "__main__":
 
     # Setup inference endpoint and index
     setup_inference_endpoint()
-    setup_index()
+    is_created = setup_index()
 
-    print("\n📥 Indexing documents...")
-    success, bulk_latency = index_documents()
+    if is_created:  # Index was just created, need to index documents
+        print("\n📥 Indexing documents...")
+        success = index_documents()
 
-    time.sleep(2)  # Wait for indexing to complete
+        if success == 0:  # if indexing failed, exit
+            print("❌ Documents indexing failed. Exiting.")
+            exit(1)
 
-    if success == 0:  # if the index documents failed, or index does not exist, exit
-        exit(1)
+        time.sleep(1)  # Wait for indexing to complete
 
     query = "Can you summarize the performance issues in the API?"
 
@@ -212,6 +211,5 @@ if __name__ == "__main__":
     for citation in citations:
         print(f"  {citation}")
 
-    print(f"✅ Indexed {success} documents in {bulk_latency:.0f}ms")
-    print(f"🔍 Search Latency: {search_latency:.0f}ms")
+    print(f"\n🔍 Search Latency: {search_latency:.0f}ms")
     print(f"🤖 AI Latency: {ai_latency:.0f}ms | {tokens_per_second:.1f} tokens/s")
