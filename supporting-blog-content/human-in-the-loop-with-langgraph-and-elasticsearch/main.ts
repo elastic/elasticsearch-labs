@@ -10,9 +10,9 @@ import { ElasticVectorSearch } from "@langchain/community/vectorstores/elasticse
 import { Client } from "@elastic/elasticsearch";
 import { writeFileSync } from "node:fs";
 import readline from "node:readline";
-import { ingestData, Document, DocumentMetadata } from "./dataIngestion.ts";
+import { ingestData, Document } from "./dataIngestion.ts";
 
-const VECTOR_INDEX = "flights-offerings";
+const VECTOR_INDEX = "legal-precedents";
 
 const llm = new ChatOpenAI({ model: "gpt-4o-mini" });
 const embeddings = new OpenAIEmbeddings({
@@ -20,9 +20,9 @@ const embeddings = new OpenAIEmbeddings({
 });
 
 const esClient = new Client({
-  node: process.env.ELASTICSEARCH_ENDPOINT!,
+  node: process.env.ELASTICSEARCH_ENDPOINT,
   auth: {
-    apiKey: process.env.ELASTICSEARCH_API_KEY!,
+    apiKey: process.env.ELASTICSEARCH_API_KEY ?? "",
   },
 });
 
@@ -31,141 +31,274 @@ const vectorStore = new ElasticVectorSearch(embeddings, {
   indexName: VECTOR_INDEX,
 });
 
-// Define the state schema for application workflow
-const SupportState = Annotation.Root({
-  input: Annotation<string>(),
-  candidates: Annotation<Document[]>(),
-  userChoice: Annotation<string>(),
-  selected: Annotation<Document>(),
-  final: Annotation<string>(),
+// Define the state schema for legal research workflow
+const LegalResearchState = Annotation.Root({
+  query: Annotation<string>(),
+  precedents: Annotation<Document[]>(),
+  selectedPrecedent: Annotation<Document | null>(),
+  draftAnalysis: Annotation<string>(),
+  ambiguityDetected: Annotation<boolean>(),
+  userClarification: Annotation<string>(),
+  finalAnalysis: Annotation<string>(),
 });
 
-// Node 1: Retrieve data from Elasticsearch
-async function retrieveFlights(state: typeof SupportState.State) {
-  const results = await vectorStore.similaritySearch(state.input, 2);
-  const candidates = results.map((d) => d as Document);
+// Node 1: Search for relevant legal precedents
+async function searchPrecedents(state: typeof LegalResearchState.State) {
+  console.log(
+    "📚 Searching for relevant legal precedents with query:\n",
+    state.query
+  );
 
-  console.log(`📋 Found ${candidates.length} different flights`);
-  return { candidates };
-}
+  const results = await vectorStore.similaritySearch(state.query, 5);
+  const precedents = results.map((d) => d as Document);
 
-// Node 2: Evaluate if there are 1 or multiple responses
-function evaluateResults(state: typeof SupportState.State) {
-  const candidates = state.candidates || [];
+  console.log(`Found ${precedents.length} relevant precedents:\n`);
 
-  // If there is 1 result, auto-select it
-  if (candidates.length === 1) {
-    const metadata = candidates[0].metadata || {};
-
-    return {
-      selected: candidates[0],
-      final: formatFlightDetails(metadata),
-    };
+  for (let i = 0; i < precedents.length; i++) {
+    const p = precedents[i];
+    const m = p.metadata;
+    console.log(
+      `${i + 1}. ${m.title} (${m.caseId})\n` +
+        `   Type: ${m.contractType}\n` +
+        `   Outcome: ${m.outcome}\n` +
+        `   Key reasoning: ${m.reasoning}\n` +
+        `   Delay period: ${m.delayPeriod}\n`
+    );
   }
 
-  return { candidates };
+  return { precedents };
 }
 
-// Node 3: Request user choice (separate from showing)
-function requestUserChoice() {
+// Node 2: HITL #1 - Request lawyer to select most relevant precedent
+function precedentSelection(state: typeof LegalResearchState.State) {
+  console.log("\n⚖️  HITL #1: Human input needed\n");
   const userChoice = interrupt({
-    question: `Which flight do you prefer?:`,
+    question: "👨‍⚖️  Which precedent is most similar to your case? ",
   });
-
   return { userChoice };
 }
 
-// Node 4: Disambiguate user choice and provide final answer
-async function disambiguateAndAnswer(state: typeof SupportState.State) {
-  const candidates = state.candidates || [];
-  const userInput = state.userChoice || "";
+// Node 3: Process precedent selection
+async function selectPrecedent(state: typeof LegalResearchState.State) {
+  const precedents = state.precedents || [];
+  const userInput = (state as any).userChoice || "";
+
+  const precedentsList = precedents
+    .map((p, i) => {
+      const m = p.metadata;
+      return `${i + 1}. ${m.caseId}: ${m.title} - ${m.outcome}`;
+    })
+    .join("\n");
+
+  const structuredLlm = llm.withStructuredOutput({
+    name: "precedent_selection",
+    schema: {
+      type: "object",
+      properties: {
+        selected_number: {
+          type: "number",
+          description:
+            "The precedent number selected by the lawyer (1-based index)",
+          minimum: 1,
+          maximum: precedents.length,
+        },
+      },
+      required: ["selected_number"],
+    },
+  });
 
   const prompt = `
-    Based on the user's response: "${userInput}"
+    The lawyer said: "${userInput}"
 
-    These are the available flights:
-    ${candidates
-      .map(
-        (d, i) =>
-          `${i}. ${d.metadata?.title} - ${d.metadata?.to_city} (${d.metadata?.airport_code}) - ${d.metadata?.airline} - $${d.metadata?.price} - ${d.metadata?.time_approx}`
-      )
-      .join("\n")}
+    Available precedents:
+    ${precedentsList}
 
-      Which flight is the user selecting? Respond ONLY with the flight number (1, 2, or 3).
+    Which precedent number (1-${precedents.length}) matches their selection?
   `;
 
-  const llmResponse = await llm.invoke([
+  const response = await structuredLlm.invoke([
     {
       role: "system",
       content:
-        "You are an assistant that interprets user selection. Respond ONLY with the selected flight number.",
+        "You are an assistant that interprets lawyer's selection and returns the corresponding precedent number.",
     },
     { role: "user", content: prompt },
   ]);
 
-  const selectedNumber = Number.parseInt(llmResponse.content as string, 10); // Convert to zero-based index
-  const selectedFlight = candidates[selectedNumber] ?? candidates[0]; // Fallback to first option
+  const selectedIndex = response.selected_number - 1;
+  const selectedPrecedent = precedents[selectedIndex] || precedents[0];
+
+  console.log(`✅ Selected: ${selectedPrecedent.metadata.title}\n`);
+  return { selectedPrecedent };
+}
+
+// Node 4: Draft initial legal analysis
+async function createDraft(state: typeof LegalResearchState.State) {
+  console.log("📝 Drafting initial legal analysis...\n");
+
+  const precedent = state.selectedPrecedent;
+  if (!precedent) return { draftAnalysis: "" };
+
+  const m = precedent.metadata;
+
+  const structuredLlm = llm.withStructuredOutput({
+    name: "draft_analysis",
+    schema: {
+      type: "object",
+      properties: {
+        needs_clarification: {
+          type: "boolean",
+          description:
+            "Whether the analysis requires clarification about contract terms or context",
+        },
+        analysis_text: {
+          type: "string",
+          description: "The draft legal analysis or the ambiguity explanation",
+        },
+        missing_information: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "List of specific information needed if clarification is required (empty if no clarification needed)",
+        },
+      },
+      required: ["needs_clarification", "analysis_text", "missing_information"],
+    },
+  });
+
+  const prompt = `
+    Based on this precedent:
+    Case: ${m.title}
+    Outcome: ${m.outcome}
+    Reasoning: ${m.reasoning}
+    Key terms: ${m.keyTerms}
+
+    And the lawyer's question: "${state.query}"
+
+    Draft a legal analysis applying this precedent to the question.
+    
+    If you need more context about the specific contract terms, timeline details, 
+    or other critical information to provide accurate analysis, set needs_clarification 
+    to true and list what information is missing.
+    
+    Otherwise, provide the legal analysis directly.
+  `;
+
+  const response = await structuredLlm.invoke([
+    {
+      role: "system",
+      content:
+        "You are a legal research assistant that analyzes cases and identifies when additional context is needed.",
+    },
+    { role: "user", content: prompt },
+  ]);
+
+  let displayText: string;
+  if (response.needs_clarification) {
+    const missingInfoList = response.missing_information
+      .map((info: string, i: number) => `${i + 1}. ${info}`)
+      .join("\n");
+    displayText = `AMBIGUITY DETECTED:\n${response.analysis_text}\n\nMissing information:\n${missingInfoList}`;
+  } else {
+    displayText = `ANALYSIS:\n${response.analysis_text}`;
+  }
+
+  console.log(displayText + "\n");
 
   return {
-    selected: selectedFlight,
-    final: formatFlightDetails(selectedFlight.metadata),
+    draftAnalysis: displayText,
+    ambiguityDetected: response.needs_clarification,
   };
 }
 
-// Node 5: Show results only
-function showResults(state: typeof SupportState.State) {
-  const candidates = state.candidates || [];
-  const formattedOptions = candidates
-    .map((d: Document, index: number) => {
-      const m = d.metadata || {};
-
-      return `${index + 1}. ${m.title} - ${m.to_city} - ${m.airport_name}(${
-        m.airport_code
-      }) airport - ${m.airline} - $${m.price} - ${m.time_approx}`;
-    })
-    .join("\n");
-
-  console.log(`\n📋 Flights found:\n${formattedOptions}\n`);
-
-  return state;
+// Node 5: HITL #2 - Request clarification from lawyer
+function requestClarification(state: typeof LegalResearchState.State) {
+  console.log("\n⚖️  HITL #2: Additional context needed\n");
+  const userClarification = interrupt({
+    question: "👨‍⚖️  Please provide clarification about your contract terms:",
+  });
+  return { userClarification };
 }
 
-// Helper function to format flight details
-function formatFlightDetails(metadata: DocumentMetadata): string {
-  return `Selected flight: ${metadata.title} - ${metadata.airline}
-    From: ${metadata.from_city} (${
-    metadata.from_city?.slice(0, 3).toUpperCase() || "N/A"
-  })
-    To: ${metadata.to_city} (${metadata.airport_code})
-    Airport: ${metadata.airport_name}
-    Price: $${metadata.price}
-    Duration: ${metadata.time_approx}
-    Date: ${metadata.date}`;
+// Node 6: Generate final analysis with clarification
+async function generateFinalAnalysis(state: typeof LegalResearchState.State) {
+  console.log("📋 Generating final legal analysis...\n");
+
+  const precedent = state.selectedPrecedent;
+  if (!precedent) return { finalAnalysis: "" };
+
+  const m = precedent.metadata;
+
+  const prompt = `
+    Original question: "${state.query}"
+    
+    Selected precedent: ${m.title}
+    Outcome: ${m.outcome}
+    Reasoning: ${m.reasoning}
+    
+    Lawyer's clarification: "${state.userClarification}"
+    
+    Provide a comprehensive legal analysis integrating:
+    1. The selected precedent's reasoning
+    2. The lawyer's specific contract context
+    3. Conditions for breach vs. no breach
+    4. Practical recommendations
+  `;
+
+  const response = await llm.invoke([
+    {
+      role: "system",
+      content:
+        "You are a legal research assistant providing comprehensive analysis.",
+    },
+    { role: "user", content: prompt },
+  ]);
+
+  const finalAnalysis = response.content as string;
+
+  console.log(
+    "\n" +
+      "=".repeat(80) +
+      "\n" +
+      "⚖️  FINAL LEGAL ANALYSIS\n" +
+      "=".repeat(80) +
+      "\n\n" +
+      finalAnalysis +
+      "\n\n" +
+      "=".repeat(80) +
+      "\n"
+  );
+
+  return { finalAnalysis };
 }
 
-// Build the graph
-const workflow = new StateGraph(SupportState)
-  .addNode("retrieveFlights", retrieveFlights)
-  .addNode("evaluateResults", evaluateResults)
-  .addNode("showResults", showResults)
-  .addNode("requestUserChoice", requestUserChoice)
-  .addNode("disambiguateAndAnswer", disambiguateAndAnswer)
-  .addEdge("__start__", "retrieveFlights")
-  .addEdge("retrieveFlights", "evaluateResults")
+// Build the legal research workflow graph
+const workflow = new StateGraph(LegalResearchState)
+  .addNode("searchPrecedents", searchPrecedents)
+  .addNode("precedentSelection", precedentSelection)
+  .addNode("selectPrecedent", selectPrecedent)
+  .addNode("createDraft", createDraft)
+  .addNode("requestClarification", requestClarification)
+  .addNode("generateFinalAnalysis", generateFinalAnalysis)
+  .addEdge("__start__", "searchPrecedents")
+  .addEdge("searchPrecedents", "precedentSelection") // HITL #1
+  .addEdge("precedentSelection", "selectPrecedent")
+  .addEdge("selectPrecedent", "createDraft")
   .addConditionalEdges(
-    "evaluateResults",
-    (state: typeof SupportState.State) => {
-      if (state.final) return "complete"; // 0 or 1 result
-      return "multiple"; // multiple results
+    "createDraft",
+    (state: typeof LegalResearchState.State) => {
+      // If ambiguity detected, request clarification (HITL #2)
+      if (state.ambiguityDetected) return "needsClarification";
+      // Otherwise, generate final analysis
+      return "final";
     },
     {
-      complete: "__end__",
-      multiple: "showResults",
+      needsClarification: "requestClarification",
+      final: "generateFinalAnalysis",
     }
   )
-  .addEdge("showResults", "requestUserChoice")
-  .addEdge("requestUserChoice", "disambiguateAndAnswer")
-  .addEdge("disambiguateAndAnswer", "__end__");
+  .addEdge("requestClarification", "generateFinalAnalysis") // HITL #2
+  .addEdge("generateFinalAnalysis", "__end__");
 
 /**
  * Get user input from the command line
@@ -208,34 +341,37 @@ async function saveGraphImage(app: any): Promise<void> {
  * Main execution function
  */
 async function main() {
-  // Ingest data
   await ingestData();
 
   // Compile workflow
   const app = workflow.compile({ checkpointer: new MemorySaver() });
-  const config = { configurable: { thread_id: "hitl-thread" } };
+  const config = { configurable: { thread_id: "hitl-circular-thread" } };
 
-  // Save graph image
   await saveGraphImage(app);
 
   // Execute workflow
-  const question = "Flights to Tokyo"; // User query
-  console.log(`🔍 SEARCHING USER QUESTION: "${question}"\n`);
+  const legalQuestion =
+    "Does a pattern of repeated delays constitute breach even if each individual delay is minor?";
 
-  let currentState = await app.invoke({ input: question }, config);
+  console.log(`⚖️  LEGAL QUESTION: "${legalQuestion}"\n`);
 
-  // Handle interruption
-  if ((currentState as any).__interrupt__?.length > 0) {
+  let currentState = await app.invoke({ query: legalQuestion }, config);
+
+  // Handle all interruptions in a loop
+  while ((currentState as any).__interrupt__?.length > 0) {
     console.log("\n💭 APPLICATION PAUSED WAITING FOR USER INPUT...");
-    const userChoice = await getUserInput("👤 CHOICE ONE OPTION: ");
+
+    const interruptQuestion = (currentState as any).__interrupt__[0]?.value
+      ?.question;
+    const userChoice = await getUserInput(
+      interruptQuestion || "👤 YOUR CHOICE: "
+    );
 
     currentState = await app.invoke(
       new Command({ resume: userChoice }),
       config
     );
   }
-
-  console.log("\n✅ Final result: \n", currentState.final);
 }
 
 // Run main function

@@ -1,6 +1,6 @@
 # LangGraph + Elasticsearch Human-in-the-Loop
 
-Flight search application using LangGraph for human-in-the-loop workflow and Elasticsearch for vector search.
+Flight search application using LangGraph for human-in-the-loop workflow and Elasticsearch for vector search. This is a supporting blog content for the article: [Building Human-in-the-Loop AI Agents with LangGraph and Elasticsearch](https://www.elastic.co/search-labs/blog/human-in-the-loop-with-langgraph-and-elasticsearch).
 
 ## Prerequisites
 
@@ -29,8 +29,8 @@ Create a `.env` file in the root directory:
 
 ```env
 ELASTICSEARCH_ENDPOINT=https://your-elasticsearch-instance.com
-ELASTICSEARCH_API_KEY=your-api-key
-OPENAI_API_KEY=your-openai-api-key
+ELASTICSEARCH_API_KEY="your-api-key"
+OPENAI_API_KEY="your-openai-api-key"
 ```
 
 ## Usage
@@ -45,12 +45,4 @@ npm start
 - 🤖 LLM-powered natural language selection
 - 👤 Human-in-the-loop workflow with LangGraph
 - 📊 Workflow visualization (generates `workflow_graph.png`)
-
-## Workflow
-
-1. **Retrieve Flights** - Search Elasticsearch with vector similarity
-2. **Evaluate Results** - Auto-select if 1 result, show options if multiple
-3. **Show Results** - Display flight options to user
-4. **Request User Choice** - Pause workflow for user input (HITL)
-5. **Disambiguate & Answer** - Use LLM to interpret selection and return final answer
 

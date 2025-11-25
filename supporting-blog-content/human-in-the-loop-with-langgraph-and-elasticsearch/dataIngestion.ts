@@ -6,19 +6,16 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const VECTOR_INDEX = "flights-offerings";
+const VECTOR_INDEX = "legal-precedents";
 
 // Types
 export interface DocumentMetadata {
-  from_city: string;
-  to_city: string;
-  airport_code: string;
-  airport_name: string;
-  country: string;
-  airline: string;
-  date: string;
-  price: number;
-  time_approx: string;
+  caseId: string;
+  contractType: string;
+  delayPeriod: string;
+  outcome: string;
+  reasoning: string;
+  keyTerms: string;
   title: string;
 }
 
@@ -88,20 +85,17 @@ export async function ingestData(): Promise<void> {
           metadata: {
             type: "object",
             properties: {
-              from_city: { type: "keyword" },
-              to_city: { type: "keyword" },
-              airport_code: { type: "keyword" },
-              airport_name: {
+              caseId: { type: "keyword" },
+              contractType: { type: "keyword" },
+              delayPeriod: {
                 type: "text",
                 fields: {
                   keyword: { type: "keyword" },
                 },
               },
-              country: { type: "keyword" },
-              airline: { type: "keyword" },
-              date: { type: "date" },
-              price: { type: "integer" },
-              time_approx: { type: "keyword" },
+              outcome: { type: "keyword" },
+              reasoning: { type: "text" },
+              keyTerms: { type: "text" },
               title: {
                 type: "text",
                 fields: {

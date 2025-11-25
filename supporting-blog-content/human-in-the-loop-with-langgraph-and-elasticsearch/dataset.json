@@ -1,152 +1,122 @@
 [
   {
-    "pageContent": "Ticket: Medellín (MDE) → Sao Paulo (GRU). 1 stop. Airline: AndeanSky.",
+    "pageContent": "Legal precedent: Case A - Service delivery delay considered breach. A software development contract stipulated delivery within 'reasonable time'. A two-week delay significantly impacted the client's product launch, causing measurable financial harm. The court ruled this constituted material breach despite no explicit deadline.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "Sao Paulo",
-      "airport_code": "GRU",
-      "airport_name": "Guarulhos International",
-      "country": "Brazil",
-      "airline": "AndeanSky",
-      "date": "2025-10-10",
-      "price": 480,
-      "time_approx": "7h 30m",
-      "title": "MDE → GRU (AndeanSky)"
+      "caseId": "CASE-A-2023",
+      "contractType": "service agreement",
+      "delayPeriod": "two weeks",
+      "outcome": "breach found",
+      "reasoning": "delay affected operations and caused financial harm",
+      "keyTerms": "reasonable time, material breach, timely delivery",
+      "title": "Case A: Delay Breach with Operational Impact"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → Sao Paulo (CGH). 1 stop. Airline: CoffeeAir.",
+    "pageContent": "Legal precedent: Case B - Service delay not considered breach. A consulting contract used term 'timely delivery' without specific dates. A three-week delay occurred but contract lacked explicit schedule. Court ruled no breach as parties had not defined concrete timeline and delay did not cause demonstrable harm.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "Sao Paulo",
-      "airport_code": "CGH",
-      "airport_name": "Congonhas",
-      "country": "Brazil",
-      "airline": "CoffeeAir",
-      "date": "2025-10-10",
-      "price": 455,
-      "time_approx": "8h 05m",
-      "title": "MDE → CGH (CoffeeAir)"
+      "caseId": "CASE-B-2022",
+      "contractType": "consulting agreement",
+      "delayPeriod": "three weeks",
+      "outcome": "no breach found",
+      "reasoning": "no explicit deadline defined, no demonstrable harm",
+      "keyTerms": "timely delivery, open terms, schedule definition",
+      "title": "Case B: Delay Without Explicit Schedule"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → Tokyo (HND). 2 stops. Airline: CondorJet.",
+    "pageContent": "Legal precedent: Case C - Delay permitted due to justified causes. A construction service contract had defined timeline but external regulatory approval delays prevented timely completion. Court found delay was justified and did not constitute breach when causes were beyond provider's control.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "Tokyo",
-      "airport_code": "HND",
-      "airport_name": "Haneda",
-      "country": "Japan",
-      "airline": "CondorJet",
-      "date": "2025-11-05",
-      "price": 1290,
-      "time_approx": "22h 10m",
-      "title": "MDE → HND (CondorJet)"
+      "caseId": "CASE-C-2023",
+      "contractType": "construction service",
+      "delayPeriod": "one month",
+      "outcome": "no breach found",
+      "reasoning": "external factors beyond control, force majeure applied",
+      "keyTerms": "justified causes, force majeure, regulatory delays",
+      "title": "Case C: Justified Delay External Factors"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → Tokyo (NRT). 1–2 stops. Airline: CaribeWings.",
+    "pageContent": "Legal precedent: Case D - Interpretation of 'prompt delivery' term. Contract stated services must be provided 'promptly'. Court analyzed industry standards and prior dealings between parties to determine reasonableness. Ten-day delay was found acceptable given industry norms for similar services.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "Tokyo",
-      "airport_code": "NRT",
-      "airport_name": "Narita",
-      "country": "Japan",
-      "airline": "CaribeWings",
-      "date": "2025-11-05",
-      "price": 1215,
-      "time_approx": "23h 30m",
-      "title": "MDE → NRT (CaribeWings)"
+      "caseId": "CASE-D-2021",
+      "contractType": "service agreement",
+      "delayPeriod": "ten days",
+      "outcome": "no breach found",
+      "reasoning": "industry standards applied, reasonable interpretation",
+      "keyTerms": "prompt delivery, industry standards, reasonable time",
+      "title": "Case D: Prompt Delivery Industry Standards"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → New York (JFK). 1 stop. Airline: AndeanSky.",
+    "pageContent": "Legal precedent: Case E - Material breach vs minor delay. Service contract had approximate delivery timeline. Five-day delay occurred but service was fully functional and met all quality specifications. Court ruled this was minor breach not justifying contract termination.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "New York",
-      "airport_code": "JFK",
-      "airport_name": "John F. Kennedy International",
-      "country": "USA",
-      "airline": "AndeanSky",
-      "date": "2025-12-01",
-      "price": 340,
-      "time_approx": "6h 40m",
-      "title": "MDE → JFK (AndeanSky)"
+      "caseId": "CASE-E-2022",
+      "contractType": "service agreement",
+      "delayPeriod": "five days",
+      "outcome": "minor breach only",
+      "reasoning": "delay minimal, quality maintained, termination unjustified",
+      "keyTerms": "material breach, substantial performance, termination rights",
+      "title": "Case E: Minor Delay Quality Maintained"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → New York (LGA). 1 stop. Airline: CoffeeAir.",
+    "pageContent": "Legal precedent: Case F - Open-ended contract terms require good faith. Contract used 'timely manner' without definition. Provider took reasonable steps but faced unexpected technical issues causing delay. Court ruled parties must interpret open terms in good faith and delay was reasonable given circumstances.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "New York",
-      "airport_code": "LGA",
-      "airport_name": "LaGuardia",
-      "country": "USA",
-      "airline": "CoffeeAir",
-      "date": "2025-12-01",
-      "price": 325,
-      "time_approx": "6h 55m",
-      "title": "MDE → LGA (CoffeeAir)"
+      "caseId": "CASE-F-2023",
+      "contractType": "technology service",
+      "delayPeriod": "two weeks",
+      "outcome": "no breach found",
+      "reasoning": "good faith interpretation, reasonable efforts demonstrated",
+      "keyTerms": "timely manner, good faith, open terms interpretation",
+      "title": "Case F: Good Faith Open Terms"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → London (LHR). 1 stop. Airline: CondorJet.",
+    "pageContent": "Legal precedent: Case G - Schedule linked to milestones. Service contract defined delivery as 'upon completion of client's approval process'. Delay occurred but was directly caused by client's slow approval. Court found provider not in breach as timeline was dependent on client actions.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "London",
-      "airport_code": "LHR",
-      "airport_name": "Heathrow",
-      "country": "UK",
-      "airline": "CondorJet",
-      "date": "2026-01-15",
-      "price": 890,
-      "time_approx": "14h 30m",
-      "title": "MDE → LHR (CondorJet)"
+      "caseId": "CASE-G-2022",
+      "contractType": "professional service",
+      "delayPeriod": "variable",
+      "outcome": "no breach found",
+      "reasoning": "timeline dependent on client actions, conditional delivery",
+      "keyTerms": "milestone delivery, conditional timeline, client obligations",
+      "title": "Case G: Milestone Dependent Delivery"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → London (LGW). 1–2 stops. Airline: CaribeWings.",
+    "pageContent": "Legal precedent: Case H - Repeated delays pattern. Service provider had history of missing approximate deadlines across multiple deliverables. Court found pattern of delays constituted breach even when individual delays seemed minor, showing failure to meet contractual obligations consistently.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "London",
-      "airport_code": "LGW",
-      "airport_name": "Gatwick",
-      "country": "UK",
-      "airline": "CaribeWings",
-      "date": "2026-01-15",
-      "price": 760,
-      "time_approx": "15h 10m",
-      "title": "MDE → LGW (CaribeWings)"
+      "caseId": "CASE-H-2021",
+      "contractType": "ongoing service agreement",
+      "delayPeriod": "multiple instances",
+      "outcome": "breach found",
+      "reasoning": "pattern demonstrated failure to perform, cumulative effect",
+      "keyTerms": "repeated breach, pattern of conduct, consistent performance",
+      "title": "Case H: Pattern of Repeated Delays"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → Paris (CDG). 1 stop. Airline: CoffeeAir.",
+    "pageContent": "Legal precedent: Case I - Contractual obligation interpretation. Contract required 'expeditious service delivery'. Court examined contract as whole, prior communications, and purpose of service to interpret meaning. Two-week delay found unreasonable given urgent nature stated in preliminary negotiations.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "Paris",
-      "airport_code": "CDG",
-      "airport_name": "Charles de Gaulle",
-      "country": "France",
-      "airline": "CoffeeAir",
-      "date": "2025-10-22",
-      "price": 720,
-      "time_approx": "13h 50m",
-      "title": "MDE → CDG (CoffeeAir)"
+      "caseId": "CASE-I-2023",
+      "contractType": "urgent service agreement",
+      "delayPeriod": "two weeks",
+      "outcome": "breach found",
+      "reasoning": "context and preliminary negotiations showed urgency expectation",
+      "keyTerms": "expeditious delivery, contract interpretation, preliminary negotiations",
+      "title": "Case I: Urgent Service Context"
     }
   },
   {
-    "pageContent": "Ticket: Medellín (MDE) → Paris (ORY). 1 stop. Airline: AndeanSky.",
+    "pageContent": "Legal precedent: Case J - Provider notification obligations. Service contract had flexible timeline but required provider to notify of delays. Provider failed to communicate expected delay. Court found this failure to notify constituted breach regardless of whether delay itself was reasonable.",
     "metadata": {
-      "from_city": "Medellín",
-      "to_city": "Paris",
-      "airport_code": "ORY",
-      "airport_name": "Orly",
-      "country": "France",
-      "airline": "AndeanSky",
-      "date": "2025-10-22",
-      "price": 695,
-      "time_approx": "13h 20m",
-      "title": "MDE → ORY (AndeanSky)"
+      "caseId": "CASE-J-2022",
+      "contractType": "service agreement",
+      "delayPeriod": "one week",
+      "outcome": "breach found",
+      "reasoning": "failure to notify violated contractual communication obligations",
+      "keyTerms": "notification duty, communication obligations, transparency",
+      "title": "Case J: Notification Failure Breach"
     }
   }
 ]
