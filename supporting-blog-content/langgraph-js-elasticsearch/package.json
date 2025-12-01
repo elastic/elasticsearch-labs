@@ -1,0 +1,20 @@
+{
+  "name": "js-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx main.ts"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^9.1.1",
+    "@langchain/core": "^0.3.78",
+    "@langchain/langgraph": "^0.4.9",
+    "@langchain/openai": "^0.6.14",
+    "@types/node": "^24.6.0",
+    "dotenv": "^17.2.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2",
+    "zod": "^3.23.8"
+  }
+}
