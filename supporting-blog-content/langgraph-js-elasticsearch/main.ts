@@ -241,8 +241,8 @@ async function executeSearch(state: typeof VCState.State) {
   }
 }
 
-// Node 4: Visualize results
-async function visualizeResults(state: typeof VCState.State) {
+// Node 4: Format results
+async function formatResults(state: typeof VCState.State) {
   const results = state.results || [];
 
   let formattedResults = `🎯 Found ${results.length} startups matching your criteria:\n\n`;
@@ -265,6 +265,9 @@ async function visualizeResults(state: typeof VCState.State) {
   };
 }
 
+/**
+ *  Saves the workflow graph as a PNG image
+ */
 async function saveGraphImage(app: any): Promise<void> {
   try {
     const drawableGraph = app.getGraph();
@@ -291,7 +294,7 @@ async function main() {
     .addNode("prepareInvestment", prepareInvestmentSearch)
     .addNode("prepareMarket", prepareMarketSearch)
     .addNode("executeSearch", executeSearch)
-    .addNode("visualizeResults", visualizeResults)
+    .addNode("formatResults", formatResults)
     // Define execution flow with conditional branching
     .addEdge(START, "decideStrategy") // Start with strategy decision
     .addConditionalEdges(
@@ -304,23 +307,29 @@ async function main() {
     )
     .addEdge("prepareInvestment", "executeSearch") // Investment prep -> execute
     .addEdge("prepareMarket", "executeSearch") // Market prep -> execute
-    .addEdge("executeSearch", "visualizeResults") // Execute -> visualize
-    .addEdge("visualizeResults", END); // End workflow
+    .addEdge("executeSearch", "formatResults") // Execute -> format
+    .addEdge("formatResults", END); // End workflow
 
   const app = workflow.compile();
 
   await saveGraphImage(app);
 
   // Investment-focused query (emphasizes funding, revenue, financial metrics)
-  const query =
+  const investmentQuery =
     "Find startups with Series A or Series B funding between $8M-$25M and monthly revenue above $500K";
 
-  // Market-focused query (emphasizes industry, geography, market positioning)
-  // const query =
-  //   "Find fintech and healthcare startups in San Francisco, New York, or Boston";
-  // console.log("🔍 Query:", query);
+  console.log("Executing investment-focused query...");
 
-  const marketResult = await app.invoke({ input: query });
+  const investmentResult = await app.invoke({ input: investmentQuery });
+  console.log(investmentResult.final);
+
+  // Market-focused query (emphasizes industry, geography, market positioning)
+  const marketQuery =
+    "Find fintech and healthcare startups in San Francisco, New York, or Boston";
+
+  console.log("Executing market-focused query...");
+
+  const marketResult = await app.invoke({ input: marketQuery });
   console.log(marketResult.final);
 }
 
