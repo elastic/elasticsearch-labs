@@ -21,7 +21,7 @@ This is an example Python console app that demonstrates how to connect and utili
                 "properties": {
                     "title": { "type": "text" },
                     "content": { 
-                        "type": "semantic_text"
+                        "type": "text"
                     },
                     "filename": { "type": "keyword" },
                     "last_modified": { "type": "date" }
