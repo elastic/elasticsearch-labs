@@ -1,0 +1,32 @@
+MEETING TRANSCRIPT - DEVELOPMENT TEAM
+Date: Monday, September 16, 2025
+Time: 09:00 AM - 10:15 AM
+Participants: Alice (Tech Lead), John (Senior Developer), Sarah (Backend Developer), Mike (DevOps Engineer)
+
+[09:02] Alice: Let's review the search API deployed last week. Any issues?
+
+[09:03] Sarah: API works but performance degrades with 1,000+ queries per minute. Response times jump from 200ms to 3 seconds.
+
+[09:05] John: Database queries and no caching layer?
+
+[09:06] Sarah: Exactly. Complex queries are slow, and we need a caching layer.
+
+[09:07] Mike: Also hitting CPU limits during spikes. Need auto-scaling.
+
+[09:08] Alice: Three priorities: query optimization, cache implementation, and infrastructure scaling.
+
+[09:11] Sarah: Propose 15-minute TTL cache with event-based invalidation.
+
+[09:13] John: I'll optimize bool queries and add calculated index fields.
+
+[09:17] Mike: Can set up auto-scaling by tomorrow - scale to 6 instances at 70% CPU.
+
+[09:18] Sarah: Starting cache implementation today, basic version by Wednesday.
+
+[09:19] John: New indexes and query optimization ready for testing Wednesday.
+
+[09:24] Alice: Clear plan. Mike handles scaling, Sarah implements cache, John optimizes queries.
+
+[09:26] Alice: I'll coordinate with product team on deployment impacts and QA for load testing.
+
+[09:30] Alice: Meeting Wednesday 3 PM to review progress. Thanks team!
