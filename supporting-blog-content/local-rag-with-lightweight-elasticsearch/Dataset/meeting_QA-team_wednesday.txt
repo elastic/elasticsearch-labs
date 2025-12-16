@@ -1,0 +1,38 @@
+MEETING TRANSCRIPT - QA TEAM
+Date: Wednesday, September 18, 2025
+Time: 10:00 AM - 11:30 AM
+Participants: Maria (QA Lead), Tom (Senior QA Engineer), Lisa (QA Automation Engineer), Roberto (Manual Testing Specialist)
+
+[10:02] Maria: Let's review CRM migration testing progress. Tom, report on data import tests?
+
+[10:03] Tom: Found critical issues. Import failures with special characters in addresses and names.
+
+[10:06] Tom: UTF-8 parsing problems with accents, currency symbols, and Asian characters.
+
+[10:08] Tom: 12% of records affected - about 15,000 out of 125,000 total records.
+
+[10:09] Roberto: Confirmed. Also, failed imports corrupt entire batches.
+
+[10:12] Lisa: No atomic transactions for batches?
+
+[10:13] Tom: Correct. Each record processed independently without rollback.
+
+[10:15] Roberto: Found referential integrity issues - orphaned references between contacts and companies.
+
+[10:19] Maria: Need three validation types: pre-import, during import, and post-import.
+
+[10:25] Tom: Recommend smaller migration batches to reduce risk?
+
+[10:26] Maria: Excellent. Batches of 5,000 records with validation between each.
+
+[10:30] Maria: Four recommendations: UTF-8 parser fix, atomic transactions, handle orphaned references, small batch migration.
+
+[10:33] Roberto: Also need concurrency testing during migration.
+
+[10:40] Maria: Complete additional testing in one week. Feasible?
+
+[10:42] Tom: Will share test cases today.
+
+[10:44] Maria: Friday 2 PM meeting before management review.
+
+[10:45] Lisa: Will prepare testing metrics dashboard.

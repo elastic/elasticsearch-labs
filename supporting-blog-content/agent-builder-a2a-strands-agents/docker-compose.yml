@@ -1,0 +1,9 @@
+services:
+  elastic-agent-builder-a2a-strands-agents:
+    build: .
+    container_name: elastic-agent-builder-a2a-strands-agents
+    stdin_open: true
+    tty: true
+    environment:
+      - ES_AGENT_URL=${ES_AGENT_URL}
+      - ES_API_KEY=${ES_API_KEY}
