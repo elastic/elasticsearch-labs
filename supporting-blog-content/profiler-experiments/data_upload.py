@@ -7,10 +7,7 @@ from datasets import load_dataset
 mappings = {
     # Flat/Brute Force - single shard for comparison
     "wikipedia-brute-force-1shard": {
-        "settings": {
-            "number_of_shards": 1,
-            "number_of_replicas": 0
-        },
+        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
         "mappings": {
             "properties": {
                 "embedding": {
@@ -18,29 +15,17 @@ mappings = {
                     "dims": 2560,
                     "index": True,
                     "similarity": "cosine",
-                    "index_options": {
-                        "type": "flat"
-                    }
+                    "index_options": {"type": "flat"},
                 },
-                "text": {
-                    "type": "text"
-                },
-                "category": {
-                    "type": "keyword"  # For filtering experiments
-                },
-                "text_length": {
-                    "type": "integer"  # For filtering experiments
-                }
+                "text": {"type": "text"},
+                "category": {"type": "keyword"},  # For filtering experiments
+                "text_length": {"type": "integer"},  # For filtering experiments
             }
-        }
+        },
     },
-
     # Flat/Brute Force - 3 shards for shard comparison
     "wikipedia-brute-force-3shards": {
-        "settings": {
-            "number_of_shards": 2,
-            "number_of_replicas": 0
-        },
+        "settings": {"number_of_shards": 2, "number_of_replicas": 0},
         "mappings": {
             "properties": {
                 "embedding": {
@@ -48,29 +33,17 @@ mappings = {
                     "dims": 2560,
                     "index": True,
                     "similarity": "cosine",
-                    "index_options": {
-                        "type": "flat"
-                    }
+                    "index_options": {"type": "flat"},
                 },
-                "text": {
-                    "type": "text"
-                },
-                "category": {
-                    "type": "keyword"
-                },
-                "text_length": {
-                    "type": "integer"
-                }
+                "text": {"type": "text"},
+                "category": {"type": "keyword"},
+                "text_length": {"type": "integer"},
             }
-        }
+        },
     },
-
     # Float32 HNSW (no compression)
     "wikipedia-float32-hnsw": {
-        "settings": {
-            "number_of_shards": 1,
-            "number_of_replicas": 0
-        },
+        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
         "mappings": {
             "properties": {
                 "embedding": {
@@ -78,31 +51,17 @@ mappings = {
                     "dims": 2560,
                     "index": True,
                     "similarity": "cosine",
-                    "index_options": {
-                        "type": "hnsw",
-                        "m": 16,
-                        "ef_construction": 200
-                    }
+                    "index_options": {"type": "hnsw", "m": 16, "ef_construction": 200},
                 },
-                "text": {
-                    "type": "text"
-                },
-                "category": {
-                    "type": "keyword"
-                },
-                "text_length": {
-                    "type": "integer"
-                }
+                "text": {"type": "text"},
+                "category": {"type": "keyword"},
+                "text_length": {"type": "integer"},
             }
-        }
+        },
     },
-
     # Int8 HNSW (with quantization)
     "wikipedia-int8-hnsw": {
-        "settings": {
-            "number_of_shards": 1,
-            "number_of_replicas": 0
-        },
+        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
         "mappings": {
             "properties": {
                 "embedding": {
@@ -113,28 +72,18 @@ mappings = {
                     "index_options": {
                         "type": "int8_hnsw",
                         "m": 16,
-                        "ef_construction": 200
-                    }
+                        "ef_construction": 200,
+                    },
                 },
-                "text": {
-                    "type": "text"
-                },
-                "category": {
-                    "type": "keyword"
-                },
-                "text_length": {
-                    "type": "integer"
-                }
+                "text": {"type": "text"},
+                "category": {"type": "keyword"},
+                "text_length": {"type": "integer"},
             }
-        }
+        },
     },
-
     # BBQ HNSW (binary quantization)
     "wikipedia-bbq-hnsw": {
-        "settings": {
-            "number_of_shards": 1,
-            "number_of_replicas": 0
-        },
+        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
         "mappings": {
             "properties": {
                 "embedding": {
@@ -146,23 +95,15 @@ mappings = {
                         "type": "bbq_hnsw",
                         "m": 16,
                         "ef_construction": 100,
-                        "rescore_vector": {
-                            "oversample": 3
-                        }
-                    }
+                        "rescore_vector": {"oversample": 3},
+                    },
                 },
-                "text": {
-                    "type": "text"
-                },
-                "category": {
-                    "type": "keyword"
-                },
-                "text_length": {
-                    "type": "integer"
-                }
+                "text": {"type": "text"},
+                "category": {"type": "keyword"},
+                "text_length": {"type": "integer"},
             }
-        }
-    }
+        },
+    },
 }
 
 
@@ -192,7 +133,7 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
 
     # Load the dataset (uses parquet files automatically)
     dataset = load_dataset("maknee/wikipedia_qwen_4b", streaming=True)
-    base_data = dataset['train']
+    base_data = dataset["train"]
 
     batch_operations = []
     doc_count = 0
@@ -200,8 +141,8 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
     print(f"Starting upload to {len(indices)} indices: {', '.join(indices)}")
 
     for doc in base_data:
-        text = doc['text']
-        embedding = doc['embedding']
+        text = doc["text"]
+        embedding = doc["embedding"]
 
         # Add metadata for filtering experiments
         category = categorize_text(text)
@@ -209,26 +150,27 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
 
         for index in indices:
             # Add index operation
-            batch_operations.append({
-                "index": {
-                    "_index": index,
-                    "_id": f"{doc['id']}"
-                }
-            })
+            batch_operations.append({"index": {"_index": index, "_id": f"{doc['id']}"}})
 
             # Add document data with metadata
-            batch_operations.append({
-                "text": text,
-                "embedding": embedding,
-                "category": category,
-                "text_length": text_length
-            })
+            batch_operations.append(
+                {
+                    "text": text,
+                    "embedding": embedding,
+                    "category": category,
+                    "text_length": text_length,
+                }
+            )
 
         doc_count += 1
 
         # When we reach batch_size, upload the batch
-        if len(batch_operations) >= batch_size * 2 * len(indices):  # *2 because each doc needs 2 operations
-            print(f"Uploading batch of {batch_size} documents per index (total processed: {doc_count})")
+        if len(batch_operations) >= batch_size * 2 * len(
+            indices
+        ):  # *2 because each doc needs 2 operations
+            print(
+                f"Uploading batch of {batch_size} documents per index (total processed: {doc_count})"
+            )
             start_time = time.time()
 
             try:
@@ -237,8 +179,10 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
                 print(f"Upload completed in {upload_time:.2f} seconds")
 
                 # Check for errors
-                if resp['errors']:
-                    error_count = sum(1 for item in resp['items'] if 'error' in item.get('index', {}))
+                if resp["errors"]:
+                    error_count = sum(
+                        1 for item in resp["items"] if "error" in item.get("index", {})
+                    )
                     print(f"{error_count} documents failed to index")
                 else:
                     print(f"Successfully indexed batch")
@@ -261,8 +205,10 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
 
         try:
             resp = es.bulk(operations=batch_operations)
-            if resp['errors']:
-                error_count = sum(1 for item in resp['items'] if 'error' in item.get('index', {}))
+            if resp["errors"]:
+                error_count = sum(
+                    1 for item in resp["items"] if "error" in item.get("index", {})
+                )
                 print(f"{error_count} documents in final batch failed to index")
             else:
                 print(f"Successfully indexed final batch")
@@ -276,8 +222,10 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
     for index in indices:
         try:
             stats = es.indices.stats(index=index)
-            doc_count_actual = stats['indices'][index]['total']['docs']['count']
-            size_mb = stats['indices'][index]['total']['store']['size_in_bytes'] / (1024 * 1024)
+            doc_count_actual = stats["indices"][index]["total"]["docs"]["count"]
+            size_mb = stats["indices"][index]["total"]["store"]["size_in_bytes"] / (
+                1024 * 1024
+            )
             print(f"{index}: {doc_count_actual} docs, {size_mb:.1f} MB")
         except Exception as e:
             print(f"Could not get stats for {index}: {e}")
@@ -285,8 +233,8 @@ def upload_to_elasticsearch(es, indices=None, batch_size=100, max_docs=100000):
 
 def main():
     # Get environment variables
-    host = os.getenv('ES_HOST')
-    api_key = os.getenv('API_KEY')
+    host = os.getenv("ES_HOST")
+    api_key = os.getenv("API_KEY")
 
     if not host or not api_key:
         raise ValueError("Please set ES_HOST and API_KEY environment variables")
@@ -294,10 +242,10 @@ def main():
     # Create Elasticsearch client
     es = Elasticsearch(hosts=host, api_key=api_key, request_timeout=120)
 
-    #print("Checking cluster health...")
+    # print("Checking cluster health...")
     try:
         cluster_info = es.info()
-        print("Connected to deployment: ",cluster_info)
+        print("Connected to deployment: ", cluster_info)
 
     except Exception as e:
         print(f"Could not connect to Elasticsearch: {e}")
@@ -305,13 +253,9 @@ def main():
     if cluster_info["name"] == "serverless":
         cluster_type = "serverless"
         for key in mappings.keys():
-            del mappings[key]['settings']
+            del mappings[key]["settings"]
     else:
         cluster_type = "hosted"
-
-
-
-
 
     # Create indices
     print("\nCreating indices...")
@@ -331,7 +275,9 @@ def main():
 
     # Upload documents
     print("\nStarting document upload...")
-    upload_to_elasticsearch(es, list(mappings.keys()), batch_size=300, max_docs=50000)  # Reduced for faster testing
+    upload_to_elasticsearch(
+        es, list(mappings.keys()), batch_size=300, max_docs=50000
+    )  # Reduced for faster testing
 
     print("\nUpload process completed!")
 
