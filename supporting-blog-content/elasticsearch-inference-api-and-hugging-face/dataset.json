@@ -1,7 +1,9 @@
 [
   {
     "id": "1",
-    "title": "New REST API v2: Performance and authentication improvements",
+    "title": {
+      "original": "New REST API v2: Performance and authentication improvements"
+    },
     "author": "Maria Lopez",
     "date": "2025-11-01",
     "category": "product",
@@ -9,7 +11,10 @@
   },
   {
     "id": "2",
-    "title": "Advertencia de seguridad: Vulnerabilidad en el sistema de autenticación",
+    "title": {
+      "original": "Advertencia de seguridad: Vulnerabilidad en el sistema de autenticación",
+      "translated_title": "Security Warning: Authentication System Vulnerability"
+    },
     "author": "Equipo de Seguridad",
     "date": "2025-11-02",
     "category": "security",
@@ -17,7 +22,9 @@
   },
   {
     "id": "3",
-    "title": "New visualization dashboard: Interactive charts and real-time analytics",
+    "title": {
+      "original": "New visualization dashboard: Interactive charts and real-time analytics"
+    },
     "author": "Ana Ruiz",
     "date": "2025-11-03",
     "category": "product",
@@ -25,7 +32,9 @@
   },
   {
     "id": "4",
-    "title": "Important changes to the notification system",
+    "title": {
+      "original": "Important changes to the notification system"
+    },
     "author": "Carlos Rivera",
     "date": "2025-11-04",
     "category": "product",
@@ -33,7 +42,10 @@
   },
   {
     "id": "5",
-    "title": "Riesgos conocidos al migrar de la versión 1.x a 2.0",
+    "title": {
+      "original": "Riesgos conocidos al migrar de la versión 1.x a 2.0",
+      "translated_title": "Known Risks When Migrating from Version 1.x to 2.0"
+    },
     "author": "Laura Pérez",
     "date": "2025-11-05",
     "category": "tutorial",
@@ -41,7 +53,9 @@
   },
   {
     "id": "6",
-    "title": "Complete guide to the new API: Endpoints and examples",
+    "title": {
+      "original": "Complete guide to the new API: Endpoints and examples"
+    },
     "author": "Tomas Hernandez",
     "date": "2025-11-06",
     "category": "tutorial",
@@ -49,7 +63,9 @@
   },
   {
     "id": "7",
-    "title": "Tutorial: Creating custom visualizations step by step",
+    "title": {
+      "original": "Tutorial: Creating custom visualizations step by step"
+    },
     "author": "Daniel Vega",
     "date": "2025-11-07",
     "category": "tutorial",
@@ -57,7 +73,10 @@
   },
   {
     "id": "8",
-    "title": "Actualización crítica: Corrección de error en procesamiento de datos",
+    "title": {
+      "original": "Actualización crítica: Corrección de error en procesamiento de datos",
+      "translated_title": "Critical Update: Data Processing Error Fix"
+    },
     "author": "Equipo de Desarrollo",
     "date": "2025-11-08",
     "category": "product",
@@ -65,7 +84,9 @@
   },
   {
     "id": "9",
-    "title": "Best practices for using the new API efficiently",
+    "title": {
+      "original": "Best practices for using the new API efficiently"
+    },
     "author": "Lucia Martinez",
     "date": "2025-11-09",
     "category": "tutorial",
@@ -73,7 +94,9 @@
   },
   {
     "id": "10",
-    "title": "Comparative analysis: Technical vs. introductory articles",
+    "title": {
+      "original": "Comparative analysis: Technical vs. introductory articles"
+    },
     "author": "Pedro Alvarez",
     "date": "2025-11-10",
     "category": "analysis",
@@ -81,7 +104,9 @@
   },
   {
     "id": "11",
-    "title": "New visualization features: Heat maps and scatter plots",
+    "title": {
+      "original": "New visualization features: Heat maps and scatter plots"
+    },
     "author": "Mike Chen",
     "date": "2025-11-11",
     "category": "product",
@@ -89,7 +114,10 @@
   },
   {
     "id": "12",
-    "title": "Advertencia: Cambios en el comportamiento de filtros de fecha",
+    "title": {
+      "original": "Advertencia: Cambios en el comportamiento de filtros de fecha",
+      "translated_title": "Warning: Changes in Date Filter Behavior"
+    },
     "author": "Sarah Johnson",
     "date": "2025-11-12",
     "category": "product",
@@ -97,7 +125,9 @@
   },
   {
     "id": "13",
-    "title": "Summary of articles about data visualizations",
+    "title": {
+      "original": "Summary of articles about data visualizations"
+    },
     "author": "Alex Turner",
     "date": "2025-11-13",
     "category": "summary",
@@ -105,7 +135,9 @@
   },
   {
     "id": "14",
-    "title": "Migration risk: Considerations for updating to the new architecture",
+    "title": {
+      "original": "Migration risk: Considerations for updating to the new architecture"
+    },
     "author": "Jessica Martinez",
     "date": "2025-11-14",
     "category": "tutorial",
@@ -113,7 +145,9 @@
   },
   {
     "id": "15",
-    "title": "Complete API documentation: Reference and examples",
+    "title": {
+      "original": "Complete API documentation: Reference and examples"
+    },
     "author": "Kevin Park",
     "date": "2025-11-15",
     "category": "documentation",
