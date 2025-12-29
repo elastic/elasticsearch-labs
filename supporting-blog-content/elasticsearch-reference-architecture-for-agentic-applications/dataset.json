@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Incident Report: Node.js Express 4.17 Prototype Pollution RCE",
+    "content": "On March 2024, our production Node.js Express 4.17 API gateway experienced a critical prototype pollution vulnerability leading to remote code execution. The attack vector involved manipulating object prototypes through JSON payloads in POST requests. This affected all Express middleware processing user input. Immediate mitigation: upgrade to Express 4.18.2+, implement input validation, use Object.freeze() for critical objects. Related to CVE-2022-24999.",
+    "doc_type": "incident_report",
+    "severity": "critical",
+    "affected_systems": [
+      "api-gateway-prod",
+      "api-gateway-staging"
+    ],
+    "date": "2024-03-15"
+  },
+  {
+    "title": "Pentest Results 2023: React 17.0 XSS via dangerouslySetInnerHTML",
+    "content": "External pentest revealed that our React 17.0 dashboard application is vulnerable to XSS attacks through improper use of dangerouslySetInnerHTML with unsanitized user input. Attackers can inject malicious scripts through comment fields and markdown rendering. This affects all authenticated users. Recommendation: upgrade to React 18+, use DOMPurify for HTML sanitization, implement Content Security Policy headers, avoid dangerouslySetInnerHTML with user content.",
+    "doc_type": "pentest",
+    "severity": "high",
+    "affected_systems": [
+      "customer-dashboard",
+      "admin-portal"
+    ],
+    "date": "2023-11-20"
+  },
+  {
+    "title": "CVE-2023-5920: PostgreSQL 14 Row Security Bypass",
+    "content": "Our PostgreSQL 14.2 database was affected by CVE-2023-5920 where row-level security policies could be bypassed using specific subquery patterns. Internal audit confirmed potential unauthorized access to customer financial records. Patched by upgrading to PostgreSQL 14.10. Implemented additional view-based security controls and query monitoring. All affected tables were audited for unauthorized access.",
+    "doc_type": "cve_internal",
+    "severity": "high",
+    "affected_systems": [
+      "postgres-prod-master",
+      "postgres-prod-replica"
+    ],
+    "date": "2023-12-10"
+  },
+  {
+    "title": "Security Guideline: Redis Configuration Hardening",
+    "content": "All Redis instances must follow security hardening guidelines: disable dangerous commands (FLUSHALL, CONFIG, EVAL), enable authentication with strong passwords, bind to localhost only or use VPN, enable TLS encryption, disable protected mode only in secured networks, set maxmemory limits, use read-only replicas for read operations. Never expose Redis directly to the internet. Use connection pooling and implement rate limiting.",
+    "doc_type": "guideline",
+    "severity": "medium",
+    "affected_systems": [
+      "all-redis-instances"
+    ],
+    "date": "2024-01-05"
+  },
+  {
+    "title": "Architecture Decision: Container Security Best Practices",
+    "content": "Standard configuration for all Docker/Kubernetes deployments: run containers as non-root users, use minimal base images (Alpine, distroless), scan images for vulnerabilities before deployment, implement network policies, enable Pod Security Standards, use secrets management (not env vars), set resource limits, enable audit logging, use read-only root filesystems where possible, regularly update base images.",
+    "doc_type": "architecture",
+    "severity": "informational",
+    "affected_systems": [
+      "kubernetes-prod-cluster",
+      "kubernetes-staging-cluster"
+    ],
+    "date": "2024-02-10"
+  },
+  {
+    "title": "Incident: Apache Kafka Unsecured JMX Port Exposure",
+    "content": "Kafka brokers 3.3.1 were discovered with JMX ports (9999) exposed to the internet without authentication. This allowed unauthorized access to broker metrics and potential remote code execution through MBean manipulation. Immediate actions: firewall rules updated to restrict JMX access, JMX authentication enabled, SSL/TLS configured for JMX connections. All Kafka configurations audited. Related to common misconfiguration patterns, not a specific CVE.",
+    "doc_type": "incident_report",
+    "severity": "critical",
+    "affected_systems": [
+      "kafka-broker-01",
+      "kafka-broker-02",
+      "kafka-broker-03"
+    ],
+    "date": "2023-06-22"
+  }
+]
