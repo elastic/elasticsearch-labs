@@ -1,0 +1,122 @@
+[
+  {
+    "pageContent": "Legal precedent: Case A - Service delivery delay considered breach. A software development contract stipulated delivery within 'reasonable time'. A two-week delay significantly impacted the client's product launch, causing measurable financial harm. The court ruled this constituted material breach despite no explicit deadline.",
+    "metadata": {
+      "caseId": "CASE-A-2023",
+      "contractType": "service agreement",
+      "delayPeriod": "two weeks",
+      "outcome": "breach found",
+      "reasoning": "delay affected operations and caused financial harm",
+      "keyTerms": "reasonable time, material breach, timely delivery",
+      "title": "Case A: Delay Breach with Operational Impact"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case B - Service delay not considered breach. A consulting contract used term 'timely delivery' without specific dates. A three-week delay occurred but contract lacked explicit schedule. Court ruled no breach as parties had not defined concrete timeline and delay did not cause demonstrable harm.",
+    "metadata": {
+      "caseId": "CASE-B-2022",
+      "contractType": "consulting agreement",
+      "delayPeriod": "three weeks",
+      "outcome": "no breach found",
+      "reasoning": "no explicit deadline defined, no demonstrable harm",
+      "keyTerms": "timely delivery, open terms, schedule definition",
+      "title": "Case B: Delay Without Explicit Schedule"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case C - Delay permitted due to justified causes. A construction service contract had defined timeline but external regulatory approval delays prevented timely completion. Court found delay was justified and did not constitute breach when causes were beyond provider's control.",
+    "metadata": {
+      "caseId": "CASE-C-2023",
+      "contractType": "construction service",
+      "delayPeriod": "one month",
+      "outcome": "no breach found",
+      "reasoning": "external factors beyond control, force majeure applied",
+      "keyTerms": "justified causes, force majeure, regulatory delays",
+      "title": "Case C: Justified Delay External Factors"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case D - Interpretation of 'prompt delivery' term. Contract stated services must be provided 'promptly'. Court analyzed industry standards and prior dealings between parties to determine reasonableness. Ten-day delay was found acceptable given industry norms for similar services.",
+    "metadata": {
+      "caseId": "CASE-D-2021",
+      "contractType": "service agreement",
+      "delayPeriod": "ten days",
+      "outcome": "no breach found",
+      "reasoning": "industry standards applied, reasonable interpretation",
+      "keyTerms": "prompt delivery, industry standards, reasonable time",
+      "title": "Case D: Prompt Delivery Industry Standards"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case E - Material breach vs minor delay. Service contract had approximate delivery timeline. Five-day delay occurred but service was fully functional and met all quality specifications. Court ruled this was minor breach not justifying contract termination.",
+    "metadata": {
+      "caseId": "CASE-E-2022",
+      "contractType": "service agreement",
+      "delayPeriod": "five days",
+      "outcome": "minor breach only",
+      "reasoning": "delay minimal, quality maintained, termination unjustified",
+      "keyTerms": "material breach, substantial performance, termination rights",
+      "title": "Case E: Minor Delay Quality Maintained"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case F - Open-ended contract terms require good faith. Contract used 'timely manner' without definition. Provider took reasonable steps but faced unexpected technical issues causing delay. Court ruled parties must interpret open terms in good faith and delay was reasonable given circumstances.",
+    "metadata": {
+      "caseId": "CASE-F-2023",
+      "contractType": "technology service",
+      "delayPeriod": "two weeks",
+      "outcome": "no breach found",
+      "reasoning": "good faith interpretation, reasonable efforts demonstrated",
+      "keyTerms": "timely manner, good faith, open terms interpretation",
+      "title": "Case F: Good Faith Open Terms"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case G - Schedule linked to milestones. Service contract defined delivery as 'upon completion of client's approval process'. Delay occurred but was directly caused by client's slow approval. Court found provider not in breach as timeline was dependent on client actions.",
+    "metadata": {
+      "caseId": "CASE-G-2022",
+      "contractType": "professional service",
+      "delayPeriod": "variable",
+      "outcome": "no breach found",
+      "reasoning": "timeline dependent on client actions, conditional delivery",
+      "keyTerms": "milestone delivery, conditional timeline, client obligations",
+      "title": "Case G: Milestone Dependent Delivery"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case H - Repeated delays pattern. Service provider had history of missing approximate deadlines across multiple deliverables. Court found pattern of delays constituted breach even when individual delays seemed minor, showing failure to meet contractual obligations consistently.",
+    "metadata": {
+      "caseId": "CASE-H-2021",
+      "contractType": "ongoing service agreement",
+      "delayPeriod": "multiple instances",
+      "outcome": "breach found",
+      "reasoning": "pattern demonstrated failure to perform, cumulative effect",
+      "keyTerms": "repeated breach, pattern of conduct, consistent performance",
+      "title": "Case H: Pattern of Repeated Delays"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case I - Contractual obligation interpretation. Contract required 'expeditious service delivery'. Court examined contract as whole, prior communications, and purpose of service to interpret meaning. Two-week delay found unreasonable given urgent nature stated in preliminary negotiations.",
+    "metadata": {
+      "caseId": "CASE-I-2023",
+      "contractType": "urgent service agreement",
+      "delayPeriod": "two weeks",
+      "outcome": "breach found",
+      "reasoning": "context and preliminary negotiations showed urgency expectation",
+      "keyTerms": "expeditious delivery, contract interpretation, preliminary negotiations",
+      "title": "Case I: Urgent Service Context"
+    }
+  },
+  {
+    "pageContent": "Legal precedent: Case J - Provider notification obligations. Service contract had flexible timeline but required provider to notify of delays. Provider failed to communicate expected delay. Court found this failure to notify constituted breach regardless of whether delay itself was reasonable.",
+    "metadata": {
+      "caseId": "CASE-J-2022",
+      "contractType": "service agreement",
+      "delayPeriod": "one week",
+      "outcome": "breach found",
+      "reasoning": "failure to notify violated contractual communication obligations",
+      "keyTerms": "notification duty, communication obligations, transparency",
+      "title": "Case J: Notification Failure Breach"
+    }
+  }
+]
