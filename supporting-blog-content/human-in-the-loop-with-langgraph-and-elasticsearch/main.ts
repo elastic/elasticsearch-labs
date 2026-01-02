@@ -35,7 +35,9 @@ const vectorStore = new ElasticVectorSearch(embeddings, {
 const LegalResearchState = Annotation.Root({
   query: Annotation<string>(),
   precedents: Annotation<Document[]>(),
+  userChoice: Annotation<string>(),
   selectedPrecedent: Annotation<Document | null>(),
+  validation: Annotation<string>(),
   draftAnalysis: Annotation<string>(),
   ambiguityDetected: Annotation<boolean>(),
   userClarification: Annotation<string>(),
@@ -72,16 +74,17 @@ async function searchPrecedents(state: typeof LegalResearchState.State) {
 // Node 2: HITL #1 - Request lawyer to select most relevant precedent
 function precedentSelection(state: typeof LegalResearchState.State) {
   console.log("\n⚖️  HITL #1: Human input needed\n");
-  const userChoice = interrupt({
+  const result = interrupt({
     question: "👨‍⚖️  Which precedent is most similar to your case? ",
   });
-  return { userChoice };
+
+  return { userChoice: result as string };
 }
 
 // Node 3: Process precedent selection
 async function selectPrecedent(state: typeof LegalResearchState.State) {
   const precedents = state.precedents || [];
-  const userInput = (state as any).userChoice || "";
+  const userInput = state.userChoice || "";
 
   const precedentsList = precedents
     .map((p, i) => {
@@ -130,6 +133,42 @@ async function selectPrecedent(state: typeof LegalResearchState.State) {
 
   console.log(`✅ Selected: ${selectedPrecedent.metadata.title}\n`);
   return { selectedPrecedent };
+}
+
+// Node 3.5:  - Validate precedent selection
+function validatePrecedentSelection(state: typeof LegalResearchState.State) {
+  const precedent = state.selectedPrecedent;
+  if (!precedent) return {};
+
+  const m = precedent.metadata;
+  console.log("\n⚖️  Selection validation needed\n");
+  console.log(
+    `Selected precedent: ${m.title} (${m.caseId})\n` +
+      `Type: ${m.contractType}\n` +
+      `Outcome: ${m.outcome}\n`
+  );
+
+  const result = interrupt({
+    question: "👨‍⚖️  Is this the correct precedent? (yes/no): ",
+  });
+  const validation =
+    typeof result === "string" ? result : (result as any)?.value || "";
+
+  return { validation };
+}
+
+// Node 3.6: Process validation response
+function processValidation(state: typeof LegalResearchState.State) {
+  const userInput = (state.validation || "").toLowerCase().trim();
+  const isValid = userInput === "yes" || userInput === "y";
+
+  if (!isValid) {
+    console.log("❌ Precedent not confirmed. Returning to selection...\n");
+    return { selectedPrecedent: null, userChoice: "" };
+  }
+
+  console.log("✅ Precedent confirmed.\n");
+  return {};
 }
 
 // Node 4: Draft initial legal analysis
@@ -277,13 +316,28 @@ const workflow = new StateGraph(LegalResearchState)
   .addNode("searchPrecedents", searchPrecedents)
   .addNode("precedentSelection", precedentSelection)
   .addNode("selectPrecedent", selectPrecedent)
+  .addNode("validatePrecedentSelection", validatePrecedentSelection)
+  .addNode("processValidation", processValidation)
   .addNode("createDraft", createDraft)
   .addNode("requestClarification", requestClarification)
   .addNode("generateFinalAnalysis", generateFinalAnalysis)
   .addEdge("__start__", "searchPrecedents")
   .addEdge("searchPrecedents", "precedentSelection") // HITL #1
   .addEdge("precedentSelection", "selectPrecedent")
-  .addEdge("selectPrecedent", "createDraft")
+  .addEdge("selectPrecedent", "validatePrecedentSelection") // Selection validation
+  .addEdge("validatePrecedentSelection", "processValidation")
+  .addConditionalEdges(
+    "processValidation",
+    (state: typeof LegalResearchState.State) => {
+      const userInput = (state.validation || "").toLowerCase().trim();
+      const isValid = userInput === "yes" || userInput === "y";
+      return isValid ? "validated" : "reselect";
+    },
+    {
+      validated: "createDraft",
+      reselect: "precedentSelection",
+    }
+  )
   .addConditionalEdges(
     "createDraft",
     (state: typeof LegalResearchState.State) => {
@@ -363,12 +417,18 @@ async function main() {
 
     const interruptQuestion = (currentState as any).__interrupt__[0]?.value
       ?.question;
-    const userChoice = await getUserInput(
-      interruptQuestion || "👤 YOUR CHOICE: "
-    );
+
+    // Handling empty responses
+    let userChoice = "";
+    while (!userChoice.trim()) {
+      userChoice = await getUserInput(interruptQuestion || "👤 YOUR CHOICE: ");
+      if (!userChoice.trim()) {
+        console.log("⚠️  Please provide a response.\n");
+      }
+    }
 
     currentState = await app.invoke(
-      new Command({ resume: userChoice }),
+      new Command({ resume: userChoice.trim() }),
       config
     );
   }
