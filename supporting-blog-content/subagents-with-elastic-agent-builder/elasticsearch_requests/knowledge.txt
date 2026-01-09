@@ -1,0 +1,22 @@
+PUT knowledge
+{
+  "mappings": {
+    "properties": {
+      "title": { "type": "text" },
+      "content": { "type": "text" },
+      "category": { "type": "keyword" },
+      "tags": { "type": "keyword" },
+      "source": { "type": "keyword" },
+      "created_at": { "type": "date" },
+      "updated_at": { "type": "date" }
+    }
+  }
+}
+
+POST knowledge/_bulk
+{"index":{}}
+{"title":"Engineering Standards: Enterprise Reliability","content":"Enterprise reliability is non-negotiable. Any issue affecting paying customers on Enterprise tier must be prioritized over issues affecting free tier users. Response time SLA for enterprise customers is 4 hours. All enterprise-impacting bugs are P1 by default.","category":"standards","tags":["engineering","enterprise","reliability","priority"],"source":"engineering-team","created_at":"2024-01-15","updated_at":"2024-11-01"}
+{"index":{}}
+{"title":"Q1 2025 Roadmap Priorities","content":"Q1 priorities focus on enterprise expansion and reliability. Key initiatives: 1) Reduce enterprise churn by fixing top 3 pain points, 2) Improve export functionality for large datasets, 3) Enhance authentication security. Performance optimizations are secondary unless they impact enterprise customers.","category":"roadmap","tags":["roadmap","q1","enterprise","priorities"],"source":"product-team","created_at":"2024-12-01","updated_at":"2024-12-15"}
+{"index":{}}
+{"title":"Technical Debt Policy","content":"Technical debt should be prioritized based on: 1) Customer impact (enterprise > pro > free), 2) Error frequency in production, 3) Support ticket volume, 4) Strategic alignment with quarterly roadmap. Quick wins (< 2 days effort) that address enterprise issues should be prioritized.","category":"standards","tags":["tech-debt","policy","prioritization"],"source":"engineering-team","created_at":"2024-06-01","updated_at":"2024-10-15"}

@@ -1,0 +1,28 @@
+PUT customer_data
+{
+  "mappings": {
+    "properties": {
+      "user_id": { "type": "keyword" },
+      "customer_tier": { "type": "keyword" },
+      "company_name": { "type": "text" },
+      "mrr": { "type": "float" },
+      "joined_at": { "type": "date" }
+    }
+  }
+}
+
+POST customer_data/_bulk
+{"index":{}}
+{"user_id":"enterprise_user_01","customer_tier":"enterprise","company_name":"Acme Corp","mrr":2500.00,"joined_at":"2023-01-15"}
+{"index":{}}
+{"user_id":"enterprise_user_02","customer_tier":"enterprise","company_name":"GlobalTech Inc","mrr":4200.00,"joined_at":"2022-08-20"}
+{"index":{}}
+{"user_id":"enterprise_user_05","customer_tier":"enterprise","company_name":"DataFlow Systems","mrr":3100.00,"joined_at":"2023-06-01"}
+{"index":{}}
+{"user_id":"user_001","customer_tier":"free","company_name":"","mrr":0,"joined_at":"2024-03-15"}
+{"index":{}}
+{"user_id":"user_002","customer_tier":"free","company_name":"","mrr":0,"joined_at":"2024-05-20"}
+{"index":{}}
+{"user_id":"user_045","customer_tier":"pro","company_name":"SmallBiz LLC","mrr":49.00,"joined_at":"2024-01-10"}
+{"index":{}}
+{"user_id":"user_089","customer_tier":"pro","company_name":"StartupXYZ","mrr":49.00,"joined_at":"2024-02-28"}
