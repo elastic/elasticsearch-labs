@@ -38,3 +38,11 @@ OPENAI_API_KEY="your-openai-api-key"
 ```bash
 npm start
 ```
+
+### Sample input message
+
+```
+Contract requires ‘prompt delivery’ without timelines. 8 delays of 2-4 days over 6 months. $50K in losses from 3 missed client deadlines. Vendor notified but pattern continued. 
+```
+
+**NOTE:** Once `ambiguityDetected` is returned, we currently pass the provided input directly to the LLM and proceed with the final analysis i.e. `generateFinalAnalysis`, even if not all relevant parameters are present. In production scenarios, this should ideally be handled with additional `requestClarification` or `validation` loops to gather sufficient context before generating the final analysis, ensuring higher accuracy and reliability.
