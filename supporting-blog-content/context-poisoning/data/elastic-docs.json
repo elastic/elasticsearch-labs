@@ -1,0 +1,137 @@
+[
+  {
+    "_id": "agent-config-01",
+    "title": "Configure Elastic Agent for Log and Metric Collection",
+    "content": "Elastic Agent is a unified agent for collecting logs, metrics, and security data from your hosts. Configure inputs in the agent policy to specify which data to collect and where to send it.",
+    "product": "elastic-agent",
+    "doc_type": "configuration",
+    "tags": ["configuration", "logs", "metrics", "observability"],
+    "url": "/docs/elastic-agent/configure"
+  },
+  {
+    "_id": "agent-fleet-01",
+    "title": "Manage Elastic Agents with Fleet",
+    "content": "Fleet provides centralized management for Elastic Agents. Create agent policies, deploy integrations, and monitor agent health from a single interface.",
+    "product": "observability",
+    "doc_type": "configuration",
+    "tags": ["fleet", "agent-management", "deployment"],
+    "url": "/docs/fleet/manage-agents"
+  },
+  {
+    "_id": "agent-install-01",
+    "title": "Installing Elastic Agent on Linux",
+    "content": "Download and install Elastic Agent on Linux hosts. The agent can be enrolled in Fleet for centralized management or run in standalone mode with local configuration.",
+    "product": "elastic-agent",
+    "doc_type": "tutorial",
+    "tags": ["installation", "linux", "setup"],
+    "url": "/docs/elastic-agent/install-linux"
+  },
+  {
+    "_id": "agent-inputs-01",
+    "title": "Elastic Agent Input Configuration",
+    "content": "Configure agent inputs to collect specific data types. Inputs define what data to collect, including file paths for logs, metrics endpoints, and data processing options.",
+    "product": "elastic-agent",
+    "doc_type": "configuration",
+    "tags": ["inputs", "logs", "metrics", "configuration"],
+    "url": "/docs/elastic-agent/inputs"
+  },
+  {
+    "_id": "agent-outputs-01",
+    "title": "Configuring Agent Outputs",
+    "content": "Configure where Elastic Agent sends collected data. Outputs can be Elasticsearch clusters, Logstash, or other destinations. Set up authentication and TLS for secure connections.",
+    "product": "elastic-agent",
+    "doc_type": "configuration",
+    "tags": ["outputs", "elasticsearch", "logstash"],
+    "url": "/docs/elastic-agent/outputs"
+  },
+  {
+    "_id": "agent-policies-01",
+    "title": "Agent Policies and Integrations",
+    "content": "Agent policies define the configuration for a group of agents. Add integrations to collect data from specific sources like system metrics, Nginx logs, or Kubernetes.",
+    "product": "observability",
+    "doc_type": "configuration",
+    "tags": ["policies", "integrations", "fleet"],
+    "url": "/docs/fleet/policies"
+  },
+  {
+    "_id": "agent-monitoring-01",
+    "title": "Monitoring Agent Health",
+    "content": "Monitor Elastic Agent health and performance in Fleet. View agent status, check for errors, and troubleshoot connectivity issues from the Fleet UI.",
+    "product": "observability",
+    "doc_type": "tutorial",
+    "tags": ["monitoring", "health", "diagnostics"],
+    "url": "/docs/fleet/monitoring"
+  },
+  {
+    "_id": "agent-upgrade-01",
+    "title": "Upgrading Elastic Agent",
+    "content": "Upgrade Elastic Agents to the latest version using Fleet. Fleet supports rolling upgrades with automatic rollback on failure to ensure continuous data collection.",
+    "product": "elastic-agent",
+    "doc_type": "tutorial",
+    "tags": ["upgrade", "version", "fleet"],
+    "url": "/docs/elastic-agent/upgrade"
+  },
+  {
+    "_id": "builder-intro-01",
+    "title": "Getting Started with Agent Builder",
+    "content": "Agent Builder is a tool for creating LLM-powered agents that can perform complex tasks. Build agents that use tools, maintain conversation context, and integrate with your data.",
+    "product": "agent-builder",
+    "doc_type": "tutorial",
+    "tags": ["genai", "llm", "agents", "introduction"],
+    "url": "/docs/agent-builder/getting-started"
+  },
+  {
+    "_id": "builder-config-01",
+    "title": "Agent Builder Configuration",
+    "content": "Configure your Agent Builder agents with custom workflows, tools, and prompts. Define how agents process requests, call tools, and generate responses.",
+    "product": "agent-builder",
+    "doc_type": "configuration",
+    "tags": ["workflow", "tools", "genai", "configuration"],
+    "url": "/docs/agent-builder/configuration"
+  },
+  {
+    "_id": "builder-tools-01",
+    "title": "Adding Tools to Your Agent",
+    "content": "Extend agent capabilities by adding tools. Tools allow agents to search data, call APIs, execute code, and perform actions beyond text generation.",
+    "product": "agent-builder",
+    "doc_type": "tutorial",
+    "tags": ["tools", "functions", "llm"],
+    "url": "/docs/agent-builder/tools"
+  },
+  {
+    "_id": "builder-prompts-01",
+    "title": "Prompt Engineering for Agents",
+    "content": "Write effective system prompts for your agents. Good prompts define agent behavior, set boundaries, and improve response quality and consistency.",
+    "product": "agent-builder",
+    "doc_type": "tutorial",
+    "tags": ["prompts", "instructions", "genai"],
+    "url": "/docs/agent-builder/prompts"
+  },
+  {
+    "_id": "builder-memory-01",
+    "title": "Agent Memory Configuration",
+    "content": "Configure memory for your agents to maintain conversation context. Choose between short-term conversation memory and long-term persistent memory for user preferences.",
+    "product": "agent-builder",
+    "doc_type": "configuration",
+    "tags": ["memory", "context", "conversation"],
+    "url": "/docs/agent-builder/memory"
+  },
+  {
+    "_id": "builder-deploy-01",
+    "title": "Deploying Your Agent",
+    "content": "Deploy agents to production environments. Configure scaling, monitoring, and failover for reliable agent operation under load.",
+    "product": "agent-builder",
+    "doc_type": "tutorial",
+    "tags": ["deployment", "production", "scaling"],
+    "url": "/docs/agent-builder/deploy"
+  },
+  {
+    "_id": "builder-debug-01",
+    "title": "Debugging Agent Workflows",
+    "content": "Debug agent behavior by inspecting tool calls, prompts, and responses. Use the Agent Builder debugger to step through agent execution and identify issues.",
+    "product": "agent-builder",
+    "doc_type": "tutorial",
+    "tags": ["debugging", "logs", "troubleshooting"],
+    "url": "/docs/agent-builder/debugging"
+  }
+]

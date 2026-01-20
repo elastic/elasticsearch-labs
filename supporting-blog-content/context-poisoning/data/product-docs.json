@@ -1,0 +1,137 @@
+[
+  {
+    "_id": "oauth-2025-01",
+    "title": "OAuth 2.0 Authentication Setup",
+    "content": "To configure OAuth 2.0 authentication in Elasticsearch 9.x, use the new security API. Navigate to Stack Management > Security and enable OAuth provider. The modern approach uses API-driven configuration rather than file-based settings.",
+    "content_snippet": "Configure OAuth 2.0 in Elasticsearch 9.x using the security API via Stack Management > Security.",
+    "last_updated": "2026-01-15",
+    "version": "9.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2025-02",
+    "title": "OAuth Token Management",
+    "content": "Manage OAuth tokens programmatically via the /_security/oauth2/token endpoint. Tokens can be refreshed and revoked using the API. This replaces the legacy token management approach.",
+    "content_snippet": "Manage OAuth tokens via /_security/oauth2/token endpoint for refresh and revocation.",
+    "last_updated": "2026-01-10",
+    "version": "9.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2025-03",
+    "title": "OAuth Security Best Practices",
+    "content": "Best practices for OAuth in Elasticsearch 9.x include using short-lived tokens, enabling PKCE for public clients, and configuring proper redirect URIs. Always validate the state parameter.",
+    "content_snippet": "OAuth best practices: short-lived tokens, PKCE, proper redirect URIs, state validation.",
+    "last_updated": "2026-01-05",
+    "version": "9.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2025-04",
+    "title": "OAuth Provider Configuration",
+    "content": "Configure external OAuth providers like Okta, Azure AD, or Auth0 through the security API. Elasticsearch 9.x supports OpenID Connect protocol natively with automatic discovery.",
+    "content_snippet": "Configure Okta, Azure AD, Auth0 via security API with OIDC auto-discovery.",
+    "last_updated": "2025-12-20",
+    "version": "9.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2025-05",
+    "title": "OAuth Troubleshooting Guide",
+    "content": "Common OAuth issues in 9.x and their solutions. Check token expiration, validate redirect URIs match exactly, and verify client credentials. Use the _security/oauth2/debug endpoint for diagnostics.",
+    "content_snippet": "Troubleshoot OAuth: check token expiration, redirect URIs, credentials, use debug endpoint.",
+    "last_updated": "2025-12-15",
+    "version": "9.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2023-01",
+    "title": "OAuth Authentication Configuration",
+    "content": "Configure OAuth using the legacy realm settings in elasticsearch.yml. Add xpack.security.authc.realms.oidc configuration block. This file-based approach requires cluster restart.",
+    "content_snippet": "Configure OAuth via elasticsearch.yml with xpack.security.authc.realms.oidc settings.",
+    "last_updated": "2023-06-15",
+    "version": "7.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2023-02",
+    "title": "OAuth Realm Setup",
+    "content": "Add oauth realm to xpack.security.authc.realms.oidc.my-oidc. Configure op.issuer, op.authorization_endpoint, and op.token_endpoint manually in the configuration file.",
+    "content_snippet": "Set up OAuth realm in xpack.security.authc.realms.oidc with op.* settings.",
+    "last_updated": "2023-05-20",
+    "version": "7.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2023-03",
+    "title": "OAuth Client Registration",
+    "content": "Register OAuth clients by adding rp.client_id and rp.client_secret to your elasticsearch.yml configuration file. Secrets should be stored in the Elasticsearch keystore.",
+    "content_snippet": "Register OAuth clients via rp.client_id and rp.client_secret in elasticsearch.yml.",
+    "last_updated": "2023-04-10",
+    "version": "7.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2023-04",
+    "title": "OAuth Role Mapping",
+    "content": "Map OAuth claims to Elasticsearch roles using role_mappings.yml. Configure claim patterns for automatic role assignment based on user attributes from the identity provider.",
+    "content_snippet": "Map OAuth claims to roles via role_mappings.yml with claim patterns.",
+    "last_updated": "2023-03-05",
+    "version": "7.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2023-05",
+    "title": "OAuth Session Management",
+    "content": "Configure session settings in elasticsearch.yml including session.timeout and token.refresh settings for OAuth realms. Sessions are managed server-side.",
+    "content_snippet": "Configure OAuth sessions via session.timeout and token.refresh in config file.",
+    "last_updated": "2023-02-15",
+    "version": "7.x",
+    "status": "published"
+  },
+  {
+    "_id": "oauth-2022-01",
+    "title": "Setting Up OAuth (Deprecated)",
+    "content": "Use the shield plugin to configure OAuth authentication. Install shield and configure shield.authc settings. Note: Shield has been replaced by X-Pack security.",
+    "content_snippet": "Configure OAuth via Shield plugin (deprecated, replaced by X-Pack).",
+    "last_updated": "2022-03-15",
+    "version": "6.x",
+    "status": "deprecated"
+  },
+  {
+    "_id": "oauth-2022-02",
+    "title": "Shield OAuth Configuration",
+    "content": "Configure shield.authc.oauth settings in elasticsearch.yml. The shield plugin handles all OAuth token validation and session management.",
+    "content_snippet": "Set shield.authc.oauth settings for OAuth token validation.",
+    "last_updated": "2022-02-20",
+    "version": "6.x",
+    "status": "deprecated"
+  },
+  {
+    "_id": "oauth-2022-03",
+    "title": "OAuth Token Validation",
+    "content": "Shield validates OAuth tokens against configured providers. Set shield.authc.oauth.token_validation.endpoint in config to point to your OAuth provider.",
+    "content_snippet": "Shield validates tokens via shield.authc.oauth.token_validation.endpoint.",
+    "last_updated": "2022-02-10",
+    "version": "6.x",
+    "status": "deprecated"
+  },
+  {
+    "_id": "oauth-2022-04",
+    "title": "Shield Security Settings",
+    "content": "Enable OAuth in Shield by setting shield.authc.oauth.enabled: true. Configure callback URLs in shield.authc.oauth.callback for redirect handling.",
+    "content_snippet": "Enable OAuth: shield.authc.oauth.enabled: true with callback URLs.",
+    "last_updated": "2022-01-25",
+    "version": "6.x",
+    "status": "deprecated"
+  },
+  {
+    "_id": "oauth-2022-05",
+    "title": "Legacy OAuth Migration",
+    "content": "Guide for migrating from Shield OAuth to native X-Pack security. Shield is deprecated in favor of X-Pack which provides the same functionality with better integration.",
+    "content_snippet": "Migrate from Shield to X-Pack security for OAuth functionality.",
+    "last_updated": "2022-01-10",
+    "version": "6.x",
+    "status": "deprecated"
+  }
+]
