@@ -1,0 +1,47 @@
+[
+  {
+    "module": "src/auth/refresh.ts",
+    "error_type": "TokenRefreshRaceCondition",
+    "message": "User session terminated unexpectedly during token refresh",
+    "severity": "error",
+    "count": 342,
+    "user_ids_affected": ["user_001", "user_002", "user_003", "user_045", "user_089"],
+    "timestamp": "2024-12-20T10:00:00Z"
+  },
+  {
+    "module": "src/export/csv.ts",
+    "error_type": "ExportTimeout",
+    "message": "CSV export timed out after 30s for datasets exceeding 10k rows",
+    "severity": "error",
+    "count": 89,
+    "user_ids_affected": ["enterprise_user_01", "enterprise_user_02", "enterprise_user_05"],
+    "timestamp": "2024-12-20T10:00:00Z"
+  },
+  {
+    "module": "src/search/indexer.ts",
+    "error_type": "IndexingLag",
+    "message": "Search index not updated within expected 30s window after bulk update",
+    "severity": "warning",
+    "count": 12,
+    "user_ids_affected": ["user_112", "user_445"],
+    "timestamp": "2024-12-20T10:00:00Z"
+  },
+  {
+    "module": "src/api/rate-limiter.ts",
+    "error_type": "RateLimitMisconfiguration",
+    "message": "Rate limit applied inconsistently across API endpoints",
+    "severity": "warning",
+    "count": 23,
+    "user_ids_affected": ["user_067", "user_089"],
+    "timestamp": "2024-12-20T10:00:00Z"
+  },
+  {
+    "module": "src/notifications/email.ts",
+    "error_type": "EmailDeliveryFailure",
+    "message": "Email notifications failing silently for some users",
+    "severity": "error",
+    "count": 156,
+    "user_ids_affected": ["user_034", "user_078", "user_123"],
+    "timestamp": "2024-12-20T10:00:00Z"
+  }
+]
