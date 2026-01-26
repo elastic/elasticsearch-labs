@@ -1,0 +1,59 @@
+version: "1"
+name: Get Current Users Data
+enabled: true
+triggers:
+  - type: manual
+inputs:
+  - name: user-email
+    default: jhon@doe.com
+    type: string
+consts:
+  snow_token: <redacted_token>
+steps:
+  - name: snow_get_user_data
+    type: http
+    with:
+      url: https://elasticdev.service-now.com/api/now/table/sys_user?email={{ inputs.user-email }}
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: snow_get_computer_data
+    type: http
+    with:
+      url: https://elasticdev.service-now.com/api/now/table/cmdb_ci_computer?assigned_to={{ steps.snow_get_user_data.output.data.result[0].sys_id }}
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: snow_get_asset
+    type: http
+    with:
+      url: ${{ steps.snow_get_computer_data.output.data.result[0].asset.link }}
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: snow_get_offices
+    type: http
+    with:
+      url: ${{ steps.snow_get_user_data.output.data.result[0].company.link }}
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: log_results_from_snow_get_user_data
+    type: console
+    with:
+      message:
+        User Data JSON :{{ steps.snow_get_user_data.output.data.result[0] | json }} \n
+        Office Data JSON :{{ steps.snow_get_offices.output.data | json }} \n
+        Asset Data JSON :{{ steps.snow_get_asset.output.data.result | json }}Na

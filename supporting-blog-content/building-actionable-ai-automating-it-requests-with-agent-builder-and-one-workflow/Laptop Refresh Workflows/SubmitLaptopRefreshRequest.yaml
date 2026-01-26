@@ -1,0 +1,128 @@
+version: "1"
+name: Submit Laptop Refresh Request
+enabled: true
+triggers:
+  - type: manual
+inputs:
+  - name: userid
+    default: user-id
+    type: string
+  - name: preferred-address
+    default: random address
+    type: string
+  - name: laptop-choice
+    default: Macbook latest
+    type: string
+  - name: mobile-number
+    default: 9999999999
+    type: number
+  - name: laptop-keep-or-return
+    default: return
+    type: string
+consts:
+  snow_token: <redacted_token>
+  itemidsnow: <redacted_token>
+  officeid: <redacted_token>
+steps:
+  - name: snow_get_computer_data
+    type: http
+    with:
+      url: https://elasticdev.service-now.com/api/now/table/cmdb_ci_computer?assigned_to={{ inputs.userid }}
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: log_results_after_snow_get_computer_data
+    type: console
+    with:
+      message: FINAL CONSOLE LOG {{ steps.snow_get_computer_data.output.data | json }}
+  - name: snow_get_asset
+    type: http
+    with:
+      url: ${{ steps.snow_get_computer_data.output.data.result[0].asset.link }}
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: log_results_after_snow_get_asset
+    type: console
+    with:
+      message: FINAL CONSOLE LOG {{ steps.snow_get_asset.output.data.result | json }}
+  - name: snow_get_offices
+    type: http
+    with:
+      url: https://elasticdev.service-now.com/api/now/table/core_company
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      timeout: 30s
+  - name: log_results_after_snow_get_offices
+    type: console
+    with:
+      message: FINAL CONSOLE LOG {{ steps.snow_get_offices.output.data | json }}
+  - name: snow_post_add_item_to_cart
+    type: http
+    with:
+      url: https://elasticdev.service-now.com/api/sn_sc/servicecatalog/items/{{ consts.itemidsnow }}/add_to_cart
+      method: POST
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      body: |
+        {
+            "sysparm_quantity": 1,
+            "variables": {
+              "caller_id_common": "{{ inputs.userid }}",
+              "current_device": "{{ steps.snow_get_asset.output.data.result.sys_id }}",
+              "laptop_keep_or_return": "{{ inputs.laptop-keep-or-return }}",
+              "choose_your_laptop": "{{ inputs.laptop-choice }}",
+              "where_should_we_deliver_your_laptop": "elastic_offices",
+              "office": "{{ consts.officeid }}",
+              "phone_number": "{{ inputs.mobile-number }}",
+              "configuration_item": "{{ steps.snow_get_computer_data.output.data.result[0].sys_id }}",
+              "shipping_address": "{{ inputs.preferred-address }}"
+            }
+        }
+      timeout: 30s
+  - name: log_results_after_snow_post_add_item_to_cart
+    type: console
+    with:
+      message: FINAL CONSOLE LOG {{ steps.snow_post_add_item_to_cart.output.data | json }}
+  - name: snow_post_submit_order
+    type: http
+    with:
+      url: https://elasticdev.service-now.com/api/sn_sc/servicecatalog/cart/submit_order
+      method: POST
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_token }}
+      body: |
+        {
+          "requested_for": "{{ inputs.userid }}"
+        }
+      timeout: 30s
+  - name: index-two-record-creation
+    type: elasticsearch.index
+    with:
+      index: laptop-refresh-submission-data
+      id: "{{ steps.snow_post_submit_order.output.data.result.request_id }}"
+      document:
+        request-id: "{{ steps.snow_post_submit_order.output.data.result.request_id }}"
+        user-id: "{{ inputs.userid }}"
+        current-device: "{{ steps.snow_get_computer_data.output.data.result[0].sys_id }}"
+        requested-for: "{{ inputs.userid }}"
+        configuration-item: "{{ steps.snow_get_computer_data.output.data.result[0].sys_id }}"
+        laptop-choice: "{{ inputs.laptop-choice }}"
+        mobile-number: "{{ inputs.mobile-number }}"
+  - name: log_results_after_snow_post_submit_order
+    type: console
+    with:
+      message: FINAL CONSOLE LOG {{ steps.snow_post_submit_order.output.data | json }}
