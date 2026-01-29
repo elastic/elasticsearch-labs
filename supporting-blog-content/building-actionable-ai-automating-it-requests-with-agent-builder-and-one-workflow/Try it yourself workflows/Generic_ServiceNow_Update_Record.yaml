@@ -1,0 +1,41 @@
+version: "1"
+name: Generic ServiceNow Update Record
+description: Updates an existing record in ServiceNow by sys_id.
+enabled: true
+tags:
+  - service-now
+  - generic
+triggers:
+  - type: manual
+inputs:
+  - name: table_name
+    description: The ServiceNow table (e.g., incident)
+    default: incident
+    type: string
+  - name: sys_id
+    description: The sys_id of the record to update
+    default: <sys_id>
+    type: string
+  - name: payload
+    description: The JSON payload with fields to update
+    default: '{"state": "2"}'
+    type: string
+consts:
+  snow_instance_url: https://<your-instance>.service-now.com
+  snow_auth_token: <redacted_token_or_base64_auth>
+steps:
+  - name: update_record
+    type: http
+    with:
+      url: "{{ consts.snow_instance_url }}/api/now/table/{{ inputs.table_name }}/{{ inputs.sys_id }}"
+      method: PATCH
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_auth_token }}
+      body: "{{ inputs.payload }}"
+      timeout: 30s
+  - name: log_output
+    type: console
+    with:
+      message: "Updated Record: {{ steps.update_record.output.data | json }}"
