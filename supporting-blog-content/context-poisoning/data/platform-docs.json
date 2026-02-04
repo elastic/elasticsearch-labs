@@ -1,0 +1,137 @@
+[
+  {
+    "_id": "serverless-auth-01",
+    "title": "Authentication in Serverless",
+    "content": "Custom authentication is not available in Serverless deployments. Use Single Sign-On (SSO) with your identity provider instead. Serverless manages all authentication through your organization's IdP.",
+    "content_snippet": "Custom authentication not available in Serverless. Use SSO with your identity provider.",
+    "deployment_type": "serverless",
+    "feature_supported": false,
+    "doc_status": "current"
+  },
+  {
+    "_id": "serverless-sso-01",
+    "title": "SSO Configuration for Serverless",
+    "content": "Configure SSO authentication in Serverless by connecting your SAML 2.0 or OpenID Connect identity provider in the Cloud console. All user management flows through your IdP.",
+    "content_snippet": "Configure SSO in Serverless via Cloud console with SAML 2.0 or OIDC.",
+    "deployment_type": "serverless",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "serverless-users-01",
+    "title": "User Management in Serverless",
+    "content": "Direct user creation is not supported in Serverless. Manage users through your organization's identity provider. User permissions sync automatically from IdP group memberships.",
+    "content_snippet": "Direct user creation not supported in Serverless. Use your organization's IdP.",
+    "deployment_type": "serverless",
+    "feature_supported": false,
+    "doc_status": "current"
+  },
+  {
+    "_id": "serverless-roles-01",
+    "title": "Role-Based Access in Serverless",
+    "content": "Configure roles and permissions through the Serverless console. Roles sync automatically with your SSO provider groups. Custom roles can be mapped to IdP groups.",
+    "content_snippet": "Configure roles in Serverless console. Roles sync with SSO provider groups.",
+    "deployment_type": "serverless",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "serverless-api-keys-01",
+    "title": "API Keys in Serverless",
+    "content": "Create API keys for programmatic access to your Serverless project. API keys inherit permissions from the creating user. This is the recommended way for service authentication.",
+    "content_snippet": "Create API keys for programmatic Serverless access. Keys inherit user permissions.",
+    "deployment_type": "serverless",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "cloud-auth-01",
+    "title": "Custom Authentication in Cloud",
+    "content": "Configure custom users in Elastic Cloud using the native realm. Create users via Kibana or the security API. Cloud supports both native users and federated identity.",
+    "content_snippet": "Configure custom users in Cloud via native realm using Kibana or security API.",
+    "deployment_type": "cloud",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "cloud-users-01",
+    "title": "User Creation in Cloud",
+    "content": "Create local users in your Cloud deployment. Navigate to Stack Management > Security > Users to add new users with custom roles and permissions.",
+    "content_snippet": "Create users in Cloud via Stack Management > Security > Users.",
+    "deployment_type": "cloud",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "cloud-sso-01",
+    "title": "SSO Options in Cloud",
+    "content": "Cloud supports both native users and SSO. Enable SSO through deployment settings while maintaining native user support for administrative accounts.",
+    "content_snippet": "Cloud supports native users and SSO simultaneously.",
+    "deployment_type": "cloud",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "cloud-roles-01",
+    "title": "Custom Roles in Cloud",
+    "content": "Define custom roles with fine-grained permissions. Cloud supports all native Elasticsearch role configurations including index and cluster privileges.",
+    "content_snippet": "Define custom roles with fine-grained permissions in Cloud.",
+    "deployment_type": "cloud",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "cloud-ldap-01",
+    "title": "LDAP Integration in Cloud",
+    "content": "Connect your LDAP directory to Cloud deployments for enterprise authentication. Supports Active Directory and OpenLDAP with user and group synchronization.",
+    "content_snippet": "Connect LDAP/Active Directory to Cloud for enterprise auth.",
+    "deployment_type": "cloud",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "self-hosted-auth-01",
+    "title": "User Management Self-Hosted",
+    "content": "Full control over authentication in self-hosted deployments. Configure multiple realms including native, LDAP, PKI, and SAML. Each realm can have different priority.",
+    "content_snippet": "Full auth control in self-hosted: native, LDAP, PKI, SAML realms.",
+    "deployment_type": "self-hosted",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "self-hosted-native-01",
+    "title": "Native Realm Configuration",
+    "content": "The native realm stores users in a dedicated Elasticsearch index. Enable with xpack.security.authc.realms.native settings in elasticsearch.yml.",
+    "content_snippet": "Native realm stores users in ES index. Configure in elasticsearch.yml.",
+    "deployment_type": "self-hosted",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "self-hosted-ldap-01",
+    "title": "LDAP Authentication",
+    "content": "Connect to enterprise LDAP directories. Configure bind DN, user search base, and group mappings in elasticsearch.yml for seamless directory integration.",
+    "content_snippet": "Connect LDAP: configure bind DN, user search base, group mappings.",
+    "deployment_type": "self-hosted",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "self-hosted-pki-01",
+    "title": "PKI Certificate Auth",
+    "content": "Authenticate users via client certificates. Configure PKI realm with truststore and certificate chain validation for mutual TLS authentication.",
+    "content_snippet": "PKI auth via client certs with truststore and chain validation.",
+    "deployment_type": "self-hosted",
+    "feature_supported": true,
+    "doc_status": "current"
+  },
+  {
+    "_id": "self-hosted-custom-01",
+    "title": "Custom Realm Development",
+    "content": "Develop custom authentication realms by extending the Elasticsearch security plugin. Full API access for custom auth flows and integration with proprietary systems.",
+    "content_snippet": "Develop custom auth realms by extending security plugin.",
+    "deployment_type": "self-hosted",
+    "feature_supported": true,
+    "doc_status": "current"
+  }
+]
