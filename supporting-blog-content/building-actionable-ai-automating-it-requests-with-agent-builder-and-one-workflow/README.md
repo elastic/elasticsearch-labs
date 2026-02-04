@@ -2,6 +2,8 @@
 
 This directory contains resources and workflows for building an AI agent capable of automating laptop refresh requests for Elastic employees. It accompanies the blog post "Building Actionable AI: Automating IT Requests with Agent Builder and One Workflow".
 
+For more details on working with workflows, refer to the [Workflows documentation](https://www.elastic.co/docs/explore-analyze/workflows).
+
 ## Contents
 
 ### Files
