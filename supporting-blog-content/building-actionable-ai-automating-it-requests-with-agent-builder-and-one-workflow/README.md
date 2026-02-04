@@ -57,3 +57,48 @@ Follow these steps to set up and execute a workflow, using the provided screensh
     - Update the **consts** values (Step 4 in the image) with your ServiceNow credentials.
     - Click the **Execute** button (Step 5 in the image) to run the workflow.
       ![Step 4](Assets/4.png)
+
+5.  **Test Workflow**:
+    As shown in step 6, try changing the JSON for testing the workflow created and then click on **Run**.
+    ![Step 5](Assets/5.png)
+
+6.  **Verify Execution**:
+    As displayed in step 7, the execution was successful. You'll be able to access input and output of each step.
+    ![Step 6](Assets/6.png)
+
+7.  **Navigate to Agents**:
+    As shown in step 8, click on **Agents** from the left navigation tab. As shown in step 9, click on **View all agents**.
+    ![Step 7](Assets/7.png)
+
+8.  **Create New Agent**:
+    As shown in step 10, click on **New agent**.
+    ![Step 8](Assets/8.png)
+
+9.  **Configure Agent**:
+    As shown in this image, paste the instructions from `Try it yourself Agents/service_now_utility_agent.ipynb` into the box after giving a name to the Agent. Then, as step 11 shows, click on **Save**.
+    ![Step 9](Assets/9.png)
+
+10. **Manage Tools**:
+    As step 12 mentions, click on **Manage tools** and then click on **New tool**.
+    ![Step 10](Assets/10.png)
+
+11. **Create Tool**:
+    As step 13 shows, select **Workflow** in the type field. As step 14 shows, select the workflow that you have created. As shown in step 15, give a name to the tool which we are creating here, and click on **Save** based on step 16.
+    ![Step 11](Assets/11.png)
+
+12. **Edit Agent**:
+    Step 17: Now click on **Edit agent** after going to the agents section.
+    ![Step 12](Assets/12.png)
+
+13. **Add Tools to Agent**:
+    Step 18: Click on **Tools**.
+    ![Step 13](Assets/13.png)
+
+14. **Select and Save Tool**:
+    Step 19: Search for the tool which you created. Step 20: Select the newly created tool. Step 21: Click on **Save**, and now you are ready to use the agent.
+    ![Step 14](Assets/14.png)
+
+## Agent Demo
+
+Here is the output of the agent and its interaction:
+![Demo](Assets/DemoGif.gif)
