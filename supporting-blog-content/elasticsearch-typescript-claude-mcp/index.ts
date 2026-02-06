@@ -56,14 +56,18 @@ server.registerTool(
       query: z
         .string()
         .describe("The search query terms to find relevant documents"),
-      max_results: z.number().describe("Maximum number of results to return"),
+      max_results: z
+        .number()
+        .optional()
+        .default(5)
+        .describe("Maximum number of results to return"),
     },
     outputSchema: {
       results: z.array(SearchResultSchema),
       total: z.number(),
     },
   },
-  async ({ query, max_results = 5 }) => {
+  async ({ query, max_results }) => {
     if (!query) {
       return {
         content: [
@@ -127,15 +131,15 @@ server.registerTool(
         .map(
           (r, i) =>
             `[${i + 1}] ${r.title} (score: ${r.score.toFixed(
-              2
-            )})\n${r.content.substring(0, 200)}...`
+              2,
+            )})\n${r.content.substring(0, 200)}...`,
         )
         .join("\n\n");
 
       const totalHits =
         typeof response.hits.total === "number"
           ? response.hits.total
-          : response.hits.total?.value ?? 0;
+          : (response.hits.total?.value ?? 0);
 
       return {
         content: [
@@ -162,7 +166,7 @@ server.registerTool(
         isError: true,
       };
     }
-  }
+  },
 );
 
 server.registerTool(
@@ -196,11 +200,11 @@ server.registerTool(
           title: z.string(),
           tags: z.array(z.string()),
           relevance_score: z.number(),
-        })
+        }),
       ),
     },
   },
-  async ({ results, question, max_length = 500, max_docs = 5 }) => {
+  async ({ results, question, max_length, max_docs }) => {
     if (!results || results.length === 0 || !question) {
       return {
         content: [
@@ -219,7 +223,7 @@ server.registerTool(
       const context = used
         .map(
           (r: SearchResult, i: number) =>
-            `[Document ${i + 1}: ${r.title}]\\n${r.content}`
+            `[Document ${i + 1}: ${r.title}]\\n${r.content}`,
         )
         .join("\n\n---\n\n");
 
@@ -244,7 +248,7 @@ server.registerTool(
       const summaryText =
         completion.choices[0]?.message?.content ?? "No summary generated.";
 
-      const citations = results.map((r: SearchResult) => ({
+      const citations = used.map((r: SearchResult) => ({
         id: r.id,
         title: r.title,
         tags: r.tags,
@@ -255,8 +259,8 @@ server.registerTool(
         .map(
           (c: any, i: number) =>
             `[${i + 1}] ID: ${c.id}, Title: "${c.title}", Tags: ${c.tags.join(
-              ", "
-            )}, Score: ${c.relevance_score.toFixed(2)}`
+              ", ",
+            )}, Score: ${c.relevance_score.toFixed(2)}`,
         )
         .join("\n");
 
@@ -286,7 +290,7 @@ server.registerTool(
         isError: true,
       };
     }
-  }
+  },
 );
 
 const transport = new StdioServerTransport();
