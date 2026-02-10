@@ -1,0 +1,40 @@
+version: "1"
+name: Generic ServiceNow Get Records
+description: Fetches records from a specified ServiceNow table using query parameters.
+enabled: true
+tags:
+  - service-now
+  - generic
+triggers:
+  - type: manual
+inputs:
+  - name: table_name
+    description: The ServiceNow table to query (e.g., sys_user, cmdb_ci_computer)
+    default: sys_user
+    type: string
+  - name: query
+    description: The sysparm_query string (e.g., active=true^nameSTARTSWITHA)
+    default: active=true
+    type: string
+  - name: limit
+    description: The maximum number of records to return
+    default: "10"
+    type: string
+consts:
+  snow_instance_url: https://<your-instance>.service-now.com
+  snow_auth_token: <redacted_token_or_base64_auth>
+steps:
+  - name: call_snow_table_api
+    type: http
+    with:
+      url: "{{ consts.snow_instance_url }}/api/now/table/{{ inputs.table_name }}?sysparm_query={{ inputs.query }}&sysparm_limit={{ inputs.limit }}"
+      method: GET
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_auth_token }}
+      timeout: 30s
+  - name: log_output
+    type: console
+    with:
+      message: "Result: {{ steps.call_snow_table_api.output.data | json }}"

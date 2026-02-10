@@ -1,0 +1,59 @@
+version: "1"
+name: Generic ServiceNow Catalog Order
+description: Submits a Service Catalog request (adds item to cart and checks out).
+enabled: true
+tags:
+  - service-now
+  - generic
+triggers:
+  - type: manual
+inputs:
+  - name: catalog_item_id
+    description: The sys_id of the catalog item (sc_cat_item)
+    default: <sys_id>
+    type: string
+  - name: requested_for
+    description: The user ID (sys_id) for whom the request is made
+    default: <user_sys_id>
+    type: string
+  - name: variables
+    description: JSON object of variables for the item
+    default: '{"variable_name": "value"}'
+    type: string
+consts:
+  snow_instance_url: https://<your-instance>.service-now.com
+  snow_auth_token: <redacted_token_or_base64_auth>
+steps:
+  - name: add_item_to_cart
+    type: http
+    with:
+      url: "{{ consts.snow_instance_url }}/api/sn_sc/servicecatalog/items/{{ inputs.catalog_item_id }}/add_to_cart"
+      method: POST
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_auth_token }}
+      body: |
+        {
+            "sysparm_quantity": 1,
+            "variables": {{ inputs.variables }}
+        }
+      timeout: 30s
+  - name: submit_order
+    type: http
+    with:
+      url: "{{ consts.snow_instance_url }}/api/sn_sc/servicecatalog/cart/submit_order"
+      method: POST
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_auth_token }}
+      body: |
+        {
+          "requested_for": "{{ inputs.requested_for }}"
+        }
+      timeout: 30s
+  - name: log_confirmation
+    type: console
+    with:
+      message: "Request Submitted. Details: {{ steps.submit_order.output.data | json }}"

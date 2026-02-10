@@ -1,0 +1,37 @@
+version: "1"
+name: Generic ServiceNow Create Record
+description: Creates a new record in a specified ServiceNow table.
+enabled: true
+tags:
+  - service-now
+  - generic
+triggers:
+  - type: manual
+inputs:
+  - name: table_name
+    description: The ServiceNow table to insert into (e.g., incident, change_request)
+    default: incident
+    type: string
+  - name: payload
+    description: The JSON payload for the new record
+    default: '{"short_description": "Test Incident", "urgency": "3"}'
+    type: string
+consts:
+  snow_instance_url: https://<your-instance>.service-now.com
+  snow_auth_token: <redacted_token_or_base64_auth>
+steps:
+  - name: create_record
+    type: http
+    with:
+      url: "{{ consts.snow_instance_url }}/api/now/table/{{ inputs.table_name }}"
+      method: POST
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Basic {{ consts.snow_auth_token }}
+      body: "{{ inputs.payload }}"
+      timeout: 30s
+  - name: log_output
+    type: console
+    with:
+      message: "Created Record: {{ steps.create_record.output.data | json }}"

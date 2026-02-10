@@ -1,0 +1,163 @@
+version: "1"
+name: CasePointServiceNow
+description: This is a new workflow
+enabled: true
+tags:
+  - service-now
+  - laptop-refresh
+triggers:
+  - type: manual
+inputs:
+  - name: email
+    description: The email to be used
+    default: jhon@doe.com
+    type: string
+  - name: sys_id_sc_req_item
+    description: The sys_id to be used
+    default: 123qwer
+    type: string
+consts:
+  orgidcasepoint: <redacted_token>
+  api_key_service_now: <redacted_token>
+  casepoint_clientid: <redacted_token>
+  casepoint_clientsecret: <redacted_token>
+steps:
+  - name: casepoint_fetch_the_token
+    type: http
+    with:
+      url: https://api.casepoint.com/Identity/connect/token
+      method: POST
+      headers:
+        Accept: "*/*"
+        Content-Type: application/x-www-form-urlencoded
+      body:
+        client_id: { { consts.casepoint_clientid } }
+        grant_type: client_credentials
+        scope: LegalHold Matters Organizations
+        client_secret: { { consts.casepoint_clientsecret } }
+      timeout: 30s
+  - name: casepoint_fetch_cp_token
+    type: http
+    with:
+      url: https://api.casepoint.com/api
+      method: POST
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+        Authorization: Bearer {{ steps.casepoint_fetch_the_token.output.data.access_token }}
+      body: |
+        {
+          "query": "mutation { connectOrganization(id: {{ consts.orgidcasepoint }} ) { cpToken } }",
+          "variables": {}
+        }
+      timeout: 30s
+  - name: casepoint_legal_hold
+    type: http
+    with:
+      url: https://api.casepoint.com/api
+      method: POST
+      headers:
+        cpToken: "{{ steps.casepoint_fetch_cp_token.output.data.connectOrganization.cpToken }}"
+        Content-Type: application/json
+        Authorization: Bearer {{ steps.casepoint_fetch_the_token.output.data.access_token }}
+      body: |
+        {
+          "query": "query { legalHold { legalHoldCustodianDetails(holdName: \"\", matterName: \"\", custodianEmail: \"{{ inputs.email }}\", employmentStatus: \"\", holdStatus: \"\", currentPage: 1, recordPerPage: 10, sortBy: \"holdName\", sortOrder: \"desc\") { pageInfo { currentPage recordPerPage totalPages sortBy sortOrder filter } totalRecordsCount data { holdID holdName matterid matterName matterNumber holdDescription holdStatus holdStartDate holdEndDate adminReminderDate legalHoldAdmin matterWorkspaceTitle issuerName issuerEmail createdBy createdDate modifiedBy modifiedDate lhCustomFieldData custodianList { custodianID custodianName custodianEmail custodianGroupID custodianGroup custodianDepartmentID departmentName custodianJobTitle employmentStatus custodianStatus managerEmail custodianCustomFieldData } } } } }",
+          "variables": {}
+        }
+      timeout: 30s
+  - name: if_legal_hold
+    type: if
+    condition: steps.casepoint_legal_hold.output.data.legalHold.legalHoldCustodianDetails.data.length > 0
+    steps:
+      - name: if_hold_status_release_or_null
+        type: if
+        condition: 'not steps.casepoint_legal_hold.output.data.legalHold.legalHoldCustodianDetails.data[0].holdStatus : "Released" and not steps.casepoint_legal_hold.output.data.legalHold.legalHoldCustodianDetails.data[0].holdStatus : ""'
+        steps:
+          - name: for_through_custodian_list
+            type: foreach
+            foreach: "{{ steps.casepoint_legal_hold.output.data.legalHold.legalHoldCustodianDetails.data[0].custodianList | json }}"
+            steps:
+              - name: if_email_matches_custodian
+                type: if
+                condition: " foreach.item.custodianEmail: {{inputs.email}} "
+                steps:
+                  - name: if_custodian_group_is_blank
+                    type: if
+                    condition: 'foreach.item.custodianGroup: ""'
+                    steps:
+                      - name: console_custodian_group_go_ahead
+                        type: console
+                        with:
+                          message: "We are good to go ahead with custodian group"
+                      - name: update_sc_req_item_1
+                        type: http
+                        with:
+                          url: https://elasticdev.service-now.com/api/sn_sc/servicecatalog/variables/sc_req_item/{{ inputs.sys_id_sc_req_item }}
+                          method: PUT
+                          headers:
+                            Accept: application/json
+                            Content-Type: application/json
+                            Authorization: Basic {{ consts.api_key_service_now }}
+                          body: |
+                            {
+                              "laptop_eligibility_check": "Yes"
+                            }
+                          timeout: 30s
+                    else:
+                      - name: console_custodian_group_cannot_go_ahead
+                        type: console
+                        with:
+                          message: "we can't go ahead with custodian because custodian group has a value: {{ foreach.item.custodianGroup }}"
+                      - name: update_sc_req_item_2
+                        type: http
+                        with:
+                          url: https://elasticdev.service-now.com/api/sn_sc/servicecatalog/variables/sc_req_item/{{ inputs.sys_id_sc_req_item }}
+                          method: PUT
+                          headers:
+                            Accept: application/json
+                            Content-Type: application/json
+                            Authorization: Basic {{ consts.api_key_service_now }}
+                          body: |
+                            {
+                              "laptop_eligibility_check": "No"
+                            }
+                          timeout: 30s
+        else:
+          - name: console_hold_status_can_not_go_ahead
+            type: console
+            with:
+              message: "we can't go ahead with custodian because hold status has a value: {{ steps.casepoint_legal_hold.output.data.legalHold.legalHoldCustodianDetails.data[0].holdStatus }}"
+          - name: update_sc_req_item_3
+            type: http
+            with:
+              url: https://elasticdev.service-now.com/api/sn_sc/servicecatalog/variables/sc_req_item/{{ inputs.sys_id_sc_req_item }}
+              method: PUT
+              headers:
+                Accept: application/json
+                Content-Type: application/json
+                Authorization: Basic {{ consts.api_key_service_now }}
+              body: |
+                {
+                  "laptop_eligibility_check": "No"
+                }
+              timeout: 30s
+    else:
+      - name: console_legal_hold_not_found
+        type: console
+        with:
+          message: "legal Hold Not Found"
+      - name: update_sc_req_item_4
+        type: http
+        with:
+          url: https://elasticdev.service-now.com/api/sn_sc/servicecatalog/variables/sc_req_item/{{ inputs.sys_id_sc_req_item }}
+          method: PUT
+          headers:
+            Accept: application/json
+            Content-Type: application/json
+            Authorization: Basic {{ consts.api_key_service_now }}
+          body: |
+            {
+              "laptop_eligibility_check": "Yes"
+            }
+          timeout: 30s
