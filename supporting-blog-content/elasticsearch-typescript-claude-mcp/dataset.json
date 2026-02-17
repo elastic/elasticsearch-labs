@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Elasticsearch Index Management Guide",
+    "content": "This document explains how to manage indices in Elasticsearch, including lifecycle policies, rollovers, and snapshots. Improper index configuration can lead to shard imbalance and high disk usage. To maintain performance, monitor shard sizes and use ILM to automate index rotation. Snapshots should be stored in a remote repository such as S3 for disaster recovery.",
+    "tags": ["elasticsearch", "indexing", "operations"]
+  },
+  {
+    "id": 2,
+    "title": "CI/CD Pipeline Best Practices",
+    "content": "A robust CI/CD pipeline improves code quality and reduces deployment risk. Always include linting, testing, and security scans before merging to main. Use environment variables for secrets and keep build artifacts versioned. Monitor build times to identify bottlenecks, and use parallel jobs to reduce total execution time.",
+    "tags": ["cicd", "devops", "automation"]
+  },
+  {
+    "id": 3,
+    "title": "Monitoring and Alerting Setup",
+    "content": "Effective monitoring involves both metrics and logs. Use Prometheus for metrics collection and Grafana for visualization. Set alerts for CPU, memory, and error rates. Log aggregation through Elasticsearch enables quick root cause analysis. Always test alert thresholds to avoid noise or missed incidents.",
+    "tags": ["monitoring", "alerting", "grafana"]
+  },
+  {
+    "id": 4,
+    "title": "User Authentication with OAuth 2.0",
+    "content": "OAuth 2.0 allows secure delegated access without sharing credentials. Configure your identity provider to issue tokens with limited scope and lifetime. Store refresh tokens securely and validate access tokens on each API request. Avoid embedding secrets in client-side code and enforce HTTPS across all endpoints.",
+    "tags": ["security", "oauth", "authentication"]
+  },
+  {
+    "id": 5,
+    "title": "Logging Standards for Microservices",
+    "content": "Consistent logging across microservices helps with debugging and tracing. Use structured JSON logs and include request IDs and timestamps. Avoid logging sensitive information. Centralize logs in Elasticsearch or a similar system. Configure log rotation to prevent storage issues and ensure logs are searchable for at least 30 days.",
+    "tags": ["logging", "microservices", "standards"]
+  },
+  {
+    "id": 6,
+    "title": "Database Backup and Recovery Policy",
+    "content": "Backups should be automated and tested regularly. Store copies in multiple regions to ensure resilience. Use incremental backups to save storage space and reduce downtime. Recovery tests must be scheduled quarterly to validate integrity. Encryption at rest and in transit is mandatory for all backup data.",
+    "tags": ["database", "backup", "recovery"]
+  },
+  {
+    "id": 7,
+    "title": "API Design Guidelines",
+    "content": "Good API design improves usability and maintainability. Use RESTful conventions and clear versioning. Provide consistent error codes and meaningful messages. Document all endpoints with OpenAPI. Include rate limiting to prevent abuse, and support pagination for large result sets.",
+    "tags": ["api", "design", "rest"]
+  },
+  {
+    "id": 8,
+    "title": "Kubernetes Deployment Checklist",
+    "content": "Before deploying to Kubernetes, validate your manifests with kubeval or a similar tool. Ensure resource limits are defined for CPU and memory. Use ConfigMaps for configuration and Secrets for credentials. Enable health probes and configure horizontal pod autoscaling. Monitor deployments through kubectl or dashboards.",
+    "tags": ["kubernetes", "deployment", "containers"]
+  },
+  {
+    "id": 9,
+    "title": "Service Reliability and SLOs",
+    "content": "Define clear service-level objectives (SLOs) for uptime and latency. Use synthetic monitoring to validate performance continuously. When an SLO breach occurs, conduct a postmortem and identify root causes. Track error budgets to balance reliability and velocity in development cycles.",
+    "tags": ["reliability", "slo", "performance"]
+  },
+  {
+    "id": 10,
+    "title": "Incident Response Playbook",
+    "content": "During incidents, communication and coordination are key. Assign clear roles such as incident commander, communications lead, and subject matter experts. Use a shared chat channel for real-time updates. Document all actions for post-incident review. After resolution, update runbooks and preventive measures.",
+    "tags": ["incident", "response", "playbook"]
+  },
+  {
+    "id": 11,
+    "title": "Access Control and Role Management",
+    "content": "Role-based access control ensures users only have permissions needed for their job. Regularly audit user roles and revoke inactive accounts. Implement just-in-time access for sensitive operations. Integrate with your identity provider for centralized management and apply the principle of least privilege.",
+    "tags": ["security", "rbac", "access"]
+  },
+  {
+    "id": 12,
+    "title": "Container Security Guidelines",
+    "content": "Containers should use minimal base images and run as non-root users. Regularly scan images for vulnerabilities using tools like Trivy. Keep dependencies up to date and avoid embedding credentials in Dockerfiles. Enable runtime protection to detect anomalies and prevent privilege escalation attacks.",
+    "tags": ["containers", "security", "devsecops"]
+  }
+]
