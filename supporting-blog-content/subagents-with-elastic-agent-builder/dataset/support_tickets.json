@@ -1,0 +1,90 @@
+[
+  {
+    "ticket_id": "TKT-1001",
+    "title": "CSV export keeps timing out",
+    "description": "Every time I try to export our quarterly report (about 15k rows), the export fails. This is blocking our monthly reporting.",
+    "related_module": "src/export/csv.ts",
+    "priority": "high",
+    "status": "open",
+    "customer_tier": "enterprise",
+    "created_at": "2024-12-18T09:00:00Z",
+    "marked_urgent": true
+  },
+  {
+    "ticket_id": "TKT-1002",
+    "title": "Export not working for large datasets",
+    "description": "Cannot export customer list. Times out every time.",
+    "related_module": "src/export/csv.ts",
+    "priority": "high",
+    "status": "open",
+    "customer_tier": "enterprise",
+    "created_at": "2024-12-17T14:00:00Z",
+    "marked_urgent": true
+  },
+  {
+    "ticket_id": "TKT-1003",
+    "title": "Random logouts are frustrating",
+    "description": "I keep getting logged out randomly throughout the day. Have to log back in 3-4 times.",
+    "related_module": "src/auth/refresh.ts",
+    "priority": "medium",
+    "status": "open",
+    "customer_tier": "pro",
+    "created_at": "2024-12-19T11:00:00Z",
+    "marked_urgent": false
+  },
+  {
+    "ticket_id": "TKT-1004",
+    "title": "Session timeout issue",
+    "description": "Getting logged out unexpectedly. Not a huge deal but annoying.",
+    "related_module": "src/auth/refresh.ts",
+    "priority": "low",
+    "status": "open",
+    "customer_tier": "free",
+    "created_at": "2024-12-15T16:00:00Z",
+    "marked_urgent": false
+  },
+  {
+    "ticket_id": "TKT-1005",
+    "title": "URGENT: Cannot generate monthly compliance report",
+    "description": "Our compliance team needs the export working by end of week or we face regulatory issues.",
+    "related_module": "src/export/csv.ts",
+    "priority": "critical",
+    "status": "open",
+    "customer_tier": "enterprise",
+    "created_at": "2024-12-19T08:00:00Z",
+    "marked_urgent": true
+  },
+  {
+    "ticket_id": "TKT-1006",
+    "title": "Export failing consistently",
+    "description": "Large dataset exports not working. Need this fixed ASAP.",
+    "related_module": "src/export/csv.ts",
+    "priority": "high",
+    "status": "open",
+    "customer_tier": "enterprise",
+    "created_at": "2024-12-16T10:00:00Z",
+    "marked_urgent": true
+  },
+  {
+    "ticket_id": "TKT-1007",
+    "title": "Bulk export timeout",
+    "description": "Trying to export 20k records and it times out.",
+    "related_module": "src/export/csv.ts",
+    "priority": "high",
+    "status": "open",
+    "customer_tier": "enterprise",
+    "created_at": "2024-12-18T13:00:00Z",
+    "marked_urgent": true
+  },
+  {
+    "ticket_id": "TKT-1008",
+    "title": "Search results outdated",
+    "description": "After adding new products, they don't show up in search for several minutes.",
+    "related_module": "src/search/indexer.ts",
+    "priority": "low",
+    "status": "open",
+    "customer_tier": "pro",
+    "created_at": "2024-12-14T09:00:00Z",
+    "marked_urgent": false
+  }
+]
