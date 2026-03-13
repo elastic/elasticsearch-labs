@@ -1,0 +1,54 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "filter": {
+        "product_synonyms": {
+          "type": "synonym",
+          "synonyms": [
+            "laptop, notebook",
+            "phone, mobile, smartphone",
+            "sneakers, trainers, running shoes",
+            "headphones, earphones, earbuds"
+          ]
+        }
+      },
+      "analyzer": {
+        "product_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "product_synonyms"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "title": {
+        "type": "text",
+        "analyzer": "product_analyzer",
+        "fields": { "keyword": { "type": "keyword" } }
+      },
+      "description": { "type": "text", "analyzer": "product_analyzer" },
+      "category": { "type": "keyword" },
+      "brand": { "type": "keyword" },
+      "price": { "type": "float" },
+      "rating": { "type": "float" },
+      "review_count": { "type": "integer" },
+      "in_stock": { "type": "boolean" },
+      "image_url": { "type": "keyword" },
+      "tags": { "type": "keyword" },
+      "rank_features": {
+        "type": "object",
+        "properties": {
+          "popularity": { "type": "rank_feature" },
+          "margin_score": { "type": "rank_feature" },
+          "freshness": { "type": "rank_feature" },
+          "conversion_rate": { "type": "rank_feature" }
+        }
+      }
+    }
+  }
+}

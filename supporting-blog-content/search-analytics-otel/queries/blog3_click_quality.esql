@@ -1,0 +1,75 @@
+// =============================================================================
+// Blog 3: Measuring Search Quality with Click Data — ES|QL Queries
+// =============================================================================
+//
+// These queries require Blog 3 click tracking to be uncommented and traffic
+// generated with: python generate_traffic.py --blog 3 --sessions 50
+//
+// Additional field mapping:
+//   search.action                → labels.search_action
+//   search.result_click_id       → labels.search_result_click_id
+//   search.result_click_position → numeric_labels.search_result_click_position
+//   search.first_click           → labels.search_first_click ("true"/"false" string!)
+//   search.client_id             → labels.search_client_id
+// =============================================================================
+
+
+// --- Overall Click-Through Rate (CTR) ---
+// Uses search.first_click to count only the first click per query (avoids inflating CTR)
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND (span.name == "search" OR labels.search_first_click == "true")
+  AND labels.search_user_query IS NOT NULL
+| STATS
+    searches = COUNT(CASE(span.name == "search", 1)),
+    clicked = COUNT(CASE(labels.search_first_click == "true", 1))
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+
+
+// --- CTR by query (which queries get clicked?) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND (span.name == "search" OR labels.search_first_click == "true")
+  AND labels.search_user_query IS NOT NULL
+| STATS
+    searches = COUNT(CASE(span.name == "search", 1)),
+    clicked = COUNT(CASE(labels.search_first_click == "true", 1))
+  BY labels.search_user_query
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+| WHERE searches > 3
+| SORT ctr_pct ASC, searches DESC
+
+
+// --- Mean Reciprocal Rank (MRR) ---
+// Measures how high up the results users click. MRR of 1.0 = always click position 1.
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND labels.search_action == "click"
+  AND numeric_labels.search_result_click_position IS NOT NULL
+| EVAL reciprocal_rank = 1.0 / numeric_labels.search_result_click_position
+| STATS mrr = ROUND(AVG(reciprocal_rank), 3)
+
+
+// --- MRR by query (which queries have poor ranking?) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND labels.search_action == "click"
+  AND numeric_labels.search_result_click_position IS NOT NULL
+  AND labels.search_user_query IS NOT NULL
+| EVAL reciprocal_rank = 1.0 / numeric_labels.search_result_click_position
+| STATS
+    mrr = ROUND(AVG(reciprocal_rank), 3),
+    clicks = COUNT(*)
+  BY labels.search_user_query
+| WHERE clicks > 2
+| SORT mrr ASC
+
+
+// --- Click position distribution ---
+// Shows where in results users are clicking (healthy = heavily weighted to position 1)
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND labels.search_action == "click"
+  AND numeric_labels.search_result_click_position IS NOT NULL
+| STATS clicks = COUNT(*) BY numeric_labels.search_result_click_position
+| SORT numeric_labels.search_result_click_position

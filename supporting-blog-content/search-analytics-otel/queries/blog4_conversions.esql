@@ -1,0 +1,81 @@
+// =============================================================================
+// Blog 4: From Clicks to Conversions — ES|QL Queries
+// =============================================================================
+//
+// These queries require Blog 3 + Blog 4 to be uncommented and traffic
+// generated with: python generate_traffic.py --blog 4 --sessions 100
+//
+// Additional field mapping:
+//   cart.quantity          → numeric_labels.cart_quantity
+//   cart.price             → numeric_labels.cart_price
+//   checkout.order_id      → labels.checkout_order_id
+//   checkout.total_amount  → numeric_labels.checkout_total_amount
+//   checkout.item_count    → numeric_labels.checkout_item_count
+// =============================================================================
+
+
+// --- Full conversion funnel ---
+// search → click → cart → purchase (each stage with counts and conversion rates)
+// Uses search.first_click for clicks to count unique searches with at least one click
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND (
+    span.name == "search"
+    OR labels.search_first_click == "true"
+    OR labels.search_action IN ("add_to_cart", "purchase")
+  )
+| STATS
+    searches  = COUNT(CASE(span.name == "search", 1)),
+    clicked   = COUNT(CASE(labels.search_first_click == "true", 1)),
+    carts     = COUNT(CASE(labels.search_action == "add_to_cart", 1)),
+    purchases = COUNT(CASE(labels.search_action == "purchase", 1))
+| EVAL
+    click_rate    = ROUND(100.0 * clicked / searches, 1),
+    cart_rate     = ROUND(100.0 * carts / clicked, 1),
+    purchase_rate = ROUND(100.0 * purchases / carts, 1),
+    overall_conversion = ROUND(100.0 * purchases / searches, 2)
+
+
+// --- Revenue by query ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND labels.search_action == "purchase"
+  AND labels.search_user_query IS NOT NULL
+| STATS
+    purchase_count = COUNT(*),
+    total_revenue = ROUND(SUM(numeric_labels.checkout_total_amount), 2)
+  BY labels.search_user_query
+| SORT total_revenue DESC
+
+
+// --- Conversion funnel by query ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND (
+    span.name == "search"
+    OR labels.search_first_click == "true"
+    OR labels.search_action IN ("add_to_cart", "purchase")
+  )
+  AND labels.search_user_query IS NOT NULL
+| STATS
+    searches  = COUNT(CASE(span.name == "search", 1)),
+    clicked   = COUNT(CASE(labels.search_first_click == "true", 1)),
+    carts     = COUNT(CASE(labels.search_action == "add_to_cart", 1)),
+    purchases = COUNT(CASE(labels.search_action == "purchase", 1))
+  BY labels.search_user_query
+| WHERE searches > 3
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+| SORT purchases DESC, searches DESC
+
+
+// --- Most clicked products ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND labels.search_action IN ("click", "add_to_cart")
+| STATS
+    clicks = COUNT(CASE(labels.search_action == "click", 1)),
+    carts  = COUNT(CASE(labels.search_action == "add_to_cart", 1))
+  BY labels.search_result_click_id
+| EVAL cart_rate_pct = ROUND(100.0 * carts / clicks, 1)
+| SORT clicks DESC
+| LIMIT 15

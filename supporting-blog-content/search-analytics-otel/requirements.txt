@@ -1,0 +1,14 @@
+# Search Analytics with OTel — Python Dependencies
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-dotenv>=1.0.0
+elasticsearch>=8.15.0
+
+# OpenTelemetry (EDOT Python bundles SDK + OTLP exporter with Elastic defaults)
+# Note: vanilla opentelemetry-sdk + opentelemetry-exporter-otlp works identically
+elastic-opentelemetry>=0.8.0
+opentelemetry-instrumentation-fastapi>=0.48b0
+opentelemetry-instrumentation-elasticsearch>=0.48b0
+
+# Traffic generator
+httpx>=0.27.0

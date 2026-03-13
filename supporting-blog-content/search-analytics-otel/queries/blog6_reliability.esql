@@ -1,0 +1,94 @@
+// =============================================================================
+// Blog 6: Search Reliability Engineering — ES|QL Queries
+// =============================================================================
+//
+// These queries support operational monitoring and dashboards.
+// They work with Blog 2 data (search spans). No additional code needed.
+//
+// Blog 6 is primarily about Kibana configuration:
+//   - Creating SLOs (see SLO definitions below)
+//   - Burn rate alerting (auto-created with SLOs)
+//   - Building on-call dashboards (these queries power Lens panels)
+// =============================================================================
+
+
+// --- Latency percentiles over time (on-call dashboard panel) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+  AND labels.search_user_query IS NOT NULL
+| EVAL bucket = DATE_TRUNC(5 minutes, @timestamp)
+| STATS
+    p50 = PERCENTILE(numeric_labels.search_took_ms, 50),
+    p95 = PERCENTILE(numeric_labels.search_took_ms, 95),
+    p99 = PERCENTILE(numeric_labels.search_took_ms, 99)
+  BY bucket
+| SORT bucket
+
+
+// --- Slowest queries (incident investigation) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+  AND labels.search_user_query IS NOT NULL
+  AND numeric_labels.search_took_ms > 100
+| STATS
+    count = COUNT(*),
+    avg_ms = ROUND(AVG(numeric_labels.search_took_ms), 0),
+    max_ms = MAX(numeric_labels.search_took_ms)
+  BY labels.search_user_query
+| SORT avg_ms DESC
+| LIMIT 10
+
+
+// --- Zero-results rate over time (quality trend) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+  AND labels.search_user_query IS NOT NULL
+| EVAL bucket = DATE_TRUNC(5 minutes, @timestamp)
+| STATS
+    total = COUNT(*),
+    zero_results = COUNT(CASE(numeric_labels.search_result_count == 0, 1))
+  BY bucket
+| EVAL zero_rate_pct = ROUND(100.0 * zero_results / total, 1)
+| SORT bucket
+
+
+// --- Search throughput over time (volume monitoring) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+| EVAL bucket = DATE_TRUNC(5 minutes, @timestamp)
+| STATS searches = COUNT(*) BY bucket
+| SORT bucket
+
+
+// =============================================================================
+// SLO Definitions (create these in Kibana > Observability > SLOs)
+// =============================================================================
+//
+// 1. LATENCY SLO — "Search is fast"
+//    Indicator type: APM Latency
+//    Service: search-analytics-demo
+//    Threshold: 200ms
+//    Target: 99% over 30-day rolling window
+//
+// 2. AVAILABILITY SLO — "Search is up"
+//    Indicator type: APM Availability
+//    Service: search-analytics-demo
+//    Target: 99.9% over 30-day rolling window
+//
+// 3. QUALITY SLO — "Search returns results"
+//    Indicator type: Custom KQL
+//    Index: traces-apm-*
+//    Good query:  span.name: "search" AND numeric_labels.search_result_count > 0
+//    Total query: span.name: "search" AND labels.search_user_query: *
+//    Target: 85% over 30-day rolling window
+//
+// Each SLO automatically creates a burn rate alert rule with:
+//   Critical: 14.4x burn rate (1h long / 5min short window)
+//   High:     6.0x burn rate  (6h long / 30min short window)
+//   Medium:   3.0x burn rate  (24h long / 120min short window)
+//   Low:      1.0x burn rate  (72h long / 360min short window)
+// =============================================================================

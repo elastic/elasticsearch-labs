@@ -1,0 +1,80 @@
+// =============================================================================
+// Blog 2: Search Instrumentation — ES|QL Queries
+// =============================================================================
+//
+// These queries work on search spans created by the POST /api/search endpoint.
+// Run them in Kibana > Discover > ES|QL.
+//
+// Field mapping reminder:
+//   OTel attribute          → ES|QL field
+//   search.user_query       → labels.search_user_query
+//   search.result_count     → numeric_labels.search_result_count
+//   search.took_ms          → numeric_labels.search_took_ms
+//   search.query_id         → labels.search_query_id
+//   (Dots become underscores. Strings → labels.*, Numbers → numeric_labels.*)
+// =============================================================================
+
+
+// --- Verify spans are arriving ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+| KEEP labels.search_user_query, numeric_labels.search_result_count,
+       numeric_labels.search_took_ms, @timestamp
+| SORT @timestamp DESC
+| LIMIT 5
+
+
+// --- Top queries by volume ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+  AND labels.search_user_query IS NOT NULL
+| STATS
+    searches = COUNT(*),
+    avg_results = ROUND(AVG(numeric_labels.search_result_count), 0),
+    avg_ms = ROUND(AVG(numeric_labels.search_took_ms), 0)
+  BY labels.search_user_query
+| SORT searches DESC
+| LIMIT 20
+
+
+// --- Zero-results rate ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+  AND labels.search_user_query IS NOT NULL
+| STATS
+    total = COUNT(*),
+    zero_results = COUNT(CASE(numeric_labels.search_result_count == 0, 1))
+| EVAL zero_rate_pct = ROUND(100.0 * zero_results / total, 1)
+
+
+// --- Which queries return zero results? ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+  AND numeric_labels.search_result_count == 0
+| STATS occurrences = COUNT(*) BY labels.search_user_query
+| SORT occurrences DESC
+
+
+// --- Latency distribution ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+| STATS
+    p50 = PERCENTILE(numeric_labels.search_took_ms, 50),
+    p95 = PERCENTILE(numeric_labels.search_took_ms, 95),
+    p99 = PERCENTILE(numeric_labels.search_took_ms, 99),
+    avg_ms = ROUND(AVG(numeric_labels.search_took_ms), 1),
+    max_ms = MAX(numeric_labels.search_took_ms)
+
+
+// --- Search volume over time (5-minute buckets) ---
+FROM traces-apm-*
+| WHERE service.name == "search-analytics-demo"
+  AND span.name == "search"
+| EVAL bucket = DATE_TRUNC(5 minutes, @timestamp)
+| STATS searches = COUNT(*) BY bucket
+| SORT bucket
