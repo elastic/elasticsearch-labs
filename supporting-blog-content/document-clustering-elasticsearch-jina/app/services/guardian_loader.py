@@ -149,7 +149,9 @@ def fetch_guardian_articles(
         )
 
     df = pd.DataFrame(records)
-    logger.info("Parsed %d Guardian articles (of %d raw results)", len(df), len(all_results))
+    logger.info(
+        "Parsed %d Guardian articles (of %d raw results)", len(df), len(all_results)
+    )
 
     # Cache to parquet
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

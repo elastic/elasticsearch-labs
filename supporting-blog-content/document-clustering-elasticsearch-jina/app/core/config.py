@@ -3,7 +3,6 @@
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 # Ensure local .env values override inherited shell values.
 load_dotenv(override=True)
 

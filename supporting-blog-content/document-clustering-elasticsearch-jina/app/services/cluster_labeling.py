@@ -12,7 +12,6 @@ import re
 
 from elasticsearch import Elasticsearch
 
-
 _GENERIC_TERMS = {
     "year",
     "years",
@@ -99,7 +98,9 @@ def get_cluster_labels(
         aggs={"clusters": {"terms": {"field": cluster_field, "size": 200}}},
     )
     cluster_ids = [
-        b["key"] for b in resp["aggregations"]["clusters"]["buckets"] if b["key"] != "-1"
+        b["key"]
+        for b in resp["aggregations"]["clusters"]["buckets"]
+        if b["key"] != "-1"
     ]
 
     labels: dict[str, str] = {}
@@ -140,7 +141,9 @@ def get_cluster_labels(
         except Exception:
             continue
 
-        raw_terms = [b["key"] for b in cluster_resp["aggregations"]["sample"]["sig"]["buckets"]]
+        raw_terms = [
+            b["key"] for b in cluster_resp["aggregations"]["sample"]["sig"]["buckets"]
+        ]
         terms = clean_significant_terms(raw_terms) if use_cleanup else raw_terms
 
         if terms:

@@ -63,16 +63,18 @@ def density_probe_msearch(
 
         for doc_id in batch:
             body_lines.append({"index": index_name})
-            body_lines.append({
-                "size": k,
-                "knn": {
-                    "field": "embedding",
-                    "query_vector": embeddings[doc_id].tolist(),
-                    "k": k,
-                    "num_candidates": k,
-                },
-                "_source": False,
-            })
+            body_lines.append(
+                {
+                    "size": k,
+                    "knn": {
+                        "field": "embedding",
+                        "query_vector": embeddings[doc_id].tolist(),
+                        "k": k,
+                        "num_candidates": k,
+                    },
+                    "_source": False,
+                }
+            )
 
         resp = es.msearch(body=body_lines)
 
@@ -104,7 +106,8 @@ def select_seeds_density_diversified(
     This is pure client-side computation (no ES calls).
     """
     candidates = [
-        (did, score) for did, score in density_scores.items()
+        (did, score)
+        for did, score in density_scores.items()
         if score > min_density and did in embeddings
     ]
     candidates.sort(key=lambda x: x[1], reverse=True)
@@ -156,26 +159,26 @@ def classify_docs_against_centroids(
 
         for seed_id in batch_seeds:
             body_lines.append({"index": index_name})
-            body_lines.append({
-                "size": k,
-                "knn": {
-                    "field": "embedding",
-                    "query_vector": embeddings[seed_id].tolist(),
-                    "k": k,
-                    "num_candidates": k,
-                    "similarity": similarity_threshold,
-                },
-                "_source": False,
-            })
+            body_lines.append(
+                {
+                    "size": k,
+                    "knn": {
+                        "field": "embedding",
+                        "query_vector": embeddings[seed_id].tolist(),
+                        "k": k,
+                        "num_candidates": k,
+                        "similarity": similarity_threshold,
+                    },
+                    "_source": False,
+                }
+            )
 
         resp = es.msearch(body=body_lines)
 
         for i, result in enumerate(resp["responses"]):
             cluster_id = batch_start + i
             hits = result.get("hits", {}).get("hits", [])
-            centroid_hits[cluster_id] = {
-                h["_id"]: h["_score"] for h in hits
-            }
+            centroid_hits[cluster_id] = {h["_id"]: h["_score"] for h in hits}
 
     # Assign each doc to its best (highest-scoring) centroid.
     doc_best: dict[str, tuple[int, float]] = {}
@@ -251,19 +254,27 @@ def cluster_index_density_centroid(
     probe_ids = rng.choice(available, size=n_probes, replace=False).tolist()
     logger.debug(
         "%s: sampled %d probes (%.0f%% of %d available)",
-        index_name, len(probe_ids), sample_fraction * 100, len(available),
+        index_name,
+        len(probe_ids),
+        sample_fraction * 100,
+        len(available),
     )
 
     # Step 2: Density probing via msearch.
     density_scores = density_probe_msearch(
-        es, index_name, probe_ids, embeddings, k=k_probe,
+        es,
+        index_name,
+        probe_ids,
+        embeddings,
+        k=k_probe,
     )
     scores = list(density_scores.values())
     median_density = float(np.median(scores)) if scores else 0.0
 
     # Step 3: Select diverse, high-density seeds.
     seeds = select_seeds_density_diversified(
-        density_scores, embeddings,
+        density_scores,
+        embeddings,
         min_density=median_density,
         max_seeds=max_seeds,
         min_seed_separation=min_seed_separation,
@@ -275,7 +286,11 @@ def cluster_index_density_centroid(
 
     # Step 4: Classify all docs against centroids.
     assigned = classify_docs_against_centroids(
-        es, index_name, seeds, embeddings, doc_ids,
+        es,
+        index_name,
+        seeds,
+        embeddings,
+        doc_ids,
         similarity_threshold=similarity_threshold,
         k=k_classify,
         min_cluster_size=min_cluster_size,
@@ -366,7 +381,9 @@ def cluster_index_sampled_knn_diversified(
             _source=False,
         )
 
-        raw_neighbors = [h["_id"] for h in resp["hits"]["hits"] if h["_id"] in unassigned]
+        raw_neighbors = [
+            h["_id"] for h in resp["hits"]["hits"] if h["_id"] in unassigned
+        ]
         if len(raw_neighbors) < min_cluster_size:
             assigned[seed_id] = -1
             unassigned.discard(seed_id)
@@ -398,7 +415,11 @@ def cluster_index_sampled_knn_diversified(
             centroid /= c_norm
 
         sims_to_centroid = vecs @ centroid
-        coherent = [nid for nid, sim in zip(diversified, sims_to_centroid) if sim >= min_coherence]
+        coherent = [
+            nid
+            for nid, sim in zip(diversified, sims_to_centroid)
+            if sim >= min_coherence
+        ]
 
         if len(coherent) < min_cluster_size:
             assigned[seed_id] = -1
@@ -426,8 +447,12 @@ def cluster_index_sampled_knn_diversified(
 
 
 def cluster_daily_index(
-    es, index_name: str, embeddings: dict[str, np.ndarray],
-    k: int = 30, similarity_threshold: float = 0.55, min_cluster_size: int = 5,
+    es,
+    index_name: str,
+    embeddings: dict[str, np.ndarray],
+    k: int = 30,
+    similarity_threshold: float = 0.55,
+    min_cluster_size: int = 5,
     min_coherence: float = 0.65,
 ) -> dict[str, int]:
     """Cluster docs in a single daily index using seed-and-expand kNN.
@@ -492,7 +517,9 @@ def cluster_daily_index(
                 }
 
         resp = es.search(index=index_name, body=body)
-        neighbors = [hit["_id"] for hit in resp["hits"]["hits"] if hit["_id"] in unassigned]
+        neighbors = [
+            hit["_id"] for hit in resp["hits"]["hits"] if hit["_id"] in unassigned
+        ]
 
         if len(neighbors) < min_cluster_size:
             unassigned.discard(seed_id)
@@ -510,7 +537,9 @@ def cluster_daily_index(
                 centroid /= norm
 
             sims = vecs @ centroid
-            coherent = [nid for nid, sim in zip(valid_neighbors, sims) if sim >= min_coherence]
+            coherent = [
+                nid for nid, sim in zip(valid_neighbors, sims) if sim >= min_coherence
+            ]
         else:
             coherent = []
 
@@ -594,7 +623,9 @@ def cluster_daily_index(
     if reassigned > 0 or demoted > 0:
         logger.debug(
             "%s refinement: %d reassigned, %d demoted to noise",
-            index_name, reassigned, demoted,
+            index_name,
+            reassigned,
+            demoted,
         )
 
     return assigned
@@ -602,6 +633,7 @@ def cluster_daily_index(
 
 def update_cluster_ids(es, index_name: str, assignments: dict[str, int]) -> None:
     """Bulk update cluster_id for a daily index."""
+
     def actions():
         for doc_id, cid in assignments.items():
             yield {
@@ -616,10 +648,14 @@ def update_cluster_ids(es, index_name: str, assignments: dict[str, int]) -> None
 
 def link_clusters_across_days(
     es,
-    day_a_index: str, day_a_clusters: dict[str, list[str]],
-    day_b_index: str, day_b_clusters: dict[str, list[str]],
+    day_a_index: str,
+    day_a_clusters: dict[str, list[str]],
+    day_b_index: str,
+    day_b_clusters: dict[str, list[str]],
     embeddings: dict[str, np.ndarray],
-    sample_size: int = 3, k: int = 20, threshold: float = 0.15,
+    sample_size: int = 3,
+    k: int = 20,
+    threshold: float = 0.15,
 ) -> list[dict]:
     """Link clusters from day A to day B using cross-index kNN.
 
@@ -664,14 +700,16 @@ def link_clusters_across_days(
         for cb_id, count in hit_counts.items():
             fraction = count / total_hits if total_hits > 0 else 0
             if fraction >= threshold:
-                links.append({
-                    "source_cluster": ca_id,
-                    "target_cluster": cb_id,
-                    "source_index": day_a_index,
-                    "target_index": day_b_index,
-                    "knn_fraction": round(fraction, 3),
-                    "hit_count": count,
-                    "total_hits": total_hits,
-                })
+                links.append(
+                    {
+                        "source_cluster": ca_id,
+                        "target_cluster": cb_id,
+                        "source_index": day_a_index,
+                        "target_index": day_b_index,
+                        "knn_fraction": round(fraction, 3),
+                        "hit_count": count,
+                        "total_hits": total_hits,
+                    }
+                )
 
     return links

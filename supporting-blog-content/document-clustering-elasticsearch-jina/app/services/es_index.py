@@ -129,7 +129,9 @@ def bulk_index(
     Returns the number of successfully indexed documents.
     """
     es = es or get_elasticsearch_client()
-    actions = _bulk_actions(index_name, doc_ids, texts, timestamps, embeddings, extra_fields)
+    actions = _bulk_actions(
+        index_name, doc_ids, texts, timestamps, embeddings, extra_fields
+    )
 
     success, errors = bulk(es, actions, chunk_size=chunk_size, raise_on_error=False)
     if errors:
@@ -181,10 +183,16 @@ def bulk_index_daily(
         timestamps = group["timestamp"].tolist()
 
         # Pass through any extra columns (source, title, section, etc.)
-        extra_cols = [c for c in group.columns if c not in ("doc_id", "text", "timestamp", "_date")]
+        extra_cols = [
+            c
+            for c in group.columns
+            if c not in ("doc_id", "text", "timestamp", "_date")
+        ]
         extra_fields = {col: group[col].tolist() for col in extra_cols}
 
-        actions = _bulk_actions(index_name, doc_ids, texts, timestamps, embeddings, extra_fields)
+        actions = _bulk_actions(
+            index_name, doc_ids, texts, timestamps, embeddings, extra_fields
+        )
         success, errors = bulk(es, actions, chunk_size=chunk_size, raise_on_error=False)
 
         if errors:
@@ -195,7 +203,9 @@ def bulk_index_daily(
     total = sum(index_counts.values())
     logger.info(
         "Indexed %d docs across %d daily indices (prefix=%s)",
-        total, len(index_counts), prefix,
+        total,
+        len(index_counts),
+        prefix,
     )
     return index_counts
 
@@ -221,5 +231,6 @@ def list_daily_indices(prefix: str, es: Elasticsearch | None = None) -> list[str
     es = es or get_elasticsearch_client()
     resp = es.indices.get(index=f"{prefix}-*", features="settings")
     import re
+
     date_pattern = re.compile(rf"^{re.escape(prefix)}-\d{{4}}\.\d{{2}}\.\d{{2}}$")
     return sorted(k for k in resp.body.keys() if date_pattern.match(k))

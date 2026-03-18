@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from datetime import datetime
 
-
 TEXT_CANDIDATES = ("text", "article", "content", "body")
 TIME_CANDIDATES = ("time", "timestamp", "date", "published")
 
