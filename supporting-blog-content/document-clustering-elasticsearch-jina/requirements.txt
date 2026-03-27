@@ -1,0 +1,20 @@
+# Core
+python-dotenv
+pydantic-settings
+elasticsearch
+pandas
+numpy
+pyarrow
+
+# Embeddings & data loading
+requests
+datasets
+beautifulsoup4
+
+# Visualization
+umap-learn
+plotly
+kaleido
+
+# Notebook
+jupyter
