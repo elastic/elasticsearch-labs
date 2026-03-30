@@ -1,0 +1,32 @@
+[
+    {
+        "title": "Introduction to Vector Databases",
+        "content": "Vector databases are specialized systems designed to store and query high-dimensional vectors efficiently. They enable similarity search, which is fundamental for AI applications like recommendation systems, image search, and semantic text search. Unlike traditional databases that use exact matching, vector databases find the most similar items based on distance metrics like cosine similarity or Euclidean distance.",
+        "category": "databases",
+        "published_date": "2025-01-15"
+    },
+    {
+        "title": "Building RAG Applications with Elasticsearch",
+        "content": "Retrieval-Augmented Generation (RAG) combines the power of large language models with external knowledge retrieval. Elasticsearch provides an excellent foundation for RAG applications by offering hybrid search capabilities that combine traditional BM25 text matching with semantic vector search. This hybrid approach ensures both keyword relevance and semantic understanding in your search results.",
+        "category": "ai",
+        "published_date": "2025-02-01"
+    },
+    {
+        "title": "Embeddings: The Foundation of Semantic Search",
+        "content": "Embeddings are numerical representations of text that capture semantic meaning. Modern embedding models like Jina v3 can process text in multiple languages and produce high-quality vectors that preserve semantic relationships. The key to effective semantic search is choosing the right embedding model for your use case and ensuring your text is properly preprocessed before embedding generation.",
+        "category": "ai",
+        "published_date": "2025-01-20"
+    },
+    {
+        "title": "Scaling Elasticsearch for Production",
+        "content": "Running Elasticsearch in production requires careful planning around cluster architecture, shard sizing, and resource allocation. For vector search workloads, consider using dedicated ML nodes or Elastic Inference Service to offload embedding generation. Monitor your cluster health, indexing throughput, and search latency to identify bottlenecks early.",
+        "category": "infrastructure",
+        "published_date": "2025-01-25"
+    },
+    {
+        "title": "AI Agents and Tool Use",
+        "content": "AI agents extend LLM capabilities by allowing them to use external tools and APIs. With Elasticsearch Agent Builder, you can create agents that query your data, execute ES|QL queries, and perform complex analytics. The key is defining clear tool descriptions and providing the agent with relevant context about your data schema.",
+        "category": "ai",
+        "published_date": "2025-02-03"
+    }
+]
