@@ -1,0 +1,44 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "refresh_interval": "-1",
+      "translog": {
+        "durability": "async",
+        "sync_interval": "60s",
+        "flush_threshold_size": "4gb"
+      },
+      "merge": {
+        "scheduler": {
+          "max_thread_count": 1
+        }
+      },
+      "codec": "best_compression"
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "delivery_amount":          { "type": "double" },
+      "delivery_datetime":        { "type": "date", "format": "yyyy-MM-dd HH:mm:ss" },
+      "delivery_location":        { "type": "geo_point" },
+      "delivery_pickup_datetime": { "type": "date", "format": "yyyy-MM-dd HH:mm:ss" },
+      "delivery_pickup_location": { "type": "geo_point" },
+      "extra":                    { "type": "scaled_float", "scaling_factor": 100 },
+      "extra_fee_amount":         { "type": "double" },
+      "load_balance":             { "type": "scaled_float", "scaling_factor": 100 },
+      "payment_type":             { "type": "keyword" },
+      "review_id":                { "type": "keyword" },
+      "state_tax":                { "type": "scaled_float", "scaling_factor": 100 },
+      "surcharge":                { "type": "scaled_float", "scaling_factor": 100 },
+      "tolls_amount":             { "type": "scaled_float", "scaling_factor": 100 },
+      "total_amount":             { "type": "scaled_float", "scaling_factor": 100 },
+      "trip_distance":            { "type": "scaled_float", "scaling_factor": 100 },
+      "trip_type":                { "type": "keyword" },
+      "unloaders_count":          { "type": "integer" },
+      "vendor_id":                { "type": "keyword" },
+      "vendor_name":              { "type": "text" }
+    }
+  }
+}
