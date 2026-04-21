@@ -1,0 +1,26 @@
+{
+  "mappings": {
+    "properties": {
+      "doc_id": { "type": "keyword" },
+      "timestamp": { "type": "date" },
+      "text": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "embedding": {
+        "type": "dense_vector",
+        "dims": 1024,
+        "index": true,
+        "similarity": "cosine",
+        "index_options": {
+          "type": "bbq_disk"
+        }
+      },
+      "source": { "type": "keyword" },
+      "title": { "type": "text", "fields": { "raw": { "type": "keyword" } } },
+      "section": { "type": "keyword" },
+      "cluster_id": { "type": "keyword" },
+      "period_cluster_id": { "type": "keyword" }
+    }
+  }
+}
