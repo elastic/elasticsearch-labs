@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Mushroom Risotto",
+    "ingredients": ["arborio rice", "mushrooms", "parmesan", "butter", "white wine", "vegetable stock", "shallots", "garlic"],
+    "allergens": ["dairy"],
+    "procedure": "Toast rice in butter. Add wine and reduce. Gradually add warm stock while stirring. Fold in sautéed mushrooms and finish with parmesan.",
+    "prep_time_minutes": 35,
+    "category": "main",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "name": "Seafood Risotto",
+    "ingredients": ["arborio rice", "shrimp", "mussels", "calamari", "white wine", "fish stock", "garlic", "parsley", "butter"],
+    "allergens": ["shellfish", "dairy"],
+    "procedure": "Toast rice in butter with garlic. Add wine and reduce. Gradually add warm fish stock. Add seafood in final minutes. Finish with parsley.",
+    "prep_time_minutes": 40,
+    "category": "main",
+    "dietary": []
+  },
+  {
+    "name": "House Vinaigrette",
+    "ingredients": ["olive oil", "red wine vinegar", "dijon mustard", "honey", "garlic", "salt", "pepper"],
+    "allergens": [],
+    "procedure": "Whisk mustard, vinegar, honey, and minced garlic. Slowly stream in olive oil while whisking. Season with salt and pepper.",
+    "prep_time_minutes": 5,
+    "category": "sauce",
+    "dietary": ["vegan", "gluten-free"]
+  },
+  {
+    "name": "Caesar Salad",
+    "ingredients": ["romaine lettuce", "parmesan", "croutons", "caesar dressing", "anchovies", "lemon"],
+    "allergens": ["dairy", "gluten", "fish"],
+    "procedure": "Toss romaine with caesar dressing. Top with shaved parmesan, croutons, and anchovy fillets. Finish with lemon zest.",
+    "prep_time_minutes": 10,
+    "category": "starter",
+    "dietary": []
+  },
+  {
+    "name": "Chocolate Lava Cake",
+    "ingredients": ["dark chocolate", "butter", "eggs", "sugar", "flour", "vanilla"],
+    "allergens": ["dairy", "eggs", "gluten"],
+    "procedure": "Melt chocolate with butter. Whisk eggs with sugar and vanilla. Fold in chocolate mixture and flour. Bake at 425F for 12 minutes.",
+    "prep_time_minutes": 25,
+    "category": "dessert",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "name": "Vegan Buddha Bowl",
+    "ingredients": ["quinoa", "chickpeas", "avocado", "sweet potato", "kale", "tahini", "lemon"],
+    "allergens": ["sesame"],
+    "procedure": "Roast sweet potato and chickpeas. Cook quinoa. Massage kale with lemon. Arrange all in bowl. Drizzle with tahini dressing.",
+    "prep_time_minutes": 45,
+    "category": "main",
+    "dietary": ["vegan", "gluten-free"]
+  },
+  {
+    "name": "Grilled Salmon",
+    "ingredients": ["salmon fillet", "olive oil", "lemon", "dill", "capers", "garlic"],
+    "allergens": ["fish"],
+    "procedure": "Season salmon with olive oil, garlic, and dill. Grill skin-side down 4 minutes, flip and cook 3 more. Top with capers and lemon.",
+    "prep_time_minutes": 15,
+    "category": "main",
+    "dietary": ["gluten-free"]
+  },
+  {
+    "name": "Tiramisu",
+    "ingredients": ["mascarpone", "espresso", "ladyfingers", "eggs", "sugar", "cocoa powder", "marsala wine"],
+    "allergens": ["dairy", "eggs", "gluten", "alcohol"],
+    "procedure": "Whip egg yolks with sugar, fold in mascarpone. Dip ladyfingers in espresso and marsala. Layer with mascarpone cream. Dust with cocoa.",
+    "prep_time_minutes": 30,
+    "category": "dessert",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "name": "Margherita Pizza",
+    "ingredients": ["pizza dough", "san marzano tomatoes", "fresh mozzarella", "basil", "olive oil"],
+    "allergens": ["dairy", "gluten"],
+    "procedure": "Stretch dough. Spread crushed tomatoes. Add torn mozzarella. Bake at 500F for 8-10 minutes. Top with fresh basil and olive oil.",
+    "prep_time_minutes": 20,
+    "category": "main",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "name": "Fruit Sorbet",
+    "ingredients": ["mixed berries", "sugar", "lemon juice", "water"],
+    "allergens": [],
+    "procedure": "Simmer berries with sugar and water. Blend and strain. Add lemon juice. Churn in ice cream maker or freeze stirring hourly.",
+    "prep_time_minutes": 20,
+    "category": "dessert",
+    "dietary": ["vegan", "gluten-free"]
+  },
+  {
+    "name": "Beef Carpaccio",
+    "ingredients": ["beef tenderloin", "arugula", "parmesan", "capers", "olive oil", "lemon"],
+    "allergens": ["dairy"],
+    "procedure": "Freeze beef 30 minutes for easier slicing. Slice paper thin. Arrange on plate with arugula. Drizzle oil, add shaved parmesan and capers.",
+    "prep_time_minutes": 15,
+    "category": "starter",
+    "dietary": ["gluten-free"]
+  },
+  {
+    "name": "Panna Cotta",
+    "ingredients": ["heavy cream", "sugar", "vanilla", "gelatin", "berry coulis"],
+    "allergens": ["dairy"],
+    "procedure": "Bloom gelatin. Heat cream with sugar and vanilla. Add gelatin and stir until dissolved. Pour into molds. Chill 4 hours. Serve with coulis.",
+    "prep_time_minutes": 20,
+    "category": "dessert",
+    "dietary": ["gluten-free", "vegetarian"]
+  }
+]
