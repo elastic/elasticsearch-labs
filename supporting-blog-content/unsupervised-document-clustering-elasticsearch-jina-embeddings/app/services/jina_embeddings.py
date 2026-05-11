@@ -44,7 +44,9 @@ def _cache_dir_for_task(task: str) -> Path:
 
 
 def _load_cached(
-    doc_ids: list[str], texts: list[str], task: str,
+    doc_ids: list[str],
+    texts: list[str],
+    task: str,
 ) -> tuple[dict[str, np.ndarray], list[int]]:
     """Return cached embeddings and indices of uncached texts."""
     cache_dir = _cache_dir_for_task(task)
@@ -119,7 +121,9 @@ def embed_documents(
     cached, uncached_indices = _load_cached(doc_ids, texts, task)
     logger.info(
         "Embedding cache: %d cached, %d to embed (task=%s)",
-        len(cached), len(uncached_indices), task,
+        len(cached),
+        len(uncached_indices),
+        task,
     )
 
     if not uncached_indices:
@@ -150,7 +154,9 @@ def embed_documents(
 
 
 def load_cached_embeddings(
-    doc_ids: list[str], texts: list[str], task: str = TASK_CLUSTERING,
+    doc_ids: list[str],
+    texts: list[str],
+    task: str = TASK_CLUSTERING,
 ) -> dict[str, np.ndarray]:
     """Load only cached embeddings without calling the API."""
     cached, _ = _load_cached(doc_ids, texts, task)

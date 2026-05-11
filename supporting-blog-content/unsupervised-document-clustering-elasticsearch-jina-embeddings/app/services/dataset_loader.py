@@ -13,7 +13,11 @@ import pandas as pd
 from datasets import concatenate_datasets, get_dataset_config_names, load_dataset
 
 from app.core.config import settings
-from app.services.dataset_audit import pick_text_column, pick_timestamp_column, to_iso8601
+from app.services.dataset_audit import (
+    pick_text_column,
+    pick_timestamp_column,
+    to_iso8601,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +88,9 @@ def load_news_dataset(
     else:
         logger.info(
             "Downloading %s configs %s (sample_size=%d)",
-            dataset_name, configs_key, sample_size,
+            dataset_name,
+            configs_key,
+            sample_size,
         )
 
         # Load and concatenate monthly shards
@@ -210,9 +216,7 @@ def load_multi_source_dataset(
             from app.services.guardian_loader import fetch_guardian_articles
 
             if not date_from or not date_to:
-                raise ValueError(
-                    "Guardian source requires both date_from and date_to."
-                )
+                raise ValueError("Guardian source requires both date_from and date_to.")
             df = fetch_guardian_articles(
                 date_from=date_from,
                 date_to=date_to,
@@ -224,7 +228,9 @@ def load_multi_source_dataset(
             raise ValueError(f"Unknown source: {src!r}. Supported: bbc, guardian")
 
     if not frames:
-        return pd.DataFrame(columns=["doc_id", "text", "timestamp", "title", "source", "section"])
+        return pd.DataFrame(
+            columns=["doc_id", "text", "timestamp", "title", "source", "section"]
+        )
 
     combined = pd.concat([_ensure_schema(f) for f in frames], ignore_index=True)
 

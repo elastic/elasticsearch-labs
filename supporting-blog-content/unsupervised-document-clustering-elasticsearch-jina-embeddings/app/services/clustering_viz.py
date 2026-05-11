@@ -47,9 +47,11 @@ def attach_labels_and_demote_incoherent(
     out = df.copy()
     out["is_noise"] = out["cluster_id"] == "-1"
     out["label"] = out.apply(
-        lambda r: labels_by_index.get(index_name, {}).get(r["cluster_id"], "noise")
-        if r["cluster_id"] != "-1"
-        else "noise",
+        lambda r: (
+            labels_by_index.get(index_name, {}).get(r["cluster_id"], "noise")
+            if r["cluster_id"] != "-1"
+            else "noise"
+        ),
         axis=1,
     )
 
@@ -103,14 +105,18 @@ def build_umap_projection(
     return df_viz
 
 
-def build_scatter_plot_frame(df_viz: pd.DataFrame, *, top_n_labels: int = 15) -> pd.DataFrame:
+def build_scatter_plot_frame(
+    df_viz: pd.DataFrame, *, top_n_labels: int = 15
+) -> pd.DataFrame:
     """Prepare a plotting frame with grouped color labels for UMAP scatter."""
     out = df_viz.sort_values("is_noise", ascending=False).copy()
     out["display"] = out.apply(
         lambda r: r["label"][:30] if not r["is_noise"] else "noise",
         axis=1,
     )
-    top_labels = out[~out["is_noise"]]["label"].value_counts().head(top_n_labels).index.tolist()
+    top_labels = (
+        out[~out["is_noise"]]["label"].value_counts().head(top_n_labels).index.tolist()
+    )
     out["color_group"] = out["display"].apply(
         lambda x: x if x in top_labels or x == "noise" else "other clusters"
     )

@@ -28,7 +28,10 @@ def make_task_comparison_figure(
     )
 
     sections = df_cmp["section"].unique()
-    color_map = {section: accent_colors[i % len(accent_colors)] for i, section in enumerate(sections)}
+    color_map = {
+        section: accent_colors[i % len(accent_colors)]
+        for i, section in enumerate(sections)
+    }
 
     for section in sections:
         sub = df_cmp[df_cmp["section"] == section]
@@ -68,19 +71,28 @@ def make_task_comparison_figure(
     fig.update_layout(
         height=500,
         width=1100,
-        title=dict(text="Same documents, different embedding tasks", font=dict(size=16, color=dark_text)),
+        title=dict(
+            text="Same documents, different embedding tasks",
+            font=dict(size=16, color=dark_text),
+        ),
         legend=dict(font=dict(size=10, color=dark_text)),
         **dark_layout,
     )
     fig.update_annotations(font=dict(color=dark_text, size=13))
     for axis in ["xaxis", "xaxis2", "yaxis", "yaxis2"]:
         fig.update_layout(
-            **{axis: dict(showticklabels=False, gridcolor=dark_grid, zerolinecolor=dark_grid)}
+            **{
+                axis: dict(
+                    showticklabels=False, gridcolor=dark_grid, zerolinecolor=dark_grid
+                )
+            }
         )
     return fig
 
 
-def make_day_summary_figure(day_summary: pd.DataFrame, *, dark_text: str, dark_layout: dict) -> go.Figure:
+def make_day_summary_figure(
+    day_summary: pd.DataFrame, *, dark_text: str, dark_layout: dict
+) -> go.Figure:
     """Plot stacked clustered vs noise counts by date."""
     fig = go.Figure()
     fig.add_trace(
@@ -101,7 +113,10 @@ def make_day_summary_figure(day_summary: pd.DataFrame, *, dark_text: str, dark_l
     )
     fig.update_layout(
         barmode="stack",
-        title=dict(text="Global Clustering Output by Publication Date", font=dict(size=16, color=dark_text)),
+        title=dict(
+            text="Global Clustering Output by Publication Date",
+            font=dict(size=16, color=dark_text),
+        ),
         xaxis_title="Date",
         yaxis_title="Documents",
         height=400,
@@ -128,7 +143,11 @@ def make_cluster_umap_figure(
     # Stabilize legend order by group size so major topics are easier to find.
     group_order = plot_df["color_group"].value_counts().index.tolist()
 
-    title = "UMAP: Clustered Documents Only" if clustered_only else "UMAP: Full Month (Noise De-emphasized)"
+    title = (
+        "UMAP: Clustered Documents Only"
+        if clustered_only
+        else "UMAP: Full Month (Noise De-emphasized)"
+    )
     fig = px.scatter(
         plot_df,
         x="umap_x",
@@ -163,7 +182,10 @@ def make_cluster_umap_figure(
 
     # Annotate centroids for largest visible topic groups.
     label_candidates = (
-        plot_df[(~plot_df["is_noise"]) & (~plot_df["color_group"].isin(["other clusters", "noise"]))]
+        plot_df[
+            (~plot_df["is_noise"])
+            & (~plot_df["color_group"].isin(["other clusters", "noise"]))
+        ]
         .groupby("color_group")
         .agg(
             umap_x=("umap_x", "median"),
@@ -189,12 +211,18 @@ def make_cluster_umap_figure(
         legend=dict(font=dict(size=9, color=dark_text), bgcolor="rgba(0,0,0,0)"),
         **dark_layout,
     )
-    fig.update_xaxes(showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid)
-    fig.update_yaxes(showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid)
+    fig.update_xaxes(
+        showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid
+    )
+    fig.update_yaxes(
+        showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid
+    )
     return fig
 
 
-def make_source_mix_figure(source_by_label: pd.DataFrame, *, dark_text: str, dark_layout: dict) -> go.Figure:
+def make_source_mix_figure(
+    source_by_label: pd.DataFrame, *, dark_text: str, dark_layout: dict
+) -> go.Figure:
     """Plot stacked source composition for top clusters."""
     fig = go.Figure()
     for source, color in [("guardian", "#636EFA"), ("bbc", "#EF553B")]:
@@ -210,7 +238,9 @@ def make_source_mix_figure(source_by_label: pd.DataFrame, *, dark_text: str, dar
             )
     fig.update_layout(
         barmode="stack",
-        title=dict(text="Source Mix per Cluster (Top 20)", font=dict(size=16, color=dark_text)),
+        title=dict(
+            text="Source Mix per Cluster (Top 20)", font=dict(size=16, color=dark_text)
+        ),
         xaxis_title="Documents",
         yaxis_title="",
         height=600,
@@ -224,7 +254,8 @@ def make_source_mix_figure(source_by_label: pd.DataFrame, *, dark_text: str, dar
 def _default_focus_group(df_plot: pd.DataFrame) -> str | None:
     """Pick the largest non-noise, non-other cluster label."""
     candidates = df_plot[
-        (~df_plot["is_noise"]) & (~df_plot["color_group"].isin(["noise", "other clusters"]))
+        (~df_plot["is_noise"])
+        & (~df_plot["color_group"].isin(["noise", "other clusters"]))
     ]
     if len(candidates) == 0:
         return None
@@ -289,6 +320,10 @@ def make_focus_cluster_figure(
         legend=dict(font=dict(size=10, color=dark_text), bgcolor="rgba(0,0,0,0)"),
         **dark_layout,
     )
-    fig.update_xaxes(showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid)
-    fig.update_yaxes(showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid)
+    fig.update_xaxes(
+        showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid
+    )
+    fig.update_yaxes(
+        showticklabels=False, title="", gridcolor=dark_grid, zerolinecolor=dark_grid
+    )
     return fig, chosen

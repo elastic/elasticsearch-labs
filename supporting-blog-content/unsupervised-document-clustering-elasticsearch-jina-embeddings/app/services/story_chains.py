@@ -36,7 +36,9 @@ def prepare_daily_results_and_labels(
     similarity_threshold: float = 0.50,
     k_classify: int = 200,
     min_cluster_size: int = 6,
-) -> tuple[list[str], dict[str, dict[str, Any]], dict[str, dict[str, str]], dict[str, int]]:
+) -> tuple[
+    list[str], dict[str, dict[str, Any]], dict[str, dict[str, str]], dict[str, int]
+]:
     """Build daily indices, cluster each day, and generate labels.
 
     Returns:
@@ -118,7 +120,9 @@ def build_temporal_links(
         if not clusters_a or not clusters_b:
             continue
 
-        links = link_clusters_across_days(es, idx_a, clusters_a, idx_b, clusters_b, embeddings)
+        links = link_clusters_across_days(
+            es, idx_a, clusters_a, idx_b, clusters_b, embeddings
+        )
 
         labels_a = all_labels.get(idx_a, {})
         labels_b = all_labels.get(idx_b, {})
@@ -145,7 +149,11 @@ def build_story_chains(
     adjacency: dict[tuple[str, str], list[tuple[str, str, float]]] = defaultdict(list)
     for _, link in strong_links.iterrows():
         key = (link["source_index"], link["source_cluster"])
-        val = (link["target_index"], link["target_cluster"], float(link["knn_fraction"]))
+        val = (
+            link["target_index"],
+            link["target_cluster"],
+            float(link["knn_fraction"]),
+        )
         adjacency[key].append(val)
 
     chains: list[list[tuple[str, str]]] = []
@@ -227,6 +235,7 @@ def build_story_chain_sankey(
     min_nodes: int = 3,
 ) -> go.Figure | None:
     """Build a Sankey figure for temporal chains or return None."""
+
     def _short_label(text: str, max_len: int = 30) -> str:
         t = " ".join((text or "").split())
         return t if len(t) <= max_len else f"{t[: max_len - 1]}…"
@@ -241,7 +250,11 @@ def build_story_chain_sankey(
         return None
 
     all_dates = sorted(
-        {idx.replace(f"{index_prefix}-", "") for chain in filtered_chains for idx, _ in chain}
+        {
+            idx.replace(f"{index_prefix}-", "")
+            for chain in filtered_chains
+            for idx, _ in chain
+        }
     )
     date_to_x = {d: (i + 0.5) / len(all_dates) for i, d in enumerate(all_dates)}
 
@@ -277,11 +290,17 @@ def build_story_chain_sankey(
                 node_map[key] = len(node_labels)
                 date = idx_name.replace(f"{index_prefix}-", "")
                 label = all_labels[idx_name][cid]
-                cluster_size = len(daily_results.get(idx_name, {}).get("clusters", {}).get(cid, []))
+                cluster_size = len(
+                    daily_results.get(idx_name, {}).get("clusters", {}).get(cid, [])
+                )
                 is_start = j == 0
                 is_end = j == len(chain) - 1
                 # Show text only on endpoints to reduce overlap; keep detail in hover.
-                display = f"{_short_label(label)} ({cluster_size})" if (is_start or is_end) else ""
+                display = (
+                    f"{_short_label(label)} ({cluster_size})"
+                    if (is_start or is_end)
+                    else ""
+                )
                 node_labels.append(display)
                 node_hover.append(
                     "<br>".join(
@@ -306,7 +325,9 @@ def build_story_chain_sankey(
                     & (strong_links["target_index"] == idx_name)
                     & (strong_links["target_cluster"] == cid)
                 ]
-                strength = float(match["knn_fraction"].values[0]) if len(match) > 0 else 0.3
+                strength = (
+                    float(match["knn_fraction"].values[0]) if len(match) > 0 else 0.3
+                )
                 sources.append(node_map[prev_key])
                 targets.append(node_map[key])
                 values.append(max(strength * 8, 0.8))
