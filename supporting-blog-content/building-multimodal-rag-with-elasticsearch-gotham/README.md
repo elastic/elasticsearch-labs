@@ -1,13 +1,13 @@
 # Building a Multimodal RAG Pipeline with Elasticsearch: The Story of Gotham City
 
-This repository contains the code for the blog [Building a multimodal etrieval-Augmented Generation (RAG) system with Elasticsearch](https://www.elastic.co/search-labs/blog/building-multimodal-rag-system). The system processes and analyzes different types of evidence (images, audio, and text) to solve a crime in Gotham City.
+This repository contains the code for the blog [Building a multimodal Retrieval-Augmented Generation (RAG) system with Elasticsearch](https://www.elastic.co/search-labs/blog/building-multimodal-rag-system). The system processes and analyzes different types of evidence (images, audio, and text) to solve a crime in Gotham City.
 
 ## Overview
 
 The pipeline demonstrates how to:
 - Use a single `semantic_text` field backed by `jina-embeddings-v5-omni-small` through Elastic Inference Service (EIS)
 - Ingest text, images, and audio in one index field and search semantically with text queries
-- Analyze evidence using GPT-4 to generate forensic reports
+- Analyze evidence using an OpenAI-compatible LLM to generate forensic reports
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ The pipeline demonstrates how to:
 ## Code execution 
 
 We provide a Google Colab notebook that allows you to explore the entire pipeline interactively:
-- [Open the Multimodal RAG Pipeline Notebook](notebook/01-mmrag-blog-quick-start.ipynb)
+- [Open the Multimodal RAG Pipeline Notebook](01-mmrag-blog-quick-start.ipynb)
 - This notebook includes step-by-step instructions and explanations for each stage of the pipeline
 
 
@@ -40,13 +40,13 @@ We provide a Google Colab notebook that allows you to explore the entire pipelin
 ```
 ├── README.md
 ├── requirements.txt
-├── notebook/
-│   ├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
+├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
 ├── src/
 │   ├── elastic_manager.py       # Elasticsearch semantic_text operations
-│   └── llm_analyzer.py         # GPT-4 integration
+│   └── llm_analyzer.py         # OpenAI-compatible LLM integration
 ├── stages/
 │   ├── 01-stage/              # File organization
+│   ├── 02-stage/              # Embedding generation
 │   ├── 03-stage/              # Elasticsearch indexing/search
 │   └── 04-stage/              # Evidence analysis
 └── data/                      # Sample data
@@ -67,7 +67,7 @@ The repository includes sample evidence files:
 
 1. **Evidence Collection**: Files are organized by modality in the `data/` directory
 2. **Semantic Indexing**: Elasticsearch `semantic_text` (`content`) sends each evidence item to EIS (`.jina-embeddings-v5-omni-small`) during indexing
-3. **Unified Storage**: Text and base64 data URIs (image/audio) are stored in one field plus metadata TODO: Double-check. This can't be right
+3. **Unified Storage**: Text and base64 data URIs (image/audio) are stored in one field (`content`) along with modality and metadata fields
 4. **Semantic Search**: Text queries run directly against `content` with semantic matching
-5. **Analysis**: GPT-4 analyzes the connections between evidence to identify suspects
+5. **Analysis**: An OpenAI-compatible LLM analyzes the connections between evidence to identify suspects
 

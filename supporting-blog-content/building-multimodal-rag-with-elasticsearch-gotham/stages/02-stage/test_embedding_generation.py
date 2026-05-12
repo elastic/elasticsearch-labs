@@ -12,7 +12,7 @@ from elastic_manager import ElasticsearchManager
 INFERENCE_ID = ".jina-embeddings-v5-omni-small"
 
 # Initialize the ES manager
-es = ElasticsearchManager.connect_elasticsearch()
+es = ElasticsearchManager.connect_elastic()
 
 # Generate embedding for text
 text_response = es.inference.embedding(

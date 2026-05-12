@@ -8,13 +8,13 @@ class ElasticsearchManager:
     """Manages multimodal operations in Elasticsearch"""
 
     def __init__(self):
-        self.es = self.connect_elasticsearch()
+        self.es = self.connect_elastic()
         self.index_name = "multimodal_content"
         self.inference_id = ".jina-embeddings-v5-omni-small"
         self._setup_index()
 
     @staticmethod
-    def connect_elasticsearch():
+    def connect_elastic():
         """Connects to Elasticsearch."""
         load_dotenv()  # Load variables from .env
         ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
@@ -59,16 +59,6 @@ class ElasticsearchManager:
             }
             self.es.indices.create(index=self.index_name, body=mapping)
             return
-
-        mapping = self.es.indices.get_mapping(index=self.index_name)
-        properties = mapping[self.index_name]["mappings"].get("properties", {})
-        content_field = properties.get("content", {})
-        if content_field.get("type") != "semantic_text":
-            raise ValueError(
-                f"Index '{self.index_name}' already exists with non-semantic "
-                "mapping for 'content'. Delete/recreate the index to migrate "
-                "from dense_vector to semantic_text."
-            )
 
     def index_content(
         self,
