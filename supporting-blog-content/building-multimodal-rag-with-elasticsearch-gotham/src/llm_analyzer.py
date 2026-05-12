@@ -12,7 +12,10 @@ class LLMAnalyzer:
 
     def __init__(self):
         load_dotenv()
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL") or None, # Only needed when using LiteLLM
+        )
 
     def analyze_evidence(self, evidence_results):
         """
@@ -23,8 +26,7 @@ class LLMAnalyzer:
             {
                 'vision': [...],
                 'audio': [...],
-                'text': [...],
-                'depth': [...]
+                'text': [...]
             }
         """
         # Format evidence for the prompt
@@ -32,7 +34,7 @@ class LLMAnalyzer:
 
         # final prompt
         prompt = f"""
-You are a highly experienced forensic detective specializing in multimodal evidence analysis. Your task is to analyze the collected evidence (audio, images, text, depth maps) and conclusively determine the **prime suspect** responsible for the Gotham Central Bank case.
+You are a highly experienced forensic detective specializing in multimodal evidence analysis. Your task is to analyze the collected evidence (audio, images, text) and conclusively determine the **prime suspect** responsible for the Gotham Central Bank case.
 
 ---
 

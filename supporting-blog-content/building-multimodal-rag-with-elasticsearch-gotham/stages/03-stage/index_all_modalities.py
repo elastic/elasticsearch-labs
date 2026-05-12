@@ -53,7 +53,7 @@ def main():
     es_manager = ElasticsearchManager()
 
     # Create data directories if they don't exist
-    for dir_name in ["images", "audios", "texts", "depths"]:
+    for dir_name in ["images", "audios", "texts"]:
         os.makedirs(os.path.join("data", dir_name), exist_ok=True)
 
     # List of evidence to process
@@ -104,15 +104,6 @@ def main():
             "metadata": {
                 "location": "Gotham Central Bank - Vault",
                 "timestamp": "2025-01-30 23:20",
-            },
-        },
-        {
-            "file_path": "data/depths/depth_suspect.png",
-            "modality": "depth",
-            "description": "Depth sensor capture of the suspect",
-            "metadata": {
-                "location": "Gotham Central Bank - Back Alley",
-                "timestamp": "2025-01-30 23:18",
             },
         },
     ]

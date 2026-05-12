@@ -1,127 +1,128 @@
-import os
-import cv2
-from io import BytesIO
+import base64
 import logging
-from torch.hub import download_url_to_file
+import mimetypes
+import os
 
-import torch
 import numpy as np
-from PIL import Image
-from imagebind import data
-from imagebind.models import imagebind_model
-
-from torchvision import transforms
+from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import ApiError, NotFoundError
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+DEFAULT_MODEL_ID = "jina-embeddings-v5-omni-small"
+DEFAULT_INFERENCE_ID = "jina-embeddings-v5-omni-small"
+
 
 class EmbeddingGenerator:
-    """Generates multimodal embeddings using ImageBind"""
+    """Generates multimodal embeddings using Elasticsearch inference."""
 
-    def __init__(self, device="cpu"):
-        self.device = device
-        self.model = self._load_model()
+    def __init__(self):
+        load_dotenv()
+        self.es = self._connect_elasticsearch()
+        self.inference_id = DEFAULT_INFERENCE_ID
+        self.model_id = DEFAULT_MODEL_ID
+        self._ensure_inference_endpoint()
 
-    def _load_model(self):
-        """Initialize and test the ImageBind model."""
+    def _connect_elasticsearch(self):
+        """Connects to Elasticsearch."""
+        elasticsearch_url = os.getenv("ELASTICSEARCH_URL")
+        elasticsearch_user = os.getenv("ELASTICSEARCH_USER")
+        elasticsearch_password = os.getenv("ELASTICSEARCH_PASSWORD")
+        elasticsearch_api_key = os.getenv("ELASTICSEARCH_API_KEY")
 
-        checkpoint_path = os.path.expanduser(
-            "~/.cache/torch/checkpoints/imagebind_huge.pth"
-        )
-        os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
+        if not elasticsearch_url:
+            raise ValueError("ELASTICSEARCH_URL must be set in your .env file")
 
-        if not os.path.exists(checkpoint_path):
-            print("Downloading ImageBind weights...")
-            download_url_to_file(
-                "https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth",
-                checkpoint_path,
+        if elasticsearch_user:
+            return Elasticsearch(
+                hosts=[elasticsearch_url],
+                basic_auth=(elasticsearch_user, elasticsearch_password),
             )
+        if elasticsearch_api_key:
+            return Elasticsearch(hosts=[elasticsearch_url], api_key=elasticsearch_api_key)
+        raise ValueError(
+            "Please set ELASTICSEARCH_API_KEY or ELASTICSEARCH_USER/ELASTICSEARCH_PASSWORD"
+        )
 
+    def _ensure_inference_endpoint(self):
         try:
-            # Check if file exists
-            if not os.path.exists(checkpoint_path):
-                raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
+            self.es.inference.get(task_type="embedding", inference_id=self.inference_id)
+            return
+        except NotFoundError:
+            pass
+        except ApiError as err:
+            if getattr(err, "meta", None) and err.meta.status == 404:
+                pass
+            else:
+                raise
 
-            model = imagebind_model.imagebind_huge(pretrained=False)
-            model.load_state_dict(torch.load(checkpoint_path))
-            model.eval().to(self.device)
-
-            # Quick test with empty text input
-            logger.info("Testing model with sample input...")
-            test_input = data.load_and_transform_text([""], self.device)
-            with torch.no_grad():
-                _ = model({"text": test_input})
-
-            logger.info("🤖 ImageBind model initialized successfully")
-            return model
-        except Exception as e:
-            logger.error(f"🚨 Model initialization failed: {str(e)}")
-            raise
+        # Create the inference endpoint if it does not exist
+        self.es.inference.put(
+            task_type="embedding",
+            inference_id=self.inference_id,
+            body={
+                "service": "elastic",
+                "service_settings": {"model_id": self.model_id},
+            },
+            timeout="120s",
+        )
 
     def generate_embedding(self, input_data, modality):
-        """Generates embedding for different modalities"""
-        processors = {
-            "vision": lambda x: data.load_and_transform_vision_data(x, self.device),
-            "audio": lambda x: data.load_and_transform_audio_data(x, self.device),
-            "text": lambda x: data.load_and_transform_text(x, self.device),
-            "depth": self.process_depth,
-        }
+        """Generates one embedding for a single text/image/audio input."""
+        if modality not in {"vision", "audio", "text"}:
+            raise ValueError(f"Unsupported modality: {modality}")
+        if not isinstance(input_data, list) or len(input_data) != 1:
+            raise ValueError("input_data must be a list with a single item")
 
-        try:
-            # Input type verification
-            if not isinstance(input_data, list):
-                raise ValueError(
-                    f"Input data must be a list. Received: {type(input_data)}"
-                )
+        input_payload = self._build_input_payload(input_data[0], modality)
+        response = self.es.inference.embedding(
+            inference_id=self.inference_id,
+            embedding={
+                "input": input_payload,
+                "input_type": "search",
+            },
+        )
 
-            # Convert input data to a tensor format that the model can process
-            # For images: [batch_size, channels, height, width]
-            # For audio: [batch_size, channels, time]
-            # For text: [batch_size, sequence_length]
-            inputs = {modality: processors[modality](input_data)}
-            with torch.no_grad():
-                embedding = self.model(inputs)[modality]
-            return embedding.squeeze(0).cpu().numpy()
-        except Exception as e:
-            logger.error(
-                f"Error generating {modality} embedding: {str(e)}", exc_info=True
-            )
-            raise
+        embeddings = response.get("embeddings") or response.get("data") or []
+        if not embeddings:
+            raise ValueError("No embeddings returned by inference API")
+        first_embedding = embeddings[0].get("embedding")
+        if first_embedding is None:
+            raise ValueError("Embedding field not found in inference response")
+        return np.array(first_embedding, dtype=np.float32)
 
-    def process_vision(self, image_path):
-        """Processes image"""
-        return data.load_and_transform_vision_data([image_path], self.device)
+    def _build_input_payload(self, value, modality):
+        if modality == "text":
+            return [
+                {
+                    "content": {
+                        "type": "text",
+                        "format": "text",
+                        "value": value,
+                    }
+                }
+            ]
 
-    def process_audio(self, audio_path):
-        """Processes audio"""
-        return data.load_and_transform_audio_data([audio_path], self.device)
+        if not os.path.exists(value):
+            raise FileNotFoundError(f"Input file not found: {value}")
 
-    def process_text(self, text):
-        """Processes text"""
-        return data.load_and_transform_text([text], self.device)
+        content_type = "image" if modality == "vision" else "audio"
+        mime_type = mimetypes.guess_type(value)[0]
+        if not mime_type:
+            mime_type = "image/jpeg" if modality == "vision" else "audio/wav"
 
-    def process_depth(self, depth_paths, device="cpu"):
-        """Custom processing for depth maps"""
-        try:
-            # Check file existence
-            for path in depth_paths:
-                if not os.path.exists(path):
-                    raise FileNotFoundError(f"Depth map file not found: {path}")
+        with open(value, "rb") as file:
+            encoded = base64.b64encode(file.read()).decode("utf-8")
 
-            # Load and transform
-            depth_images = [Image.open(path).convert("L") for path in depth_paths]
-
-            transform = transforms.Compose(
-                [
-                    transforms.Resize((224, 224)),
-                    transforms.ToTensor(),
-                ]
-            )
-
-            return torch.stack([transform(img) for img in depth_images]).to(device)
-
-        except Exception as e:
-            logger.error(f"🚨 - Error processing depth map: {str(e)}")
-            raise
+        return [
+            {
+                "content": {
+                    "type": content_type,
+                    "format": "base64",
+                    "value": f"data:{mime_type};base64,{encoded}",
+                }
+            }
+        ]

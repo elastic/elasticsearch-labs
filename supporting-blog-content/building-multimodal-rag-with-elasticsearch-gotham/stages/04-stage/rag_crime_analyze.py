@@ -9,7 +9,6 @@ from embedding_generator import EmbeddingGenerator
 from elastic_manager import ElasticsearchManager
 from llm_analyzer import LLMAnalyzer
 
-import json
 import logging
 from dotenv import load_dotenv
 
@@ -35,7 +34,6 @@ try:
         "vision": "data/images/crime_scene2.jpg",
         "audio": "data/audios/joker_laugh.wav",
         "text": "Why so serious?",
-        "depth": "data/depths/jdancing-depth.png",
     }
 
     logger.info("🔍 Collecting evidence...")

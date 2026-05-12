@@ -1,8 +1,7 @@
-from elasticsearch import Elasticsearch, helpers
+from elasticsearch import Elasticsearch
 import base64
 import os
 from dotenv import load_dotenv
-import numpy as np
 
 
 class ElasticsearchManager:

@@ -7,7 +7,6 @@ sys.path.append(
 
 from embedding_generator import EmbeddingGenerator
 from elastic_manager import ElasticsearchManager
-import json
 import logging
 from dotenv import load_dotenv
 
