@@ -12,13 +12,13 @@ The pipeline demonstrates how to:
 ## Prerequisites
 
 - Python 3.x
-- Elasticsearch 9.4+ cluster (Elastic Cloud recommended)
+- Elastic Cloud Serverless Elasticsearch instance
 - OpenAI-compatible API key (direct OpenAI key or LiteLLM virtual key)
 
 ## Elastic Cloud setup (free trial)
 
 1. Sign up for an Elastic Cloud free trial at [cloud.elastic.co](https://cloud.elastic.co/registration).
-2. Create an Elasticsearch deployment (9.4+).
+2. Create an Elasticsearch Serverless instance.
 3. In the deployment page, copy:
    - the **Elasticsearch endpoint** (use it as `ELASTICSEARCH_URL`)
    - an **API key** with `manage_inference` privileges (use it as `ELASTICSEARCH_API_KEY`)

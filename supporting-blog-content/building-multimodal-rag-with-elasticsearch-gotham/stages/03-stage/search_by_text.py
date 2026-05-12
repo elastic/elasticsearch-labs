@@ -21,6 +21,7 @@ es_manager = ElasticsearchManager()
 
 # Search for related evidence with one text query
 text_query = "Why so serious?"
+print(f"\n🧾 Query used for search:\n{text_query}\n")
 similar_evidences = es_manager.search_similar(query_input=text_query, k=3)
 
 # Display the retrieved results

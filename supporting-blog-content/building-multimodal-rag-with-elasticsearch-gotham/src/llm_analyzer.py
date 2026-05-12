@@ -62,7 +62,7 @@ This report must be **direct and definitive**—avoid speculation and provide a 
 """
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model="llm-gateway/gpt-5.4-nano",
                 messages=[
                     {
                         "role": "system",

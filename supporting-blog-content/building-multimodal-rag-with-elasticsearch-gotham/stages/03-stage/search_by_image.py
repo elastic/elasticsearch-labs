@@ -20,9 +20,11 @@ load_dotenv()
 es_manager = ElasticsearchManager()
 
 # Search using the image file itself as the semantic query
+image_query_path = "data/images/crime_scene2.jpg"
 query_content = es_manager.build_content_from_file(
-    "data/images/crime_scene2.jpg", "vision"
+    image_query_path, "vision"
 )
+print(f"\n🧾 Query used for search:\n{image_query_path}\n")
 similar_evidences = es_manager.search_similar(query_input=query_content, k=3)
 
 # Display the retrieved results
