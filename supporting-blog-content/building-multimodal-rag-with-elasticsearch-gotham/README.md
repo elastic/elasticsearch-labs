@@ -5,8 +5,8 @@ This repository contains the code for the blog [Building a multimodal etrieval-A
 ## Overview
 
 The pipeline demonstrates how to:
-- Generate unified embeddings for multiple modalities using the `jina-embeddings-v5-omni-small` model through Elastic Inference Service (EIS)
-- Store and search vectors efficiently in Elasticsearch
+- Use a single `semantic_text` field backed by `jina-embeddings-v5-omni-small` through Elastic Inference Service (EIS)
+- Ingest text, images, and audio in one index field and search semantically with text queries
 - Analyze evidence using GPT-4 to generate forensic reports
 
 ## Prerequisites
@@ -43,12 +43,10 @@ We provide a Google Colab notebook that allows you to explore the entire pipelin
 ├── notebook/
 │   ├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
 ├── src/
-│   ├── embedding_generator.py   # EIS embedding wrapper
-│   ├── elastic_manager.py       # Elasticsearch operations
+│   ├── elastic_manager.py       # Elasticsearch semantic_text operations
 │   └── llm_analyzer.py         # GPT-4 integration
 ├── stages/
 │   ├── 01-stage/              # File organization
-│   ├── 02-stage/              # Embedding generation
 │   ├── 03-stage/              # Elasticsearch indexing/search
 │   └── 04-stage/              # Evidence analysis
 └── data/                      # Sample data
@@ -68,8 +66,8 @@ The repository includes sample evidence files:
 ## How It Works
 
 1. **Evidence Collection**: Files are organized by modality in the `data/` directory
-2. **Embedding Generation**: EIS (`jina-embeddings-v5-omni-small`) converts each piece of evidence into a 1024-dimensional vector
-3. **Vector Storage**: Elasticsearch stores embeddings with metadata for efficient retrieval
-4. **Similarity Search**: New evidence is compared against the database using k-NN search
+2. **Semantic Indexing**: Elasticsearch `semantic_text` (`content`) sends each evidence item to EIS (`.jina-embeddings-v5-omni-small`) during indexing
+3. **Unified Storage**: Text and base64 data URIs (image/audio) are stored in one field plus metadata TODO: Double-check. This can't be right
+4. **Semantic Search**: Text queries run directly against `content` with semantic matching
 5. **Analysis**: GPT-4 analyzes the connections between evidence to identify suspects
 
