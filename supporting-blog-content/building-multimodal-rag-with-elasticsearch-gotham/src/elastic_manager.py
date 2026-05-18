@@ -81,12 +81,7 @@ class ElasticsearchManager:
 
     def search_similar(self, query_input, k=5):
         """Searches for similar contents"""
-        query = {
-            "semantic": {
-                "field": "content", 
-                "query": query_input
-            }
-        }
+        query = {"semantic": {"field": "content", "query": query_input}}
 
         try:
             response = self.es.search(index=self.index_name, query=query, size=k)
