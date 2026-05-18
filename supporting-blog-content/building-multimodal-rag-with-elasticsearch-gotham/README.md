@@ -1,26 +1,37 @@
 # Building a Multimodal RAG Pipeline with Elasticsearch: The Story of Gotham City
 
-This repository contains the code for implementing a Multimodal Retrieval-Augmented Generation (RAG) system using Elasticsearch. The system processes and analyzes different types of evidence (images, audio, text, and depth maps) to solve a crime in Gotham City.
+This repository contains the code for the blog [Building a multimodal Retrieval-Augmented Generation (RAG) system with Elasticsearch](https://www.elastic.co/search-labs/blog/building-multimodal-rag-system). The system processes and analyzes different types of evidence (images, audio, and text) to solve a crime in Gotham City.
 
 ## Overview
 
 The pipeline demonstrates how to:
-- Generate unified embeddings for multiple modalities using ImageBind
-- Store and search vectors efficiently in Elasticsearch
-- Analyze evidence using GPT-4 to generate forensic reports
+- Use a single `semantic_text` field backed by `jina-embeddings-v5-omni-small` through Elastic Inference Service (EIS)
+- Ingest text, images, and audio in one index field and search semantically with text queries
+- Analyze evidence using an OpenAI-compatible LLM to generate forensic reports
 
 ## Prerequisites
 
 - Python 3.x
-- Elasticsearch cluster (cloud or local)
-- OpenAI API key - Setup an OpenAI account and create a [secret key](https://platform.openai.com/docs/quickstart)
-- 8GB+ RAM
-- GPU (optional but recommended)
+- Elastic Cloud Serverless Elasticsearch instance
+- OpenAI-compatible API key (direct OpenAI key or LiteLLM virtual key)
+
+## Elastic Cloud setup (free trial)
+
+1. Sign up for an Elastic Cloud free trial at [cloud.elastic.co](https://cloud.elastic.co/registration).
+2. Create an Elasticsearch Serverless instance.
+3. In the deployment page, copy:
+   - the **Elasticsearch endpoint** (use it as `ELASTICSEARCH_URL`)
+   - an **API key** with `manage_inference` privileges (use it as `ELASTICSEARCH_API_KEY`)
+4. Copy `env.example` to `.env` and set:
+   - `ELASTICSEARCH_URL`
+   - `ELASTICSEARCH_API_KEY`
+   - `OPENAI_API_KEY`
+   - `OPENAI_BASE_URL` (optional, only when using LiteLLM proxy)
 
 ## Code execution 
 
 We provide a Google Colab notebook that allows you to explore the entire pipeline interactively:
-- [Open the Multimodal RAG Pipeline Notebook](notebook/01-mmrag-blog-quick-start.ipynb)
+- [Open the Multimodal RAG Pipeline Notebook](01-mmrag-blog-quick-start.ipynb)
 - This notebook includes step-by-step instructions and explanations for each stage of the pipeline
 
 
@@ -29,12 +40,10 @@ We provide a Google Colab notebook that allows you to explore the entire pipelin
 ```
 ├── README.md
 ├── requirements.txt
-├── notebook/
-│   ├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
+├── 01-mmrag-blog-quick-start.ipynb   # Jupyter notebook execution
 ├── src/
-│   ├── embedding_generator.py   # ImageBind wrapper
-│   ├── elastic_manager.py       # Elasticsearch operations
-│   └── llm_analyzer.py         # GPT-4 integration
+│   ├── elastic_manager.py       # Elasticsearch semantic_text operations
+│   └── llm_analyzer.py         # OpenAI-compatible LLM integration
 ├── stages/
 │   ├── 01-stage/              # File organization
 │   ├── 02-stage/              # Embedding generation
@@ -43,8 +52,7 @@ We provide a Google Colab notebook that allows you to explore the entire pipelin
 └── data/                      # Sample data
     ├── images/
     ├── audios/
-    ├── texts/
-    └── depths/
+    └── texts/
 
 ```
 
@@ -54,13 +62,11 @@ The repository includes sample evidence files:
 - Images: Crime scene photos and security camera footage
 - Audio: Suspicious sound recordings
 - Text: Mysterious notes and riddles
-- Depth Maps: 3D scene captures
 
 ## How It Works
 
 1. **Evidence Collection**: Files are organized by modality in the `data/` directory
-2. **Embedding Generation**: ImageBind converts each piece of evidence into a 1024-dimensional vector
-3. **Vector Storage**: Elasticsearch stores embeddings with metadata for efficient retrieval
-4. **Similarity Search**: New evidence is compared against the database using k-NN search
-5. **Analysis**: GPT-4 analyzes the connections between evidence to identify suspects
+2. **Semantic Indexing**: Elasticsearch `semantic_text` (`content`) sends each evidence item to EIS (`.jina-embeddings-v5-omni-small`) during indexing
+3. **Semantic Search**: Semantic queries (text, image, or audio) run directly against content with semantic matching
+4. **Analysis**: An OpenAI-compatible LLM analyzes the connections between evidence to identify suspects
 

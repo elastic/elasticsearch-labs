@@ -12,7 +12,11 @@ class LLMAnalyzer:
 
     def __init__(self):
         load_dotenv()
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL")
+            or None,  # Only needed when using LiteLLM
+        )
 
     def analyze_evidence(self, evidence_results):
         """
@@ -23,8 +27,7 @@ class LLMAnalyzer:
             {
                 'vision': [...],
                 'audio': [...],
-                'text': [...],
-                'depth': [...]
+                'text': [...]
             }
         """
         # Format evidence for the prompt
@@ -32,7 +35,7 @@ class LLMAnalyzer:
 
         # final prompt
         prompt = f"""
-You are a highly experienced forensic detective specializing in multimodal evidence analysis. Your task is to analyze the collected evidence (audio, images, text, depth maps) and conclusively determine the **prime suspect** responsible for the Gotham Central Bank case.
+You are a highly experienced forensic detective specializing in multimodal evidence analysis. Your task is to analyze the collected evidence (audio, images, text) and conclusively determine the **prime suspect** responsible for the Gotham Central Bank case.
 
 ---
 
@@ -59,8 +62,14 @@ If there is **insufficient evidence**, specify exactly what is missing and sugge
 This report must be **direct and definitive**—avoid speculation and provide a final, actionable determination of the suspect's identity.
 """
         try:
+            MODEL_NAME = (
+                "llm-gateway/gpt-5.4-nano"
+                if os.getenv("OPENAI_BASE_URL")
+                else "gpt-5.4-nano"
+            )
+
             response = self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model=MODEL_NAME,
                 messages=[
                     {
                         "role": "system",
