@@ -20,7 +20,7 @@ load_dotenv()
 es_manager = ElasticsearchManager()
 
 # Search using the audio file itself as the semantic query
-audio_query_path = "data/audios/joker_laugh.wav"
+audio_query_path = "data/audios/joker_laugh_similar.wav"
 query_content = es_manager.build_content_from_file(
     audio_query_path, "audio"
 )
