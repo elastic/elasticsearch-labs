@@ -61,8 +61,10 @@ If there is **insufficient evidence**, specify exactly what is missing and sugge
 This report must be **direct and definitive**—avoid speculation and provide a final, actionable determination of the suspect's identity.
 """
         try:
+            MODEL_NAME = "llm-gateway/gpt-5.4-nano" if os.getenv("OPENAI_BASE_URL") else "gpt-5.4-nano"
+            
             response = self.client.chat.completions.create(
-                model="llm-gateway/gpt-5.4-nano",
+                model=MODEL_NAME,
                 messages=[
                     {
                         "role": "system",

@@ -67,7 +67,6 @@ The repository includes sample evidence files:
 
 1. **Evidence Collection**: Files are organized by modality in the `data/` directory
 2. **Semantic Indexing**: Elasticsearch `semantic_text` (`content`) sends each evidence item to EIS (`.jina-embeddings-v5-omni-small`) during indexing
-3. **Unified Storage**: Text and base64 data URIs (image/audio) are stored in one field (`content`) along with modality and metadata fields
-4. **Semantic Search**: Text queries run directly against `content` with semantic matching
-5. **Analysis**: An OpenAI-compatible LLM analyzes the connections between evidence to identify suspects
+3. **Semantic Search**: Semantic queries (text, image, or audio) run directly against content with semantic matching
+4. **Analysis**: An OpenAI-compatible LLM analyzes the connections between evidence to identify suspects
 
