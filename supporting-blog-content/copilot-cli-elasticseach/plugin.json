@@ -1,0 +1,19 @@
+{
+  "name": "copilot-cli-elasticsearch",
+  "description": "An Elasticsearch plugin for GitHub Copilot CLI featuring ES|QL and MCP tool integration.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Your Name"
+  },
+  "keywords": [
+    "elasticsearch",
+    "mcp",
+    "esql"
+  ],
+  "agents": [
+    "agents/"
+  ],
+  "skills": [
+    "skills/"
+  ]
+}
