@@ -2,8 +2,8 @@
  * Search Analytics Demo — Frontend
  *
  * Blog 2 (active):    Search form, result rendering
- * Blog 3 (active):    Click tracking
- * Blog 4 (active):    Add to cart tracking
+ * Blog 3 (commented): Click tracking
+ * Blog 4 (commented): Add to cart tracking
  */
 
 function escapeHtml(text) {
@@ -96,7 +96,8 @@ function renderResults(hits) {
                 <div class="meta">${escapeHtml(hit.brand)} · ${escapeHtml(hit.category)}</div>
                 <div class="price">$${price.toFixed(2)} ${stockLabel}</div>
                 <div class="rating">${stars} (${Number(hit.review_count) || 0} reviews)</div>
-                <button class="cart-btn" data-id="${hit.id}" data-position="${position}" data-price="${price}">Add to Cart</button>
+                ${ /* BLOG 4: Uncomment the line below to show Add to Cart button */ ""}
+                ${ /* `<button class="cart-btn" data-id="${hit.id}" data-position="${position}" data-price="${price}">Add to Cart</button>` */ ""}
             </div>
         `;
     }).join("");
@@ -107,12 +108,12 @@ function renderResults(hits) {
     // ║  Also uncomment the Blog 3 section in app.py.              ║
     // ╚══════════════════════════════════════════════════════════════╝
 
-    document.querySelectorAll(".result-card").forEach(card => {
-        card.addEventListener("click", (e) => {
-            if (e.target.classList.contains("cart-btn")) return;
-            trackClick(card.dataset.id, parseInt(card.dataset.position));
-        });
-    });
+    // document.querySelectorAll(".result-card").forEach(card => {
+    //     card.addEventListener("click", (e) => {
+    //         if (e.target.classList.contains("cart-btn")) return;
+    //         trackClick(card.dataset.id, parseInt(card.dataset.position));
+    //     });
+    // });
 
     // ╔══════════════════════════════════════════════════════════════╗
     // ║  BLOG 4: Cart Tracking                                     ║
@@ -122,12 +123,12 @@ function renderResults(hits) {
     // ║  Requires: Blog 3 must be uncommented first.               ║
     // ╚══════════════════════════════════════════════════════════════╝
 
-    document.querySelectorAll(".cart-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            addToCart(btn.dataset.id, parseInt(btn.dataset.position), parseFloat(btn.dataset.price));
-        });
-    });
+    // document.querySelectorAll(".cart-btn").forEach(btn => {
+    //     btn.addEventListener("click", (e) => {
+    //         e.stopPropagation();
+    //         addToCart(btn.dataset.id, parseInt(btn.dataset.position), parseFloat(btn.dataset.price));
+    //     });
+    // });
 }
 
 
@@ -136,24 +137,24 @@ function renderResults(hits) {
 // ║  Uncomment the function below.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
-async function trackClick(objectId, position) {
-    try {
-        await fetch("/api/events", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                object_id: objectId,
-                position: position,
-                query_id: lastQueryId,
-                client_id: CLIENT_ID,
-                user_query: lastQuery,
-            }),
-        });
-        console.log(`Click tracked: ${objectId} at position ${position}`);
-    } catch (err) {
-        console.error("Click tracking failed:", err);
-    }
-}
+// async function trackClick(objectId, position) {
+//     try {
+//         await fetch("/api/events", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({
+//                 object_id: objectId,
+//                 position: position,
+//                 query_id: lastQueryId,
+//                 client_id: CLIENT_ID,
+//                 user_query: lastQuery,
+//             }),
+//         });
+//         console.log(`Click tracked: ${objectId} at position ${position}`);
+//     } catch (err) {
+//         console.error("Click tracking failed:", err);
+//     }
+// }
 
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -162,23 +163,23 @@ async function trackClick(objectId, position) {
 // ║  Requires: Blog 3 must be uncommented first.                   ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
-async function addToCart(objectId, position, price) {
-    try {
-        await fetch("/api/cart/add", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                object_id: objectId,
-                position: position,
-                query_id: lastQueryId,
-                client_id: CLIENT_ID,
-                user_query: lastQuery,
-                quantity: 1,
-                price: price,
-            }),
-        });
-        console.log(`Added to cart: ${objectId} at $${price}`);
-    } catch (err) {
-        console.error("Cart tracking failed:", err);
-    }
-}
+// async function addToCart(objectId, position, price) {
+//     try {
+//         await fetch("/api/cart/add", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({
+//                 object_id: objectId,
+//                 position: position,
+//                 query_id: lastQueryId,
+//                 client_id: CLIENT_ID,
+//                 user_query: lastQuery,
+//                 quantity: 1,
+//                 price: price,
+//             }),
+//         });
+//         console.log(`Added to cart: ${objectId} at $${price}`);
+//     } catch (err) {
+//         console.error("Cart tracking failed:", err);
+//     }
+// }
