@@ -7,9 +7,10 @@ A minimal reference project for the blog series **"Search Analytics with OTel an
 - **Blog 2**: Search API instrumented with OpenTelemetry — every search creates a span with `search.*` attributes, queryable via ES|QL
 - **Blog 3**: Click tracking with CTR and MRR metrics
 - **Blog 4**: Conversion funnel from search to purchase
+- **Blog 5**: Rank features and relevance tuning — use Blog 3–4 analytics to adjust boosts in `search_queries.py`
 - **Blog 6**: SLO definitions, burn rate alerting, and operational dashboards
 
-The project starts with Blog 2 active. Blogs 3 and 4 are present but commented out — uncomment them as you progress through the series.
+The project starts with Blog 2 active. Blogs 3 and 4 are present but commented out — uncomment them as you progress through the series. Blog 5 uses the existing search query and product data; no new routes to enable.
 
 ## Architecture
 
@@ -180,6 +181,38 @@ New attributes on click spans:
 - Full conversion funnel (search → click → cart → purchase)
 - Revenue by query
 - Most clicked products with cart rates
+
+### Blog 5: Personalization and Relevance Tuning
+
+**No code to uncomment.** Blog 5 closes the feedback loop between analytics (Blogs 3–4) and ranking. The companion app already ships with rank features on every product and blends them into search at query time.
+
+**Prerequisites:**
+
+1. Blogs 3 and 4 enabled (see above)
+2. Traffic with clicks and conversions: `python generate_traffic.py --blog 4 --sessions 100`
+3. In Discover, set the time picker to when traffic ran (e.g. **Last 15 minutes**)
+
+**Where to look in the repo:**
+
+| File | Role in Blog 5 |
+| --- | --- |
+| `search_queries.py` | `build_product_search()` — BM25 `multi_match` plus `rank_feature` boosts in the `"should"` clause |
+| `index_mapping.json` | Defines `rank_features.popularity`, `margin_score`, `freshness`, `conversion_rate` field types |
+| `products.json` | Pre-seeded rank feature values per product (demo data; in production you'd write back ES\|QL aggregates) |
+| `queries/blog3_click_quality.esql` | CTR/MRR queries to find problem queries |
+| `queries/blog4_conversions.esql` | Revenue and funnel queries for judgment grading |
+| `queries/blog5_personalization.esql` | Judgment list and document-popularity queries from the blog |
+
+**Try adjusting a boost:**
+
+1. Run the problem-query ES|QL in `queries/blog5_personalization.esql` against `traces-generic.otel-default`
+2. Open `search_queries.py` and find the `"should"` clause in `build_product_search()`
+3. Change the `"boost"` on `rank_features.popularity` (default `2`) — e.g. to `5`
+4. Restart: `python app.py`
+5. Regenerate traffic: `python generate_traffic.py --blog 3 --sessions 50`
+6. Compare CTR/MRR in Discover before and after
+
+In production, you'd periodically run ES|QL to compute click popularity or conversion rate per product, then update each document's `rank_features.*` fields — the blog walks through that workflow.
 
 ### Blog 6: Search Reliability (Kibana Configuration)
 

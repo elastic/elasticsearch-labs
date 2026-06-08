@@ -6,13 +6,15 @@ Blog series: "Search Analytics with OTel and Elastic"
   Blog 2 (active):    Search spans with search.* attributes
   Blog 3 (active):    Click tracking (CTR, MRR)
   Blog 4 (active):    Cart and purchase funnel
+  Blog 5 (no changes): Rank features in search_queries.py + products.json —
+                       tune boosts using analytics from Blogs 3–4
 
 Files:
   app.py           — API routes and span attributes (tutorial focus)
+  search_queries.py — BM25 + rank_feature query (Blog 5 tuning target)
   otel_setup.py    — EDOT bootstrap / .env fixes (skim if you like)
   config.py        — Elasticsearch connection from .env
-  search_queries.py — Elasticsearch query JSON
-  load_data.py     — Index sample products
+  load_data.py     — Index sample products (includes rank_features.*)
 """
 
 from typing import List, Optional  # used when Blog 3/4 sections are uncommented
