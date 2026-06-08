@@ -3,9 +3,9 @@ Search Analytics with OpenTelemetry — Reference Implementation
 
 Blog series: "Search Analytics with OTel and Elastic"
 
-  Blog 2 (active):    Search spans with search.* attributes  ← start here
-  Blog 3 (commented): Click tracking (CTR, MRR)
-  Blog 4 (commented): Cart and purchase funnel
+  Blog 2 (active):    Search spans with search.* attributes
+  Blog 3 (active):    Click tracking (CTR, MRR)
+  Blog 4 (active):    Cart and purchase funnel
 
 Files:
   app.py           — API routes and span attributes (tutorial focus)
@@ -133,51 +133,51 @@ async def search(request: SearchRequest):
 # Queries: queries/blog3_click_quality.esql
 # =============================================================================
 
-# import threading
-# import time
-#
-# _clicked_queries: dict[str, float] = {}
-# _clicked_queries_lock = threading.Lock()
-#
-#
-# def _is_first_click(query_id: str) -> bool:
-#     """True once per query_id — enables CTR without double-counting clicks."""
-#     now = time.time()
-#     with _clicked_queries_lock:
-#         cutoff = now - 1800
-#         for k in [k for k, v in _clicked_queries.items() if v < cutoff]:
-#             del _clicked_queries[k]
-#         if query_id in _clicked_queries:
-#             return False
-#         _clicked_queries[query_id] = now
-#         return True
-#
-#
-# class ClickEvent(BaseModel):
-#     object_id: str = Field(..., description="Product ID clicked")
-#     position: int = Field(..., ge=1, description="1-based position in results")
-#     query_id: Optional[str] = None
-#     client_id: Optional[str] = None
-#     user_query: Optional[str] = None
-#     object_id_type: str = "product"
-#
-#
-# @app.post("/api/events")
-# async def track_click(event: ClickEvent):
-#     with tracer.start_as_current_span("search.result.click") as span:
-#         span.set_attribute("search.action", "click")
-#         span.set_attribute("search.result_click_id", event.object_id)
-#         span.set_attribute("search.result_click_position", event.position)
-#         span.set_attribute("search.result_click_type", event.object_id_type)
-#         if event.query_id:
-#             span.set_attribute("search.query_id", event.query_id)
-#         if event.client_id:
-#             span.set_attribute("enduser.pseudo.id", event.client_id)
-#         if event.user_query:
-#             span.set_attribute("search.query", event.user_query.lower().strip())
-#         if event.query_id and _is_first_click(event.query_id):
-#             span.set_attribute("search.first_click", True)  # native boolean
-#         return {"status": "ok", "query_id": event.query_id}
+import threading
+import time
+
+_clicked_queries: dict[str, float] = {}
+_clicked_queries_lock = threading.Lock()
+
+
+def _is_first_click(query_id: str) -> bool:
+    """True once per query_id — enables CTR without double-counting clicks."""
+    now = time.time()
+    with _clicked_queries_lock:
+        cutoff = now - 1800
+        for k in [k for k, v in _clicked_queries.items() if v < cutoff]:
+            del _clicked_queries[k]
+        if query_id in _clicked_queries:
+            return False
+        _clicked_queries[query_id] = now
+        return True
+
+
+class ClickEvent(BaseModel):
+    object_id: str = Field(..., description="Product ID clicked")
+    position: int = Field(..., ge=1, description="1-based position in results")
+    query_id: Optional[str] = None
+    client_id: Optional[str] = None
+    user_query: Optional[str] = None
+    object_id_type: str = "product"
+
+
+@app.post("/api/events")
+async def track_click(event: ClickEvent):
+    with tracer.start_as_current_span("search.result.click") as span:
+        span.set_attribute("search.action", "click")
+        span.set_attribute("search.result_click_id", event.object_id)
+        span.set_attribute("search.result_click_position", event.position)
+        span.set_attribute("search.result_click_type", event.object_id_type)
+        if event.query_id:
+            span.set_attribute("search.query_id", event.query_id)
+        if event.client_id:
+            span.set_attribute("enduser.pseudo.id", event.client_id)
+        if event.user_query:
+            span.set_attribute("search.query", event.user_query.lower().strip())
+        if event.query_id and _is_first_click(event.query_id):
+            span.set_attribute("search.first_click", True)  # native boolean
+        return {"status": "ok", "query_id": event.query_id}
 
 
 # =============================================================================
@@ -188,63 +188,63 @@ async def search(request: SearchRequest):
 # Queries: queries/blog4_conversions.esql
 # =============================================================================
 
-# class CartEvent(BaseModel):
-#     object_id: str
-#     position: int = Field(..., ge=1)
-#     query_id: Optional[str] = None
-#     client_id: Optional[str] = None
-#     user_query: Optional[str] = None
-#     quantity: int = 1
-#     price: Optional[float] = None
-#
-#
-# @app.post("/api/cart/add")
-# async def add_to_cart(event: CartEvent):
-#     with tracer.start_as_current_span("cart.add") as span:
-#         span.set_attribute("search.action", "add_to_cart")
-#         span.set_attribute("search.result_click_id", event.object_id)
-#         span.set_attribute("search.result_click_position", event.position)
-#         span.set_attribute("cart.quantity", event.quantity)
-#         if event.price is not None:
-#             span.set_attribute("cart.price", event.price)
-#         if event.query_id:
-#             span.set_attribute("search.query_id", event.query_id)
-#         if event.client_id:
-#             span.set_attribute("enduser.pseudo.id", event.client_id)
-#         if event.user_query:
-#             span.set_attribute("search.query", event.user_query.lower().strip())
-#         return {"status": "ok"}
-#
-#
-# class CheckoutItem(BaseModel):
-#     object_id: str
-#     quantity: int = 1
-#     price: float
-#
-#
-# class CheckoutEvent(BaseModel):
-#     order_id: str
-#     total_amount: float
-#     items: List[CheckoutItem] = []
-#     client_id: Optional[str] = None
-#     query_id: Optional[str] = None
-#     user_query: Optional[str] = None
-#
-#
-# @app.post("/api/checkout")
-# async def checkout(event: CheckoutEvent):
-#     with tracer.start_as_current_span("checkout.complete") as span:
-#         span.set_attribute("search.action", "purchase")
-#         span.set_attribute("checkout.order_id", event.order_id)
-#         span.set_attribute("checkout.total_amount", event.total_amount)
-#         span.set_attribute("checkout.item_count", len(event.items))
-#         if event.client_id:
-#             span.set_attribute("enduser.pseudo.id", event.client_id)
-#         if event.query_id:
-#             span.set_attribute("search.query_id", event.query_id)
-#         if event.user_query:
-#             span.set_attribute("search.query", event.user_query.lower().strip())
-#         return {"status": "ok", "order_id": event.order_id}
+class CartEvent(BaseModel):
+    object_id: str
+    position: int = Field(..., ge=1)
+    query_id: Optional[str] = None
+    client_id: Optional[str] = None
+    user_query: Optional[str] = None
+    quantity: int = 1
+    price: Optional[float] = None
+
+
+@app.post("/api/cart/add")
+async def add_to_cart(event: CartEvent):
+    with tracer.start_as_current_span("cart.add") as span:
+        span.set_attribute("search.action", "add_to_cart")
+        span.set_attribute("search.result_click_id", event.object_id)
+        span.set_attribute("search.result_click_position", event.position)
+        span.set_attribute("cart.quantity", event.quantity)
+        if event.price is not None:
+            span.set_attribute("cart.price", event.price)
+        if event.query_id:
+            span.set_attribute("search.query_id", event.query_id)
+        if event.client_id:
+            span.set_attribute("enduser.pseudo.id", event.client_id)
+        if event.user_query:
+            span.set_attribute("search.query", event.user_query.lower().strip())
+        return {"status": "ok"}
+
+
+class CheckoutItem(BaseModel):
+    object_id: str
+    quantity: int = 1
+    price: float
+
+
+class CheckoutEvent(BaseModel):
+    order_id: str
+    total_amount: float
+    items: List[CheckoutItem] = []
+    client_id: Optional[str] = None
+    query_id: Optional[str] = None
+    user_query: Optional[str] = None
+
+
+@app.post("/api/checkout")
+async def checkout(event: CheckoutEvent):
+    with tracer.start_as_current_span("checkout.complete") as span:
+        span.set_attribute("search.action", "purchase")
+        span.set_attribute("checkout.order_id", event.order_id)
+        span.set_attribute("checkout.total_amount", event.total_amount)
+        span.set_attribute("checkout.item_count", len(event.items))
+        if event.client_id:
+            span.set_attribute("enduser.pseudo.id", event.client_id)
+        if event.query_id:
+            span.set_attribute("search.query_id", event.query_id)
+        if event.user_query:
+            span.set_attribute("search.query", event.user_query.lower().strip())
+        return {"status": "ok", "order_id": event.order_id}
 
 
 # =============================================================================
