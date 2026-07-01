@@ -18,7 +18,7 @@ These notebooks exercise the Context Engine, Workflows, and the `ai.agent` step 
 - An **Elastic Cloud** deployment where the Context Engine is available. The notebooks connect with your **Cloud ID** and an **API key** (the Kibana URL is derived from the Cloud ID).
 - The notebooks **explicitly enable** the `agentBuilder:experimentalFeatures` feature flag — don't assume it's on.
 - A **GenAI connector** configured in Kibana (Stack Management → Connectors) for the `ai.agent` workflow step.
-- For the agent harness in `index-facts-kis.ipynb`, an **Anthropic API key** (the deep agent runs on Claude Haiku via `langchain-anthropic`).
+- For the deep agent harness in both notebooks, an **LLM API key** for any OpenAI-compatible endpoint (defaults to OpenRouter + Claude Haiku; the base URL and model are configurable at the prompt).
 
 ## Notebooks
 
