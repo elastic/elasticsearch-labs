@@ -43,14 +43,37 @@ def build_product_search(query: str, page: int, page_size: int) -> dict:
                 ],
                 "should": [
                     {"rank_feature": {"field": "rank_features.popularity", "boost": 2}},
-                    {"rank_feature": {"field": "rank_features.margin_score", "boost": 1}},
-                    {"rank_feature": {"field": "rank_features.freshness", "boost": 1.5}},
-                    {"rank_feature": {"field": "rank_features.conversion_rate", "boost": 1}},
+                    {
+                        "rank_feature": {
+                            "field": "rank_features.margin_score",
+                            "boost": 1,
+                        }
+                    },
+                    {
+                        "rank_feature": {
+                            "field": "rank_features.freshness",
+                            "boost": 1.5,
+                        }
+                    },
+                    {
+                        "rank_feature": {
+                            "field": "rank_features.conversion_rate",
+                            "boost": 1,
+                        }
+                    },
                 ],
             }
         },
         "_source": [
-            "id", "title", "description", "category", "brand",
-            "price", "rating", "review_count", "in_stock", "image_url",
+            "id",
+            "title",
+            "description",
+            "category",
+            "brand",
+            "price",
+            "rating",
+            "review_count",
+            "in_stock",
+            "image_url",
         ],
     }

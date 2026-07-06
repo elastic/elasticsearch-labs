@@ -22,9 +22,7 @@ load_dotenv(override=True)
 
 # Settings rejected on Elastic Cloud Serverless (see Elastic docs:
 # /docs/reference/elasticsearch/index-settings/serverless)
-SERVERLESS_BLOCKED_SETTINGS = frozenset(
-    {"number_of_shards", "number_of_replicas"}
-)
+SERVERLESS_BLOCKED_SETTINGS = frozenset({"number_of_shards", "number_of_replicas"})
 
 
 def require_search_config() -> tuple[str, str, str]:
@@ -72,7 +70,9 @@ def is_serverless(info: dict[str, Any]) -> bool:
     return info.get("version", {}).get("build_flavor") == "serverless"
 
 
-def adapt_mapping_for_cluster(mapping: dict[str, Any], serverless: bool) -> dict[str, Any]:
+def adapt_mapping_for_cluster(
+    mapping: dict[str, Any], serverless: bool
+) -> dict[str, Any]:
     """Strip index settings that Serverless does not allow."""
     if not serverless:
         return mapping
@@ -160,7 +160,13 @@ def verify_connection(es: Elasticsearch) -> dict[str, Any]:
     """Verify cluster reachability and credentials; return info() or exit with guidance."""
     try:
         return es.info()
-    except (AuthenticationException, AuthorizationException, ConnectionError, ConnectionTimeout, ApiError) as exc:
+    except (
+        AuthenticationException,
+        AuthorizationException,
+        ConnectionError,
+        ConnectionTimeout,
+        ApiError,
+    ) as exc:
         print(f"Error: {format_es_error(exc)}")
         sys.exit(1)
     except Exception as exc:
