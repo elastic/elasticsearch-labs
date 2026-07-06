@@ -1,0 +1,42 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 2,
+      "refresh_interval": "1s",
+      "translog": {
+        "durability": "request",
+        "flush_threshold_size": "32mb"
+      },
+      "merge": {
+        "scheduler": {
+          "max_thread_count": 4
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "delivery_amount":          {"type": "double"},
+      "delivery_datetime":        { "type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+      "delivery_location":        { "type": "geo_point"},
+      "delivery_pickup_datetime": { "type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+      "delivery_pickup_location": { "type": "geo_point" },
+      "extra":                    { "type": "double" },
+      "extra_fee_amount":         { "type": "double" },
+      "load_balance":             { "type": "double"},
+      "payment_type":             { "type": "text", "fields": { "keyword": { "type": "keyword", "eager_global_ordinals": true }}},
+      "review_id":                { "type": "keyword", "eager_global_ordinals": true },
+      "state_tax":                { "type": "double"},
+      "surcharge":                { "type": "double"},
+      "tolls_amount":             { "type": "double" },
+      "total_amount":             { "type": "double" },
+      "trip_distance":            { "type": "double" },
+      "trip_type":                { "type": "text", "fields": { "keyword": { "type": "keyword", "eager_global_ordinals": true }}},
+      "unloaders_count":          { "type": "integer" },
+      "vendor_id":                { "type": "text", "fields": { "keyword": { "type": "keyword", "eager_global_ordinals": true } }},
+      "vendor_name":              { "type": "text", "term_vector": "with_positions_offsets", "fields": { "keyword": { "type": "keyword", "eager_global_ordinals": true }}}
+    }
+  }
+}
