@@ -1,0 +1,74 @@
+// =============================================================================
+// Blog 5: Personalizing Search from Behavior — ES|QL Queries
+// =============================================================================
+//
+// Prerequisites:
+//   - Blogs 2–4 enabled in the companion app
+//   - Traffic generated: python generate_traffic.py --blog 4 --sessions 100
+//   - Discover time range set to when traffic ran (e.g. Last 15 minutes)
+//
+// Judgment lists and rank-feature signals come from traces in
+// traces-generic.otel-default. Rank feature *boosts* live in search_queries.py;
+// pre-seeded feature *values* are in products.json (loaded via load_data.py).
+// =============================================================================
+
+
+// --- Problem queries: high volume, low CTR (relevance tuning candidates) ---
+FROM traces-generic.otel-default
+| WHERE ((name == "search" AND attributes.search.query IS NOT NULL)
+    OR attributes.search.first_click == true)
+  AND attributes.search.query IS NOT NULL
+| STATS
+    searches = COUNT(CASE(name == "search" AND attributes.search.query IS NOT NULL, 1)),
+    clicked = COUNT(CASE(attributes.search.first_click == true, 1))
+  BY attributes.search.query
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+| WHERE searches > 5
+| SORT ctr_pct ASC, searches DESC
+| LIMIT 20
+
+
+// --- Judgment list source: clicks per query-document pair ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action == "click"
+  AND attributes.search.query IS NOT NULL
+| STATS
+    click_count = COUNT(*),
+    avg_position = AVG(attributes.search.result_click_position)
+  BY attributes.search.query, attributes.search.result_click_id
+| SORT attributes.search.query, click_count DESC
+
+
+// --- Stronger judgments: clicks + cart additions per query-document pair ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action IN ("click", "add_to_cart")
+  AND attributes.search.query IS NOT NULL
+| STATS
+    clicks = COUNT(CASE(attributes.search.action == "click", 1)),
+    carts = COUNT(CASE(attributes.search.action == "add_to_cart", 1))
+  BY attributes.search.query, attributes.search.result_click_id
+| SORT attributes.search.query, clicks DESC
+
+
+// --- Document-level popularity (candidate rank_feature values to write back) ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action IN ("click", "add_to_cart")
+| STATS
+    clicks = COUNT(CASE(attributes.search.action == "click", 1)),
+    carts = COUNT(CASE(attributes.search.action == "add_to_cart", 1))
+  BY attributes.search.result_click_id
+| EVAL cart_rate_pct = ROUND(100.0 * carts / clicks, 1)
+| SORT clicks DESC
+| LIMIT 20
+
+
+// --- Skip-above signal: users clicked below position 1 ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action == "click"
+  AND attributes.search.query IS NOT NULL
+| STATS
+    min_click_position = MIN(attributes.search.result_click_position),
+    click_count = COUNT(*)
+  BY attributes.search.query_id, attributes.search.query
+| WHERE min_click_position > 1
+| SORT click_count DESC
