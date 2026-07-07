@@ -27,7 +27,9 @@ from es_utils import (
 
 def main():
     parser = argparse.ArgumentParser(description="Load product data into Elasticsearch")
-    parser.add_argument("--no-delete", action="store_true", help="Don't delete existing index")
+    parser.add_argument(
+        "--no-delete", action="store_true", help="Don't delete existing index"
+    )
     args = parser.parse_args()
 
     url, api_key, index = require_search_config()

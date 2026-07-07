@@ -24,6 +24,7 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/llama-index/intro.ipynb"
     "notebooks/integrations/gemini/vector-search-gemini-elastic.ipynb"
     "notebooks/integrations/gemini/qa-langchain-gemini-elasticsearch.ipynb"
+    "notebooks/integrations/gemini/audio_similarity_search_gemini_elasticsearch.ipynb"
     "notebooks/integrations/openai/openai-KNN-RAG.ipynb"
     "notebooks/integrations/openai/function-calling.ipynb"
     "notebooks/integrations/gemma/rag-gemma-huggingface-elastic.ipynb"

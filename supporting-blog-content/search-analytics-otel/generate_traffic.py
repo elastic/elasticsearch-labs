@@ -24,30 +24,61 @@ import httpx
 
 # High volume: common searches with good results
 HIGH_VOLUME_QUERIES = [
-    "laptop", "headphones", "running shoes", "coffee maker", "yoga mat",
-    "bluetooth speaker", "keyboard", "wireless mouse",
+    "laptop",
+    "headphones",
+    "running shoes",
+    "coffee maker",
+    "yoga mat",
+    "bluetooth speaker",
+    "keyboard",
+    "wireless mouse",
 ]
 
 # Medium volume: moderate traffic
 MEDIUM_VOLUME_QUERIES = [
-    "backpack", "desk lamp", "water bottle", "phone case",
-    "usb hub", "leather wallet", "sunglasses", "travel mug",
+    "backpack",
+    "desk lamp",
+    "water bottle",
+    "phone case",
+    "usb hub",
+    "leather wallet",
+    "sunglasses",
+    "travel mug",
 ]
 
 # Low volume: occasional searches
 LOW_VOLUME_QUERIES = [
-    "garden tools", "chess set", "meditation cushion", "balance board",
-    "solar charger", "foam roller",
+    "garden tools",
+    "chess set",
+    "meditation cushion",
+    "balance board",
+    "solar charger",
+    "foam roller",
 ]
 
 # Zero-result queries: these won't match any products
 ZERO_RESULT_QUERIES = [
-    "quantum physics calculator", "unicorn saddle",
-    "holographic projector", "time machine parts",
+    "quantum physics calculator",
+    "unicorn saddle",
+    "holographic projector",
+    "time machine parts",
 ]
 
 # Click position weights: position 1 gets clicked most, then 2, etc.
-POSITION_WEIGHTS = [0.35, 0.20, 0.12, 0.08, 0.06, 0.05, 0.04, 0.03, 0.03, 0.02, 0.01, 0.01]
+POSITION_WEIGHTS = [
+    0.35,
+    0.20,
+    0.12,
+    0.08,
+    0.06,
+    0.05,
+    0.04,
+    0.03,
+    0.03,
+    0.02,
+    0.01,
+    0.01,
+]
 
 
 def pick_query() -> str:
@@ -63,16 +94,23 @@ def pick_query() -> str:
         return random.choice(ZERO_RESULT_QUERIES)
 
 
-def simulate_session(client: httpx.Client, base_url: str, blog_level: int, verbose: bool):
+def simulate_session(
+    client: httpx.Client, base_url: str, blog_level: int, verbose: bool
+):
     """Simulate one user session: search, optionally click, cart, purchase."""
     client_id = f"user-{random.randint(1000, 9999)}"
     query = pick_query()
 
     # --- Search ---
     try:
-        resp = client.post(f"{base_url}/api/search", json={
-            "query": query, "page": 1, "page_size": 12,
-        })
+        resp = client.post(
+            f"{base_url}/api/search",
+            json={
+                "query": query,
+                "page": 1,
+                "page_size": 12,
+            },
+        )
         resp.raise_for_status()
         data = resp.json()
     except Exception as e:
@@ -98,16 +136,21 @@ def simulate_session(client: httpx.Client, base_url: str, blog_level: int, verbo
         hit = hits[position - 1]
 
         try:
-            r = client.post(f"{base_url}/api/events", json={
-                "object_id": hit["id"],
-                "position": position,
-                "query_id": query_id,
-                "client_id": client_id,
-                "user_query": query,
-                "object_id_type": "product",
-            })
+            r = client.post(
+                f"{base_url}/api/events",
+                json={
+                    "object_id": hit["id"],
+                    "position": position,
+                    "query_id": query_id,
+                    "client_id": client_id,
+                    "user_query": query,
+                    "object_id_type": "product",
+                },
+            )
             if r.status_code == 404:
-                print("  ✗ /api/events returned 404 — did you uncomment the Blog 3 section in app.py?")
+                print(
+                    "  ✗ /api/events returned 404 — did you uncomment the Blog 3 section in app.py?"
+                )
                 sys.exit(1)
             r.raise_for_status()
             if verbose:
@@ -122,14 +165,17 @@ def simulate_session(client: httpx.Client, base_url: str, blog_level: int, verbo
             if pos2 != position:
                 hit2 = hits[pos2 - 1]
                 try:
-                    client.post(f"{base_url}/api/events", json={
-                        "object_id": hit2["id"],
-                        "position": pos2,
-                        "query_id": query_id,
-                        "client_id": client_id,
-                        "user_query": query,
-                        "object_id_type": "product",
-                    })
+                    client.post(
+                        f"{base_url}/api/events",
+                        json={
+                            "object_id": hit2["id"],
+                            "position": pos2,
+                            "query_id": query_id,
+                            "client_id": client_id,
+                            "user_query": query,
+                            "object_id_type": "product",
+                        },
+                    )
                 except Exception:
                     pass
 
@@ -140,17 +186,22 @@ def simulate_session(client: httpx.Client, base_url: str, blog_level: int, verbo
         # --- Add to Cart (Blog 4+) ---
         if random.random() < 0.30:  # 30% of clicks become carts
             try:
-                r = client.post(f"{base_url}/api/cart/add", json={
-                    "object_id": hit["id"],
-                    "position": position,
-                    "query_id": query_id,
-                    "client_id": client_id,
-                    "user_query": query,
-                    "quantity": random.choice([1, 1, 1, 2]),
-                    "price": hit.get("price"),
-                })
+                r = client.post(
+                    f"{base_url}/api/cart/add",
+                    json={
+                        "object_id": hit["id"],
+                        "position": position,
+                        "query_id": query_id,
+                        "client_id": client_id,
+                        "user_query": query,
+                        "quantity": random.choice([1, 1, 1, 2]),
+                        "price": hit.get("price"),
+                    },
+                )
                 if r.status_code == 404:
-                    print("  ✗ /api/cart/add returned 404 — did you uncomment the Blog 4 section in app.py?")
+                    print(
+                        "  ✗ /api/cart/add returned 404 — did you uncomment the Blog 4 section in app.py?"
+                    )
                     sys.exit(1)
                 r.raise_for_status()
                 if verbose:
@@ -164,16 +215,23 @@ def simulate_session(client: httpx.Client, base_url: str, blog_level: int, verbo
                 order_id = str(uuid.uuid4())[:8]
                 price = hit.get("price", 29.99)
                 try:
-                    r = client.post(f"{base_url}/api/checkout", json={
-                        "order_id": order_id,
-                        "total_amount": price,
-                        "items": [{"object_id": hit["id"], "quantity": 1, "price": price}],
-                        "client_id": client_id,
-                        "query_id": query_id,
-                        "user_query": query,
-                    })
+                    r = client.post(
+                        f"{base_url}/api/checkout",
+                        json={
+                            "order_id": order_id,
+                            "total_amount": price,
+                            "items": [
+                                {"object_id": hit["id"], "quantity": 1, "price": price}
+                            ],
+                            "client_id": client_id,
+                            "query_id": query_id,
+                            "user_query": query,
+                        },
+                    )
                     if r.status_code == 404:
-                        print("  ✗ /api/checkout returned 404 — did you uncomment the Blog 4 section in app.py?")
+                        print(
+                            "  ✗ /api/checkout returned 404 — did you uncomment the Blog 4 section in app.py?"
+                        )
                         sys.exit(1)
                     r.raise_for_status()
                     if verbose:
@@ -187,29 +245,43 @@ def main():
         description="Generate demo traffic for search analytics"
     )
     parser.add_argument(
-        "--blog", type=int, default=2, choices=[2, 3, 4],
-        help="Blog level: 2=search only, 3=+clicks, 4=+cart+purchase (default: 2)"
+        "--blog",
+        type=int,
+        default=2,
+        choices=[2, 3, 4],
+        help="Blog level: 2=search only, 3=+clicks, 4=+cart+purchase (default: 2)",
     )
     parser.add_argument(
-        "--sessions", type=int, default=50,
-        help="Number of user sessions to simulate (default: 50)"
+        "--sessions",
+        type=int,
+        default=50,
+        help="Number of user sessions to simulate (default: 50)",
     )
     parser.add_argument(
-        "--url", type=str, default="http://localhost:8000",
-        help="Base URL of the search API (default: http://localhost:8000)"
+        "--url",
+        type=str,
+        default="http://localhost:8000",
+        help="Base URL of the search API (default: http://localhost:8000)",
     )
     parser.add_argument(
-        "--verbose", "-v", action="store_true",
-        help="Print details for each session"
+        "--verbose", "-v", action="store_true", help="Print details for each session"
     )
     parser.add_argument(
-        "--delay", type=float, default=0.1,
-        help="Delay between sessions in seconds (default: 0.1)"
+        "--delay",
+        type=float,
+        default=0.1,
+        help="Delay between sessions in seconds (default: 0.1)",
     )
     args = parser.parse_args()
 
-    blog_labels = {2: "search only", 3: "search + clicks", 4: "search + clicks + cart + purchases"}
-    print(f"Generating {args.sessions} sessions (Blog {args.blog}: {blog_labels[args.blog]})")
+    blog_labels = {
+        2: "search only",
+        3: "search + clicks",
+        4: "search + clicks + cart + purchases",
+    }
+    print(
+        f"Generating {args.sessions} sessions (Blog {args.blog}: {blog_labels[args.blog]})"
+    )
     print(f"Target: {args.url}")
     print()
 
