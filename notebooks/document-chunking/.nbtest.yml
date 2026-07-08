@@ -9,3 +9,5 @@ masks:
 - "'build_date': '[^']+'"
 - '^ID: .*$'
 - '^Score: [0-9]+\.[0-9][0-9]*$'
+- '^\[transformers\] Token indices sequence length.*$'
+- '^Token indices sequence length.*$'

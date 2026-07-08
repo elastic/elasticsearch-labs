@@ -1,0 +1,73 @@
+// =============================================================================
+// Blog 3: Measuring Search Quality with Click Data — ES|QL Queries
+// =============================================================================
+//
+// These queries require Blog 3 click tracking to be uncommented and traffic
+// generated with: python generate_traffic.py --blog 3 --sessions 50
+//
+// OTel-native field mapping (attributes preserved as-is):
+//   search.action                → attributes.search.action
+//   search.result_click_id       → attributes.search.result_click_id
+//   search.result_click_position → attributes.search.result_click_position
+//   search.first_click           → attributes.search.first_click (native boolean!)
+//   enduser.pseudo.id            → attributes.enduser.pseudo.id
+//
+// Filter custom search spans with attributes.search.query IS NOT NULL — OTel
+// auto-instrumentation also emits spans named "search" without search.* attrs.
+// =============================================================================
+
+
+// --- Overall Click-Through Rate (CTR) ---
+// Uses search.first_click (native boolean) to count only the first click per query
+FROM traces-generic.otel-default
+| WHERE (name == "search" AND attributes.search.query IS NOT NULL)
+    OR attributes.search.first_click == true
+| STATS
+    searches = COUNT(CASE(name == "search" AND attributes.search.query IS NOT NULL, 1)),
+    clicked = COUNT(CASE(attributes.search.first_click == true, 1))
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+
+
+// --- CTR by query (which queries get clicked?) ---
+FROM traces-generic.otel-default
+| WHERE ((name == "search" AND attributes.search.query IS NOT NULL)
+    OR attributes.search.first_click == true)
+  AND attributes.search.query IS NOT NULL
+| STATS
+    searches = COUNT(CASE(name == "search" AND attributes.search.query IS NOT NULL, 1)),
+    clicked = COUNT(CASE(attributes.search.first_click == true, 1))
+  BY attributes.search.query
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+| WHERE searches > 3
+| SORT ctr_pct ASC, searches DESC
+
+
+// --- Mean Reciprocal Rank (MRR) ---
+// First-click MRR — aligns with CTR (one data point per search)
+FROM traces-generic.otel-default
+| WHERE attributes.search.action == "click"
+  AND attributes.search.first_click == true
+| EVAL reciprocal_rank = 1.0 / attributes.search.result_click_position
+| STATS mrr = ROUND(AVG(reciprocal_rank), 3)
+
+
+// --- MRR by query (which queries have poor ranking?) ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action == "click"
+  AND attributes.search.first_click == true
+  AND attributes.search.query IS NOT NULL
+| EVAL reciprocal_rank = 1.0 / attributes.search.result_click_position
+| STATS
+    mrr = ROUND(AVG(reciprocal_rank), 3),
+    clicks = COUNT(*)
+  BY attributes.search.query
+| WHERE clicks > 2
+| SORT mrr ASC
+
+
+// --- Click position distribution ---
+// Shows where in results users are clicking (healthy = heavily weighted to position 1)
+FROM traces-generic.otel-default
+| WHERE attributes.search.action == "click"
+| STATS clicks = COUNT(*) BY attributes.search.result_click_position
+| SORT attributes.search.result_click_position

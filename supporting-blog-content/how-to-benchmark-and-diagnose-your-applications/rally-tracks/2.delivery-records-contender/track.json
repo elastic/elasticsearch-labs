@@ -1,0 +1,111 @@
+{
+  "version": 2,
+  "description": "OPTIMIZED: oem-product index with bulk-indexing best practices — refresh disabled, 0 replicas during load, async translog. Settings are restored after indexing completes.",
+  "indices": [
+    {
+      "name": "oem-product-optimized",
+      "body": "index-settings.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "oem-products",
+      "documents": [
+        {
+          "source-file": "documents.json.bz2",
+          "document-count": 1000000
+        }
+      ]
+    }
+  ],
+  "schedule": [
+    {
+      "operation": {
+        "operation-type": "delete-index",
+        "index": "oem-product-optimized",
+        "only-if-exists": true
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "create-index",
+        "index": "oem-product-optimized"
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "cluster-health",
+        "request-params": {
+          "wait_for_status": "yellow",
+          "wait_for_no_relocating_shards": "true"
+        }
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "bulk",
+        "bulk-size": 100,
+        "ingest-percentage": 100
+      },
+      "name": "bulk-index",
+      "clients": 2
+    },
+    {
+      "operation": {
+        "operation-type": "raw-request",
+        "method": "PUT",
+        "path": "/oem-product-optimized/_settings",
+        "body": {
+          "index": {
+            "refresh_interval": "30s",
+            "number_of_replicas": 1,
+            "translog": {
+              "durability": "request"
+            }
+          }
+        }
+      },
+      "name": "restore-settings-after-load"
+    },
+    {
+      "operation": {
+        "operation-type": "raw-request",
+        "method": "POST",
+        "path": "/oem-product-optimized/_flush"
+      },
+      "name": "flush-translog"
+    },
+    {
+      "operation": {
+        "operation-type": "cluster-health",
+        "request-params": {
+          "wait_for_status": "green",
+          "wait_for_no_relocating_shards": "true",
+          "wait_for_no_initializing_shards": "true",
+          "timeout": "300s"
+        },
+        "request-timeout": 360
+      },
+      "name": "wait-for-green-after-replica"
+    },
+    {
+      "operation": {
+        "operation-type": "force-merge",
+        "request-timeout": 7200
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "index-stats",
+        "index": "oem-product-optimized"
+      },
+      "name": "get-index-stats"
+    },
+    {
+      "operation": {
+        "operation-type": "node-stats"
+      },
+      "name": "get-node-stats"
+    }
+  ]
+}

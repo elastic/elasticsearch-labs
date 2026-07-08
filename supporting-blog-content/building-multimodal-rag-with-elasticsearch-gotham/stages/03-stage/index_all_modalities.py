@@ -5,7 +5,6 @@ sys.path.append(
     os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "src")
 )
 
-from embedding_generator import EmbeddingGenerator
 from elastic_manager import ElasticsearchManager
 import json
 import logging
@@ -19,17 +18,21 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 
-def process_evidence(generator, es_manager, file_path, modality, description, metadata):
+def process_evidence(es_manager, file_path, modality, description, metadata):
     """Helper function to process each piece of evidence"""
     try:
         if not os.path.exists(file_path):
             logger.error(f"File not found: {file_path}")
             return
 
-        embedding = generator.generate_embedding([file_path], modality)
+        if modality == "text":
+            with open(file_path, "r", encoding="utf-8") as file:
+                content = file.read().strip()
+        else:
+            content = es_manager.build_content_from_file(file_path, modality)
         response = es_manager.index_content(
-            embedding=embedding,
             modality=modality,
+            content=content,
             description=description,
             content_path=file_path,
             metadata=metadata,
@@ -49,11 +52,10 @@ def process_evidence(generator, es_manager, file_path, modality, description, me
 
 def main():
     # Initialize components
-    generator = EmbeddingGenerator()
     es_manager = ElasticsearchManager()
 
     # Create data directories if they don't exist
-    for dir_name in ["images", "audios", "texts", "depths"]:
+    for dir_name in ["images", "audios", "texts"]:
         os.makedirs(os.path.join("data", dir_name), exist_ok=True)
 
     # List of evidence to process
@@ -106,21 +108,11 @@ def main():
                 "timestamp": "2025-01-30 23:20",
             },
         },
-        {
-            "file_path": "data/depths/depth_suspect.png",
-            "modality": "depth",
-            "description": "Depth sensor capture of the suspect",
-            "metadata": {
-                "location": "Gotham Central Bank - Back Alley",
-                "timestamp": "2025-01-30 23:18",
-            },
-        },
     ]
 
     # Process each piece of evidence
     for evidence in evidence_list:
         process_evidence(
-            generator,
             es_manager,
             evidence["file_path"],
             evidence["modality"],

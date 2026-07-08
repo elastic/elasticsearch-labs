@@ -1,0 +1,72 @@
+// =============================================================================
+// Blog 4: From Clicks to Conversions — ES|QL Queries
+// =============================================================================
+//
+// These queries require Blog 3 + Blog 4 to be uncommented and traffic
+// generated with: python generate_traffic.py --blog 4 --sessions 100
+//
+// Additional OTel-native fields:
+//   cart.quantity          → attributes.cart.quantity
+//   cart.price             → attributes.cart.price
+//   checkout.order_id      → attributes.checkout.order_id
+//   checkout.total_amount  → attributes.checkout.total_amount
+//   checkout.item_count    → attributes.checkout.item_count
+// =============================================================================
+
+
+// --- Full conversion funnel ---
+// search → click → cart → purchase (each stage with counts and conversion rates)
+FROM traces-generic.otel-default
+| WHERE name == "search"
+    OR attributes.search.first_click == true
+    OR attributes.search.action IN ("add_to_cart", "purchase")
+| STATS
+    searches  = COUNT(CASE(name == "search", 1)),
+    clicked   = COUNT(CASE(attributes.search.first_click == true, 1)),
+    carts     = COUNT(CASE(attributes.search.action == "add_to_cart", 1)),
+    purchases = COUNT(CASE(attributes.search.action == "purchase", 1))
+| EVAL
+    click_rate    = ROUND(100.0 * clicked / searches, 1),
+    cart_rate     = ROUND(100.0 * carts / clicked, 1),
+    purchase_rate = ROUND(100.0 * purchases / carts, 1),
+    overall_conversion = ROUND(100.0 * purchases / searches, 2)
+
+
+// --- Revenue by query ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action == "purchase"
+  AND attributes.search.query IS NOT NULL
+| STATS
+    purchase_count = COUNT(*),
+    total_revenue = ROUND(SUM(attributes.checkout.total_amount), 2)
+  BY attributes.search.query
+| SORT total_revenue DESC
+
+
+// --- Conversion funnel by query ---
+FROM traces-generic.otel-default
+| WHERE (name == "search"
+    OR attributes.search.first_click == true
+    OR attributes.search.action IN ("add_to_cart", "purchase"))
+  AND attributes.search.query IS NOT NULL
+| STATS
+    searches  = COUNT(CASE(name == "search", 1)),
+    clicked   = COUNT(CASE(attributes.search.first_click == true, 1)),
+    carts     = COUNT(CASE(attributes.search.action == "add_to_cart", 1)),
+    purchases = COUNT(CASE(attributes.search.action == "purchase", 1))
+  BY attributes.search.query
+| WHERE searches > 3
+| EVAL ctr_pct = ROUND(100.0 * clicked / searches, 1)
+| SORT purchases DESC, searches DESC
+
+
+// --- Most clicked products ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.action IN ("click", "add_to_cart")
+| STATS
+    clicks = COUNT(CASE(attributes.search.action == "click", 1)),
+    carts  = COUNT(CASE(attributes.search.action == "add_to_cart", 1))
+  BY attributes.search.result_click_id
+| EVAL cart_rate_pct = ROUND(100.0 * carts / clicks, 1)
+| SORT clicks DESC
+| LIMIT 15
