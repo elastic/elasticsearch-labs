@@ -14,22 +14,7 @@ The project starts with Blog 2 active. Blogs 3 and 4 are present but commented o
 
 ## Architecture
 
-```text
-┌──────────────┐        ┌──────────────┐        ┌──────────────────┐
-│   Browser    │──POST──│   FastAPI     │──query──│  Elasticsearch   │
-│  (frontend)  │  /api  │   (app.py)   │         │  (product data)  │
-└──────────────┘        └──────┬───────┘        └──────────────────┘
-                               │
-                          OTLP/HTTP
-                               │
-                        ┌──────▼───────┐
-                        │ Elastic Cloud │
-                        │ (mOTLP or    │
-                        │  Collector)   │
-                        └──────────────┘
-                               │
-                    traces-generic.otel-default
-```
+![Architecture components](assets/architecture.png)
 
 ## Prerequisites
 
@@ -123,7 +108,7 @@ See `queries/blog2_search_analytics.esql` for more queries.
 
 The `POST /api/search` endpoint in `app.py` creates an OTel span named `search` with these attributes:
 
-| Attribute | ES|QL Field | Description |
+| Attribute | ES\|QL Field | Description |
 |-----------|------------|-------------|
 | `search.query` | `attributes.search.query` | Query text |
 | `search.query_id` | `attributes.search.query_id` | Unique ID (trace ID) |
@@ -149,7 +134,7 @@ The `POST /api/search` endpoint in `app.py` creates an OTel span named `search` 
 
 New attributes on click spans:
 
-| Attribute | ES|QL Field | Description |
+| Attribute | ES\|QL Field | Description |
 |-----------|------------|-------------|
 | `search.action` | `attributes.search.action` | `"click"` |
 | `search.result_click_id` | `attributes.search.result_click_id` | Product ID clicked |
@@ -235,7 +220,7 @@ Each SLO auto-creates a burn rate alert rule. See `queries/blog6_reliability.esq
 
 With **OTel-native ingestion** (via Managed OTLP or EDOT Collector with `mapping.mode: otel`), attribute names are **preserved as-is** under the `attributes.*` namespace:
 
-| OTel attribute | ES|QL field | Type |
+| OTel attribute | ES\|QL field | Type |
 |---------------|-------------|------|
 | `search.query` | `attributes.search.query` | keyword |
 | `search.result_count` | `attributes.search.result_count` | long |
