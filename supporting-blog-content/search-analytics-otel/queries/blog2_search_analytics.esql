@@ -1,0 +1,77 @@
+// =============================================================================
+// Blog 2: Search Instrumentation — ES|QL Queries
+// =============================================================================
+//
+// These queries work on search spans created by the POST /api/search endpoint.
+// Run them in Kibana > Discover > ES|QL.
+//
+// OTel-native field mapping (attributes preserved as-is under attributes.*):
+//   OTel attribute          → ES|QL field
+//   search.query            → attributes.search.query
+//   search.result_count     → attributes.search.result_count
+//   search.took_ms          → attributes.search.took_ms
+//   search.query_id         → attributes.search.query_id
+//   Span name               → name
+// =============================================================================
+
+
+// --- Verify spans are arriving ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.query IS NOT NULL
+  AND name == "search"
+| KEEP attributes.search.query, attributes.search.result_count,
+       attributes.search.took_ms, @timestamp
+| SORT @timestamp DESC
+| LIMIT 5
+
+
+// --- Top queries by volume ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.query IS NOT NULL
+  AND name == "search"
+| STATS
+    searches = COUNT(*),
+    avg_results = ROUND(AVG(attributes.search.result_count), 0),
+    avg_ms = ROUND(AVG(attributes.search.took_ms), 0)
+  BY attributes.search.query
+| SORT searches DESC
+| LIMIT 20
+
+
+// --- Zero-results rate ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.query IS NOT NULL
+  AND name == "search"
+| STATS
+    total = COUNT(*),
+    zero_results = COUNT(CASE(attributes.search.result_count == 0, 1))
+| EVAL zero_rate_pct = ROUND(100.0 * zero_results / total, 1)
+
+
+// --- Which queries return zero results? ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.result_count == 0
+  AND name == "search"
+| STATS occurrences = COUNT(*) BY attributes.search.query
+| SORT occurrences DESC
+
+
+// --- Latency distribution ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.query IS NOT NULL
+  AND name == "search"
+| STATS
+    p50 = PERCENTILE(attributes.search.took_ms, 50),
+    p95 = PERCENTILE(attributes.search.took_ms, 95),
+    p99 = PERCENTILE(attributes.search.took_ms, 99),
+    avg_ms = ROUND(AVG(attributes.search.took_ms), 1),
+    max_ms = MAX(attributes.search.took_ms)
+
+
+// --- Search volume over time (5-minute buckets) ---
+FROM traces-generic.otel-default
+| WHERE attributes.search.query IS NOT NULL
+  AND name == "search"
+| EVAL bucket = DATE_TRUNC(5 minutes, @timestamp)
+| STATS searches = COUNT(*) BY bucket
+| SORT bucket

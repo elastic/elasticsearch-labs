@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "description": "BASELINE: oem-product index with bad indexing settings — demonstrates slow indexing caused by frequent refreshes, replicas during load, and synchronous translog",
+  "indices": [
+    {
+      "name": "oem-product-bad-settings",
+      "body": "index-settings.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "oem-products",
+      "documents": [
+        {
+          "source-file": "documents.json.bz2",
+          "document-count": 1000000
+        }
+      ]
+    }
+  ],
+  "schedule": [
+    {
+      "operation": {
+        "operation-type": "delete-index",
+        "index": "oem-product-bad-settings",
+        "only-if-exists": true
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "create-index",
+        "index": "oem-product-bad-settings"
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "cluster-health",
+        "request-params": {
+          "wait_for_status": "green",
+          "wait_for_no_relocating_shards": "true"
+        }
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "bulk",
+        "bulk-size": 100,
+        "ingest-percentage": 100
+      },
+      "name": "bulk-index",
+      "clients": 1
+    },
+    {
+      "operation": {
+        "operation-type": "force-merge",
+        "request-timeout": 7200
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "index-stats",
+        "index": "oem-product-bad-settings"
+      },
+      "name": "get-index-stats"
+    },
+    {
+      "operation": {
+        "operation-type": "node-stats"
+      },
+      "name": "get-node-stats"
+    }
+  ]
+}
