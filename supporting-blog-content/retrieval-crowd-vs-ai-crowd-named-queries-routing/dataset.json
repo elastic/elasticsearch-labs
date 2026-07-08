@@ -1,0 +1,173 @@
+[
+  {
+    "sku": "NIKE-VPF3-M10-BLK",
+    "name": "Nike Vaporfly 3 Men's Black Size 10",
+    "aliases": ["Vaporfly 3", "VPF3", "Nike carbon racer"],
+    "description": "Carbon-plate racing shoe with ZoomX foam. Built for half-marathon and marathon race days on the road, responsive rather than soft.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "race"
+  },
+  {
+    "sku": "NIKE-VPF3-M10-ORG",
+    "name": "Nike Vaporfly 3 Men's Orange Size 10",
+    "aliases": ["Vaporfly 3"],
+    "description": "Carbon-plate racing shoe with ZoomX foam. Race-day road shoe in volt orange, responsive and light.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "race"
+  },
+  {
+    "sku": "NIKE-VMF17-M10-BLK",
+    "name": "Nike Vomero 17 Men's Black Size 10",
+    "aliases": ["Vomero 17"],
+    "description": "Plush daily trainer with ZoomX and React foam stack. Soft cushioning for easy mileage on the road.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "daily"
+  },
+  {
+    "sku": "ASICS-KAY30-M10-GRY",
+    "name": "Asics Kayano 30 Men's Grey Size 10",
+    "aliases": ["Kayano 30"],
+    "description": "Stability daily trainer with FF Blast Plus midsole. Firmer structured cushioning for mild to moderate overpronators on long road runs.",
+    "surface": "road",
+    "stability": "stability",
+    "category": "daily"
+  },
+  {
+    "sku": "ASICS-NB14-M10-BLU",
+    "name": "Asics Novablast 14 Men's Blue Size 10",
+    "aliases": ["Novablast 14"],
+    "description": "Bouncy neutral trainer with FF Blast Plus Eco foam. Soft, fun ride for daily road miles.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "daily"
+  },
+  {
+    "sku": "BRK-AD23-M10-BLU",
+    "name": "Brooks Adrenaline GTS 23 Men's Blue Size 10",
+    "aliases": ["Adrenaline GTS 23", "Adrenaline 23"],
+    "description": "GuideRails stability trainer with DNA Loft v2 foam. Reliable support for mild overpronators, balanced cushioning for daily road miles.",
+    "surface": "road",
+    "stability": "stability",
+    "category": "daily"
+  },
+  {
+    "sku": "BRK-GH21-M10-BLK",
+    "name": "Brooks Ghost 16 Men's Black Size 10",
+    "aliases": ["Ghost 16"],
+    "description": "Neutral daily trainer with DNA Loft v3. Smooth, soft road ride for easy mileage.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "daily"
+  },
+  {
+    "sku": "HOKA-ARA7-M10-BLK",
+    "name": "Hoka Arahi 7 Men's Black Size 10",
+    "aliases": ["Arahi 7"],
+    "description": "J-Frame stability trainer with firmer EVA midsole. Light support for mild overpronators on the road.",
+    "surface": "road",
+    "stability": "stability",
+    "category": "daily"
+  },
+  {
+    "sku": "HOKA-CLI9-M10-WHT",
+    "name": "Hoka Clifton 9 Men's White Size 10",
+    "aliases": ["Clifton 9"],
+    "description": "Lightweight neutral cushioned trainer. Soft, balanced ride for easy daily road miles.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "daily"
+  },
+  {
+    "sku": "SAUC-GUI17-M10-RED",
+    "name": "Saucony Guide 17 Men's Red Size 10",
+    "aliases": ["Guide 17"],
+    "description": "CenterPath stability trainer with PWRRUN foam. Moderate support for overpronators, firmer cushioning for marathon training blocks.",
+    "surface": "road",
+    "stability": "stability",
+    "category": "daily"
+  },
+  {
+    "sku": "SAUC-EE13-M10-BLU",
+    "name": "Saucony Endorphin Speed 4 Men's Blue Size 10",
+    "aliases": ["Endorphin Speed 4"],
+    "description": "Nylon-plate tempo and workout shoe with PWRRUN PB foam. Snappy, responsive ride for intervals and long road tempo runs.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "tempo"
+  },
+  {
+    "sku": "SAUC-EP4-M10-WHT",
+    "name": "Saucony Endorphin Pro 4 Men's White Size 10",
+    "aliases": ["Endorphin Pro 4"],
+    "description": "Carbon-plate racing shoe with PWRRUN HG foam. Marathon and half-marathon race day on the road.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "race"
+  },
+  {
+    "sku": "ADID-AP3-M10-BLK",
+    "name": "Adidas Adios Pro 3 Men's Black Size 10",
+    "aliases": ["Adios Pro 3"],
+    "description": "Carbon-rod racing shoe with Lightstrike Pro foam. Marathon race day on the road, responsive and firm.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "race"
+  },
+  {
+    "sku": "ADID-BO12-M10-WHT",
+    "name": "Adidas Boston 12 Men's White Size 10",
+    "aliases": ["Boston 12"],
+    "description": "Energy-rod tempo trainer with Lightstrike Pro foam. Long tempo runs and marathon training pace work on the road.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "tempo"
+  },
+  {
+    "sku": "NB-FCEL-M10-BLU",
+    "name": "New Balance Fresh Foam X 1080 v13 Men's Blue Size 10",
+    "aliases": ["1080 v13"],
+    "description": "Plush neutral daily trainer with Fresh Foam X. Soft cushioned ride for high-mileage road weeks.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "daily"
+  },
+  {
+    "sku": "NB-SC4-M10-BLK",
+    "name": "New Balance SuperComp Elite v4 Men's Black Size 10",
+    "aliases": ["SC Elite v4"],
+    "description": "Carbon-plate racing shoe with FuelCell foam and Energy Arc. Marathon race day on the road.",
+    "surface": "road",
+    "stability": "neutral",
+    "category": "race"
+  },
+  {
+    "sku": "HOKA-SPEED5-M10-GRN",
+    "name": "Hoka Speedgoat 5 Men's Green Size 10",
+    "aliases": ["Speedgoat 5"],
+    "description": "Trail running shoe with Vibram Megagrip outsole. Cushioned ride for technical and rocky trails.",
+    "surface": "trail",
+    "stability": "neutral",
+    "category": "trail"
+  },
+  {
+    "sku": "SAL-SP5-M10-RED",
+    "name": "Salomon Speedcross 6 Men's Red Size 10",
+    "aliases": ["Speedcross 6"],
+    "description": "Trail running shoe with deep aggressive lugs. Grip-focused ride for soft and muddy trails.",
+    "surface": "trail",
+    "stability": "neutral",
+    "category": "trail"
+  },
+  {
+    "sku": "BRK-CASC17-M10-GRY",
+    "name": "Brooks Cascadia 17 Men's Grey Size 10",
+    "aliases": ["Cascadia 17"],
+    "description": "Trail running shoe with TrailTack rubber and balanced DNA Loft v2 cushioning. Versatile ride for mixed trail terrain.",
+    "surface": "trail",
+    "stability": "neutral",
+    "category": "trail"
+  }
+]
