@@ -10,7 +10,7 @@ Full step-by-step deployment of the APM Service Health Monitor agent and its fiv
 
 - Elasticsearch 9.3 and Kibana 9.3
 - Agent Builder enabled in Kibana
-- APM data flowing into `traces-`* indices via any Elastic APM agent
+- APM data flowing into `traces-*` indices via any Elastic APM agent
 - Elastic Enterprise license is required to utilize Agent Builder and ES|QL cross-cluster search
 
 ---
