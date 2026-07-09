@@ -38,8 +38,9 @@ See [`implementation-guide.md`](./implementation-guide.md) for the full step-by-
 
 ## Authors
 
-- Naga Putta
-- Stephen Brown
+- Naga Putta, Consulting Architect
+- Stephen Brown, Distinguished Customer Engineering Specialist
 
 **Tags:** Observability · APM · Agent Builder · Elasticsearch  
-**Published:** 2026-07-13
+
+
