@@ -297,7 +297,7 @@ The agent fans out to all five tools, computes metric states in a single reasoni
 
 ## Notes
 
-- Queries use `traces-`* with cross-cluster wildcard support — one deployment covers multi-cluster environments.
+- Queries use `traces-*` with cross-cluster wildcard support — one deployment covers multi-cluster environments.
 - The `service` parameter means the same agent serves every service in your fleet with no per-service configuration.
 - Health thresholds are encoded in the agent's `instructions` field — update them from Kibana without redeploying.
 
