@@ -24,6 +24,11 @@ triggers:
   - type: manual
 
 steps:
+  # The corpus is queried three times, each for a different purpose: by_phase
+  # and by_anomaly build two small stratified samples for the planner
+  # (stratifying on two independent axes keeps the sample diverse without
+  # sending the whole corpus to the large model), while fetch_corpus later
+  # retrieves the documents that the small model will classify.
   - name: by_phase
     type: elasticsearch.request
     with:
