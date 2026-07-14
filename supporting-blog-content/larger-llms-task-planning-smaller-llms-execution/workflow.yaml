@@ -162,6 +162,10 @@ steps:
       method: POST
       path: "/__CORPUS_INDEX__/_search"
       body:
+        # Capped at 100 documents for demo purposes: at the conservative
+        # 6 requests/minute rate limit set on the Mistral endpoint, the full
+        # 4,000+ report corpus would take hours to classify. Raise this (or
+        # paginate with search_after) to cover the whole corpus.
         size: 100
         _source: ["acn", "narrative"]
         query:
