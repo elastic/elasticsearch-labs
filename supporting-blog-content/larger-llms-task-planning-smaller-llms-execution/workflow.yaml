@@ -1,0 +1,205 @@
+# Workflow definition for the "Larger LLMs for schema discovery, smaller LLMs
+# for application" notebook. The __CORPUS_INDEX__, __CONNECTOR_ID__ and
+# __INFERENCE_ID__ tokens are substituted by the notebook before the workflow
+# is registered via the Kibana Workflows API.
+name: Pilot Schema Discovery and Application
+description: >
+  Discovers a categorical schema from a stratified sample of incident reports
+  using a large reasoning model, then applies it across the corpus with a small
+  Mistral model.
+enabled: true
+
+consts:
+  corpusIndex: __CORPUS_INDEX__
+  schemasIndex: schemas
+  extractionsIndex: extractions
+
+inputs:
+  - name: goal
+    type: string
+    required: true
+    default: "What does this report reveal about the pilot who wrote it?"
+
+triggers:
+  - type: manual
+
+steps:
+  - name: by_phase
+    type: elasticsearch.request
+    with:
+      method: POST
+      path: "/__CORPUS_INDEX__/_search"
+      body:
+        size: 0
+        aggs:
+          per_phase:
+            terms:
+              field: flight_phase
+              size: 8
+            aggs:
+              sampled:
+                top_hits:
+                  size: 5
+                  _source: ["acn", "synopsis", "narrative"]
+
+  - name: by_anomaly
+    type: elasticsearch.request
+    with:
+      method: POST
+      path: "/__CORPUS_INDEX__/_search"
+      body:
+        size: 0
+        aggs:
+          per_anomaly:
+            terms:
+              field: anomaly
+              size: 8
+            aggs:
+              sampled:
+                top_hits:
+                  size: 3
+                  _source: ["acn", "synopsis", "narrative"]
+
+  - name: discover
+    type: ai.prompt
+    connector-id: "__CONNECTOR_ID__"
+    with:
+      systemPrompt: |
+        You design categorical schemas for use by downstream classifiers. A
+        schema is a small set of fields, each with a few mutually exclusive
+        values. Every value you propose must be grounded in evidence from the
+        provided sample and must serve the stated question. You do not invent
+        values that are not supported by at least two documents in the sample.
+        You do not propose fields that a reasonable analyst could have written
+        without reading the documents.
+      prompt: |
+        Question:
+        {{ inputs.goal }}
+
+        Sample documents stratified by flight phase:
+        {{ steps.by_phase.output.aggregations.per_phase.buckets | json }}
+
+        Sample documents stratified by anomaly type:
+        {{ steps.by_anomaly.output.aggregations.per_anomaly.buckets | json }}
+
+        Propose between 2 and 4 categorical fields that:
+        - serve the question (you can explain how)
+        - depend on patterns visible in the sample (you can cite document IDs)
+        - would not be obvious to someone who has not read the sample
+
+        For each field, return: name (snake_case), definition, why_useful,
+        and values (2 to 4 mutually exclusive options).
+
+        For each value, return: value (snake_case) and definition.
+      schema:
+        type: object
+        properties:
+          fields:
+            type: array
+            minItems: 2
+            maxItems: 4
+            items:
+              type: object
+              required: [name, definition, why_useful, values]
+              properties:
+                name: { type: string }
+                definition: { type: string }
+                why_useful: { type: string }
+                values:
+                  type: array
+                  minItems: 2
+                  maxItems: 4
+                  items:
+                    type: object
+                    required: [value, definition]
+                    properties:
+                      value: { type: string }
+                      definition: { type: string }
+      temperature: 0.3
+
+  - name: human_gate
+    type: waitForInput
+    with:
+      message: "Review and edit the proposed schema. The approved fields will be applied across the full corpus."
+      schema:
+        type: object
+        required: [approved_fields]
+        properties:
+          approved_fields:
+            type: array
+            items:
+              type: object
+              properties:
+                name: { type: string }
+                definition: { type: string }
+                values:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      value: { type: string }
+                      definition: { type: string }
+          notes:
+            type: string
+
+  - name: store_schema
+    type: elasticsearch.index
+    with:
+      index: "{{ consts.schemasIndex }}"
+      document:
+        question: "{{ inputs.goal }}"
+        approved_fields: "{{ steps.human_gate.output.approved_fields }}"
+        reviewer_notes: "{{ steps.human_gate.output.notes }}"
+
+  - name: fetch_corpus
+    type: elasticsearch.request
+    with:
+      method: POST
+      path: "/__CORPUS_INDEX__/_search"
+      body:
+        size: 100
+        _source: ["acn", "narrative"]
+        query:
+          match_all: {}
+
+  - name: classify_all
+    type: foreach
+    foreach: "${{ steps.fetch_corpus.output.hits.hits }}"
+    iteration-on-failure:
+      retry:
+        max-attempts: 5
+        delay: "3s"
+    steps:
+      - name: classify
+        type: ai.agent
+        inference-id: "__INFERENCE_ID__"
+        timeout: "120s"
+        with:
+          message: |
+            You will classify the following report against a fixed schema.
+            For each field in the schema, assign exactly one of its value
+            options, or null if none of the values clearly applies. Include
+            the short quote that supports the assignment and a confidence
+            score between 0 and 1. Set review_required to true if any field
+            returned null or any confidence is below 0.5.
+
+            Schema:
+            {{ steps.human_gate.output.approved_fields | json }}
+
+            Report:
+            {{ foreach.item._source.narrative }}
+          schema:
+            type: object
+            properties:
+              field_values:
+                type: object
+                additionalProperties: true
+              review_required: { type: boolean }
+      - name: write_extraction
+        type: elasticsearch.index
+        with:
+          index: "{{ consts.extractionsIndex }}"
+          document:
+            acn: "{{ foreach.item._source.acn }}"
+            field_values: "{{ steps.classify.output.structured_output.field_values }}"
+            review_required: "{{ steps.classify.output.structured_output.review_required }}"
