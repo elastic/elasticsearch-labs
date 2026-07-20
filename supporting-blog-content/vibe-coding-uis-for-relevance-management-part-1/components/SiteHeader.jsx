@@ -19,33 +19,23 @@ export default function SiteHeader({
     <header className="sa-header">
       <div className="sa-header__top">
         <a
-          href="https://searchali.com"
+          href="https://www.elastic.co/"
           className="sa-header__brand"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="searchali.com"
+          aria-label="Elastic"
         >
           <Image
-            src="/icons/logo.png"
-            alt="searchali.com"
-            width={519}
-            height={112}
-            className="sa-header__brand-logo"
+            src="/icons/elastic-logo.svg"
+            alt="Elastic"
+            width={688}
+            height={236}
+            className="sa-header__brand-logo sa-header__brand-logo--elastic"
             priority
           />
         </a>
 
         <h1 className="sa-header__title">Elasticsearch Query Comparer</h1>
-
-        <div className="sa-header__partner">
-          <Image
-            src="/icons/elastic-partner-banner.webp"
-            alt="Elastic Partner"
-            width={1000}
-            height={1000}
-            className="sa-header__partner-logo"
-          />
-        </div>
       </div>
 
       <div className="sa-header__toolbar">

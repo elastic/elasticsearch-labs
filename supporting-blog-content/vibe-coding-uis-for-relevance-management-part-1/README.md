@@ -1,10 +1,10 @@
-# SearchAli Query Comparer
+# Elasticsearch Query Comparer
 
 Part 1 companion app for the Search Labs article *Vibe Coding UIs for Relevance Management: A Query Results Comparer*.
 
 Compare two Elasticsearch query strategies side by side using the same search term, the same dataset, and the same moment. Old Query runs a baseline `multi_match` on name, description, category, and brand. New Query adds `name^2` and `brand^2` field boosts on the same fields.
 
-**Live demo:** [query-comparer.searchali.com](https://query-comparer.searchali.com/)
+**Author-hosted demo:** [query-comparer.searchali.com](https://query-comparer.searchali.com/)
 
 ![iphone charger — Old Query vs New Query](public/icons/iphone%20charger.png)
 
@@ -130,3 +130,7 @@ Product data derived from [Amazon Reviews'23](https://amazon-reviews-2023.github
 Companion code: [github.com/musabdogan/searchali-query-comparer](https://github.com/musabdogan/searchali-query-comparer)
 
 Musab Dogan · [SearchAli](https://searchali.com)
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).

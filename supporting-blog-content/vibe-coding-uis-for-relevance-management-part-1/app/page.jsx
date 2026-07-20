@@ -28,7 +28,7 @@ export default function HomePage() {
   const runSearchWithTerm = useCallback(async (searchTerm) => {
     const query = searchTerm.trim();
     if (!query) {
-      setError('Enter a search term.');
+      setError('Enter a search term or press Random button.');
       return;
     }
 

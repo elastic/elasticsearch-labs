@@ -1,6 +1,7 @@
 {
-  "name": "searchali-query-comparer",
+  "name": "elasticsearch-query-comparer",
   "version": "0.1.0",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

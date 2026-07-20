@@ -135,6 +135,11 @@ body {
   display: block;
 }
 
+.sa-header__brand-logo--elastic {
+  height: calc(var(--sa-header-logo-height) * 0.85);
+  max-width: min(160px, 28vw);
+}
+
 .sa-header__brand:hover .sa-header__brand-logo {
   opacity: 0.9;
 }
@@ -375,6 +380,16 @@ body {
 
 .sa-footer__sep {
   color: var(--sa-border-strong);
+}
+
+.sa-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sa-footer a:hover {
+  color: var(--sa-accent);
+  text-decoration: underline;
 }
 
 /* Compare layout */

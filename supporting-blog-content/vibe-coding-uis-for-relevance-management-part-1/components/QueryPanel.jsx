@@ -68,7 +68,7 @@ export default function QueryPanel({
           </div>
         ) : !hasSearched ? (
           <div className="query-panel__centered query-panel__placeholder">
-            <p>Enter a search term above</p>
+            <p>Enter a search term or press Random button</p>
           </div>
         ) : pageHits.length === 0 ? (
           <div className="query-panel__centered query-panel__placeholder">
