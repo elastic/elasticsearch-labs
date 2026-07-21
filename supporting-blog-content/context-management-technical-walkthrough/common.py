@@ -12,7 +12,9 @@ from elasticsearch import Elasticsearch, helpers
 
 def get_client():
     """Connect to Elasticsearch using ES_URL / ES_API_KEY, or interactive prompts."""
-    es_url = os.environ.get("ES_URL") or input("Elasticsearch endpoint URL: ").strip().rstrip("/")
+    es_url = os.environ.get("ES_URL") or input(
+        "Elasticsearch endpoint URL: "
+    ).strip().rstrip("/")
     api_key = os.environ.get("ES_API_KEY") or getpass("Elastic API key: ")
     client = Elasticsearch(hosts=[es_url], api_key=api_key)
     print(client.info())
@@ -39,4 +41,6 @@ def populate_index(client, index_name, mappings, actions, *, skip_if_populated=F
     client.indices.create(index=index_name, mappings=mappings)
     helpers.bulk(client, actions)
     client.indices.refresh(index=index_name)
-    print(f"Indexed {client.count(index=index_name)['count']} documents into '{index_name}'.")
+    print(
+        f"Indexed {client.count(index=index_name)['count']} documents into '{index_name}'."
+    )

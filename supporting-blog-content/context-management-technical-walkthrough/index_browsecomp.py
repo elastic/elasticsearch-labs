@@ -45,11 +45,15 @@ MAPPINGS = {
         },
         "title": {
             "type": "text",
-            "meta": {"description": "Document title (from the document's front matter)."},
+            "meta": {
+                "description": "Document title (from the document's front matter)."
+            },
         },
         "text": {
             "type": "text",
-            "meta": {"description": "Full document text: title, date, and body content."},
+            "meta": {
+                "description": "Full document text: title, date, and body content."
+            },
         },
     },
 }
