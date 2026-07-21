@@ -1,12 +1,9 @@
 # Context management technical walkthrough — index setup scripts
 
-Standalone scripts that create and populate the four sample indices used in the
-[Context Engine manual-walkthrough notebooks](../../notebooks/context-engine/manual-walkthrough).
-They extract only the index-creation and sample-data steps so you can stand up
-the data without running the notebooks.
+Standalone scripts that create and populate the four indices referenced in the `Context Management Technical Walkthrough` blog with 50 sample documents. 
+This allows index creation and indexing of sample data to easily follow along with blog content. 
 
-All four indices are BM25-only and are enriched with mapping metadata
-(`_meta.description` and per-field `meta.description`).
+All four indices are BM25-only to save on inference costs, and are enriched with mapping metadata (`_meta.description` and per-field `meta.description`).
 
 | Script | Indices | Dataset |
 |--------|---------|---------|
@@ -42,7 +39,7 @@ Set them as environment variables:
 
 ```bash
 export ES_URL="https://your-deployment.es.cloud.es.io:443"   # or http://localhost:9200
-export ELASTIC_API_KEY="your-api-key"
+export ES_API_KEY="your-api-key"
 ```
 
 Or skip this step — each script falls back to an interactive prompt (`ES_URL` via
@@ -76,6 +73,6 @@ Hugging Face before indexing.
 - **Verify:**
 
   ```bash
-  curl -s -H "Authorization: ApiKey $ELASTIC_API_KEY" \
+  curl -s -H "Authorization: ApiKey $ES_API_KEY" \
     "$ES_URL/_cat/indices/beir-*,browsecomp-plus?v"
   ```
