@@ -23,7 +23,7 @@ from getpass import getpass
 from datasets import load_dataset
 from elasticsearch import Elasticsearch, helpers
 
-SAMPLE_DOCS = 100
+SAMPLE_DOCS = 50
 
 DATASETS = [
     {
