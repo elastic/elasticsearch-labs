@@ -17,11 +17,9 @@ Run:
     python index_beir_datasets.py
 """
 
-import os
-from getpass import getpass
-
 from datasets import load_dataset
-from elasticsearch import Elasticsearch, helpers
+
+from common import get_client, populate_index
 
 SAMPLE_DOCS = 50
 
@@ -60,21 +58,27 @@ DATASETS = [
     },
 ]
 
+PROPERTIES = {
+    "title": {
+        "type": "text",
+        "meta": {"description": "Document or article title."},
+    },
+    "text": {
+        "type": "text",
+        "meta": {"description": "Full document body text."},
+    },
+}
 
-def get_client():
-    es_url = os.environ.get("ES_URL") or input("Elasticsearch endpoint URL: ").strip().rstrip("/")
-    api_key = os.environ.get("ES_API_KEY") or getpass("Elastic API key: ")
-    client = Elasticsearch(hosts=[es_url], api_key=api_key)
-    print(client.info())
-    return client
 
-
-def actions(corpus, index_name, n):
+def actions(ds, n):
+    corpus = load_dataset(
+        ds["hf_dataset"], ds["hf_config"], split=ds["hf_split"], streaming=True
+    )
     for i, row in enumerate(corpus):
         if i >= n:
             break
         yield {
-            "_index": index_name,
+            "_index": ds["index_name"],
             "_id": row["_id"],
             "_source": {
                 "title": row.get("title", "").strip()
@@ -88,32 +92,11 @@ def main():
     client = get_client()
 
     for ds in DATASETS:
-        idx = ds["index_name"]
-        client.indices.delete(index=idx, ignore_unavailable=True)
-        client.indices.create(
-            index=idx,
-            mappings={
-                "_meta": {"description": ds["meta_description"]},
-                "properties": {
-                    "title": {
-                        "type": "text",
-                        "meta": {"description": "Document or article title."},
-                    },
-                    "text": {
-                        "type": "text",
-                        "meta": {"description": "Full document body text."},
-                    },
-                },
-            },
-        )
-
-        corpus = load_dataset(
-            ds["hf_dataset"], ds["hf_config"], split=ds["hf_split"], streaming=True
-        )
-
-        helpers.bulk(client, actions(corpus, idx, SAMPLE_DOCS))
-        client.indices.refresh(index=idx)
-        print(f"Indexed {client.count(index=idx)['count']} documents into '{idx}'.")
+        mappings = {
+            "_meta": {"description": ds["meta_description"]},
+            "properties": PROPERTIES,
+        }
+        populate_index(client, ds["index_name"], mappings, actions(ds, SAMPLE_DOCS))
 
 
 if __name__ == "__main__":

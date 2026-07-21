@@ -2,7 +2,7 @@
 
 Streams a small slice of the BrowseComp-Plus corpus into an index enriched
 with mapping metadata (`_meta.description` and per-field `meta.description`).
-Derives a title from the beginning of the document. 
+Derives a title from the beginning of the document.
 May be used in conjunction with the context management technical walkthrough blog.
 
 Connection is read from environment variables, falling back to an interactive
@@ -17,23 +17,42 @@ Run:
     python index_browsecomp.py
 """
 
-import os
 import re
-from getpass import getpass
 
 from datasets import load_dataset
-from elasticsearch import Elasticsearch, helpers
+
+from common import get_client, populate_index
 
 INDEX_NAME = "browsecomp-plus"
 SAMPLE_DOCS = 50  # documents to index (one KI is generated per doc, so keep it small)
 
-
-def get_client():
-    es_url = os.environ.get("ES_URL") or input("Elasticsearch endpoint URL: ").strip().rstrip("/")
-    api_key = os.environ.get("ES_API_KEY") or getpass("Elastic API key: ")
-    client = Elasticsearch(hosts=[es_url], api_key=api_key)
-    print(client.info())
-    return client
+MAPPINGS = {
+    "_meta": {
+        "description": (
+            "BrowseComp-Plus corpus: ~100k human-verified web documents "
+            "(news articles, Wikipedia entries, institutional pages) used as a "
+            "reasoning-intensive browsing/QA retrieval benchmark. BM25-only index."
+        )
+    },
+    "properties": {
+        "docid": {
+            "type": "keyword",
+            "meta": {"description": "Stable corpus document id."},
+        },
+        "url": {
+            "type": "keyword",
+            "meta": {"description": "Source URL the document was crawled from."},
+        },
+        "title": {
+            "type": "text",
+            "meta": {"description": "Document title (from the document's front matter)."},
+        },
+        "text": {
+            "type": "text",
+            "meta": {"description": "Full document text: title, date, and body content."},
+        },
+    },
+}
 
 
 def extract_title(text):
@@ -50,7 +69,10 @@ def extract_title(text):
     return ""
 
 
-def actions(corpus, n):
+def actions(n):
+    corpus = load_dataset(
+        "Tevatron/browsecomp-plus-corpus", split="train", streaming=True
+    )
     for i, row in enumerate(corpus):
         if i >= n:
             break
@@ -69,57 +91,8 @@ def actions(corpus, n):
 
 def main():
     client = get_client()
-
-    if (
-        client.indices.exists(index=INDEX_NAME)
-        and client.count(index=INDEX_NAME)["count"] > 0
-    ):
-        count = client.count(index=INDEX_NAME)["count"]
-        print(
-            f"Index '{INDEX_NAME}' already has {count} documents — reusing it (skipping indexing)."
-        )
-        return
-
-    client.indices.delete(index=INDEX_NAME, ignore_unavailable=True)
-    client.indices.create(
-        index=INDEX_NAME,
-        mappings={
-            "_meta": {
-                "description": (
-                    "BrowseComp-Plus corpus: ~100k human-verified web documents "
-                    "(news articles, Wikipedia entries, institutional pages) used as a "
-                    "reasoning-intensive browsing/QA retrieval benchmark. BM25-only index."
-                )
-            },
-            "properties": {
-                "docid": {
-                    "type": "keyword",
-                    "meta": {"description": "Stable corpus document id."},
-                },
-                "url": {
-                    "type": "keyword",
-                    "meta": {"description": "Source URL the document was crawled from."},
-                },
-                "title": {
-                    "type": "text",
-                    "meta": {"description": "Document title (from the document's front matter)."},
-                },
-                "text": {
-                    "type": "text",
-                    "meta": {"description": "Full document text: title, date, and body content."},
-                },
-            },
-        },
-    )
-
-    corpus = load_dataset(
-        "Tevatron/browsecomp-plus-corpus", split="train", streaming=True
-    )
-
-    helpers.bulk(client, actions(corpus, SAMPLE_DOCS))
-    client.indices.refresh(index=INDEX_NAME)
-    print(
-        f"Indexed {client.count(index=INDEX_NAME)['count']} documents into '{INDEX_NAME}'."
+    populate_index(
+        client, INDEX_NAME, MAPPINGS, actions(SAMPLE_DOCS), skip_if_populated=True
     )
 
 
