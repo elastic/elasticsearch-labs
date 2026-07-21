@@ -1,14 +1,15 @@
 """Create the BrowseComp-Plus document index and populate it with sample data.
 
-Standalone extraction of the indexing step from the `index-facts-kis.ipynb`
-notebook. Streams a small slice of the BrowseComp-Plus corpus into a single
-BM25-only index, deriving a `title` from each document's front matter.
+Streams a small slice of the BrowseComp-Plus corpus into an index enriched
+with mapping metadata (`_meta.description` and per-field `meta.description`).
+Derives a title from the beginning of the document. 
+May be used in conjunction with the context management technical walkthrough blog.
 
 Connection is read from environment variables, falling back to an interactive
 prompt:
 
     ES_URL            Elasticsearch endpoint URL
-    ELASTIC_API_KEY   Elastic API key
+    ES_API_KEY   Elastic API key
 
 Run:
 
@@ -29,7 +30,7 @@ SAMPLE_DOCS = 50  # documents to index (one KI is generated per doc, so keep it 
 
 def get_client():
     es_url = os.environ.get("ES_URL") or input("Elasticsearch endpoint URL: ").strip().rstrip("/")
-    api_key = os.environ.get("ELASTIC_API_KEY") or getpass("Elastic API key: ")
+    api_key = os.environ.get("ES_API_KEY") or getpass("Elastic API key: ")
     client = Elasticsearch(hosts=[es_url], api_key=api_key)
     print(client.info())
     return client

@@ -1,15 +1,15 @@
 """Create the three BEIR index-selection indices and populate them with sample data.
 
-Standalone extraction of the indexing step from the `index-metadata-kis.ipynb`
-notebook. Streams a small slice of three BEIR benchmark corpora (financial Q&A,
+Streams a small slice of three BEIR benchmark corpora (financial Q&A,
 biomedical, scientific fact-checking) into three BM25-only indices, each enriched
 with mapping metadata (`_meta.description` and per-field `meta.description`).
+May be used in conjunction with the context management technical walkthrough blog.
 
 Connection is read from environment variables, falling back to an interactive
 prompt:
 
     ES_URL            Elasticsearch endpoint URL
-    ELASTIC_API_KEY   Elastic API key
+    ES_API_KEY   Elastic API key
 
 Run:
 
@@ -63,7 +63,7 @@ DATASETS = [
 
 def get_client():
     es_url = os.environ.get("ES_URL") or input("Elasticsearch endpoint URL: ").strip().rstrip("/")
-    api_key = os.environ.get("ELASTIC_API_KEY") or getpass("Elastic API key: ")
+    api_key = os.environ.get("ES_API_KEY") or getpass("Elastic API key: ")
     client = Elasticsearch(hosts=[es_url], api_key=api_key)
     print(client.info())
     return client
