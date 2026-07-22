@@ -1,0 +1,71 @@
+{
+  "_comment": "Cursor-only hooks config.",
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "stop": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "subagentStart": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:\\ai-hooks\\log-tool-calls.ps1"
+      }
+    ]
+  }
+}
