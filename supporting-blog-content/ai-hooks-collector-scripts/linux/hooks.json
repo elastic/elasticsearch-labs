@@ -1,0 +1,71 @@
+{
+  "_comment": "Cursor-only hooks config. System install copies this to /etc/cursor/hooks.json (Linux) or /Library/Application Support/Cursor/hooks.json (macOS). Script lives at /usr/local/share/ai-hooks/log-tool-calls.sh on both.",
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "stop": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "subagentStart": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": "/usr/local/share/ai-hooks/log-tool-calls.sh"
+      }
+    ]
+  }
+}
