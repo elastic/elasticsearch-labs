@@ -1,6 +1,7 @@
 import os
 from elasticsearch import Elasticsearch
 from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
 from deepagents import create_deep_agent
 from deepagents.backends.filesystem import FilesystemBackend
 
@@ -24,7 +25,11 @@ def esql_query(query: str) -> list[dict] | str:
 backend = FilesystemBackend(root_dir=".", virtual_mode=False)
 
 agent = create_deep_agent(
-    model="openrouter:anthropic/claude-sonnet-4.5",  # any provider works: swap for anthropic:..., openai:...
+    model=ChatOpenAI(  # any OpenAI-compatible endpoint; configure via LLM_* env vars
+        base_url=os.environ.get("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
+        model=os.environ.get("LLM_MODEL", "anthropic/claude-sonnet-4.5"),
+        api_key=os.environ["LLM_API_KEY"],
+    ),
     tools=[esql_query],
     skills=["skills"],
     backend=backend,

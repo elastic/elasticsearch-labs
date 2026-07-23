@@ -1,6 +1,7 @@
 import os
 from elasticsearch import Elasticsearch
 from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
 from deepagents import create_deep_agent
 
 es = Elasticsearch(os.environ["ES_URL"], api_key=os.environ["ES_API_KEY"])
@@ -26,7 +27,11 @@ def get_mapping(index: str) -> dict:
     return es.indices.get_mapping(index=index).body
 
 baseline_agent = create_deep_agent(
-    model="openrouter:anthropic/claude-sonnet-4.5",
+    model=ChatOpenAI(  # any OpenAI-compatible endpoint; configure via LLM_* env vars
+        base_url=os.environ.get("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
+        model=os.environ.get("LLM_MODEL", "anthropic/claude-sonnet-4.5"),
+        api_key=os.environ["LLM_API_KEY"],
+    ),
     tools=[esql_query, get_mapping],
     system_prompt=(
         "You are a research assistant with access to three Elasticsearch indices: "
