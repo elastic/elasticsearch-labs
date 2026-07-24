@@ -7,6 +7,7 @@ from deepagents.backends.filesystem import FilesystemBackend
 
 es = Elasticsearch(os.environ["ES_URL"], api_key=os.environ["ES_API_KEY"])
 
+
 @tool
 def esql_query(query: str) -> list[dict] | str:
     """Execute an ES|QL query against Elasticsearch and return the matching rows.
@@ -21,6 +22,7 @@ def esql_query(query: str) -> list[dict] | str:
         return [dict(zip(cols, row)) for row in resp["values"]]
     except Exception as e:
         return f"ES|QL error: {e}"
+
 
 backend = FilesystemBackend(root_dir=".", virtual_mode=False)
 
@@ -38,25 +40,34 @@ agent = create_deep_agent(
         "You do NOT know which index is relevant for a given question. "
         "Before searching, always use the query-ki skill with type 'index_metadata_entry' "
         "to retrieve the routing profile for the right index, then query that index directly. "
-        "Full-text search syntax: WHERE MATCH(field, \"value\") — never use field MATCH \"value\". "
+        'Full-text search syntax: WHERE MATCH(field, "value") — never use field MATCH "value". '
         "Ground your answer strictly in what the queries return and cite the KI you used for routing."
     ),
 )
 
-result = agent.invoke({
-    "messages": [
-        {"role": "user",
-         "content": "Is there scientific evidence that vitamin D supplementation prevents cancer?"}
-    ]
-})
+result = agent.invoke(
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Is there scientific evidence that vitamin D supplementation prevents cancer?",
+            }
+        ]
+    }
+)
 
 from langchain_core.messages import AIMessage
+
 print("\n--- Tool calls ---")
 for m in result["messages"]:
     if isinstance(m, AIMessage) and m.tool_calls:
         for tc in m.tool_calls:
             print(f"  [{tc['name']}] {str(tc['args'])[:120]}")
-total = sum(len(m.tool_calls) for m in result["messages"] if isinstance(m, AIMessage) and m.tool_calls)
+total = sum(
+    len(m.tool_calls)
+    for m in result["messages"]
+    if isinstance(m, AIMessage) and m.tool_calls
+)
 print(f"Total: {total}\n")
 
 print("--- Answer ---")

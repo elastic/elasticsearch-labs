@@ -7,6 +7,7 @@ from deepagents.backends.filesystem import FilesystemBackend
 
 es = Elasticsearch(os.environ["ES_URL"], api_key=os.environ["ES_API_KEY"])
 
+
 @tool
 def esql_query(query: str) -> list[dict] | str:
     """Execute an ES|QL query against Elasticsearch and return the matching rows.
@@ -20,6 +21,7 @@ def esql_query(query: str) -> list[dict] | str:
         return [dict(zip(cols, row)) for row in resp["values"]]
     except Exception as e:
         return f"ES|QL error: {e}"
+
 
 # FilesystemBackend loads skills from disk, relative to root_dir.
 backend = FilesystemBackend(root_dir=".", virtual_mode=False)
@@ -42,20 +44,29 @@ agent = create_deep_agent(
     ),
 )
 
-result = agent.invoke({
-    "messages": [
-        {"role": "user",
-         "content": "What was the actress who played Torvi from Vikings also known for?"}
-    ]
-})
+result = agent.invoke(
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": "What was the actress who played Torvi from Vikings also known for?",
+            }
+        ]
+    }
+)
 
 from langchain_core.messages import AIMessage
+
 print("\n--- Tool calls ---")
 for m in result["messages"]:
     if isinstance(m, AIMessage) and m.tool_calls:
         for tc in m.tool_calls:
             print(f"  [{tc['name']}] {str(tc['args'])[:120]}")
-total = sum(len(m.tool_calls) for m in result["messages"] if isinstance(m, AIMessage) and m.tool_calls)
+total = sum(
+    len(m.tool_calls)
+    for m in result["messages"]
+    if isinstance(m, AIMessage) and m.tool_calls
+)
 print(f"Total: {total}\n")
 
 print("--- Answer ---")

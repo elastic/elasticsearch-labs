@@ -6,6 +6,7 @@ from deepagents import create_deep_agent
 
 es = Elasticsearch(os.environ["ES_URL"], api_key=os.environ["ES_API_KEY"])
 
+
 @tool
 def esql_query(query: str) -> list[dict] | str:
     """Execute an ES|QL query against Elasticsearch and return the matching rows.
@@ -21,10 +22,12 @@ def esql_query(query: str) -> list[dict] | str:
     except Exception as e:
         return f"ES|QL error: {e}"
 
+
 @tool
 def get_mapping(index: str) -> dict:
     """Return the field mapping for an Elasticsearch index or pattern."""
     return es.indices.get_mapping(index=index).body
+
 
 baseline_agent = create_deep_agent(
     model=ChatOpenAI(  # any OpenAI-compatible endpoint; configure via LLM_* env vars
@@ -39,25 +42,34 @@ baseline_agent = create_deep_agent(
         "You do NOT know which index is relevant for a given question. "
         "Use get_mapping to inspect an index's description and fields, "
         "then query the most relevant one with esql_query. "
-        "Full-text search syntax: WHERE MATCH(field, \"value\") — never use field MATCH \"value\". "
+        'Full-text search syntax: WHERE MATCH(field, "value") — never use field MATCH "value". '
         "Ground your answer strictly in what the queries return."
     ),
 )
 
-result = baseline_agent.invoke({
-    "messages": [
-        {"role": "user",
-         "content": "Is there scientific evidence that vitamin D supplementation prevents cancer?"}
-    ]
-})
+result = baseline_agent.invoke(
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Is there scientific evidence that vitamin D supplementation prevents cancer?",
+            }
+        ]
+    }
+)
 
 from langchain_core.messages import AIMessage
+
 print("\n--- Tool calls ---")
 for m in result["messages"]:
     if isinstance(m, AIMessage) and m.tool_calls:
         for tc in m.tool_calls:
             print(f"  [{tc['name']}] {str(tc['args'])[:120]}")
-total = sum(len(m.tool_calls) for m in result["messages"] if isinstance(m, AIMessage) and m.tool_calls)
+total = sum(
+    len(m.tool_calls)
+    for m in result["messages"]
+    if isinstance(m, AIMessage) and m.tool_calls
+)
 print(f"Total: {total}\n")
 
 print("--- Answer ---")
