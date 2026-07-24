@@ -8,6 +8,20 @@ All four indices are BM25-only to save on inference costs, and are enriched with
 Alongside the setup scripts, a set of [evaluation scripts](#evaluating-with-agents-kis-vs-baseline) and a
 [`query-ki` skill](#the-query-ki-skill) let you compare an agent answering with and without Knowledge Indicators (KIs).
 
+## Notebooks
+
+Two runnable notebooks (in [`notebooks/context/manual-walkthrough/`](../../notebooks/context/manual-walkthrough/))
+walk through the two examples in the blog end to end — creating the AI Index,
+generating KIs with a Kibana Workflow, and comparing an agent answering with and without them:
+
+| Notebook | Example | What it covers |
+|----------|---------|----------------|
+| [`index-metadata-kis.ipynb`](../../notebooks/context/manual-walkthrough/index-metadata-kis.ipynb) | Routing | Profile the three BEIR indices into `index_metadata_entry` KIs so an agent picks the right index instead of guessing. |
+| [`index-facts-kis.ipynb`](../../notebooks/context/manual-walkthrough/index-facts-kis.ipynb) | Facts | Distill each `browsecomp-plus` document into a `corpus_entry` fact KI so an agent answers without reading full documents. |
+
+Each notebook is self-contained, so you can run it top to bottom. 
+Beyond the script prerequisites below, the notebooks also need a **Kibana endpoint URL**, a **GenAI connector** for the workflow's `ai.agent` step, and an **LLM API key** for any OpenAI-compatible endpoint.
+
 | Script | Indices | Dataset |
 |--------|---------|---------|
 | `index_beir_datasets.py` | `beir-fiqa`, `beir-nfcorpus`, `beir-scifact` | Three [BEIR](https://github.com/beir-cellar/beir) corpora (50 docs each) |
