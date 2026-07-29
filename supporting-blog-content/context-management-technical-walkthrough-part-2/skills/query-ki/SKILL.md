@@ -1,9 +1,10 @@
 ---
-name: query-index-metadata-ki
+name: query-ki
 description: >-
   Retrieve Knowledge Indicators (pre-computed context) from the Elasticsearch AI
-  Index before answering. Use it to find which index to search (routing profiles).
-  Trigger on any question that depends on choosing a data source.
+  Index before answering. Use it to look up pre-computed facts without reading
+  source documents. Trigger on any question that depends on specific facts,
+  names, dates, or events.
 allowed-tools: esql_query
 ---
 
@@ -11,7 +12,8 @@ allowed-tools: esql_query
 
 Knowledge Indicators (KIs) live in Elasticsearch indices named `ai-index-*`.
 Retrieve them by calling the `esql_query` tool with the query below. Substitute
-the user's question for `<query>`, and `index_metadata_entry` as the `<ki_type>` for routing profiles.
+the user's question for `<query>`, and use `corpus_entry` as the `<ki_type>` for
+document facts.
 
 ```esql
 FROM ai-index-idx-* METADATA _id, _index, _score
@@ -29,4 +31,3 @@ FROM ai-index-idx-* METADATA _id, _index, _score
 
 Ground your answer in what the query returns, and cite the KI titles you used. If
 nothing relevant comes back, say so rather than guessing.
-
