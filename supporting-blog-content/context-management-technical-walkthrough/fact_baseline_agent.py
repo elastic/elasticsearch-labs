@@ -1,8 +1,13 @@
+# Example question: What was the actress who played Torvi from Vikings also known for?
 import os
+import sys
 from elasticsearch import Elasticsearch
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 from deepagents import create_deep_agent
+
+if len(sys.argv) < 2:
+    sys.exit(f'Usage: python {sys.argv[0]} "your question"')
 
 es = Elasticsearch(os.environ["ES_URL"], api_key=os.environ["ES_API_KEY"])
 
@@ -52,7 +57,7 @@ result = baseline_agent.invoke(
         "messages": [
             {
                 "role": "user",
-                "content": "What was the actress who played Torvi from Vikings also known for?",
+                "content": sys.argv[1],
             }
         ]
     }

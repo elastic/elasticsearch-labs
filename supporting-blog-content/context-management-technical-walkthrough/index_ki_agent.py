@@ -1,9 +1,14 @@
+# Example question: Is there scientific evidence that vitamin D supplementation prevents cancer?
 import os
+import sys
 from elasticsearch import Elasticsearch
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 from deepagents import create_deep_agent
 from deepagents.backends.filesystem import FilesystemBackend
+
+if len(sys.argv) < 2:
+    sys.exit(f'Usage: python {sys.argv[0]} "your question"')
 
 es = Elasticsearch(os.environ["ES_URL"], api_key=os.environ["ES_API_KEY"])
 
@@ -40,7 +45,6 @@ agent = create_deep_agent(
         "You do NOT know which index is relevant for a given question. "
         "Before searching, always use the query-ki skill with type 'index_metadata_entry' "
         "to retrieve the routing profile for the right index, then query that index directly. "
-        'Full-text search syntax: WHERE MATCH(field, "value") — never use field MATCH "value". '
         "Ground your answer strictly in what the queries return and cite the KI you used for routing."
     ),
 )
@@ -50,7 +54,7 @@ result = agent.invoke(
         "messages": [
             {
                 "role": "user",
-                "content": "Is there scientific evidence that vitamin D supplementation prevents cancer?",
+                "content": sys.argv[1],
             }
         ]
     }
