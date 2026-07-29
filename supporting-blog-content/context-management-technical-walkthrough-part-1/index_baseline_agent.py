@@ -2,6 +2,7 @@
 import os
 import sys
 from elasticsearch import Elasticsearch
+from langchain_core.messages import AIMessage
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 from deepagents import create_deep_agent
@@ -61,8 +62,6 @@ result = baseline_agent.invoke(
         ]
     }
 )
-
-from langchain_core.messages import AIMessage
 
 print("\n--- Tool calls ---")
 for m in result["messages"]:

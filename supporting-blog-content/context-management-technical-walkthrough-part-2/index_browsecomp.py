@@ -17,8 +17,11 @@ Run:
     python index_browsecomp.py
 """
 
+import os
 import re
+import sys
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "../context-management-technical-walkthrough"))
 from datasets import load_dataset
 
 from common import get_client, populate_index
