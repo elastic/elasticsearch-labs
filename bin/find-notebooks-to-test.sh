@@ -40,6 +40,8 @@ EXEMPT_NOTEBOOKS=(
     "notebooks/integrations/cohere/updated-cohere-elasticsearch-inference-api.ipynb",
     "notebooks/integrations/alibabacloud-ai-search/inference-alibabacloud-ai-search.ipynb",
     "notebooks/integrations/jinaai/inference-jinaai.ipynb"
+    "notebooks/context/manual-walkthrough/part-1/index-metadata-kis.ipynb"
+    "notebooks/context/manual-walkthrough/part-2/index-facts-kis.ipynb"
 )
 
 # Per-version testing exceptions
