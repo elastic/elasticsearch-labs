@@ -1,7 +1,8 @@
 # Context management manual walkthrough, Part 1: routing with index-metadata KIs
 
-Companion notebook for Part 1 of the *Context management in Elasticsearch: a
-technical walkthrough* blog series. It profiles three BEIR indices into
+Companion notebook for [Know Your Index: Context Management for Smarter AI Agents,
+Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-index-metadata),
+Part 1 of the Context management technical walkthrough series. It profiles three BEIR indices into
 `index_metadata_entry` Knowledge Indicators (KIs) so an agent routes to the right
 index instead of guessing, then compares an agent answering with and without
 those routing KIs.

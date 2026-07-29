@@ -1,7 +1,8 @@
 # Context management manual walkthrough, Part 2: fact KIs over a corpus
 
-Companion notebook for Part 2 of the *Context management in Elasticsearch: a
-technical walkthrough* blog series. It distills each `browsecomp-plus` document
+Companion notebook for [Know Your Facts: Context Management for Smarter AI Agents,
+Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-facts),
+Part 2 of the Context management technical walkthrough series. It distills each `browsecomp-plus` document
 into a `corpus_entry` Knowledge Indicator (KI) so an agent answers without
 reading full documents, then compares an agent answering with and without those
 fact KIs.

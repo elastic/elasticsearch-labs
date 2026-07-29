@@ -1,9 +1,10 @@
 # Context management technical walkthrough (Part 1): routing with index-metadata KIs
 
-Standalone scripts for Part 1 of the *Context management in Elasticsearch: a
-technical walkthrough* blog series. Part 1 covers routing: it profiles each index
-into an `index_metadata_entry` Knowledge Indicator (KI) so an agent picks the
-right index instead of guessing.
+Standalone scripts for [Know Your Index: Context Management for Smarter AI Agents,
+Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-index-metadata),
+Part 1 of the Context management technical walkthrough series. Part 1 covers
+routing: it profiles each index into an `index_metadata_entry` Knowledge Indicator
+(KI) so an agent picks the right index instead of guessing.
 
 The scripts here create and populate the three [BEIR](https://github.com/beir-cellar/beir)
 indices used in the blog, then let you compare an agent answering with and

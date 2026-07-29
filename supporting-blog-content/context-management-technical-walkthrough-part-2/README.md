@@ -1,9 +1,10 @@
 # Context management technical walkthrough (Part 2): fact KIs over a corpus
 
-Standalone scripts for Part 2 of the *Context management in Elasticsearch: a
-technical walkthrough* blog series. Part 2 covers facts: it distills each
-document into a `corpus_entry` Knowledge Indicator (KI) so an agent answers
-without reading full documents.
+Standalone scripts for [Know Your Facts: Context Management for Smarter AI Agents,
+Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-facts),
+Part 2 of the Context management technical walkthrough series. Part 2 covers
+facts: it distills each document into a `corpus_entry` Knowledge Indicator (KI) so
+an agent answers without reading full documents.
 
 The scripts here create and populate the `browsecomp-plus` index used in the
 blog, then let you compare an agent answering with and without those fact KIs.
