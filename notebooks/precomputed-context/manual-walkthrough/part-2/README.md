@@ -1,8 +1,8 @@
-# Context management manual walkthrough, Part 2: fact KIs over a corpus
+# Precomputed context manual walkthrough, Part 2: fact KIs over a corpus
 
-Companion notebook for [Know Your Facts: Context Management for Smarter AI Agents,
+Companion notebook for [Know Your Facts: Precomputed Context for Smarter AI Agents,
 Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-facts),
-Part 2 of the Context management technical walkthrough series. It distills each `browsecomp-plus` document
+Part 2 of the Precomputed context technical walkthrough series. It distills each `browsecomp-plus` document
 into a `corpus_entry` Knowledge Indicator (KI) so an agent answers without
 reading full documents, then compares an agent answering with and without those
 fact KIs.
@@ -38,4 +38,4 @@ Both are gitignored.
 ## Related
 
 The blog's copy-paste index setup and agent-evaluation scripts live in
-[`supporting-blog-content/context-management-technical-walkthrough-part-2`](../../../../supporting-blog-content/context-management-technical-walkthrough-part-2).
+[`supporting-blog-content/precomputed-context-technical-walkthrough-part-2`](../../../../supporting-blog-content/precomputed-context-technical-walkthrough-part-2).

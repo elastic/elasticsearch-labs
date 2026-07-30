@@ -1,8 +1,8 @@
-# Context management manual walkthrough, Part 1: routing with index-metadata KIs
+# Precomputed context manual walkthrough, Part 1: routing with index-metadata KIs
 
-Companion notebook for [Know Your Index: Context Management for Smarter AI Agents,
+Companion notebook for [Know Your Index: Precomputed Context for Smarter AI Agents,
 Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-index-metadata),
-Part 1 of the Context management technical walkthrough series. It profiles three BEIR indices into
+Part 1 of the Precomputed context technical walkthrough series. It profiles three BEIR indices into
 `index_metadata_entry` Knowledge Indicators (KIs) so an agent routes to the right
 index instead of guessing, then compares an agent answering with and without
 those routing KIs.
@@ -34,4 +34,4 @@ Both are gitignored.
 ## Related
 
 The blog's copy-paste index setup and agent-evaluation scripts live in
-[`supporting-blog-content/context-management-technical-walkthrough-part-1`](../../../../supporting-blog-content/context-management-technical-walkthrough-part-1).
+[`supporting-blog-content/precomputed-context-technical-walkthrough-part-1`](../../../../supporting-blog-content/precomputed-context-technical-walkthrough-part-1).

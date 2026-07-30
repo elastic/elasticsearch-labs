@@ -1,8 +1,8 @@
-# Context management technical walkthrough (Part 2): fact KIs over a corpus
+# Precomputed context technical walkthrough (Part 2): fact KIs over a corpus
 
-Standalone scripts for [Know Your Facts: Context Management for Smarter AI Agents,
+Standalone scripts for [Know Your Facts: Precomputed Context for Smarter AI Agents,
 Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-facts),
-Part 2 of the Context management technical walkthrough series. Part 2 covers
+Part 2 of the Precomputed context technical walkthrough series. Part 2 covers
 facts: it distills each document into a `corpus_entry` Knowledge Indicator (KI) so
 an agent answers without reading full documents.
 
@@ -10,7 +10,7 @@ The scripts here create and populate the `browsecomp-plus` index used in the
 blog, then let you compare an agent answering with and without those fact KIs.
 
 Part 1 (routing with index-metadata KIs) lives in
-[`../context-management-technical-walkthrough-part-1`](../context-management-technical-walkthrough-part-1).
+[`../precomputed-context-technical-walkthrough-part-1`](../precomputed-context-technical-walkthrough-part-1).
 
 | Script | Index | Dataset |
 |--------|-------|---------|
@@ -25,7 +25,7 @@ A runnable notebook walks through this example end to end. It creates the AI
 Index, generates the fact KIs with a Kibana Workflow, and compares an agent
 answering with and without them:
 
-- [`notebooks/context/manual-walkthrough/part-2/index-facts-kis.ipynb`](../../notebooks/context/manual-walkthrough/part-2/index-facts-kis.ipynb)
+- [`notebooks/precomputed-context/manual-walkthrough/part-2/index-facts-kis.ipynb`](../../notebooks/precomputed-context/manual-walkthrough/part-2/index-facts-kis.ipynb)
 
 The notebook is self-contained: it writes its own `query-ki` skill and inlines
 the agent harness, so you can run it top to bottom. Beyond the script
@@ -44,7 +44,7 @@ endpoint.
 
 ```bash
 git clone https://github.com/elastic/elasticsearch-labs.git
-cd elasticsearch-labs/supporting-blog-content/context-management-technical-walkthrough-part-2
+cd elasticsearch-labs/supporting-blog-content/precomputed-context-technical-walkthrough-part-2
 ```
 
 ### 2. Install dependencies

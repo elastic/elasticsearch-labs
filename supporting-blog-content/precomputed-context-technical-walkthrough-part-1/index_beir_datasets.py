@@ -3,7 +3,7 @@
 Streams a small slice of three BEIR benchmark corpora (financial Q&A,
 biomedical, scientific fact-checking) into three BM25-only indices, each enriched
 with mapping metadata (`_meta.description` and per-field `meta.description`).
-May be used in conjunction with the context management technical walkthrough blog.
+May be used in conjunction with the precomputed context technical walkthrough blog.
 
 Connection is read from environment variables, falling back to an interactive
 prompt:
@@ -24,7 +24,7 @@ sys.path.insert(
     0,
     os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        "../context-management-technical-walkthrough",
+        "../precomputed-context-technical-walkthrough",
     ),
 )
 from datasets import load_dataset

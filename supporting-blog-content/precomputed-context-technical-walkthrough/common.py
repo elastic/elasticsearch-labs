@@ -1,4 +1,4 @@
-"""Shared helpers for the context management technical walkthrough index scripts.
+"""Shared helpers for the precomputed context technical walkthrough index scripts.
 
 Both `index_beir_datasets.py` and `index_browsecomp.py` connect the same way and
 follow the same create-and-populate flow; that logic lives here.
