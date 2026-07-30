@@ -19,18 +19,38 @@ Run:
 
 import os
 import re
-import sys
+from getpass import getpass
 
-sys.path.insert(
-    0,
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "../precomputed-context-technical-walkthrough",
-    ),
-)
 from datasets import load_dataset
+from elasticsearch import Elasticsearch, helpers
 
-from common import get_client, populate_index
+
+def get_client():
+    es_url = os.environ.get("ES_URL") or input(
+        "Elasticsearch endpoint URL: "
+    ).strip().rstrip("/")
+    api_key = os.environ.get("ES_API_KEY") or getpass("Elastic API key: ")
+    client = Elasticsearch(hosts=[es_url], api_key=api_key)
+    print(client.info())
+    return client
+
+
+def populate_index(client, index_name, mappings, actions, *, skip_if_populated=False):
+    if skip_if_populated and client.indices.exists(index=index_name):
+        count = client.count(index=index_name)["count"]
+        if count > 0:
+            print(
+                f"Index '{index_name}' already has {count} documents — reusing it (skipping indexing)."
+            )
+            return
+
+    client.indices.delete(index=index_name, ignore_unavailable=True)
+    client.indices.create(index=index_name, mappings=mappings)
+    helpers.bulk(client, actions)
+    client.indices.refresh(index=index_name)
+    print(
+        f"Indexed {client.count(index=index_name)['count']} documents into '{index_name}'."
+    )
 
 INDEX_NAME = "browsecomp-plus"
 SAMPLE_DOCS = 50  # documents to index (one KI is generated per doc, so keep it small)
