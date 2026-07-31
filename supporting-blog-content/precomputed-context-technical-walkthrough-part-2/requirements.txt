@@ -1,2 +1,0 @@
-elasticsearch>=9,<10
-datasets
