@@ -9,8 +9,6 @@ Notebooks are organized into the following folders:
 
 - [`search`](./search/): Notebooks that demonstrate the fundamentals of Elasticsearch, like indexing embeddings, running lexical, semantic and _hybrid_ searches, and more.
 
-- [`context`](./context/): Notebooks that demonstrate precomputed context for agents with Elasticsearch, like generating and retrieving Knowledge Indicators (KIs) from AI Indices.
-
 - [`doc-ingestion-and-chunking`](./ingestion-and-chunking/): Notebooks that demonstrate how to ingest and chunk documents for indexing in Elasticsearch from PDF, HTML and JSON with ELSER.
 
 - [`generative-ai`](./generative-ai/): Notebooks that demonstrate various use cases for Elasticsearch as the retrieval engine and vector store for LLM-powered applications.
