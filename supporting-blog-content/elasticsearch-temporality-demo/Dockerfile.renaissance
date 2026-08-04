@@ -1,0 +1,15 @@
+FROM eclipse-temurin:21-jdk-jammy
+
+WORKDIR /demo
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL -o /demo/opentelemetry-javaagent.jar \
+    https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
+
+RUN curl -fsSL -o /demo/renaissance-gpl-0.16.1.jar \
+    https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.16.1/renaissance-gpl-0.16.1.jar
+
+ENTRYPOINT ["java", "-XX:+UseG1GC", "-javaagent:/demo/opentelemetry-javaagent.jar", "-jar", "/demo/renaissance-gpl-0.16.1.jar", "db-shootout", "--operation-run-seconds", "60000", "--no-forced-gc"]

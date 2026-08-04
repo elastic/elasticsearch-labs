@@ -1,0 +1,39 @@
+x-otlp-settings: &otlp-settings
+  OTEL_EXPORTER_OTLP_ENDPOINT: https://<cluster-endpoint>/_otlp
+  OTEL_EXPORTER_OTLP_HEADERS: "Authorization=ApiKey <base64 api key>"
+services:
+  renaissance-delta:
+    build:
+      context: .
+      dockerfile: Dockerfile.renaissance
+    cpus: "3.0"
+    mem_limit: 512m
+    environment:
+      <<: *otlp-settings
+      OTEL_SERVICE_NAME: renaissance
+      OTEL_RESOURCE_ATTRIBUTES: "service.instance.id=delta-instance"
+      OTEL_TRACES_EXPORTER: none
+      OTEL_LOGS_EXPORTER: none
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_METRIC_EXPORT_INTERVAL: 15000
+      OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE: delta
+      OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION: BASE2_EXPONENTIAL_BUCKET_HISTOGRAM
+      OTEL_INSTRUMENTATION_RUNTIME_TELEMETRY_ENABLED: "true"
+      
+  renaissance-cumulative:
+    build:
+      context: .
+      dockerfile: Dockerfile.renaissance
+    cpus: "3.0"
+    mem_limit: 512m
+    environment:
+      <<: *otlp-settings
+      OTEL_SERVICE_NAME: renaissance
+      OTEL_RESOURCE_ATTRIBUTES: "service.instance.id=cumulative-instance"
+      OTEL_TRACES_EXPORTER: none
+      OTEL_LOGS_EXPORTER: none
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_METRIC_EXPORT_INTERVAL: 15000
+      OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE: cumulative
+      OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION: BASE2_EXPONENTIAL_BUCKET_HISTOGRAM
+      OTEL_INSTRUMENTATION_RUNTIME_TELEMETRY_ENABLED: "true"
