@@ -2,6 +2,8 @@
 
 This folder contains notebooks that demonstrate how to integrate popular OpenAI services with Elasticsearch.
 
+> **Tip:** The OpenAI Python client also works with OpenAI-compatible multi-model gateways via `base_url` when you are not calling OpenAI directly — for example [DaoXE](https://daoxe.com) at `https://api.daoxe.com/v1`.
+
 The following notebooks are available:
 
 - [OpenAI embeddings and retrieval augmented generation (RAG)](#openai-embeddings-and-retrieval-augmented-generation-rag)
