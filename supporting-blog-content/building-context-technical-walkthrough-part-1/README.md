@@ -1,6 +1,6 @@
-# Precomputed context technical walkthrough (Part 1): routing with index-metadata KIs
+# Building context technical walkthrough (Part 1): routing with index-metadata KIs
 
-A runnable notebook for [Know Your Index: Precomputed Context for Smarter AI Agents, Powered by Elasticsearch AI Indices](https://www.elastic.co/search-labs/blog/context-management-technical-walkthrough-index-metadata), Part 1 of the Precomputed context technical walkthrough series. 
+A runnable notebook for [Building context in Elasticsearch: how AI Indices power smarter agents using fewer tokens](https://www.elastic.co/search-labs/blog/ai-index-building-context-agents), Part 1 of the Building context technical walkthrough series. 
 Part 1 covers routing: it profiles each index into an `index_metadata_entry` Knowledge Indicator (KI) so an agent picks the right index instead of guessing.
 
 The notebook creates and populates the three [BEIR](https://github.com/beir-cellar/beir) indices used in the blog, then lets you compare an agent answering with and without those routing KIs.
