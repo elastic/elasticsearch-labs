@@ -38,20 +38,243 @@ if [ -t 0 ]; then
   exit 1
 fi
 
-INPUT=$(cat)
-INPUT_ONE_LINE="${INPUT//$'\n'/ }"
-INPUT_ONE_LINE="${INPUT_ONE_LINE//$'\r'/ }"
+# Map all control bytes to spaces: newlines/carriage returns for the one-line
+# form, and any raw control bytes (invalid inside JSON strings) so extracted
+# values and the embedded raw payload always stay valid JSON.
+INPUT_ONE_LINE=$(LC_ALL=C tr '\000-\037' ' ')
 
-# Output permission response FIRST for blocking hooks — before any filesystem work
-# that could fail and exit early due to set -euo pipefail
-if [[ "$INPUT" == *'"hook_event_name"'*'"beforeMCPExecution"'* ]] || \
-   [[ "$INPUT" == *'"hook_event_name"'*'"beforeShellExecution"'* ]] || \
-   [[ "$INPUT" == *'"hook_event_name"'*'"beforeReadFile"'* ]] || \
-   [[ "$INPUT" == *'"hook_event_name"'*'"subagentStart"'* ]] || \
-   [[ "$INPUT" == *'"hook_event_name"'*'"PreToolUse"'* ]] || \
-   [[ "$INPUT" == *'"hook_event_name"'*'"SubagentStart"'* ]]; then
-  echo '{"permission":"allow"}'
-fi
+# Parse all fields in one native-code pass. Repeated Bash pattern removals become
+# extremely slow when optional keys are absent from large hook payloads.
+FIELD_SEPARATOR=$'\034'
+EXTRACTED_FIELDS=$(printf '%s\n' "$INPUT_ONE_LINE" | LC_ALL=C awk '
+  function wanted_string(key) {
+    return key == "hook_event_name" || key == "tool_name" || key == "model" ||
+      key == "session_id" || key == "final_status" || key == "command" ||
+      key == "file_path"
+  }
+
+  # BSD awk substr() cost grows with the length of the source string, so all
+  # scanning goes through a small sliding window refilled as the parse
+  # position advances. Requests beyond the window come back truncated, which
+  # only affects pathological tokens larger than the window itself.
+  function chunk_at(position, size) {
+    if (position < window_start ||
+        (position + size - 1 > window_end && window_end < input_length)) {
+      window_start = position
+      window_buffer = substr(input, position, 16384)
+      window_end = position + length(window_buffer) - 1
+    }
+    return substr(window_buffer, position - window_start + 1, size)
+  }
+
+  function skip_string(position, chunk, consumed, next_character) {
+    position++
+    while (position <= input_length) {
+      chunk = chunk_at(position, 256)
+      if (match(chunk, /^([^"\\]|\\.)*/) != 1) {
+        return 0
+      }
+
+      consumed = RLENGTH
+      position += consumed
+      if (consumed < length(chunk)) {
+        next_character = chunk_at(position, 1)
+        if (next_character == "\"") {
+          return position + 1
+        }
+        if (next_character == "\\" && position < input_length) {
+          position += 2
+        } else {
+          return 0
+        }
+      }
+    }
+    return 0
+  }
+
+  function skip_composite(position, depth, remainder, character) {
+    depth = 0
+    while (position <= input_length) {
+      remainder = chunk_at(position, 256)
+      character = substr(remainder, 1, 1)
+
+      if (character == "\"") {
+        if (match(remainder, /^"([^"\\]|\\.)*"/) == 1) {
+          position += RLENGTH
+        } else {
+          position = skip_string(position)
+          if (position == 0) {
+            return input_length + 1
+          }
+        }
+      } else if (character == "{" || character == "[") {
+        depth++
+        composite_closer[depth] = character == "{" ? "}" : "]"
+        position++
+      } else if (character == "}" || character == "]") {
+        if (depth == 0 || character != composite_closer[depth]) {
+          return input_length + 1
+        }
+        delete composite_closer[depth]
+        depth--
+        position++
+        if (depth == 0) {
+          return position
+        }
+      } else if (match(remainder, /^[^][{}"]+/) == 1) {
+        position += RLENGTH
+      } else {
+        position++
+      }
+    }
+    return position
+  }
+
+  # Advance past whitespace in bounded chunks. Never copies the full string
+  # tail, so per-member cost stays constant regardless of payload size.
+  function skip_whitespace(position, chunk) {
+    while (position <= input_length) {
+      chunk = chunk_at(position, 256)
+      if (match(chunk, /^[[:space:]]+/) != 1) {
+        return position
+      }
+      position += RLENGTH
+      if (RLENGTH < length(chunk)) {
+        return position
+      }
+    }
+    return position
+  }
+
+  # Scans one JSON object starting at an opening "{". capture_mode "top"
+  # populates present[]/string_values[]/number_values[] for every wanted
+  # top-level key, and additionally descends one level into a "tool_input"
+  # member (Claude Code PreToolUse/PostToolUse payloads nest command/
+  # file_path there) via a recursive "tool_input" call, which only captures
+  # command/file_path and never overrides a value already seen at top level.
+  # Returns the position just after the matching "}", or input_length + 1 on
+  # a malformed/truncated object.
+  function parse_object(position, capture_mode,    member_count, character, key_start, key_end, key, value_start, value_end, chunk) {
+    position++
+    while (position <= input_length) {
+      position = skip_whitespace(position)
+      character = chunk_at(position, 1)
+      if (character == "}") {
+        position++
+        if (capture_mode == "top" && skip_whitespace(position) > input_length) {
+          parsed_object = 1
+        }
+        return position
+      }
+      if (member_count > 0) {
+        if (character != ",") {
+          return input_length + 1
+        }
+        position = skip_whitespace(position + 1)
+        if (chunk_at(position, 1) == "}") {
+          return input_length + 1
+        }
+      }
+      if (chunk_at(position, 1) != "\"") {
+        return input_length + 1
+      }
+
+      key_start = position
+      key_end = skip_string(position)
+      if (key_end == 0) {
+        return input_length + 1
+      }
+      key = chunk_at(key_start + 1, key_end - key_start - 2)
+      if (capture_mode == "top") {
+        present[key] = 1
+      }
+      position = skip_whitespace(key_end)
+      if (chunk_at(position, 1) != ":") {
+        return input_length + 1
+      }
+      position = skip_whitespace(position + 1)
+
+      character = chunk_at(position, 1)
+      if (character == "\"") {
+        value_start = position
+        value_end = skip_string(position)
+        if (value_end == 0) {
+          return input_length + 1
+        }
+        if (capture_mode == "top" && wanted_string(key)) {
+          string_values[key] = substr(input, value_start + 1, value_end - value_start - 2)
+        } else if (capture_mode == "tool_input" && (key == "command" || key == "file_path") && !(key in string_values)) {
+          string_values[key] = substr(input, value_start + 1, value_end - value_start - 2)
+        }
+        position = value_end
+      } else if (character == "{") {
+        if (capture_mode == "top" && key == "tool_input") {
+          position = parse_object(position, "tool_input")
+        } else {
+          position = skip_composite(position)
+        }
+      } else if (character == "[") {
+        position = skip_composite(position)
+      } else {
+        # Scalar tokens (numbers, true/false/null) fit well within 64 bytes.
+        chunk = chunk_at(position, 64)
+        if (match(chunk, /^-?[0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)?/) == 1) {
+          if (capture_mode == "top" && (key == "duration" || key == "duration_ms")) {
+            number_values[key] = substr(chunk, RSTART, RLENGTH)
+          }
+          position += RLENGTH
+        } else if (match(chunk, /^(true|false|null)/) == 1) {
+          position += RLENGTH
+        } else {
+          return input_length + 1
+        }
+      }
+      member_count++
+    }
+    return input_length + 1
+  }
+
+  {
+    input = $0
+    input_length = length(input)
+    window_start = 1
+    window_end = 0
+    position = skip_whitespace(1)
+
+    if (chunk_at(position, 1) == "{") {
+      parse_object(position, "top")
+    }
+
+    separator = sprintf("%c", 28)
+    values[1] = string_values["hook_event_name"]
+    values[2] = string_values["tool_name"]
+    values[3] = string_values["model"]
+    values[4] = string_values["session_id"]
+    values[5] = string_values["final_status"]
+    values[6] = number_values["duration"]
+    values[7] = number_values["duration_ms"]
+    values[8] = string_values["command"]
+    values[9] = string_values["file_path"]
+    values[10] = ("cursor_version" in present) ? "1" : "0"
+    values[11] = parsed_object ? "1" : "0"
+
+    for (i = 1; i <= 11; i++) {
+      if (i > 1) {
+        printf "%s", separator
+      }
+      printf "%s", values[i]
+    }
+  }
+')
+IFS="$FIELD_SEPARATOR" read -r HOOK_EVENT_NAME TOOL_NAME MODEL SESSION_ID FINAL_STATUS DURATION DURATION_MS INPUT_COMMAND INPUT_FILE_PATH HAS_CURSOR_VERSION HAS_TOP_LEVEL_OBJECT <<< "$EXTRACTED_FIELDS"
+
+# Output permission response FIRST for blocking hooks, before any filesystem work
+# that could fail and exit early
+case "$HOOK_EVENT_NAME" in
+  beforeMCPExecution|beforeShellExecution|beforeReadFile|subagentStart|PreToolUse|SubagentStart)
+    echo '{"permission":"allow"}'
+    ;;
+esac
 
 (umask 077 && mkdir -p "$LOG_DIR")
 
@@ -62,7 +285,7 @@ HOSTNAME_VAL=$(hostname -s 2>/dev/null || hostname 2>/dev/null || uname -n 2>/de
 HOSTNAME_VAL="${HOSTNAME_VAL%%.*}"
 
 detect_agent_and_ide() {
-  if [[ "$INPUT" == *'"cursor_version"'* ]] || [ -n "${CURSOR_VERSION:-}" ]; then
+  if [ "$HAS_CURSOR_VERSION" = "1" ] || [ -n "${CURSOR_VERSION:-}" ]; then
     AGENT="cursor"
     if [ "${CURSOR_CODE_REMOTE:-}" = "true" ]; then
       IDE="remote"
@@ -106,37 +329,11 @@ json_escape() {
   printf '%s' "$s"
 }
 
-extract_json_string() {
-  local key="$1"
-  local remainder="${INPUT_ONE_LINE#*\"$key\"}"
-  if [ "$remainder" = "$INPUT_ONE_LINE" ]; then
-    return
-  fi
-  printf '%s' "$remainder" | sed -nE 's/^[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)".*/\1/p' | head -n 1
-}
-
-extract_json_number() {
-  local key="$1"
-  local remainder="${INPUT_ONE_LINE#*\"$key\"}"
-  if [ "$remainder" = "$INPUT_ONE_LINE" ]; then
-    return
-  fi
-  printf '%s' "$remainder" | sed -nE 's/^[[:space:]]*:[[:space:]]*([0-9]+(\.[0-9]+)?).*/\1/p' | head -n 1
-}
-
 ESCAPED_USER=$(json_escape "$CURRENT_USER")
 ESCAPED_HOST=$(json_escape "$HOSTNAME_VAL")
 ESCAPED_AGENT=$(json_escape "$AGENT")
 ESCAPED_IDE=$(json_escape "$IDE")
 ESCAPED_EMAIL=$(json_escape "$EMAIL")
-
-HOOK_EVENT_NAME=$(extract_json_string "hook_event_name")
-TOOL_NAME=$(extract_json_string "tool_name")
-MODEL=$(extract_json_string "model")
-SESSION_ID=$(extract_json_string "session_id")
-FINAL_STATUS=$(extract_json_string "final_status")
-DURATION=$(extract_json_number "duration")
-DURATION_MS=$(extract_json_number "duration_ms")
 
 # Extract event-specific fields
 COMMAND=""
@@ -144,21 +341,21 @@ FILE_PATH=""
 MCP_SERVER=""
 case "$HOOK_EVENT_NAME" in
   beforeShellExecution|afterShellExecution)
-    COMMAND=$(extract_json_string "command")
+    COMMAND="$INPUT_COMMAND"
     ;;
   afterFileEdit|beforeReadFile)
-    FILE_PATH=$(extract_json_string "file_path")
+    FILE_PATH="$INPUT_FILE_PATH"
     ;;
   beforeMCPExecution|afterMCPExecution)
-    MCP_SERVER=$(extract_json_string "command")
+    MCP_SERVER="$INPUT_COMMAND"
     ;;
   postToolUse|postToolUseFailure|PreToolUse|PostToolUse|PostToolUseFailure)
     case "$TOOL_NAME" in
       Bash|Shell|shell_execution)
-        COMMAND=$(extract_json_string "command")
+        COMMAND="$INPUT_COMMAND"
         ;;
       Read|Write|Edit|MultiEdit|NotebookEdit)
-        FILE_PATH=$(extract_json_string "file_path")
+        FILE_PATH="$INPUT_FILE_PATH"
         ;;
     esac
     ;;
@@ -237,11 +434,18 @@ if [ -n "$DURATION_MS" ]; then
 elif [ -n "$DURATION" ]; then
   EVENT_DURATION=$(awk "BEGIN {printf \"%.0f\", $DURATION * 1000000000}")
 fi
+# Reject non-finite results (e.g. from an oversized exponent like 1e400),
+# since bare inf/nan tokens are not valid JSON numbers.
+case "$EVENT_DURATION" in
+  *[!0-9-]*|"") EVENT_DURATION="" ;;
+esac
 
 json_string_or_null() {
   local value="$1"
   if [ -n "$value" ]; then
-    printf '"%s"' "$(json_escape "$value")"
+    printf '"'
+    printf '%s' "$value" | LC_ALL=C sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+    printf '"'
   else
     printf 'null'
   fi
@@ -256,12 +460,9 @@ json_number_or_null() {
   fi
 }
 
-RAW_PAYLOAD="$INPUT"
-if [[ -z "$RAW_PAYLOAD" ]] || [[ "$RAW_PAYLOAD" != "{"* ]]; then
+RAW_PAYLOAD="$INPUT_ONE_LINE"
+if [ "$HAS_TOP_LEVEL_OBJECT" != "1" ]; then
   RAW_PAYLOAD="null"
-else
-  RAW_PAYLOAD="${RAW_PAYLOAD//$'\n'/ }"
-  RAW_PAYLOAD="${RAW_PAYLOAD//$'\r'/ }"
 fi
 
 printf '{"timestamp":"%s","user":"%s","email":"%s","host":"%s","agent":"%s","ide":"%s","model":%s,"session_id":%s,"hook_event_name":%s,"tool_name":%s,"command":%s,"file_path":%s,"mcp_server":%s,"final_status":%s,"duration":%s,"duration_ms":%s,"event":{"kind":"event","category":%s,"type":%s,"action":%s,"outcome":%s,"duration":%s},"raw":%s}\n' \
