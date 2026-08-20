@@ -67,7 +67,7 @@ ES_API_KEY="${ES_API_KEY:-}"
 if [[ -z "$ES_URL" || -z "$ES_API_KEY" ]]; then
   echo "Error: ES_URL and ES_API_KEY must be set." >&2
   echo "  export ES_URL=https://your-project.es.region.gcp.elastic.cloud:443" >&2
-  echo "  export ES_API_KEY=your-api-key" >&2
+  echo "  export ES_API_KEY=<your-api-key>" >&2
   exit 1
 fi
 

@@ -9,7 +9,7 @@ Usage:
 Required environment variables, either exported or placed in .env:
 
     KIBANA_ENDPOINT=https://your-project.kb.region.gcp.elastic.cloud
-    ES_API_KEY=your-api-key
+    ES_API_KEY=<your-api-key>
 
 Optional:
 
@@ -47,7 +47,7 @@ if not KIBANA_ENDPOINT or not API_KEY:
     print("Export them or create a .env file in the repository root:")
     print("")
     print("KIBANA_ENDPOINT=https://your-project.kb.region.gcp.elastic.cloud")
-    print("ES_API_KEY=your-api-key")
+    print("ES_API_KEY=<your-api-key>")
     sys.exit(1)
 
 HEADERS = {
