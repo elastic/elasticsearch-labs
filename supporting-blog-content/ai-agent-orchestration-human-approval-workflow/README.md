@@ -31,6 +31,12 @@ export KIBANA_ENDPOINT="https://your-project.kb.region.gcp.elastic.cloud"
 ### 1. Run the code locally
 
 ```bash
+# Clone the repository without checking out all files
+git clone --filter=blob:none --sparse https://github.com/elastic/elasticsearch-labs.git
+cd elasticsearch-labs
+
+# Check out only this companion folder
+git sparse-checkout set supporting-blog-content/ai-agent-orchestration-human-approval-workflow
 cd supporting-blog-content/ai-agent-orchestration-human-approval-workflow
 
 python3 -m venv .venv
