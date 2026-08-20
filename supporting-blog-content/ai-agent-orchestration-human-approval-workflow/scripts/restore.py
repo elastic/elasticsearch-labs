@@ -152,10 +152,7 @@ def request_agent(
         compatible_payload = dict(payload)
         compatible_payload.pop("visibility", None)
 
-        print(
-            "  note: target API does not accept 'visibility'; "
-            "retrying without it"
-        )
+        print("  note: target API does not accept 'visibility'; " "retrying without it")
 
         return request(method, path, json_body=compatible_payload)
 
@@ -168,9 +165,7 @@ def read_json_file(path: Path, collection_name: str) -> list[dict[str, Any]]:
     collection = data.get(collection_name)
 
     if not isinstance(collection, list):
-        raise ValueError(
-            f"{path} must contain a JSON array named '{collection_name}'."
-        )
+        raise ValueError(f"{path} must contain a JSON array named '{collection_name}'.")
 
     return collection
 
@@ -199,11 +194,7 @@ def build_skill_payload(
     *,
     include_id: bool,
 ) -> dict[str, Any]:
-    payload = {
-        key: value
-        for key, value in skill.items()
-        if key in SKILL_FIELDS
-    }
+    payload = {key: value for key, value in skill.items() if key in SKILL_FIELDS}
 
     payload.setdefault("referenced_content", [])
     payload.setdefault("tool_ids", [])
@@ -223,9 +214,7 @@ def build_agent_payload(
     include_id: bool,
 ) -> dict[str, Any]:
     payload = {
-        key: value
-        for key, value in agent.items()
-        if key in AGENT_TOP_LEVEL_FIELDS
+        key: value for key, value in agent.items() if key in AGENT_TOP_LEVEL_FIELDS
     }
 
     # Older/read APIs can return access_control rather than visibility.
@@ -283,9 +272,7 @@ def restore_skills() -> None:
         ("results", "skills"),
     )
     existing_ids = {
-        skill["id"]
-        for skill in existing_skills
-        if isinstance(skill.get("id"), str)
+        skill["id"] for skill in existing_skills if isinstance(skill.get("id"), str)
     }
 
     created = 0
@@ -330,9 +317,7 @@ def restore_agents() -> None:
         ("results", "agents"),
     )
     existing_ids = {
-        agent["id"]
-        for agent in existing_agents
-        if isinstance(agent.get("id"), str)
+        agent["id"] for agent in existing_agents if isinstance(agent.get("id"), str)
     }
 
     created = 0
@@ -367,9 +352,7 @@ def restore_agents() -> None:
 
 def restore_workflow() -> None:
     if not WORKFLOW_FILE.exists():
-        raise FileNotFoundError(
-            f"Required workflow YAML not found: {WORKFLOW_FILE}"
-        )
+        raise FileNotFoundError(f"Required workflow YAML not found: {WORKFLOW_FILE}")
 
     workflow_yaml = WORKFLOW_FILE.read_text(encoding="utf-8")
 
@@ -415,8 +398,7 @@ def restore_workflow() -> None:
 
     if failures:
         raise RuntimeError(
-            "Workflow import returned failures:\n"
-            + json.dumps(failures, indent=2)
+            "Workflow import returned failures:\n" + json.dumps(failures, indent=2)
         )
 
     print(f"  imported {workflow_name} ({workflow_id})")
