@@ -1,0 +1,323 @@
+version: "1"
+name: failure_store_remediation
+description: >
+  Long-running workflow that remediates failed documents in a data stream's
+  failure store. Triggered by an alerting rule when failures are detected.
+  An AI agent diagnoses the root cause and proposes a fix. After human
+  approval, the remediation-executor agent runs the fix automatically,
+  then pauses for verification.
+enabled: true
+tags: [failure-store, remediation, agentic]
+settings:
+  timeout: 7d
+
+triggers:
+  - type: alert
+
+steps:
+  # 1. Read failed documents from the failure store (last 5 minutes, matching the alert window)
+  - name: read_failures
+    type: elasticsearch.search
+    with:
+      index: "logs-demo-app::failures"
+      query:
+        range:
+          "@timestamp":
+            gte: "now-5m"
+            lte: "now"
+      size: 50
+      sort:
+        - "@timestamp": "desc"
+
+  # 2. AI diagnoses the failures
+  - name: diagnose
+    type: ai.agent
+    agent-id: failure-analyst
+    timeout: 300s
+    with:
+      message: |
+        Analyze these failed documents from the "logs-demo-app" failure store.
+
+        Failed documents:
+        {{ steps.read_failures.output.hits.hits | json }}
+
+        Identify the root cause, classify the failure type, propose a concrete fix
+        with ingest pipeline processors, generate a remediation pipeline to reindex
+        the failed documents, and assess the risk.
+
+        When the fix involves removing or transforming a field, preserve the original
+        value in a separate field (e.g. price_raw) before removing or replacing it.
+
+        YOUR RESPONSE MUST BE A SINGLE JSON OBJECT ONLY.
+        Do not write any explanation, preamble, markdown, or commentary.
+        Start your response with { and end with }.
+        Use exactly these top-level keys: root_cause, failure_type, affected_docs,
+        proposed_fix, remediation_pipeline, risk_assessment.
+
+  # 3. Record the diagnosis for audit
+  - name: record_diagnosis
+    type: elasticsearch.index
+    with:
+      index: remediation-runs
+      document:
+        "@timestamp": "{{ now | date_to_xmlschema }}"
+        execution_id: "{{ execution.id }}"
+        data_stream: "logs-demo-app"
+        triggered_by_rule: "{{ event.rule.name }}"
+        failure_count: "{{ steps.read_failures.output.hits.hits | size }}"
+        failure_count_total: "{{ steps.read_failures.output.hits.total.value }}"
+        diagnosis: "{{ steps.diagnose.output.message }}"
+        status: awaiting_fix_approval
+
+  # 4. GATE 1 - Human approves or rejects the fix (PAUSE)
+  - name: gate_fix
+    type: waitForInput
+    timeout: 72h
+    with:
+      message: |
+        GATE 1/2 - Fix Approval
+
+        Data stream: logs-demo-app
+        Failed documents loaded for analysis: {{ steps.read_failures.output.hits.hits | size }} of {{ steps.read_failures.output.hits.total.value }} matching
+
+        The AI agent has diagnosed the failures. Review the full diagnosis
+        in the 'diagnose' step output above, then approve or reject.
+      schema:
+        type: object
+        properties:
+          approved:
+            type: boolean
+            title: "Approve fix"
+            default: true
+          notes:
+            type: string
+            title: "Feedback (required if rejecting)"
+
+  # 5. Branch on the human decision
+  - name: route_fix
+    type: if
+    condition: "steps.gate_fix.output.response.approved: true"
+    steps:
+      # === APPROVED PATH ===
+
+      # 6. Execute the fix automatically via the remediation-executor agent
+      - name: execute_fix
+        type: ai.agent
+        agent-id: remediation-executor
+        timeout: 300s
+        with:
+          message: |
+            Run remediation for the "logs-demo-app" failure store.
+
+            Workflow execution ID: {{ execution.id }}
+
+            The fix has been approved by a human reviewer. Execute the skill
+            'execute-failure-store-fix' immediately without asking for confirmation.
+
+            Report the result: how many documents were reindexed, whether the
+            ingest pipeline was created, and any errors encountered.
+
+      # 7. GATE 2 - Human verifies the result (PAUSE)
+      - name: gate_verify
+        type: waitForApproval
+        timeout: 72h
+        with:
+          message: |
+            GATE 2/2 - Verify Remediation
+
+            Data stream: logs-demo-app
+            Failed documents loaded for analysis: {{ steps.read_failures.output.hits.hits | size }} of {{ steps.read_failures.output.hits.total.value }} matching
+
+            The remediation-executor agent has run the fix. Review its report:
+
+            {{ steps.execute_fix.output.message }}
+
+            Were the documents successfully remediated?
+          approveLabel: "Yes, mark as resolved"
+          rejectLabel: "No, escalate"
+
+      # 8. Branch on verification
+      - name: route_verify
+        type: if
+        condition: "steps.gate_verify.output.response.approved: true"
+        steps:
+          - name: mark_resolved
+            type: elasticsearch.index
+            with:
+              index: remediation-runs
+              document:
+                "@timestamp": "{{ now | date_to_xmlschema }}"
+                execution_id: "{{ execution.id }}"
+                data_stream: "logs-demo-app"
+                status: resolved
+                agent_report: "{{ steps.execute_fix.output.message }}"
+        else:
+          - name: mark_escalated
+            type: elasticsearch.index
+            with:
+              index: remediation-runs
+              document:
+                "@timestamp": "{{ now | date_to_xmlschema }}"
+                execution_id: "{{ execution.id }}"
+                data_stream: "logs-demo-app"
+                status: escalated
+                agent_report: "{{ steps.execute_fix.output.message }}"
+
+    else:
+      # === REJECTED PATH - AI revises with feedback ===
+
+      - name: record_revision_request
+        type: elasticsearch.index
+        with:
+          index: remediation-runs
+          document:
+            "@timestamp": "{{ now | date_to_xmlschema }}"
+            execution_id: "{{ execution.id }}"
+            data_stream: "logs-demo-app"
+            status: fix_revision_requested
+            reviewer_feedback: "{{ steps.gate_fix.output.response.notes }}"
+
+      # AI revises the fix using reviewer feedback
+      - name: revise_diagnosis
+        type: ai.agent
+        agent-id: failure-analyst
+        timeout: 300s
+        with:
+          message: |
+            You previously proposed a fix for the "logs-demo-app" failure store.
+
+            Your original diagnosis:
+            {{ steps.diagnose.output.message }}
+
+            The engineer REJECTED the proposal with this feedback:
+            "{{ steps.gate_fix.output.response.notes }}"
+
+            Revise your proposal to address the engineer's concerns.
+            Failed documents for reference:
+            {{ steps.read_failures.output.hits.hits | json }}
+
+            When the fix involves removing or transforming a field, preserve the
+            original value in a separate field (e.g. price_raw) before removing
+            or replacing it.
+
+            YOUR RESPONSE MUST BE A SINGLE JSON OBJECT ONLY.
+            Do not write any explanation, preamble, markdown, or commentary.
+            Start your response with { and end with }.
+            Use exactly these top-level keys: root_cause, failure_type,
+            affected_docs, proposed_fix, remediation_pipeline, risk_assessment.
+
+      # Record revised diagnosis
+      - name: record_revised_diagnosis
+        type: elasticsearch.index
+        with:
+          index: remediation-runs
+          document:
+            "@timestamp": "{{ now | date_to_xmlschema }}"
+            execution_id: "{{ execution.id }}"
+            data_stream: "logs-demo-app"
+            revised_diagnosis: "{{ steps.revise_diagnosis.output.message }}"
+            status: awaiting_fix_approval_v2
+
+      # GATE 1b - Revised fix approval (PAUSE)
+      - name: gate_fix_revised
+        type: waitForInput
+        timeout: 72h
+        with:
+          message: |
+            GATE 1b/2 - Revised Fix Approval
+
+            Data stream: logs-demo-app
+            Your feedback: {{ steps.gate_fix.output.response.notes }}
+
+            The AI has revised the diagnosis based on your feedback.
+            Review it in the 'revise_diagnosis' step output above.
+            This is the final decision.
+          schema:
+            type: object
+            properties:
+              approved:
+                type: boolean
+                title: "Approve revised fix"
+              notes:
+                type: string
+                title: "Final notes"
+
+      # Branch on revised decision
+      - name: route_fix_revised
+        type: if
+        condition: "steps.gate_fix_revised.output.response.approved: true"
+        steps:
+          # Execute the revised fix via the remediation-executor agent
+          - name: execute_fix_revised
+            type: ai.agent
+            agent-id: remediation-executor
+            timeout: 300s
+            with:
+              message: |
+                Run remediation for the "logs-demo-app" failure store.
+
+                Workflow execution ID: {{ execution.id }}
+
+                The revised fix has been approved by a human reviewer. Execute the skill
+                'execute-failure-store-fix' immediately without asking for confirmation.
+
+                Report the result: how many documents were reindexed, whether the
+                ingest pipeline was created, and any errors encountered.
+
+          # GATE 2 for revised fix
+          - name: gate_verify_v2
+            type: waitForApproval
+            timeout: 72h
+            with:
+              message: |
+                GATE 2/2 - Verify Remediation (Revised Fix)
+
+                Data stream: logs-demo-app
+                Failed documents loaded for analysis: {{ steps.read_failures.output.hits.hits | size }} of {{ steps.read_failures.output.hits.total.value }} matching
+
+                The remediation-executor agent has run the revised fix. Review its report:
+
+                {{ steps.execute_fix_revised.output.message }}
+
+                Were the documents successfully remediated?
+              approveLabel: "Yes, mark as resolved"
+              rejectLabel: "No, escalate"
+
+          - name: route_verify_v2
+            type: if
+            condition: "steps.gate_verify_v2.output.response.approved: true"
+            steps:
+              - name: mark_resolved_v2
+                type: elasticsearch.index
+                with:
+                  index: remediation-runs
+                  document:
+                    "@timestamp": "{{ now | date_to_xmlschema }}"
+                    execution_id: "{{ execution.id }}"
+                    data_stream: "logs-demo-app"
+                    status: resolved
+                    agent_report: "{{ steps.execute_fix_revised.output.message }}"
+            else:
+              - name: mark_escalated_v2
+                type: elasticsearch.index
+                with:
+                  index: remediation-runs
+                  document:
+                    "@timestamp": "{{ now | date_to_xmlschema }}"
+                    execution_id: "{{ execution.id }}"
+                    data_stream: "logs-demo-app"
+                    status: escalated
+                    agent_report: "{{ steps.execute_fix_revised.output.message }}"
+
+        else:
+          # Final rejection
+          - name: mark_fix_rejected
+            type: elasticsearch.index
+            with:
+              index: remediation-runs
+              document:
+                "@timestamp": "{{ now | date_to_xmlschema }}"
+                execution_id: "{{ execution.id }}"
+                data_stream: "logs-demo-app"
+                status: fix_rejected
+                notes: "{{ steps.gate_fix_revised.output.response.notes }}"
