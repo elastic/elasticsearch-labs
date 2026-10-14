@@ -1,0 +1,34 @@
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "shingle_8": {
+          "type": "shingle",
+          "min_shingle_size": 8,
+          "max_shingle_size": 8,
+          "output_unigrams": false
+        }
+      },
+      "analyzer": {
+        "fingerprint_8": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "asciifolding", "shingle_8"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {"type": "text"},
+      "source": {"type": "keyword"},
+      "collection": {"type": "keyword"},
+      "body": {
+        "type": "text",
+        "analyzer": "fingerprint_8",
+        "index_options": "offsets",
+        "norms": false
+      }
+    }
+  }
+}

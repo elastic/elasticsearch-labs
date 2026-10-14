@@ -1,0 +1,102 @@
+"""Real-cluster tests (no mocks). Uses a throwaway index and deletes it afterwards. Run: pytest tests -q"""
+
+import secrets
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from boilerplate import common_phrases  # noqa: E402
+from check import check  # noqa: E402
+from es import create_index, get_client  # noqa: E402
+
+COPIED = (
+    "the sensor assembly comprises a flexible substrate carrying a plurality of electrodes arranged in a "
+    "regular grid pattern wherein each electrode is coupled to a shared readout line through a switch"
+)  # 30 words
+SHORT = "to avoid suspension of your account you must verify your payment details within twenty"  # 14 words -> 7 fingerprints
+FILLER_A = "this patent describes an unrelated pump with a rotating impeller and a sealed housing for liquids"
+COMMON = "as described in the preferred embodiment of the present invention"
+FILLER_B = "a different filing about wireless antennas tuned to narrow frequency bands for portable radios"
+
+
+def doc(title, body, coll="patents"):
+    return {"title": title, "source": "test", "collection": coll, "body": body}
+
+
+@pytest.fixture(scope="module")
+def env():
+    es, name = get_client(), f"fp-demo-test-{secrets.token_hex(4)}"
+    create_index(es, name)
+    docs = [
+        doc("A", f"{FILLER_A} {COPIED} {FILLER_B}"),
+        doc(
+            "B",
+            f"{COMMON} {FILLER_B} {COMMON} and nothing else in common here at all today",
+        ),
+        doc("C", f"Dear customer, {SHORT}, thank you.", "phishing"),
+        doc(
+            "D",
+            f"completely different text about gardening, tomatoes, compost and the best time to plant beans, {COMMON}",
+        ),
+    ]
+    for i, d in enumerate(docs):
+        es.index(index=name, id=str(i), document=d)
+    es.indices.refresh(index=name)
+    yield es, name
+    es.indices.delete(index=name, ignore_unavailable=True)
+
+
+def test_copied_passage_found_with_spans(env):
+    es, name = env
+    text = f"Hi all, please see this quote from the filing: {COPIED} Regards, Pat"
+    res = check(es, name, text, "any")
+    assert [m.title for m in res.matches] == ["A"]
+    m = res.matches[0]
+    assert m.longest_run == len(COPIED.split())
+    assert [m.doc_text[s:e] for s, e in m.doc_spans] == [COPIED]
+    assert [text[s:e] for s, e in m.input_spans] == [COPIED]
+    assert m.matched == len(COPIED.split()) - 7
+
+
+def test_unrelated_text_not_found(env):
+    es, name = env
+    assert (
+        check(
+            es,
+            name,
+            "Lunch on Friday? I booked a table for six near the station at one",
+            "any",
+        ).matches
+        == []
+    )
+
+
+def test_min_shared_ignores_duplicates_in_query(env):
+    es, name = env
+    text = f"{SHORT} " * 3  # repeated phrase: still only the unique fingerprints count
+    assert check(
+        es, name, text, "min_shared", 7
+    ).matches  # 14 words -> 7 unique fingerprints
+    assert not check(es, name, text, "min_shared", 8).matches
+
+
+def test_verified_run_filters_short_phrases(env):
+    es, name = env
+    assert check(es, name, SHORT, "any").matches  # 14-word overlap found by any
+    assert not check(
+        es, name, SHORT, "verified_run", 16
+    ).matches  # but below a 16-word run
+    assert check(es, name, COPIED, "verified_run", 16).matches
+
+
+def test_exclude_list_and_common_phrases(env):
+    es, name = env
+    top = common_phrases(es, name, 2, 100)
+    assert top and all(
+        c == 2 for _, c in top
+    )  # B and D share COMMON, A and B share FILLER_B
+    assert {m.title for m in check(es, name, COMMON, "any").matches} == {"B", "D"}
+    assert check(es, name, COMMON, "any", exclude={p for p, _ in top}).matches == []
