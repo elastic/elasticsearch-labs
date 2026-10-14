@@ -93,9 +93,14 @@ with tab_check:
     cols = st.columns(4)
     ex = examples.build(client(), idx)
     for col, (label, body) in zip(cols, ex.items()):
-        if col.button(label, use_container_width=True):
+        if col.button(label, width="stretch"):
             st.session_state.text = body
     text = st.text_area("Text to check", key="text", height=190)
+    # Any button click reruns the script with the latest text, so this just gives the rerun a visible trigger.
+    st.button(":material/search: Check text", type="primary")
+    st.caption(
+        "Edit the text, then select Check text (or press Ctrl+Enter / Cmd+Enter in the box)."
+    )
     if text.strip():
         res = check(
             client(), idx, text, rule, n, cached_deny(idx, excl) if excl else None
