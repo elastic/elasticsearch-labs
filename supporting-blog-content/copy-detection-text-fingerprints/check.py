@@ -3,7 +3,7 @@
 check(es, index, text, rule, n) runs ONE search:
   must    match on `body` with the raw text (the field analyzer fingerprints the query too)
   filter  bool/should of term queries on the unique query fingerprints, minimum_should_match = N
-  highlight  unified highlighter on `body` with the same fingerprints -> copied passages of the matched doc
+  highlight  unified highlighter on `body` with a match on the raw text -> copied passages of the matched doc
 Rules: "any" (>= 1 shared fingerprint), "min_shared" (>= N), "verified_run" (longest copied run >= N words).
 """
 
@@ -83,7 +83,8 @@ def check(
         "pre_tags": [PRE],
         "post_tags": [POST],
         "number_of_fragments": 0,
-        "highlight_query": {"terms": {"body": fps}},
+        # match (not terms): a large terms highlight_query fails on long texts ("bytes can be at most 32766").
+        "highlight_query": {"match": {"body": text}},
     }
     resp = es.search(
         index=index,
