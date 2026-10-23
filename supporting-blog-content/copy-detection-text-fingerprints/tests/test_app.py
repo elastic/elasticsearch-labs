@@ -27,7 +27,7 @@ BODY = f"{FILLER} {COPIED}. The end of the filing."  # > 150 words, so the examp
 
 @pytest.fixture(scope="module")
 def index():
-    es, name = get_client(), f"fp-demo-test-{secrets.token_hex(4)}"
+    es, name = get_client(), f"fingerprint-demo-test-{secrets.token_hex(4)}"
     create_index(es, name)
     es.index(
         index=name,
@@ -74,6 +74,6 @@ def test_app_example_buttons(monkeypatch, index):
 
 
 def test_app_missing_index(monkeypatch):
-    at = run_app(monkeypatch, f"fp-demo-missing-{secrets.token_hex(4)}")
+    at = run_app(monkeypatch, f"fingerprint-demo-missing-{secrets.token_hex(4)}")
     assert not at.exception
     assert "not found" in at.error[0].value

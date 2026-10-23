@@ -30,7 +30,7 @@ def doc(title, body, coll="patents"):
 
 @pytest.fixture(scope="module")
 def env():
-    es, name = get_client(), f"fp-demo-test-{secrets.token_hex(4)}"
+    es, name = get_client(), f"fingerprint-demo-test-{secrets.token_hex(4)}"
     create_index(es, name)
     docs = [
         doc("A", f"{FILLER_A} {COPIED} {FILLER_B}"),
@@ -115,6 +115,14 @@ def stop_words_of(env):
 
     yield apply
     set_stop_words(es, name, set())
+    for _ in range(
+        90
+    ):  # wait until the reopened index answers again, so the next test isn't hit by a 503
+        try:
+            es.search(index=name, size=0)
+            return
+        except ApiError:
+            time.sleep(1)
 
 
 def test_common_phrases_as_stop_words(env, stop_words_of):
