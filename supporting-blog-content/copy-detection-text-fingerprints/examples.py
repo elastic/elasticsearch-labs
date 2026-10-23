@@ -13,13 +13,15 @@ UNRELATED = (
 
 
 def _body(es, index: str, collection: str) -> str:
-    hits = es.search(
-        index=index,
-        size=1,
-        query={"term": {"collection": collection}},
-        _source=["body"],
-    )["hits"]["hits"]
-    return hits[0]["_source"]["body"] if hits else ""
+    """Body of one document of `collection`, or of any non-phishing document (e.g. your own files)."""
+    for q in (
+        {"term": {"collection": collection}},
+        {"bool": {"must_not": {"term": {"collection": "phishing"}}}},
+    ):
+        hits = es.search(index=index, size=1, query=q, _source=["body"])["hits"]["hits"]
+        if hits:
+            return hits[0]["_source"]["body"]
+    return ""
 
 
 def _edit(text: str) -> str:
@@ -50,7 +52,7 @@ def build(es, index: str) -> dict[str, str]:
         .replace("twenty four hours", "24 hours")
     )
     return {
-        "Email quoting a patent": (
+        "Email quoting a document": (
             f"Hi Priya, here is the paragraph I mentioned from the partner's filing: {passage} "
             f"Can you tell me if this overlaps with our draft? Thanks, Jo"
             if passage

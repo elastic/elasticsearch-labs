@@ -3,6 +3,7 @@
 python load_data.py                      # 2,000 BigPatent patents + 8 phishing templates
 python load_data.py --patents 500        # fewer patents
 python load_data.py --from-folder DIR    # your own .txt / .md files instead
+python load_data.py --recreate           # replace an existing index of the same name
 """
 
 import argparse
@@ -15,10 +16,9 @@ from elasticsearch import helpers
 
 from es import HERE, create_index, get_client, index_name
 
-MAX_WORDS, MIN_WORDS = (
-    2000,
-    300,
-)  # _analyze allows 10,000 tokens by default, so own files are cut at 9,000 words
+MAX_WORDS, MIN_WORDS = 2000, 300  # patents are cut to 2,000 words
+CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
+MAX_TOKENS = 9000  # own files: cut to 9,000 tokens, so a whole file can also be checked (_analyze takes 10,000)
 HF_REPO = "NortheasternUniversity/big_patent"
 SHARDS = ["a/validation-00000-of-00001.parquet", "a/train-00000-of-00012.parquet"]
 
@@ -54,6 +54,19 @@ def phishing_docs():
         yield {**t, "source": "synthetic", "collection": "phishing"}
 
 
+def cut_tokens(text: str, max_tokens: int = MAX_TOKENS) -> str:
+    """Keep whole words while the text has at most max_tokens tokens. Tokens are estimated like the standard
+    tokenizer: hyphens and punctuation split words, and each Chinese/Japanese character is a token.
+    """
+    out, count = [], 0
+    for w in text.split():
+        count += max(1, len(re.findall(r"\w+", w)), len(CJK.findall(w)))
+        if count > max_tokens:
+            break
+        out.append(w)
+    return " ".join(out)
+
+
 def folder_docs(folder: Path):
     for p in sorted(folder.rglob("*")):
         if p.suffix.lower() in (".txt", ".md") and p.is_file():
@@ -61,7 +74,7 @@ def folder_docs(folder: Path):
                 "title": p.name,
                 "source": str(p),
                 "collection": "own",
-                "body": " ".join(p.read_text(errors="replace").split()[:9000]),
+                "body": cut_tokens(p.read_text(encoding="utf-8", errors="replace")),
             }
 
 
@@ -88,10 +101,15 @@ def main():
     )
     ap.add_argument("--patents", type=int, default=2000)
     ap.add_argument("--from-folder", type=Path)
-    ap.add_argument("--index", default=None)
+    ap.add_argument(
+        "--index", default=None, help="index name (default: INDEX_NAME in .env)"
+    )
+    ap.add_argument(
+        "--recreate", action="store_true", help="delete and rebuild an existing index"
+    )
     a = ap.parse_args()
     es, name = get_client(), a.index or index_name()
-    create_index(es, name)
+    create_index(es, name, a.recreate)
     if a.from_folder:
         docs = folder_docs(a.from_folder)
     else:

@@ -9,7 +9,7 @@ import streamlit as st
 
 import examples
 from boilerplate import common_phrases, deny_list
-from check import check
+from check import CheckError, check
 from es import get_client, index_name
 
 st.set_page_config(page_title="Fingerprint copy check", layout="wide")
@@ -34,6 +34,11 @@ def cached_deny(index: str, min_docs: int) -> set[str]:
     return deny_list(client(), index, min_docs)
 
 
+@st.cache_data(show_spinner=False)
+def cached_examples(index: str) -> dict[str, str]:
+    return examples.build(client(), index)
+
+
 def render(text: str, spans: list[tuple[int, int]], limit: int | None = None) -> str:
     """HTML with copied spans in <mark>. For long documents show only the area around the copied passages."""
     if limit and len(text) > limit and spans:
@@ -49,21 +54,23 @@ def render(text: str, spans: list[tuple[int, int]], limit: int | None = None) ->
 
 
 def short_query(q: dict) -> dict:
-    """The sent query with the long term list cut to 5 clauses (the real one has one per fingerprint)."""
+    """The sent query with the term list cut to 5 clauses (the real one has one per fingerprint)."""
     q = json.loads(json.dumps(q))
-    f = q["query"]["bool"]["filter"][0]["bool"]
-    f["should"] = (
-        f["should"][:5] + [f"... {len(f['should']) - 5} more term clauses"]
-        if len(f["should"]) > 5
-        else f["should"]
-    )
-    t = q["highlight"]["fields"]["body"]["highlight_query"]["terms"]
-    t["body"] = t["body"][:5] + ["..."] if len(t["body"]) > 5 else t["body"]
+    b = q.get("query", {}).get("bool", {})
+    should = b.get("should", [])
+    if len(should) > 5:
+        b["should"] = should[:5] + [f"... {len(should) - 5} more term clauses"]
     return q
 
 
 idx = index_name()
 st.title("Copy check with stock Elasticsearch")
+if not client().indices.exists(index=idx):
+    st.error(
+        f"Index '{idx}' not found. Load the sample data first: `python load_data.py` "
+        "(or set INDEX_NAME in .env)."
+    )
+    st.stop()
 st.caption(
     f"Index: {idx}. Each protected document is stored as overlapping 8-word phrases (fingerprints)."
 )
@@ -91,7 +98,7 @@ tab_check, tab_common = st.tabs(["Check text", "Common phrases (boilerplate)"])
 
 with tab_check:
     cols = st.columns(4)
-    ex = examples.build(client(), idx)
+    ex = cached_examples(idx)
     for col, (label, body) in zip(cols, ex.items()):
         if col.button(label, width="stretch"):
             st.session_state.text = body
@@ -101,10 +108,20 @@ with tab_check:
     st.caption(
         "Edit the text, then select Check text (or press Ctrl+Enter / Cmd+Enter in the box)."
     )
+    res = None
     if text.strip():
-        res = check(
-            client(), idx, text, rule, n, cached_deny(idx, excl) if excl else None
+        try:
+            res = check(
+                client(), idx, text, rule, n, cached_deny(idx, excl) if excl else None
+            )
+        except CheckError as e:
+            st.error(str(e))
+    if res and not res.fingerprints:
+        st.info(
+            "No fingerprints to check: the text needs at least 8 words in a row "
+            "(after any ignored common phrases)."
         )
+    elif res:
         st.subheader(f"{len(res.matches)} protected document(s) matched")
         st.write(f"Input has {res.fingerprints} distinct fingerprints.")
         for m in res.matches:
@@ -132,6 +149,4 @@ with tab_common:
     min_docs = st.slider("Minimum documents", 2, 50, 5, key="mind")
     if st.button("Find common phrases"):
         rows = common_phrases(client(), idx, min_docs, 40)
-        st.dataframe(
-            [{"phrase": p, "documents": d} for p, d in rows], use_container_width=True
-        )
+        st.dataframe([{"phrase": p, "documents": d} for p, d in rows], width="stretch")

@@ -9,7 +9,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from boilerplate import common_phrases  # noqa: E402
-from check import check  # noqa: E402
+from check import CheckError, analyze, check  # noqa: E402
 from es import create_index, get_client  # noqa: E402
 
 COPIED = (
@@ -100,3 +100,49 @@ def test_exclude_list_and_common_phrases(env):
     )  # B and D share COMMON, A and B share FILLER_B
     assert {m.title for m in check(es, name, COMMON, "any").matches} == {"B", "D"}
     assert check(es, name, COMMON, "any", exclude={p for p, _ in top}).matches == []
+
+
+def test_excluded_phrases_do_not_count_as_evidence(env):
+    es, name = env
+    # B has COMMON directly followed by FILLER_B: a 13-word copied run, 10 words of it boilerplate
+    text = f"{COMMON} {' '.join(FILLER_B.split()[:3])}"
+    assert check(es, name, text, "verified_run", 12).matches
+    common = {t["token"] for t in analyze(es, name, COMMON)}
+    res = check(es, name, text, "verified_run", 12, exclude=common)
+    assert (
+        res.matches == []
+    )  # only the 10 words of fingerprints that cross into FILLER_B remain
+    m = check(es, name, text, "any", exclude=common).matches[0]
+    assert m.title == "B" and m.longest_run == 10
+
+
+def test_run_must_be_unbroken_in_the_input(env):
+    es, name = env
+    w = COPIED.split()
+    # two 10-word pieces that are adjacent in doc A, separated by other words in the input
+    text = f"{' '.join(w[:10])} and then something else entirely {' '.join(w[10:20])}"
+    m = check(es, name, text, "any").matches[0]
+    assert m.title == "A" and m.longest_run == 10
+    assert not check(es, name, text, "verified_run", 16).matches
+    assert check(es, name, " ".join(w[:20]), "verified_run", 16).matches
+
+
+def test_emoji_offsets(env):
+    es, name = env
+    text = f"\U0001f600\U0001f600 see \U0001f4ce {COPIED} \U0001f600"
+    m = check(es, name, text, "any").matches[0]
+    assert [text[s:e] for s, e in m.input_spans] == [COPIED]
+
+
+def test_short_and_too_long_input(env):
+    es, name = env
+    res = check(es, name, "hello world", "any")
+    assert res.fingerprints == 0 and res.matches == []
+    with pytest.raises(CheckError):
+        check(es, name, "word " * 10500, "any")
+
+
+def test_create_index_refuses_existing(env):
+    es, name = env
+    with pytest.raises(SystemExit):
+        create_index(es, name)
