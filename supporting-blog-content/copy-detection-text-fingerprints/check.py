@@ -1,13 +1,16 @@
 """Core logic: is this text copied from a protected document? Uses stock Elasticsearch only.
 
 check(es, index, text, rule, n):
-  1. _analyze the input with the index analyzer -> its unique fingerprints (8-word phrases) with offsets;
-     phrases on the exclude list (boilerplate) are dropped here.
-  2. ONE search: bool/should of term queries on those fingerprints, minimum_should_match = N (N = 1 unless the rule
-     is min_shared). The score grows with the number of shared fingerprints.
-  3. ONE _mtermvectors call for the hits: the offsets of every shared fingerprint in each protected document.
-Evidence is computed from the shared, non-excluded fingerprints on both sides. The copied run is measured on the
-input: consecutive shared fingerprints overlap, so an unbroken chain of them is one copied passage.
+  1. ONE search: a plain `match` with the whole text. The field's analyzer turns the text into fingerprints on the
+     server, so the client never builds them. minimum_should_match = N for min_shared. The score grows with the
+     number of shared fingerprints. With an exclude list (boilerplate), a filter also requires at least one
+     non-excluded fingerprint.
+  2. _analyze the text with the same analyzer -> its fingerprints with offsets, to show where the copied words are
+     in the input. ONE _mtermvectors call gives the same for each matched protected document.
+Evidence is computed from the shared, non-excluded fingerprints on both sides, counted once each (the match query
+counts a phrase repeated in the input every time, so min_shared is checked exactly on the distinct ones). The
+copied run is measured on the input: consecutive shared fingerprints overlap, so an unbroken chain of them is one
+copied passage.
 Rules: "any" (>= 1 shared fingerprint), "min_shared" (>= N), "verified_run" (copied run >= N words).
 """
 
@@ -62,11 +65,19 @@ def analyze(es, index: str, text: str) -> list[dict]:
         raise
 
 
-def build_query(fps: list[str], n: int) -> dict:
+def build_query(text: str, n: int = 1, keep: list[str] | None = None) -> dict:
+    """`match` on the whole text. keep = the non-excluded fingerprints, only when an exclude list is in use."""
+    match = {"query": text}
+    if n > 1:
+        match["minimum_should_match"] = n
+    query = {"match": {"body": match}}
+    if keep is None:
+        return query
+    should = [{"term": {"body": f}} for f in keep]
     return {
         "bool": {
-            "should": [{"term": {"body": f}} for f in fps],
-            "minimum_should_match": n,
+            "must": [query],
+            "filter": [{"bool": {"should": should, "minimum_should_match": 1}}],
         }
     }
 
@@ -107,7 +118,7 @@ def check(
     tokens = analyze(es, index, text)
     fps = sorted({t["token"] for t in tokens} - (exclude or set()))
     need = n if rule == "min_shared" else 1
-    query = build_query(fps, need)
+    query = build_query(text, need, fps if exclude else None)
     if not fps:
         return Result(rule, n, 0, text, [], {"query": query})
     try:
@@ -139,7 +150,7 @@ def check(
         shared = set(fps) & terms.keys()
         in_spans = [s for f in shared for s in in_offsets[f]]
         run = max((word_count(text, s) for s in runs(in_spans)), default=0)
-        if rule == "verified_run" and run < n:
+        if len(shared) < need or (rule == "verified_run" and run < n):
             continue
         doc_py = es_offsets(doc_text)
         dspans = [(doc_py(s), doc_py(e)) for f in shared for s, e in terms[f]]

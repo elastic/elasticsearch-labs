@@ -54,12 +54,14 @@ def render(text: str, spans: list[tuple[int, int]], limit: int | None = None) ->
 
 
 def short_query(q: dict) -> dict:
-    """The sent query with the term list cut to 5 clauses (the real one has one per fingerprint)."""
+    """The sent query, with an exclude-list filter cut to 5 term clauses (one per non-excluded fingerprint)."""
     q = json.loads(json.dumps(q))
-    b = q.get("query", {}).get("bool", {})
-    should = b.get("should", [])
-    if len(should) > 5:
-        b["should"] = should[:5] + [f"... {len(should) - 5} more term clauses"]
+    for f in q.get("query", {}).get("bool", {}).get("filter", []):
+        should = f["bool"]["should"]
+        if len(should) > 5:
+            f["bool"]["should"] = should[:5] + [
+                f"... {len(should) - 5} more term clauses"
+            ]
     return q
 
 
@@ -139,6 +141,10 @@ with tab_check:
                     render(m.doc_text, m.doc_spans, limit=2500), unsafe_allow_html=True
                 )
         with st.expander("Query JSON"):
+            st.caption(
+                "The whole text is sent in a match query. The body field's analyzer turns it into 8-word "
+                "fingerprints on the server. _analyze and _mtermvectors are only used to locate the copied words."
+            )
             st.json(short_query(res.query), expanded=True)
 
 with tab_common:

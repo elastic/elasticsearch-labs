@@ -146,3 +146,13 @@ def test_create_index_refuses_existing(env):
     es, name = env
     with pytest.raises(SystemExit):
         create_index(es, name)
+
+
+def test_query_sends_the_whole_text(env):
+    es, name = env
+    text = f"Hi all, please see this quote from the filing: {COPIED} Regards, Pat"
+    assert check(es, name, text, "any").query["query"] == {
+        "match": {"body": {"query": text}}
+    }
+    q = check(es, name, text, "min_shared", 5).query["query"]
+    assert q["match"]["body"] == {"query": text, "minimum_should_match": 5}

@@ -9,10 +9,10 @@ It works on Elastic Cloud Serverless 9.x and self-managed Elasticsearch 9.x. Eve
 ## What it shows
 - Index analyzer `fingerprint_8`: standard tokenizer, lowercase, asciifolding, `shingle` (8 words, no unigrams).
   The `body` field uses it with `index_options: offsets` (see `mappings/index.json`).
-- One search per check (`check.py`): the input is fingerprinted with `_analyze`, and a bool `should` of `term`
-  queries (one per distinct fingerprint, `minimum_should_match` from the rule) finds the protected documents.
-  One `_mtermvectors` call then gives the offsets of the shared fingerprints in each match, so the copied words are
-  highlighted on both sides.
+- One search per check (`check.py`): a plain `match` query with the whole input text. The `body` field's analyzer
+  turns the text into fingerprints on the server, exactly as it did for the protected documents.
+- Evidence: `_analyze` (the input) and one `_mtermvectors` call (the matched documents) give the offsets of the
+  shared fingerprints, so the copied words are highlighted on both sides.
 - Two sample collections: patents (leakage of internal documents) and phishing email templates (cyber).
 - A boilerplate finder that lists phrases shared by many documents.
 
@@ -47,7 +47,8 @@ python cleanup.py                            # delete the index
 The input is fingerprinted with the same analyzer. Duplicates in the input are removed first, so a repeated phrase
 counts once.
 - **any**: at least 1 shared fingerprint. Most sensitive, and shared stock phrases will trigger it.
-- **min_shared N** (default 3): at least N distinct shared fingerprints (`minimum_should_match: N`). N shared
+- **min_shared N** (default 3): at least N distinct shared fingerprints. The query uses `minimum_should_match: N`,
+  which counts a phrase repeated in the input each time, so the demo then checks the distinct count. N shared
   fingerprints in a row mean a copied run of N + 7 tokens (the standard tokenizer splits hyphenated words, so this
   can be more than N + 7 words).
 - **verified_run N** (default 16 words): the input must also contain a copied passage of at least N words in a row:
