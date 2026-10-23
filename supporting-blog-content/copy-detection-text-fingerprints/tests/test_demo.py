@@ -2,13 +2,15 @@
 
 import secrets
 import sys
+import time
 from pathlib import Path
 
 import pytest
+from elasticsearch import ApiError
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from boilerplate import common_phrases  # noqa: E402
+from boilerplate import common_phrases, set_stop_words, stop_words  # noqa: E402
 from check import CheckError, analyze, check  # noqa: E402
 from es import create_index, get_client  # noqa: E402
 
@@ -92,28 +94,59 @@ def test_verified_run_filters_short_phrases(env):
     assert check(es, name, COPIED, "verified_run", 16).matches
 
 
-def test_exclude_list_and_common_phrases(env):
+@pytest.fixture
+def stop_words_of(env):
+    """Apply stop words to the test index; wait until searches use them; clear them afterwards."""
+    es, name = env
+
+    def apply(phrases, probe):
+        set_stop_words(es, name, phrases)
+        # the index reopens: on Serverless, searches can fail (503) for a while before they use the new list
+        for _ in range(90):
+            try:
+                if not es.search(index=name, query={"match": {"body": probe}})["hits"][
+                    "hits"
+                ]:
+                    return
+            except ApiError:
+                pass
+            time.sleep(1)
+        raise AssertionError("stop words not applied within 90 s")
+
+    yield apply
+    set_stop_words(es, name, set())
+
+
+def test_common_phrases_as_stop_words(env, stop_words_of):
     es, name = env
     top = common_phrases(es, name, 2, 100)
     assert top and all(
         c == 2 for _, c in top
     )  # B and D share COMMON, A and B share FILLER_B
     assert {m.title for m in check(es, name, COMMON, "any").matches} == {"B", "D"}
-    assert check(es, name, COMMON, "any", exclude={p for p, _ in top}).matches == []
+    common = {p for p, _ in top if p in COMMON}
+    stop_words_of(common, COMMON)
+    assert stop_words(es, name) == common
+    assert (
+        check(es, name, COMMON, "any").matches == []
+    )  # leak check ignores boilerplate
+    classified = check(es, name, COMMON, "any", boilerplate=True).matches
+    assert {m.title for m in classified} == {"B", "D"}  # classification still sees it
 
 
-def test_excluded_phrases_do_not_count_as_evidence(env):
+def test_stop_words_do_not_count_as_evidence(env, stop_words_of):
     es, name = env
     # B has COMMON directly followed by FILLER_B: a 13-word copied run, 10 words of it boilerplate
     text = f"{COMMON} {' '.join(FILLER_B.split()[:3])}"
     assert check(es, name, text, "verified_run", 12).matches
-    common = {t["token"] for t in analyze(es, name, COMMON)}
-    res = check(es, name, text, "verified_run", 12, exclude=common)
-    assert (
-        res.matches == []
-    )  # only the 10 words of fingerprints that cross into FILLER_B remain
-    m = check(es, name, text, "any", exclude=common).matches[0]
-    assert m.title == "B" and m.longest_run == 10
+    stop_words_of({t["token"] for t in analyze(es, name, COMMON)}, COMMON)
+    assert check(es, name, text, "verified_run", 12).matches == []
+    m = check(es, name, text, "any").matches[0]
+    # only the fingerprints that cross into FILLER_B remain: 10 words, highlighted on both sides
+    assert m.title == "B" and m.longest_run == 10 and m.matched == 3
+    tail = " ".join(text.split()[3:])
+    assert [text[s:e] for s, e in m.input_spans] == [tail]
+    assert [m.doc_text[s:e] for s, e in m.doc_spans] == [tail]
 
 
 def test_run_must_be_unbroken_in_the_input(env):
@@ -151,8 +184,8 @@ def test_create_index_refuses_existing(env):
 def test_query_sends_the_whole_text(env):
     es, name = env
     text = f"Hi all, please see this quote from the filing: {COPIED} Regards, Pat"
-    assert check(es, name, text, "any").query["query"] == {
-        "match": {"body": {"query": text}}
-    }
+    res = check(es, name, text, "any")
+    assert res.query["query"] == {"match": {"body": {"query": text}}}
+    assert res.query["highlight"]["fields"]["body"]["type"] == "unified"
     q = check(es, name, text, "min_shared", 5).query["query"]
     assert q["match"]["body"] == {"query": text, "minimum_should_match": 5}

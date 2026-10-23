@@ -1,4 +1,23 @@
-"""Small helpers for character spans."""
+"""Small helpers for highlight tags and character spans."""
+
+PRE, POST = "\ue000", "\ue001"  # private-use characters, cannot clash with real text
+
+
+def parse_marked(marked: str) -> tuple[str, list[tuple[int, int]]]:
+    """Strip highlight tags; return (plain text, char spans of the marked parts)."""
+    plain, spans, start, depth = [], [], 0, 0
+    for ch in marked:
+        if ch == PRE:
+            if depth == 0:
+                start = len(plain)
+            depth += 1
+        elif ch == POST:
+            depth -= 1
+            if depth == 0:
+                spans.append((start, len(plain)))
+        else:
+            plain.append(ch)
+    return "".join(plain), spans
 
 
 def es_offsets(text: str):

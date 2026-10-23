@@ -3,12 +3,11 @@ Run: streamlit run app.py
 """
 
 import html
-import json
 
 import streamlit as st
 
 import examples
-from boilerplate import common_phrases, deny_list
+from boilerplate import common_phrases, set_stop_words, stop_words
 from check import CheckError, check
 from es import get_client, index_name
 
@@ -30,8 +29,8 @@ def client():
 
 
 @st.cache_data(show_spinner=False)
-def cached_deny(index: str, min_docs: int) -> set[str]:
-    return deny_list(client(), index, min_docs)
+def cached_stop_words(index: str) -> set[str]:
+    return stop_words(client(), index)
 
 
 @st.cache_data(show_spinner=False)
@@ -53,16 +52,13 @@ def render(text: str, spans: list[tuple[int, int]], limit: int | None = None) ->
     return f'<div class="box">{"".join(out)}</div>'
 
 
-def short_query(q: dict) -> dict:
-    """The sent query, with an exclude-list filter cut to 5 term clauses (one per non-excluded fingerprint)."""
-    q = json.loads(json.dumps(q))
-    for f in q.get("query", {}).get("bool", {}).get("filter", []):
-        should = f["bool"]["should"]
-        if len(should) > 5:
-            f["bool"]["should"] = should[:5] + [
-                f"... {len(should) - 5} more term clauses"
-            ]
-    return q
+def apply_stop_words(phrases: set[str]) -> None:
+    with st.spinner("Updating the search analyzer (the index reopens)..."):
+        try:
+            set_stop_words(client(), idx, phrases)
+        except (ValueError, RuntimeError) as e:
+            st.session_state.stop_error = str(e)
+    cached_stop_words.clear()
 
 
 idx = index_name()
@@ -92,8 +88,12 @@ with st.sidebar:
         n = st.slider("N (fingerprints)", 1, 30, 3)
     elif rule == "verified_run":
         n = st.slider("N (words)", 8, 60, 16)
-    excl = st.slider(
-        "Ignore phrases found in at least this many documents (0 = off)", 0, 50, 0
+    stop = cached_stop_words(idx)
+    st.header("Boilerplate")
+    st.write(f"{len(stop)} phrases are stop words (see the Common phrases tab).")
+    boilerplate = st.toggle(
+        "Count boilerplate too (classification)",
+        help="Match with the index analyzer, so stop-word phrases count again.",
     )
 
 tab_check, tab_common = st.tabs(["Check text", "Common phrases (boilerplate)"])
@@ -113,15 +113,13 @@ with tab_check:
     res = None
     if text.strip():
         try:
-            res = check(
-                client(), idx, text, rule, n, cached_deny(idx, excl) if excl else None
-            )
+            res = check(client(), idx, text, rule, n, stop, boilerplate)
         except CheckError as e:
             st.error(str(e))
     if res and not res.fingerprints:
         st.info(
             "No fingerprints to check: the text needs at least 8 words in a row "
-            "(after any ignored common phrases)."
+            "(boilerplate stop-word phrases do not count)."
         )
     elif res:
         st.subheader(f"{len(res.matches)} protected document(s) matched")
@@ -142,17 +140,35 @@ with tab_check:
                 )
         with st.expander("Query JSON"):
             st.caption(
-                "The whole text is sent in a match query. The body field's analyzer turns it into 8-word "
-                "fingerprints on the server. _analyze and _mtermvectors are only used to locate the copied words."
+                "The whole text is sent in a match query. The body field's search analyzer turns it into 8-word "
+                "fingerprints on the server and drops boilerplate stop words. The unified highlighter marks the "
+                "copied words in the protected document; _analyze marks them in your text."
             )
-            st.json(short_query(res.query), expanded=True)
+            st.json(res.query, expanded=True)
 
 with tab_common:
     st.write(
-        "Phrases shared by many protected documents. They cause false alarms, so exclude them or require more "
-        "than one shared phrase."
+        "Phrases shared by many protected documents. They cause false alarms in leak checks. Apply them as stop "
+        "words: the search analyzer then drops them, while the index keeps them for classification."
     )
     min_docs = st.slider("Minimum documents", 2, 50, 5, key="mind")
     if st.button("Find common phrases"):
-        rows = common_phrases(client(), idx, min_docs, 40)
-        st.dataframe([{"phrase": p, "documents": d} for p, d in rows], width="stretch")
+        st.session_state.common = common_phrases(client(), idx, min_docs, 200)
+    rows = st.session_state.get("common", [])
+    if err := st.session_state.pop("stop_error", None):
+        st.error(err)
+    if rows:
+        st.dataframe(
+            [{"phrase": p, "documents": d} for p, d in rows],
+            width="stretch",
+            height=300,
+        )
+        if st.button(f"Apply these {len(rows)} phrases as stop words", type="primary"):
+            apply_stop_words(stop | {p for p, _ in rows})
+            st.rerun()
+    if stop:
+        st.write(f"Current stop words: {len(stop)}")
+        st.dataframe([{"phrase": p} for p in sorted(stop)], width="stretch", height=200)
+        if st.button("Clear stop words"):
+            apply_stop_words(set())
+            st.rerun()

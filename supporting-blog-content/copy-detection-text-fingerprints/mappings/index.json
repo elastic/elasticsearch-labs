@@ -7,6 +7,10 @@
           "min_shingle_size": 8,
           "max_shingle_size": 8,
           "output_unigrams": false
+        },
+        "boilerplate_stop": {
+          "type": "stop",
+          "stopwords": "_none_"
         }
       },
       "analyzer": {
@@ -14,6 +18,11 @@
           "type": "custom",
           "tokenizer": "standard",
           "filter": ["lowercase", "asciifolding", "shingle_8"]
+        },
+        "fingerprint_8_search": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "asciifolding", "shingle_8", "boilerplate_stop"]
         }
       }
     }
@@ -26,6 +35,7 @@
       "body": {
         "type": "text",
         "analyzer": "fingerprint_8",
+        "search_analyzer": "fingerprint_8_search",
         "index_options": "offsets",
         "norms": false
       }

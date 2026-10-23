@@ -3,14 +3,14 @@
   python cli.py "text to check"
   python cli.py --file email.txt --rule min_shared --n 3
   cat email.txt | python cli.py --rule any
-  python cli.py --file email.txt --rule verified_run --n 16 --exclude-common 5
+  python cli.py --file email.txt --rule verified_run --n 16
+  python cli.py --file email.txt --boilerplate      # count boilerplate stop words too (classification)
 Copied words are marked [[like this]].
 """
 
 import argparse
 import sys
 
-from boilerplate import deny_list
 from check import DEFAULT_N, RULES, CheckError, check
 from es import get_client, index_name
 from spans import mark
@@ -31,11 +31,9 @@ def main():
     )
     ap.add_argument("--index", help="index name (default: INDEX_NAME in .env)")
     ap.add_argument(
-        "--exclude-common",
-        type=int,
-        default=0,
-        metavar="DOCS",
-        help="skip phrases found in at least this many protected docs",
+        "--boilerplate",
+        action="store_true",
+        help="count boilerplate stop-word phrases too (classification)",
     )
     a = ap.parse_args()
     if a.file:
@@ -50,9 +48,8 @@ def main():
     es, idx = get_client(), a.index or index_name()
     if not es.indices.exists(index=idx):
         sys.exit(f"Index '{idx}' not found. Load data first: python load_data.py")
-    excl = deny_list(es, idx, a.exclude_common) if a.exclude_common else set()
     try:
-        res = check(es, idx, text, a.rule, a.n, excl)
+        res = check(es, idx, text, a.rule, a.n, boilerplate=a.boilerplate)
     except CheckError as e:
         sys.exit(str(e))
     shown_n = "" if a.rule == "any" else f" n={res.n}"

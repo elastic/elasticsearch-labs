@@ -1,28 +1,37 @@
 """Core logic: is this text copied from a protected document? Uses stock Elasticsearch only.
 
 check(es, index, text, rule, n):
-  1. ONE search: a plain `match` with the whole text. The field's analyzer turns the text into fingerprints on the
-     server, so the client never builds them. minimum_should_match = N for min_shared. The score grows with the
-     number of shared fingerprints. With an exclude list (boilerplate), a filter also requires at least one
-     non-excluded fingerprint.
-  2. _analyze the text with the same analyzer -> its fingerprints with offsets, to show where the copied words are
-     in the input. ONE _mtermvectors call gives the same for each matched protected document.
-Evidence is computed from the shared, non-excluded fingerprints on both sides, counted once each (the match query
-counts a phrase repeated in the input every time, so min_shared is checked exactly on the distinct ones). The
-copied run is measured on the input: consecutive shared fingerprints overlap, so an unbroken chain of them is one
-copied passage.
-Rules: "any" (>= 1 shared fingerprint), "min_shared" (>= N), "verified_run" (copied run >= N words).
+  1. ONE search: a plain `match` with the whole text. The field's search analyzer turns it into fingerprints
+     (8-word phrases) on the server and drops boilerplate phrases listed as stop words (see boilerplate.py).
+     minimum_should_match = N for min_shared. The unified highlighter marks the copied words in each matched
+     protected document, using the offsets stored in the index.
+  2. _analyze the text with the index analyzer -> its fingerprints with offsets, to mark the copied words in the
+     input too (the stop words from the index settings are removed here as well).
+Rules are checked on distinct shared fingerprints (the match query counts a phrase repeated in the input each time):
+  "any" (>= 1), "min_shared" (>= N), "verified_run" (an unbroken copied run of >= N words in the input:
+  consecutive shared fingerprints overlap, so a chain of them is one copied passage).
+boilerplate=True counts boilerplate too (classification): the match uses the index analyzer instead.
 """
 
 from dataclasses import dataclass, field
 
 from elasticsearch import BadRequestError
 
-from spans import es_offsets, merge, runs, word_count
+from spans import PRE, POST, es_offsets, merge, parse_marked, runs, word_count
 
 ANALYZER = "fingerprint_8"
 RULES = ("any", "min_shared", "verified_run")
 DEFAULT_N = {"any": 1, "min_shared": 3, "verified_run": 16}
+HIGHLIGHT = {
+    "fields": {
+        "body": {
+            "type": "unified",
+            "number_of_fragments": 0,  # the whole document, with every copied passage marked
+            "pre_tags": [PRE],
+            "post_tags": [POST],
+        }
+    }
+}
 
 
 class CheckError(Exception):
@@ -35,7 +44,7 @@ class Match:
     title: str
     collection: str
     score: float
-    matched: int  # distinct shared fingerprints (after exclusions)
+    matched: int  # distinct shared fingerprints
     longest_run: int  # words in the longest unbroken copied passage of the input
     doc_text: str
     doc_spans: list = field(default_factory=list)  # char spans in the matched doc
@@ -46,7 +55,9 @@ class Match:
 class Result:
     rule: str
     n: int
-    fingerprints: int  # distinct fingerprints in the input (after exclusions)
+    fingerprints: (
+        int  # distinct fingerprints in the input (boilerplate stop words removed)
+    )
     text: str
     matches: list
     query: dict
@@ -65,43 +76,13 @@ def analyze(es, index: str, text: str) -> list[dict]:
         raise
 
 
-def build_query(text: str, n: int = 1, keep: list[str] | None = None) -> dict:
-    """`match` on the whole text. keep = the non-excluded fingerprints, only when an exclude list is in use."""
+def build_query(text: str, n: int = 1, boilerplate: bool = False) -> dict:
     match = {"query": text}
     if n > 1:
         match["minimum_should_match"] = n
-    query = {"match": {"body": match}}
-    if keep is None:
-        return query
-    should = [{"term": {"body": f}} for f in keep]
-    return {
-        "bool": {
-            "must": [query],
-            "filter": [{"bool": {"should": should, "minimum_should_match": 1}}],
-        }
-    }
-
-
-def _doc_offsets(es, index: str, ids: list[str]) -> dict[str, dict]:
-    """{doc id: {fingerprint: [(start, end), ...]}} from term vectors (computed on the fly from _source)."""
-    resp = es.mtermvectors(
-        index=index,
-        ids=ids,
-        fields=["body"],
-        offsets=True,
-        positions=False,
-        payloads=False,
-        field_statistics=False,
-        term_statistics=False,
-    )
-    out = {}
-    for d in resp["docs"]:
-        terms = d.get("term_vectors", {}).get("body", {}).get("terms", {})
-        out[d["_id"]] = {
-            t: [(x["start_offset"], x["end_offset"]) for x in v.get("tokens", [])]
-            for t, v in terms.items()
-        }
-    return out
+    if boilerplate:
+        match["analyzer"] = ANALYZER  # the index analyzer: no stop words
+    return {"match": {"body": match}}
 
 
 def check(
@@ -110,15 +91,24 @@ def check(
     text: str,
     rule: str = "any",
     n: int | None = None,
-    exclude: set[str] | None = None,
+    stop_words: set[str] | None = None,
+    boilerplate: bool = False,
     size: int = 20,
 ) -> Result:
-    """Find protected documents that share fingerprints with `text` under the chosen rule."""
+    """Find protected documents that share fingerprints with `text` under the chosen rule.
+    stop_words: the index's boilerplate list (boilerplate.stop_words); read from the index when None.
+    """
+    from boilerplate import stop_words as read_stop_words
+
     n = DEFAULT_N[rule] if n is None else n
-    tokens = analyze(es, index, text)
-    fps = sorted({t["token"] for t in tokens} - (exclude or set()))
+    if boilerplate:
+        stop = set()
+    else:
+        stop = read_stop_words(es, index) if stop_words is None else stop_words
+    tokens = [t for t in analyze(es, index, text) if t["token"] not in stop]
+    fps = {t["token"] for t in tokens}
     need = n if rule == "min_shared" else 1
-    query = build_query(text, need, fps if exclude else None)
+    query = build_query(text, need, boilerplate)
     if not fps:
         return Result(rule, n, 0, text, [], {"query": query})
     try:
@@ -126,7 +116,8 @@ def check(
             index=index,
             size=size,
             query=query,
-            _source=["title", "collection", "body"],
+            highlight=HIGHLIGHT,
+            _source=["title", "collection"],
         )
     except BadRequestError as e:
         if "too_many" in str(e) or "maxClauseCount" in str(e):
@@ -135,25 +126,22 @@ def check(
                 "(indices.query.bool.max_clause_count). Check a shorter part."
             ) from e
         raise
-    hits = resp["hits"]["hits"]
-    doc_offsets = _doc_offsets(es, index, [h["_id"] for h in hits]) if hits else {}
     to_py = es_offsets(text)
-    in_offsets: dict[str, list] = {}
-    for t in tokens:
-        in_offsets.setdefault(t["token"], []).append(
-            (to_py(t["start_offset"]), to_py(t["end_offset"]))
-        )
     matches = []
-    for h in hits:
-        doc_text = h["_source"].get("body", "")
-        terms = doc_offsets.get(h["_id"], {})
-        shared = set(fps) & terms.keys()
-        in_spans = [s for f in shared for s in in_offsets[f]]
+    for h in resp["hits"]["hits"]:
+        doc_text, dspans = parse_marked(h.get("highlight", {}).get("body", [""])[0])
+        dspans = merge(dspans, doc_text)
+        # shared = fingerprints of the highlighted passages (short) that are also in the input
+        passages = "\n".join(doc_text[s:e] for s, e in dspans)
+        shared = {t["token"] for t in analyze(es, index, passages)} & fps
+        in_spans = [
+            (to_py(t["start_offset"]), to_py(t["end_offset"]))
+            for t in tokens
+            if t["token"] in shared
+        ]
         run = max((word_count(text, s) for s in runs(in_spans)), default=0)
         if len(shared) < need or (rule == "verified_run" and run < n):
             continue
-        doc_py = es_offsets(doc_text)
-        dspans = [(doc_py(s), doc_py(e)) for f in shared for s, e in terms[f]]
         matches.append(
             Match(
                 h["_id"],
@@ -163,8 +151,10 @@ def check(
                 len(shared),
                 run,
                 doc_text,
-                merge(dspans, doc_text),
+                dspans,
                 merge(in_spans, text),
             )
         )
-    return Result(rule, n, len(fps), text, matches, {"query": query})
+    return Result(
+        rule, n, len(fps), text, matches, {"query": query, "highlight": HIGHLIGHT}
+    )
