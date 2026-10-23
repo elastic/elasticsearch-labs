@@ -12,12 +12,16 @@ from check import CheckError, check
 from es import get_client, index_name
 
 st.set_page_config(page_title="Fingerprint copy check", layout="wide")
+# Text boxes follow the theme (dark by default in .streamlit/config.toml; run with --theme.base light for light)
+LIGHT = st.get_option("theme.base") == "light"
+BOX = ("#f5f7fa", "#c9d2e3", "#1c1e23") if LIGHT else ("#161b26", "#3a4258", "#f2f4f8")
+MARK = "#48efcf" if LIGHT else "#ffb454"
 st.markdown(
-    """<style>
-html, body, [class*="css"], .stTextArea textarea { font-size: 19px !important; }
-.box { background:#161b26; border:1px solid #3a4258; border-radius:8px; padding:14px; line-height:1.65;
-       white-space:pre-wrap; max-height:420px; overflow:auto; color:#f2f4f8; }
-mark { background:#ffb454; color:#10131a; padding:1px 2px; border-radius:3px; font-weight:600; }
+    f"""<style>
+html, body, [class*="css"], .stTextArea textarea {{ font-size: 19px !important; }}
+.box {{ background:{BOX[0]}; border:1px solid {BOX[1]}; border-radius:8px; padding:14px; line-height:1.65;
+       white-space:pre-wrap; max-height:420px; overflow:auto; color:{BOX[2]}; }}
+mark {{ background:{MARK}; color:#10131a; padding:1px 2px; border-radius:3px; font-weight:600; }}
 </style>""",
     unsafe_allow_html=True,
 )
